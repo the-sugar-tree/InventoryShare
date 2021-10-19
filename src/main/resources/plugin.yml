@@ -1,0 +1,8 @@
+name: InventoryShare
+version: '1.0'
+main: com.sugar_tree.inventoryshare.InventoryShare
+api-version: 1.17
+authors: [ sugar_tree ]
+commands:
+  inventoryshare:
+    usage: /inventoryshare <advancement|DeathAnnounce|reload> [true|false]
