@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 the-sugar-tree
+ * Copyright (c) 2021 the-sugar-tree
  *
  *  Licensed under the General Public License, Version 3.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.WorldSaveEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -53,6 +54,8 @@ public final class InventoryShare extends JavaPlugin implements Listener {
     public static FileConfiguration advconfig;
 
     public static List<NamespacedKey> advlist = new ArrayList<>();
+
+    private final static Plugin plugin = getPlugin(InventoryShare.class);
 
     @Override
     public void onEnable() {
@@ -79,6 +82,7 @@ public final class InventoryShare extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "인벤토리 공유 플러그인 by." + ChatColor.GREEN + "sugar_tree"));
         invPatch(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
@@ -95,11 +99,11 @@ public final class InventoryShare extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onAdvancement(PlayerAdvancementDoneEvent event) {
+        if (!(advlist.contains(event.getAdvancement().getKey()))) {
+            advlist.add(event.getAdvancement().getKey());
+        }
         if (advancement) {
-            if (!(advlist.contains(event.getAdvancement().getKey()))) {
-                advlist.add(event.getAdvancement().getKey());
-                AdvancementPatch(event.getPlayer());
-            }
+            AdvancementPatch(event.getPlayer());
         }
     }
 

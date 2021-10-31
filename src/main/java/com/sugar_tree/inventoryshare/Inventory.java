@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 the-sugar-tree
+ * Copyright (c) 2021 the-sugar-tree
  *
  *  Licensed under the General Public License, Version 3.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import java.util.Map;
 import static com.sugar_tree.inventoryshare.InventoryShare.*;
 
 public class Inventory {
-    final static Plugin plugin = getPlugin(InventoryShare.class);
+    private final static Plugin plugin = getPlugin(InventoryShare.class);
 
     private static final NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
     private static final NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);

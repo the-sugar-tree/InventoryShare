@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 the-sugar-tree
+ * Copyright (c) 2021 the-sugar-tree
  *
  *  Licensed under the General Public License, Version 3.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,17 +21,18 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sugar_tree.inventoryshare.Inventory.load;
 import static com.sugar_tree.inventoryshare.InventoryShare.*;
 
 public class command implements TabExecutor {
+
+    private final static Plugin plugin = getPlugin(InventoryShare.class);
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -101,7 +102,8 @@ public class command implements TabExecutor {
                     }
                     else if (args[0].equalsIgnoreCase("reload")) {
                         if (args.length == 1) {
-                            load();
+                            if (plugin.getConfig().contains("advancement")) advancement = plugin.getConfig().getBoolean("advancement");
+                            if (plugin.getConfig().contains("AnnounceDeath")) AnnounceDeath = plugin.getConfig().getBoolean("AnnounceDeath");
                             sender.sendMessage(PREFIX + ChatColor.GREEN + "Config 파일이 새로고침 되었습니다!");
                         }
                         else {
