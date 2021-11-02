@@ -1,7 +1,10 @@
 # 인벤토리 공유 플러그인
 
-[![Download](https://img.shields.io/badge/플러그인%20다운로드-클릭-gold)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)   
+---
 
+[![Download](https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)
+
+---
 [![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
 [![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/1.1)
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total)](https://github.com/the-sugar-tree/InventoryShare/releases)
@@ -10,12 +13,13 @@
 [![Java](https://img.shields.io/badge/java-16-ED8B00.svg?logo=java)](https://www.azul.com/)
 [![Gradle](https://img.shields.io/badge/gradle-7.2-02303A.svg?logo=gradle)](https://gradle.org)
 
--------------------------------------------------------------------------
+---
 
+###추가 안내
 유튜브에 사용하실분은 제 깃허브 링크 [ https://github.com/the-sugar-tree/InventoryShare ] 를 설명란에 추가해주세요.   
 (가능하면 언급도 해주시면 감사하겠습니다.)
 
--------------------------------------------------------------------------
+---
 
 ## 마인크래프트 버젼
 ### Native Minecraft Version
