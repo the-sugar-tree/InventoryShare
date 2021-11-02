@@ -3,6 +3,13 @@
 ---
 
 [![Download](https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)
+[![Download](https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)
+[![Download](https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)
+[![Download](https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)   
+[![Download](https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)
+[![Download](https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)
+[![Download](https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)
+[![Download](https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)
 
 ---
 [![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
