@@ -21,18 +21,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sugar_tree.inventoryshare.Inventory.plugin;
 import static com.sugar_tree.inventoryshare.InventoryShare.*;
 
 public class command implements TabExecutor {
-
-    private final static Plugin plugin = getPlugin(InventoryShare.class);
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {

@@ -35,7 +35,7 @@ import java.util.Map;
 import static com.sugar_tree.inventoryshare.InventoryShare.*;
 
 public class Inventory {
-    private final static Plugin plugin = getPlugin(InventoryShare.class);
+    final static Plugin plugin = getPlugin(InventoryShare.class);
 
     private static final NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
     private static final NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
@@ -94,7 +94,7 @@ public class Inventory {
         saveConfigs();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored", "ConstantConditions"})
     public static void load() {
         var itemslist = invconfig.getMapList("items");
         for (int i = 0; i <= itemslist.size(); i++) {

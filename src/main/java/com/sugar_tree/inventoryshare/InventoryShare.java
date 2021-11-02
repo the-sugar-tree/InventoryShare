@@ -17,7 +17,6 @@
 package com.sugar_tree.inventoryshare;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -31,7 +30,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.WorldSaveEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -55,8 +53,7 @@ public final class InventoryShare extends JavaPlugin implements Listener {
 
     public static List<NamespacedKey> advlist = new ArrayList<>();
 
-    private final static Plugin plugin = getPlugin(InventoryShare.class);
-
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
         invfile = new File(getDataFolder(), "inventory.yml");
@@ -116,6 +113,7 @@ public final class InventoryShare extends JavaPlugin implements Listener {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void AdvancementPatch(Player player) {
         if (advancement) {
             Iterator<Advancement> serveradvancements = Bukkit.getServer().advancementIterator();
