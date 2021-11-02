@@ -2,9 +2,7 @@
 
 [![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
 [![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)
-[![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)
-
-
+[![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total)](https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar)   
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![Java](https://img.shields.io/badge/java-16-ED8B00.svg?logo=java)](https://www.azul.com/)
 [![Gradle](https://img.shields.io/badge/gradle-7.2-02303A.svg?logo=gradle)](https://gradle.org)
