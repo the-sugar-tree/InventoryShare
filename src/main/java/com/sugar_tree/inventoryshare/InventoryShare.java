@@ -69,7 +69,7 @@ public final class InventoryShare extends JavaPlugin implements Listener {
             invPatch(player);
             AdvancementPatch(player);
         }
-        getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "인벤토리 공유 플러그인 by." + ChatColor.GREEN + "sugar_tree");
+        getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "Enabled 인벤토리 공유 플러그인 by. " + ChatColor.GREEN + "sugar_tree");
     }
 
     @Override
@@ -79,7 +79,7 @@ public final class InventoryShare extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "인벤토리 공유 플러그인 by." + ChatColor.GREEN + "sugar_tree"));
+        event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "This server is using 인벤토리 공유 플러그인 by." + ChatColor.GREEN + "sugar_tree"));
         invPatch(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }

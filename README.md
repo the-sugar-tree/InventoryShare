@@ -4,9 +4,9 @@
 [Youtube](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
 
 ## 마인크래프트 버젼
-###개발버젼
-- 1.17~1.17.1
-###테스트된 버젼
+### 개발버젼
+- 1.17~1.17.1   
+### 테스트된 버젼
 - 안해봄
 
 ## 주의사항
