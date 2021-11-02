@@ -15,7 +15,7 @@
 
 ---
 
-###추가 안내
+### 추가 안내
 유튜브에 사용하실분은 제 깃허브 링크 [ https://github.com/the-sugar-tree/InventoryShare ] 를 설명란에 추가해주세요.   
 (가능하면 언급도 해주시면 감사하겠습니다.)
 
