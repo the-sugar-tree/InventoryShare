@@ -22,7 +22,12 @@
 
 ### 추가 안내
 유튜브에 사용하실분은 제 깃허브 링크 [ https://github.com/the-sugar-tree/InventoryShare ] 를 설명란에 추가해주세요.   
-(가능하면 언급도 해주시면 감사하겠습니다.)
+(가능하면 언급도 해주시면 감사하겠습니다.)   
+
+https://www.koreaminecraft.net/plugins/2902818   
+https://blog.naver.com/sugar-tree/222556850608   
+
+위 게시물 및 현 깃허브 주소 이외의 다른 사이트에서 배포를 하고 있다면<sugar_tree@outlook.kr>로 알려주시면 감사하겠습니다.
 
 ---
 
@@ -38,8 +43,13 @@
 
 ## 명령어
 - /inventoryshare advancement (발전과제 공유설정을 확인합니다. 초기값 true)
-- /inventoryshare advancement [true|false] (발전과제 공유설정을 활성화/비활성화 합니다.)
+- /inventoryshare advancement \[true|false] (발전과제 공유설정을 활성화/비활성화 합니다.)
 - /inventoryshare AnnounceDeath (죽었을때 좌표가 뜨는지 확인합니다. 초기값 false)
-- /inventoryshare AnnounceDeath [true|false] (죽었을때 좌표가 뜨는것을 활성화/비활성화 합니다.)
+- /inventoryshare AnnounceDeath \[true|false] (죽었을때 좌표가 뜨는것을 활성화/비활성화 합니다.)
+
+## License / 라이센스
+
+이 프로젝트는 \[GNU General Public License v3.0] 라이센스가 부여되어 있습니다. 자세한 내용은 [LICENSE](https://github.com/the-sugar-tree/InventoryShare/blob/master/LICENSE.md) 파일을 참고하세요.
+
 
 [![Video Label](http://img.youtube.com/vi/PI6eTCOs-x4/0.jpg)](https://www.youtube.com/watch?v=PI6eTCOs-x4)
