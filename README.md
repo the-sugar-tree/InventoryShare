@@ -1,6 +1,9 @@
 # 인벤토리 공유 플러그인
 
-**먼저 README파일을 다 읽어주세요!**
+<span style="color:red">
+    <b>먼저 README파일(아래)를 다 읽어주세요!!!</b><br />
+    <b>읽어주세요 제발...</b>
+</span>
 
 ---
 <p align="center">
