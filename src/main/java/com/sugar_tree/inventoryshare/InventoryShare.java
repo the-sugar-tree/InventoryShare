@@ -5,7 +5,7 @@
  *  you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * https://opensource.org/licenses/gpl-3.0
+ * https://opensource.org/licenses/lgpl-3.0.html
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,7 @@
 package com.sugar_tree.inventoryshare;
 
 import net.kyori.adventure.text.Component;
+import net.minecraft.world.entity.player.PlayerInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -33,9 +34,7 @@ import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static com.sugar_tree.inventoryshare.Inventory.*;
 public final class InventoryShare extends JavaPlugin implements Listener {
@@ -53,6 +52,8 @@ public final class InventoryShare extends JavaPlugin implements Listener {
 
     public static List<NamespacedKey> advlist = new ArrayList<>();
 
+    public static Map<UUID, PlayerInventory> invList = new HashMap<>();
+
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
@@ -66,32 +67,46 @@ public final class InventoryShare extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(this, this);
         load();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            invPatch(player);
-            AdvancementPatch(player);
+            if (inventory) invApply(player);
+            getServer().getScheduler().runTaskLater(this, () -> AdvancementPatch(player), 1);
         }
-        getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "Enabled 인벤토리 공유 플러그인 by. " + ChatColor.GREEN + "sugar_tree");
+        getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "인벤토리 공유 플러그인 by. " + ChatColor.GREEN + "sugar_tree");
     }
 
     @Override
     public void onDisable() {
+        for (UUID puuid : invList.keySet()) {
+            Player p = (Player) Bukkit.getOfflinePlayer(puuid);
+            invDisApply(p);
+        }
         save();
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "This server is using 인벤토리 공유 플러그인 by." + ChatColor.GREEN + "sugar_tree"));
-        invPatch(event.getPlayer());
+        if (inventory) invApply(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        invDisApply(event.getPlayer());
         save();
     }
 
     @EventHandler
     public void onWorldSave(WorldSaveEvent event){
         save();
+        if (inventory) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                invDisApply(p);
+            }
+            Bukkit.savePlayers();
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                invApply(p);
+            }
+        }
     }
 
     @EventHandler

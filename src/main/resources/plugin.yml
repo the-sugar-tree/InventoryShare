@@ -6,4 +6,7 @@ api-version: 1.17
 authors: [ sugar_tree ]
 commands:
   inventoryshare:
-    usage: /inventoryshare <advancement|DeathAnnounce|reload> [true|false]
+    usage: /inventoryshare <inventory|advancement|AnnounceDeath|reload> [true|false]
+    description: 콘피그 설정
+    aliases:
+      - is

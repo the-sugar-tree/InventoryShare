@@ -5,7 +5,7 @@
  *  you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * https://opensource.org/licenses/gpl-3.0
+ * https://opensource.org/licenses/lgpl-3.0.html
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,6 +26,7 @@ import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -43,15 +44,56 @@ public class Inventory {
 
     private static final List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
 
-    public static void invPatch(Player p) {
-        if (inventory) {
-            EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-            PlayerInventory playerInventory = entityPlayer.getInventory();
+    public static void invApply(@NotNull Player p) {
+        PlayerInventory pinv = new PlayerInventory(null);
+        try {
+            setField(pinv, "h", ((CraftPlayer) p).getHandle().getInventory().h);
+            setField(pinv, "i", ((CraftPlayer) p).getHandle().getInventory().i);
+            setField(pinv, "j", ((CraftPlayer) p).getHandle().getInventory().j);
+            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().getInventory().h,((CraftPlayer) p).getHandle().getInventory().i, ((CraftPlayer) p).getHandle().getInventory().j));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        invList.put(p.getUniqueId(), pinv);
+        EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
+        PlayerInventory playerInventory = entityPlayer.getInventory();
+        try {
+            setField(playerInventory, "h", items);
+            setField(playerInventory, "i", armor);
+            setField(playerInventory, "j", extraSlots);
+            setField(playerInventory, "n", contents);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void invDisApply(@NotNull Player p) {
+        EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
+        PlayerInventory playerInventory = entityPlayer.getInventory();
+        if (invList.containsKey(entityPlayer.getUniqueID())) {
             try {
-                setField(playerInventory, "h", items);
-                setField(playerInventory, "i", armor);
-                setField(playerInventory, "j", extraSlots);
-                setField(playerInventory, "n", contents);
+                NonNullList<ItemStack> items1 = invList.get(entityPlayer.getUniqueID()).h;
+                NonNullList<ItemStack> armor1 = invList.get(entityPlayer.getUniqueID()).i;
+                NonNullList<ItemStack> extraSlots1 = invList.get(entityPlayer.getUniqueID()).j;
+                List<NonNullList<ItemStack>> contents1 = ImmutableList.of(items1, armor1, extraSlots1);
+                setField(playerInventory, "h", items1);
+                setField(playerInventory, "i", armor1);
+                setField(playerInventory, "j", extraSlots1);
+                setField(playerInventory, "n", contents1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            // 사용될 일이 없지만, 혹시 모른 버그 방지
+            try {
+                NonNullList<ItemStack> items1 = NonNullList.a(36, ItemStack.b);
+                NonNullList<ItemStack> armor1 = NonNullList.a(36, ItemStack.b);
+                NonNullList<ItemStack> extraSlots1 = NonNullList.a(36, ItemStack.b);
+                List<NonNullList<ItemStack>> contents1 = ImmutableList.of(items1, armor1, extraSlots1);
+                setField(playerInventory, "h", items1);
+                setField(playerInventory, "i", armor1);
+                setField(playerInventory, "j", extraSlots1);
+                setField(playerInventory, "n", contents1);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -88,7 +130,7 @@ public class Inventory {
         }
         advconfig.set("advancement", alist);
 
-//        plugin.getConfig().set("inventory", inventory);
+        plugin.getConfig().set("inventory", inventory);
         plugin.getConfig().set("advancement", advancement);
         plugin.getConfig().set("AnnounceDeath", AnnounceDeath);
         saveConfigs();
@@ -129,10 +171,9 @@ public class Inventory {
             advlist.add(plugin.getServer().getAdvancement(NamespacedKey.fromString(alist.get(i))).getKey());
         }
 
-//        if (plugin.getConfig().contains("inventory")) {
-//            inventory = plugin.getConfig().getBoolean("inventory");
-//        }
-        inventory = true;
+        if (plugin.getConfig().contains("inventory")) {
+            inventory = plugin.getConfig().getBoolean("inventory");
+        }
         if (plugin.getConfig().contains("advancement")) {
             advancement = plugin.getConfig().getBoolean("advancement");
         }
