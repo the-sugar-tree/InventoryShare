@@ -7,7 +7,7 @@
 
 ---
 <p align="center">
-    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/1.1/InventoryShare-1.1.jar">
+    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v1.1/InventoryShare-1.1.jar">
         <img src="https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb" height="40" width="260">
     </a>
 </p>
