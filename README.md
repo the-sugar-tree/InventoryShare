@@ -45,6 +45,8 @@ https://blog.naver.com/sugar-tree/222556850608
 **반드시 페이퍼 서버에서 사용해주세요!**
 
 ## 명령어
+- /inventoryshare inventory (인벤토리 공유설정을 확인합니다. 초기값 true)
+- /inventoryshare inventory \[true|false] (인벤토리 공유설정을 활성화/비활성화 합니다.)
 - /inventoryshare advancement (발전과제 공유설정을 확인합니다. 초기값 true)
 - /inventoryshare advancement \[true|false] (발전과제 공유설정을 활성화/비활성화 합니다.)
 - /inventoryshare AnnounceDeath (죽었을때 좌표가 뜨는지 확인합니다. 초기값 false)
