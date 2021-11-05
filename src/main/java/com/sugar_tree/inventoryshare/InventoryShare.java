@@ -32,7 +32,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
@@ -77,7 +76,7 @@ public final class InventoryShare extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         for (UUID puuid : invList.keySet()) {
-            Player p = (Player) Bukkit.getOfflinePlayer(puuid);
+            Player p = (Player) getServer().getOfflinePlayer(puuid);
             invDisApply(p);
         }
         save();
@@ -102,9 +101,7 @@ public final class InventoryShare extends JavaPlugin implements Listener {
         if (inventory) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 invDisApply(p);
-            }
-            Bukkit.savePlayers();
-            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.saveData();
                 invApply(p);
             }
         }

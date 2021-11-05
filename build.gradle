@@ -10,7 +10,7 @@ configurations {
 }
 
 group = 'com.sugar_tree'
-version = '1.3'
+version = '1.2.1'
 
 sourceCompatibility = '16'
 targetCompatibility = '16'
