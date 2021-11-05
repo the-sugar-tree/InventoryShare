@@ -32,6 +32,8 @@ https://blog.naver.com/sugar-tree/222556850608
 
 위 게시물 및 현 깃허브 주소 이외의 다른 사이트에서 배포를 하고 있다면<sugar_tree@outlook.kr>로 알려주시면 감사하겠습니다.
 
+가끔 \[Server thread/WARN]: A manual (plugin-induced) save has been detected while server is configured to auto-save. This may affect performance. 이렇게 뜨는데 무시하셔도 좋습니다! :D
+
 ---
 
 ## 마인크래프트 버젼

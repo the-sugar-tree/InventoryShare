@@ -99,6 +99,13 @@ public class Inventory {
             }
         }
     }
+    /**
+     * @param obj Object which you want to change field
+     * @param name Field name
+     * @param value Value to change field
+     * @throws NoSuchFieldException if a field with the specified name is not found.
+     * @throws IllegalAccessException if this Field object is enforcing Java language access control and the underlying field is inaccessible or final; or if this Field object has no write access.
+     */
     private static void setField(Object obj, String name, Object value) throws NoSuchFieldException, IllegalAccessException {
         Field field = obj.getClass().getDeclaredField(name);
         field.setAccessible(true);

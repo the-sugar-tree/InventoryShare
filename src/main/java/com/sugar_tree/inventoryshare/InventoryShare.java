@@ -32,6 +32,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
@@ -70,7 +71,7 @@ public final class InventoryShare extends JavaPlugin implements Listener {
             if (inventory) invApply(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementPatch(player), 1);
         }
-        getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "인벤토리 공유 플러그인 by. " + ChatColor.GREEN + "sugar_tree");
+        getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"인벤토리 공유 플러그인\" by. " + ChatColor.GREEN + "sugar_tree");
     }
 
     @Override
@@ -84,7 +85,7 @@ public final class InventoryShare extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "This server is using 인벤토리 공유 플러그인 by." + ChatColor.GREEN + "sugar_tree"));
+        event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree"));
         if (inventory) invApply(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
