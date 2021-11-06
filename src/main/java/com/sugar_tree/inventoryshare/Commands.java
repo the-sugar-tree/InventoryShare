@@ -31,7 +31,7 @@ import java.util.List;
 import static com.sugar_tree.inventoryshare.Inventory.*;
 import static com.sugar_tree.inventoryshare.InventoryShare.*;
 
-public class command implements TabExecutor {
+public class Commands implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {

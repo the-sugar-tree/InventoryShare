@@ -36,6 +36,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.*;
 
+import static com.sugar_tree.inventoryshare.Advancement.AdvancementPatch;
 import static com.sugar_tree.inventoryshare.Inventory.*;
 public final class InventoryShare extends JavaPlugin implements Listener {
 
@@ -62,9 +63,9 @@ public final class InventoryShare extends JavaPlugin implements Listener {
         invconfig = YamlConfiguration.loadConfiguration(invfile);
         advconfig = YamlConfiguration.loadConfiguration(advfile);
         saveDefaultConfigs();
-        getCommand("inventoryshare").setExecutor(new command());
-        getCommand("inventoryshare").setTabCompleter(new command());
-        Bukkit.getPluginManager().registerEvents(this, this);
+        getCommand("inventoryshare").setExecutor(new Commands());
+        getCommand("inventoryshare").setTabCompleter(new Commands());
+        Bukkit.getPluginManager().registerEvents(new Listeners(), this);
         load();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (inventory) invApply(player);
@@ -82,76 +83,6 @@ public final class InventoryShare extends JavaPlugin implements Listener {
         save();
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree"));
-        if (inventory) invApply(event.getPlayer());
-        AdvancementPatch(event.getPlayer());
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        invDisApply(event.getPlayer());
-        save();
-    }
-
-    @EventHandler
-    public void onWorldSave(WorldSaveEvent event){
-        save();
-        if (inventory) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                invDisApply(p);
-                p.saveData();
-                invApply(p);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onAdvancement(PlayerAdvancementDoneEvent event) {
-        if (!(advlist.contains(event.getAdvancement().getKey()))) {
-            advlist.add(event.getAdvancement().getKey());
-        }
-        if (advancement) {
-            AdvancementPatch(event.getPlayer());
-        }
-    }
-
-    @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        if (AnnounceDeath) {
-            Bukkit.broadcast(Component.text(PREFIX + ChatColor.RED + event.getEntity().getName() + "(이)가 [" + event.getEntity().getLocation().getWorld().getKey().getKey() + "] x: "
-                    + event.getEntity().getLocation().getBlockX() + ", y: " + event.getEntity().getLocation().getBlockY() + ", z: " + event.getEntity().getLocation().getBlockZ()
-                    + "에서 사망했습니다."));
-        }
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private void AdvancementPatch(Player player) {
-        if (advancement) {
-            Iterator<Advancement> serveradvancements = Bukkit.getServer().advancementIterator();
-            while (serveradvancements.hasNext()) {
-                AdvancementProgress progress = player.getAdvancementProgress(serveradvancements.next());
-                if (progress.isDone()) {
-                    if (!(advlist.contains(progress.getAdvancement().getKey()))) {
-                        advlist.add(progress.getAdvancement().getKey());
-                    }
-                }
-            }
-            for (NamespacedKey namespacedKey : advlist) {
-                Advancement adv = getServer().getAdvancement(namespacedKey);
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (!(p.getAdvancementProgress(adv).isDone())) {
-                        AdvancementProgress progress = p.getAdvancementProgress(adv);
-                        List<String> crl = new ArrayList<>(progress.getRemainingCriteria());
-                        for (String cr : crl) {
-                            progress.awardCriteria(cr);
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     private void saveDefaultConfigs() {
         saveDefaultConfig();
