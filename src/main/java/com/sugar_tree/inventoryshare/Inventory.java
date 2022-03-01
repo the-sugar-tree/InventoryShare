@@ -22,8 +22,8 @@ import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -47,16 +47,16 @@ public class Inventory {
     public static void invApply(@NotNull Player p) {
         PlayerInventory pinv = new PlayerInventory(null);
         try {
-            setField(pinv, "h", ((CraftPlayer) p).getHandle().getInventory().h);
-            setField(pinv, "i", ((CraftPlayer) p).getHandle().getInventory().i);
-            setField(pinv, "j", ((CraftPlayer) p).getHandle().getInventory().j);
-            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().getInventory().h,((CraftPlayer) p).getHandle().getInventory().i, ((CraftPlayer) p).getHandle().getInventory().j));
+            setField(pinv, "h", ((CraftPlayer) p).getHandle().fq().h);
+            setField(pinv, "i", ((CraftPlayer) p).getHandle().fq().i);
+            setField(pinv, "j", ((CraftPlayer) p).getHandle().fq().j);
+            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().fq().h,((CraftPlayer) p).getHandle().fq().i, ((CraftPlayer) p).getHandle().fq().j));
         } catch (Exception e) {
             e.printStackTrace();
         }
         invList.put(p.getUniqueId(), pinv);
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.getInventory();
+        PlayerInventory playerInventory = entityPlayer.fq();
         try {
             setField(playerInventory, "h", items);
             setField(playerInventory, "i", armor);
@@ -68,12 +68,12 @@ public class Inventory {
     }
     public static void invDisApply(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.getInventory();
-        if (invList.containsKey(entityPlayer.getUniqueID())) {
+        PlayerInventory playerInventory = entityPlayer.fq();
+        if (invList.containsKey(entityPlayer.fq())) {
             try {
-                NonNullList<ItemStack> items1 = invList.get(entityPlayer.getUniqueID()).h;
-                NonNullList<ItemStack> armor1 = invList.get(entityPlayer.getUniqueID()).i;
-                NonNullList<ItemStack> extraSlots1 = invList.get(entityPlayer.getUniqueID()).j;
+                NonNullList<ItemStack> items1 = invList.get(entityPlayer.cm()).h;
+                NonNullList<ItemStack> armor1 = invList.get(entityPlayer.cm()).i;
+                NonNullList<ItemStack> extraSlots1 = invList.get(entityPlayer.cm()).j;
                 List<NonNullList<ItemStack>> contents1 = ImmutableList.of(items1, armor1, extraSlots1);
                 setField(playerInventory, "h", items1);
                 setField(playerInventory, "i", armor1);
