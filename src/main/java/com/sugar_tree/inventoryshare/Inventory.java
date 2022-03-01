@@ -66,6 +66,8 @@ public class Inventory {
             e.printStackTrace();
         }
     }
+
+    @SuppressWarnings("SuspiciousMethodCalls")
     public static void invDisApply(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.fq();
