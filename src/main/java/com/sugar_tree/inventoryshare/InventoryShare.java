@@ -16,6 +16,7 @@
 
 package com.sugar_tree.inventoryshare;
 
+import net.kyori.adventure.text.Component;
 import net.minecraft.world.entity.player.PlayerInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
