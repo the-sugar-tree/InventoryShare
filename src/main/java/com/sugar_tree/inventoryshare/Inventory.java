@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class Inventory {
 
     private static final List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
 
+    private static final Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
     public static void invApply(@NotNull Player p) {
         PlayerInventory pinv = new PlayerInventory(null);
         try {
@@ -100,7 +102,59 @@ public class Inventory {
                 e.printStackTrace();
             }
         }
+        invList.remove(entityPlayer);
     }
+
+    public static void invApply(@NotNull Player p, String teamName) {
+        if (!(teaminventory)) {
+            invApply(p);
+            return;
+        }
+        if (!(/*팀이 있는지 확인*/)) {
+            return;
+        }
+        NonNullList<ItemStack> itemsT;
+        NonNullList<ItemStack> armorT;
+        NonNullList<ItemStack> extraSlotsT;
+        if (!InventoryList.containsKey(teamName)) {
+            Map<String, NonNullList<ItemStack>> map = new HashMap<>();
+            itemsT = NonNullList.a(36, ItemStack.b);
+            armorT = NonNullList.a(4, ItemStack.b);
+            extraSlotsT = NonNullList.a(1, ItemStack.b);
+            map.put("items", itemsT);
+            map.put("armor", armorT);
+            map.put("extraSlots", extraSlotsT);
+            InventoryList.put(teamName, map);
+        }
+        else {
+            Map<String, NonNullList<ItemStack>> map = InventoryList.get(teamName);
+            itemsT = map.get("items");
+            armorT = map.get("armor");
+            extraSlotsT = map.get("extraSlots");
+        }
+        List<NonNullList<ItemStack>> contentsT = ImmutableList.of(itemsT, armorT, extraSlotsT);
+        PlayerInventory pinv = new PlayerInventory(null);
+        try {
+            setField(pinv, "h", ((CraftPlayer) p).getHandle().fq().h);
+            setField(pinv, "i", ((CraftPlayer) p).getHandle().fq().i);
+            setField(pinv, "j", ((CraftPlayer) p).getHandle().fq().j);
+            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().fq().h,((CraftPlayer) p).getHandle().fq().i, ((CraftPlayer) p).getHandle().fq().j));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        invList.put(p.getUniqueId(), pinv);
+        EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
+        PlayerInventory playerInventory = entityPlayer.fq();
+        try {
+            setField(playerInventory, "h", itemsT);
+            setField(playerInventory, "i", armorT);
+            setField(playerInventory, "j", extraSlotsT);
+            setField(playerInventory, "n", contentsT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * @param obj Object which you want to change field
      * @param name Field name

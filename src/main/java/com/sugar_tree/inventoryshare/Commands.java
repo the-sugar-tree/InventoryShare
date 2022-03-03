@@ -47,7 +47,7 @@ public class Commands implements TabExecutor {
                                     }
                                 }
                                 inventory = true;
-                                sender.sendMessage(PREFIX + ChatColor.YELLOW + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.YELLOW + "로 설정되었습니다.");
+                                sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
                             }
                             else if (args[1].equalsIgnoreCase("false")) {
                                 if (inventory) {
@@ -56,51 +56,51 @@ public class Commands implements TabExecutor {
                                     }
                                 }
                                 inventory = false;
-                                sender.sendMessage(PREFIX + ChatColor.YELLOW + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.YELLOW + "로 설정되었습니다.");
+                                sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
                             }
                             else {
-                                sender.sendMessage(PREFIX + ChatColor.RED + "제대로 입력해주세요! " + command.getUsage());
+                                sender.sendMessage(usageMessage);
                             }
                         }
                         else {
-                            sender.sendMessage(PREFIX + ChatColor.YELLOW + "인벤토리 공유: " + ChatColor.GREEN + inventory);
+                            sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory);
                         }
                     }
                     else if (args[0].equalsIgnoreCase("advancement")) {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("true")) {
                                 advancement = true;
-                                sender.sendMessage(PREFIX + ChatColor.YELLOW + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.YELLOW + "로 설정되었습니다.");
+                                sender.sendMessage(PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.GOLD + "로 설정되었습니다.");
 
                             }
                             else if (args[1].equalsIgnoreCase("false")) {
                                 advancement = false;
-                                sender.sendMessage(PREFIX + ChatColor.YELLOW + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.YELLOW + "로 설정되었습니다.");
+                                sender.sendMessage(PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.GOLD + "로 설정되었습니다.");
                             }
                             else {
-                                sender.sendMessage(PREFIX + ChatColor.RED + "제대로 입력해주세요! " + command.getUsage());
+                                sender.sendMessage(usageMessage);
                             }
                         }
                         else {
-                            sender.sendMessage(PREFIX + ChatColor.YELLOW + "발전과제 공유: " + ChatColor.GREEN + advancement);
+                            sender.sendMessage(PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement);
                         }
                     }
                     else if (args[0].equalsIgnoreCase("AnnounceDeath")) {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("true")) {
                                 AnnounceDeath = true;
-                                sender.sendMessage(PREFIX + ChatColor.YELLOW + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.YELLOW + "로 설정되었습니다.");
+                                sender.sendMessage(PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.GOLD + "로 설정되었습니다.");
                             }
                             else if (args[1].equalsIgnoreCase("false")) {
                                 AnnounceDeath = false;
-                                sender.sendMessage(PREFIX + ChatColor.YELLOW + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.YELLOW + "로 설정되었습니다.");
+                                sender.sendMessage(PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.GOLD + "로 설정되었습니다.");
                             }
                             else {
-                                sender.sendMessage(PREFIX + ChatColor.RED + "제대로 입력해주세요! " + command.getUsage());
+                                sender.sendMessage(usageMessage);
                             }
                         }
                         else {
-                            sender.sendMessage(PREFIX + ChatColor.YELLOW + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath);
+                            sender.sendMessage(PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath);
                         }
                     }
                     else if (args[0].equalsIgnoreCase("reload")) {
@@ -111,15 +111,15 @@ public class Commands implements TabExecutor {
                             sender.sendMessage(PREFIX + ChatColor.GREEN + "Config 파일이 새로고침 되었습니다!");
                         }
                         else {
-                            sender.sendMessage(PREFIX + ChatColor.RED + "제대로 입력해주세요! " + command.getUsage());
+                            sender.sendMessage(usageMessage);
                         }
                     }
                     else {
-                        sender.sendMessage(PREFIX + ChatColor.RED + "제대로 입력해주세요! " + command.getUsage());
+                        sender.sendMessage(usageMessage);
                     }
                 }
                 else {
-                    sender.sendMessage(PREFIX + ChatColor.RED + "제대로 입력해주세요! " + command.getUsage());
+                    sender.sendMessage(usageMessage);
                 }
             }
             else {
@@ -153,4 +153,14 @@ public class Commands implements TabExecutor {
         }
         return null;
     }
+
+    String usageMessage = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
+            PREFIX + ChatColor.GREEN + "커맨드 도움말\n" +
+            ChatColor.LIGHT_PURPLE + "(true나 false를 입력하지 않고 커맨드를 사용하면 현재 설정을 보여줍니다.)\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " inventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 인벤토리 공유 설정을 수정합니다.\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " advancement " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 발전과제 공유 설정을 수정합니다.\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " AnnounceDeath " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 사망시 좌표 공유 설정을 수정합니다.\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " reload" + ChatColor.YELLOW + " - config 파일을 새로고침 합니다.\n" +
+            ChatColor.DARK_AQUA + "-----------------------------------------------------"
+            ;
 }
