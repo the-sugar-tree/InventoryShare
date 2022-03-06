@@ -22,6 +22,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,20 +44,29 @@ public class Commands implements TabExecutor {
                             if (args[1].equalsIgnoreCase("true")) {
                                 if (!inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
+                                        savePlayerInventory(p);
+                                    }
+                                    inventory = true;
+                                    sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
+                                    for (Player p : Bukkit.getOnlinePlayers()) {
                                         invApply(p);
                                     }
                                 }
-                                inventory = true;
-                                sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
+                                else {
+                                    sender.sendMessage(PREFIX + ChatColor.RED + "이미 인벤토리 공유가 활성화 되어 있습니다!");
+                                }
                             }
                             else if (args[1].equalsIgnoreCase("false")) {
                                 if (inventory) {
+                                    inventory = false;
+                                    sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
                                     for (Player p : Bukkit.getOnlinePlayers()) {
                                         invDisApply(p);
                                     }
                                 }
-                                inventory = false;
-                                sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
+                                else {
+                                    sender.sendMessage(PREFIX + ChatColor.RED + "이미 인벤토리 공유가 비활성화 되어 있습니다!");
+                                }
                             }
                             else {
                                 sender.sendMessage(usageMessage);
@@ -103,11 +113,50 @@ public class Commands implements TabExecutor {
                             sender.sendMessage(PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath);
                         }
                     }
+                    else if (args[0].equalsIgnoreCase("teaminventory")) {
+                        if (args.length == 2) {
+                            if (args[1].equalsIgnoreCase("true")) {
+                                if (!teaminventory) {
+                                    teaminventory = true;
+                                    sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다.");
+                                    if (inventory) {
+                                        for (Player p : Bukkit.getOnlinePlayers()) {
+                                            invApply(p);
+                                        }
+                                    }
+                                }
+                                else {
+                                    sender.sendMessage(PREFIX + ChatColor.RED + "이미 팀 아이템 공유가 활성화 되어 있습니다!");
+                                }
+                            }
+                            else if (args[1].equalsIgnoreCase("false")) {
+                                if (teaminventory) {
+                                    teaminventory = false;
+                                    sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다.");
+                                    if (inventory) {
+                                        for (Player p : Bukkit.getOnlinePlayers()) {
+                                            invApply(p);
+                                        }
+                                    }
+                                }
+                                else {
+                                    sender.sendMessage(PREFIX + ChatColor.RED + "이미 팀 아이템 공유가 비활성화 되어 있습니다!");
+                                }
+                            }
+                            else {
+                                sender.sendMessage(usageMessage);
+                            }
+                        }
+                        else {
+                            sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory);
+                        }
+                    }
                     else if (args[0].equalsIgnoreCase("reload")) {
                         if (args.length == 1) {
                             if (plugin.getConfig().contains("inventory")) advancement = plugin.getConfig().getBoolean("inventory");
                             if (plugin.getConfig().contains("advancement")) advancement = plugin.getConfig().getBoolean("advancement");
                             if (plugin.getConfig().contains("AnnounceDeath")) AnnounceDeath = plugin.getConfig().getBoolean("AnnounceDeath");
+                            if (plugin.getConfig().contains("teaminventory")) AnnounceDeath = plugin.getConfig().getBoolean("teaminventory");
                             sender.sendMessage(PREFIX + ChatColor.GREEN + "Config 파일이 새로고침 되었습니다!");
                         }
                         else {
@@ -138,6 +187,7 @@ public class Commands implements TabExecutor {
                 arrayList.add("inventory");
                 arrayList.add("advancement");
                 arrayList.add("AnnounceDeath");
+                arrayList.add("teaminventory");
                 arrayList.add("reload");
                 return arrayList;
             }
@@ -160,6 +210,7 @@ public class Commands implements TabExecutor {
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " inventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 인벤토리 공유 설정을 수정합니다.\n" +
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " advancement " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 발전과제 공유 설정을 수정합니다.\n" +
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " AnnounceDeath " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 사망시 좌표 공유 설정을 수정합니다.\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " teaminventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 팀 아이템 공유 설정을 수정합니다.\n" +
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " reload" + ChatColor.YELLOW + " - config 파일을 새로고침 합니다.\n" +
             ChatColor.DARK_AQUA + "-----------------------------------------------------"
             ;

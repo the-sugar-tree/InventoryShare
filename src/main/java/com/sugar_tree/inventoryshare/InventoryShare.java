@@ -16,7 +16,6 @@
 
 package com.sugar_tree.inventoryshare;
 
-import net.kyori.adventure.text.Component;
 import net.minecraft.world.entity.player.PlayerInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,6 +31,8 @@ import java.util.*;
 
 import static com.sugar_tree.inventoryshare.Advancement.AdvancementPatch;
 import static com.sugar_tree.inventoryshare.Inventory.*;
+import static com.sugar_tree.inventoryshare.fileManager.*;
+
 public final class InventoryShare extends JavaPlugin implements Listener {
 
     public static boolean inventory = true;
@@ -45,6 +46,8 @@ public final class InventoryShare extends JavaPlugin implements Listener {
     private static File advfile;
     public static FileConfiguration invconfig;
     public static FileConfiguration advconfig;
+
+    public static Map<FileConfiguration, File> teamInvList = new HashMap<>();
 
     public static List<NamespacedKey> advlist = new ArrayList<>();
 
@@ -81,6 +84,7 @@ public final class InventoryShare extends JavaPlugin implements Listener {
     }
 
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void saveDefaultConfigs() {
         saveDefaultConfig();
         if (!(invfile.exists())) {
@@ -89,16 +93,18 @@ public final class InventoryShare extends JavaPlugin implements Listener {
         if (!(advfile.exists())) {
             saveResource("advancements.yml", false);
         }
+        if (!(new File(getDataFolder(), "\\teams")).exists()) {
+            (new File(getDataFolder(), "\\teams")).mkdir();
+        }
     }
 
     public static void saveConfigs() {
+        deleteWasteFiles();
         plugin.saveConfig();
-        try {
-            invconfig.save(invfile);
-            advconfig.save(advfile);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        try { invconfig.save(invfile); } catch (Exception e) { e.printStackTrace(); }
+        try { advconfig.save(advfile); } catch (Exception e) { e.printStackTrace(); }
+        for (FileConfiguration fileConfiguration : teamInvList.keySet()) {
+            try { fileConfiguration.save(teamInvList.get(fileConfiguration)); } catch (Exception e) { e.printStackTrace(); }
         }
     }
 }

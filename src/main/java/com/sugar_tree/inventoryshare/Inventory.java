@@ -21,15 +21,12 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
-import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,24 +36,15 @@ import static com.sugar_tree.inventoryshare.InventoryShare.*;
 public class Inventory {
     final static Plugin plugin = getPlugin(InventoryShare.class);
 
-    private static final NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
-    private static final NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
-    private static final NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
+    public static final NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
+    public static final NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
+    public static final NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
 
-    private static final List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
+    public static final List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
 
-    private static final Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
-    public static void invApply(@NotNull Player p) {
-        PlayerInventory pinv = new PlayerInventory(null);
-        try {
-            setField(pinv, "h", ((CraftPlayer) p).getHandle().fq().h);
-            setField(pinv, "i", ((CraftPlayer) p).getHandle().fq().i);
-            setField(pinv, "j", ((CraftPlayer) p).getHandle().fq().j);
-            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().fq().h,((CraftPlayer) p).getHandle().fq().i, ((CraftPlayer) p).getHandle().fq().j));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        invList.put(p.getUniqueId(), pinv);
+    public static final Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
+
+    public static void invApplyAll(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.fq();
         try {
@@ -73,7 +61,7 @@ public class Inventory {
     public static void invDisApply(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.fq();
-        if (invList.containsKey(entityPlayer.fq())) {
+        if (invList.containsKey(entityPlayer.cm())) {
             try {
                 NonNullList<ItemStack> items1 = invList.get(entityPlayer.cm()).h;
                 NonNullList<ItemStack> armor1 = invList.get(entityPlayer.cm()).i;
@@ -105,14 +93,17 @@ public class Inventory {
         invList.remove(entityPlayer);
     }
 
-    public static void invApply(@NotNull Player p, String teamName) {
+    @SuppressWarnings("ConstantConditions")
+    public static void invApply(@NotNull Player p) {
         if (!(teaminventory)) {
-            invApply(p);
+            invApplyAll(p);
             return;
         }
-        if (!(/*팀이 있는지 확인*/)) {
+        if (plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p) == null) {
+            invApplyAll(p);
             return;
         }
+        String teamName = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p).getName();
         NonNullList<ItemStack> itemsT;
         NonNullList<ItemStack> armorT;
         NonNullList<ItemStack> extraSlotsT;
@@ -133,16 +124,6 @@ public class Inventory {
             extraSlotsT = map.get("extraSlots");
         }
         List<NonNullList<ItemStack>> contentsT = ImmutableList.of(itemsT, armorT, extraSlotsT);
-        PlayerInventory pinv = new PlayerInventory(null);
-        try {
-            setField(pinv, "h", ((CraftPlayer) p).getHandle().fq().h);
-            setField(pinv, "i", ((CraftPlayer) p).getHandle().fq().i);
-            setField(pinv, "j", ((CraftPlayer) p).getHandle().fq().j);
-            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().fq().h,((CraftPlayer) p).getHandle().fq().i, ((CraftPlayer) p).getHandle().fq().j));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        invList.put(p.getUniqueId(), pinv);
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.fq();
         try {
@@ -153,6 +134,19 @@ public class Inventory {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void savePlayerInventory(@NotNull Player p) {
+        PlayerInventory pinv = new PlayerInventory(null);
+        try {
+            setField(pinv, "h", ((CraftPlayer) p).getHandle().fq().h);
+            setField(pinv, "i", ((CraftPlayer) p).getHandle().fq().i);
+            setField(pinv, "j", ((CraftPlayer) p).getHandle().fq().j);
+            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().fq().h,((CraftPlayer) p).getHandle().fq().i, ((CraftPlayer) p).getHandle().fq().j));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        invList.put(p.getUniqueId(), pinv);
     }
 
     /**
@@ -166,82 +160,5 @@ public class Inventory {
         Field field = obj.getClass().getDeclaredField(name);
         field.setAccessible(true);
         field.set(obj, value);
-    }
-
-    public static void save() {
-        List<Map<?, ?>> itemslist = new ArrayList<>();
-        for (ItemStack itemStack1 : items) {
-            itemslist.add(CraftItemStack.asCraftMirror(itemStack1).serialize());
-        }
-        invconfig.set("items", itemslist);
-
-        List<Map<?, ?>> armorlist = new ArrayList<>();
-        for (ItemStack itemStack2 : armor) {
-            armorlist.add(CraftItemStack.asCraftMirror(itemStack2).serialize());
-        }
-        invconfig.set("armor", armorlist);
-
-        List<Map<?, ?>> extraSlotsList = new ArrayList<>();
-        for (ItemStack itemStack3 : extraSlots) {
-            extraSlotsList.add(CraftItemStack.asCraftMirror(itemStack3).serialize());
-        }
-        invconfig.set("extraSlots", extraSlotsList);
-
-        List<String> alist = new ArrayList<>();
-        for (NamespacedKey namespacedKey : advlist) {
-            alist.add(namespacedKey.getKey());
-        }
-        advconfig.set("advancement", alist);
-
-        plugin.getConfig().set("inventory", inventory);
-        plugin.getConfig().set("advancement", advancement);
-        plugin.getConfig().set("AnnounceDeath", AnnounceDeath);
-        saveConfigs();
-    }
-
-    @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored", "ConstantConditions"})
-    public static void load() {
-        var itemslist = invconfig.getMapList("items");
-        for (int i = 0; i <= itemslist.size(); i++) {
-            try { itemslist.get(i); } catch (IndexOutOfBoundsException e) { break; }
-            if (itemslist.get(i).isEmpty()) {
-                continue;
-            }
-            items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
-        }
-
-        var armorlist = invconfig.getMapList("armor");
-        for (int i = 0; i <= armorlist.size(); i++) {
-            try { armorlist.get(i); } catch (IndexOutOfBoundsException e) { break; }
-            if (armorlist.get(i).isEmpty()) {
-                continue;
-            }
-            armor.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) armorlist.get(i))));
-        }
-
-        var extraSlotslist = invconfig.getMapList("extraSlots");
-        for (int i = 0; i <= extraSlotslist.size(); i++) {
-            try { extraSlotslist.get(i); } catch (IndexOutOfBoundsException e) { break; }
-            if (extraSlotslist.get(i).isEmpty()) {
-                continue;
-            }
-            extraSlots.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) extraSlotslist.get(i))));
-        }
-
-        var alist = advconfig.getStringList("advancement");
-        for (int i = 0; i <= alist.size(); i++) {
-            try { alist.get(i); } catch (IndexOutOfBoundsException e) { break; }
-            advlist.add(plugin.getServer().getAdvancement(NamespacedKey.fromString(alist.get(i))).getKey());
-        }
-
-        if (plugin.getConfig().contains("inventory")) {
-            inventory = plugin.getConfig().getBoolean("inventory");
-        }
-        if (plugin.getConfig().contains("advancement")) {
-            advancement = plugin.getConfig().getBoolean("advancement");
-        }
-        if (plugin.getConfig().contains("AnnounceDeath")) {
-            AnnounceDeath = plugin.getConfig().getBoolean("AnnounceDeath");
-        }
     }
 }

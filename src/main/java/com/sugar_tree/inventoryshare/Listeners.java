@@ -16,27 +16,36 @@
 
 package com.sugar_tree.inventoryshare;
 
+import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldSaveEvent;
+import org.bukkit.scoreboard.Team;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.sugar_tree.inventoryshare.Advancement.AdvancementPatch;
 import static com.sugar_tree.inventoryshare.Inventory.*;
 import static com.sugar_tree.inventoryshare.InventoryShare.*;
+import static com.sugar_tree.inventoryshare.fileManager.save;
 
 public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree"));
+        savePlayerInventory(event.getPlayer());
         if (inventory) invApply(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
@@ -75,6 +84,24 @@ public class Listeners implements Listener {
             Bukkit.broadcast(Component.text(PREFIX + ChatColor.RED + event.getEntity().getName() + "(이)가 [" + event.getEntity().getLocation().getWorld().getKey().getKey() + "] x: "
                     + event.getEntity().getLocation().getBlockX() + ", y: " + event.getEntity().getLocation().getBlockY() + ", z: " + event.getEntity().getLocation().getBlockZ()
                     + "에서 사망했습니다."));
+        }
+    }
+
+    Map<Player, Team> teamMap = new HashMap<>();
+    @EventHandler(priority = EventPriority.LOW)
+    public void onTick(ServerTickStartEvent event) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (teamMap.containsKey(p)) {
+                if (inventory) {
+                    if (teaminventory) {
+                        if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p))) {
+                            teamMap.put(p, Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
+                            invApply(p);
+                        }
+                    }
+                }
+            }
+            teamMap.put(p, Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
         }
     }
 }
