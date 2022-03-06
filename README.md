@@ -1,6 +1,4 @@
-# 인벤토리 공유 플러그인 (v1.3)
-현재 1.18 버젼에 오류가 있습니다.
-3/13 안으로 처리할테니 잠시만 기다려 주세요.
+# 인벤토리 공유 플러그인 (v1.4)
 
 <span style="color:red">
     <b>먼저 README파일(아래)를 다 읽어주세요!!!</b>
@@ -8,7 +6,7 @@
 
 ---
 <p align="center">
-    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v1.3/InventoryShare-1.3.jar">
+    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v1.4/InventoryShare-1.4.jar">
         <img src="https://img.shields.io/badge/플러그인%20다운로드(1.18)-클릭-bbbbbb" height="40" width="260">
     </a>
 </p>
@@ -20,7 +18,7 @@
 
 ---
 [![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
-[![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v1.3)
+[![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v1.4)
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total)](https://github.com/the-sugar-tree/InventoryShare/releases)
 [![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.18.*-green)](https://github.com/the-sugar-tree/InventoryShare)   
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare)](https://www.gnu.org/licenses/gpl-3.0.html)
@@ -42,13 +40,27 @@ https://blog.naver.com/sugar-tree/222556850608
 
 ## 마인크래프트 버젼
 ### Current Versions
-- 1.18.* (Release 1.3) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v1.3/InventoryShare-1.3.jar)]
+- 1.18.* (Release 1.4) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v1.4/InventoryShare-1.4.jar)]
 ### Old Versions
 - 1.17.* (Release 1.0~1.2.1) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v1.2.1/InventoryShare-1.2.1.jar)]
 
 ## 주의사항
 **이 플러그인은 페이퍼 기반입니다!**   
 **반드시 페이퍼 서버에서 사용해주세요!**
+
+## 도움말
+팀 공유기능을 사용하시려면 아래 커맨드를 활용해 팀을 정해주시고
+- /team add <팀 이름> 
+- /team join <팀 이름> \[닉네임]
+
+
+- /inventoryshare teaminventory true
+
+를 사용하여 팀과의 인벤토리를 공유 할 수 있습니다.  
+
+원래있던 인벤토리는 따로 저장되며, 팀에 배정되지 않았을 시 전체 인벤토리를 사용합니다.  
+팀 인벤토리 공유는 전체 인벤토리 공유가 활성화 되었을때만 활성화 되며 팀 인벤토리도 따로 저장됩니다.  
+그러나 페이퍼 서버의 한계로, 아무도 없는팀은 서버를 재시작할때 삭제되오니 이 점 참고 바랍니다.
 
 ## 명령어
 - /inventoryshare inventory (인벤토리 공유설정을 확인합니다. 초기값 true)
@@ -57,6 +69,8 @@ https://blog.naver.com/sugar-tree/222556850608
 - /inventoryshare advancement \[true|false] (발전과제 공유설정을 활성화/비활성화 합니다.)
 - /inventoryshare AnnounceDeath (죽었을때 좌표가 뜨는지 확인합니다. 초기값 false)
 - /inventoryshare AnnounceDeath \[true|false] (죽었을때 좌표가 뜨는것을 활성화/비활성화 합니다.)
+- /inventoryshare teaminventory (팀 인벤토리 공유설정을 확인합니다. 초기값 false)
+- /inventoryshare teaminventory \[true|false] (팀 인벤토리 공유설정을 활성화/비활성화 합니다.)
 
 ## License / 라이센스
 
