@@ -21,7 +21,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +46,7 @@ public class Inventory {
 
     public static void invApplyAll(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.fq();
+        PlayerInventory playerInventory = entityPlayer.fr();
         try {
             setField(playerInventory, "h", items);
             setField(playerInventory, "i", armor);
@@ -60,7 +60,7 @@ public class Inventory {
     @SuppressWarnings("SuspiciousMethodCalls")
     public static void invDisApply(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.fq();
+        PlayerInventory playerInventory = entityPlayer.fr();
         if (invList.containsKey(entityPlayer.cm())) {
             try {
                 NonNullList<ItemStack> items1 = invList.get(entityPlayer.cm()).h;
@@ -125,7 +125,7 @@ public class Inventory {
         }
         List<NonNullList<ItemStack>> contentsT = ImmutableList.of(itemsT, armorT, extraSlotsT);
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.fq();
+        PlayerInventory playerInventory = entityPlayer.fr();
         try {
             setField(playerInventory, "h", itemsT);
             setField(playerInventory, "i", armorT);
@@ -139,10 +139,10 @@ public class Inventory {
     public static void savePlayerInventory(@NotNull Player p) {
         PlayerInventory pinv = new PlayerInventory(null);
         try {
-            setField(pinv, "h", ((CraftPlayer) p).getHandle().fq().h);
-            setField(pinv, "i", ((CraftPlayer) p).getHandle().fq().i);
-            setField(pinv, "j", ((CraftPlayer) p).getHandle().fq().j);
-            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().fq().h,((CraftPlayer) p).getHandle().fq().i, ((CraftPlayer) p).getHandle().fq().j));
+            setField(pinv, "h", ((CraftPlayer) p).getHandle().fr().h);
+            setField(pinv, "i", ((CraftPlayer) p).getHandle().fr().i);
+            setField(pinv, "j", ((CraftPlayer) p).getHandle().fr().j);
+            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().fr().h,((CraftPlayer) p).getHandle().fr().i, ((CraftPlayer) p).getHandle().fr().j));
         } catch (Exception e) {
             e.printStackTrace();
         }
