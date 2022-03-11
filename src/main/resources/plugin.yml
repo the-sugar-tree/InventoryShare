@@ -1,5 +1,5 @@
 name: InventoryShare
-version: '1.4'
+version: '1.4.1'
 main: com.sugar_tree.inventoryshare.InventoryShare
 website: https://github.com/the-sugar-tree/InventoryShare
 api-version: 1.18
