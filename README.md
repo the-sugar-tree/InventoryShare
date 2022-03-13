@@ -1,4 +1,4 @@
-# 인벤토리 공유 플러그인 (v1.4.1)
+# 인벤토리 공유 플러그인 (v2.0-beta)
 
 <span style="color:red">
     <b>먼저 README파일(아래)를 다 읽어주세요!!!</b>
@@ -6,13 +6,8 @@
 
 ---
 <p align="center">
-    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v1.4.1/InventoryShare-1.4.1.jar">
-        <img src="https://img.shields.io/badge/플러그인%20다운로드(1.18.2)-클릭-bbbbbb" height="40" width="260">
-    </a>
-</p>
-<p align="center">
-    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v1.4/InventoryShare-1.4.jar">
-        <img src="https://img.shields.io/badge/플러그인%20다운로드(1.18.1)-클릭-bbbbbb" height="40" width="260">
+    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v2.0-beta/InventoryShare-2.0-beta.jar">
+        <img src="https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb" height="40" width="260">
     </a>
 </p>
 
@@ -20,7 +15,7 @@
 [![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
 [![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v1.4.1)
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total)](https://github.com/the-sugar-tree/InventoryShare/releases)
-[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.18.2-green)](https://github.com/the-sugar-tree/InventoryShare)   
+[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.17,%201.18-green)](https://github.com/the-sugar-tree/InventoryShare)   
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![Java](https://img.shields.io/badge/java-16,%2017-ED8B00.svg?logo=java)](https://www.azul.com/)
 [![Gradle](https://img.shields.io/badge/gradle-7.4.1-02303A.svg?logo=gradle)](https://gradle.org)
@@ -44,8 +39,7 @@ https://blog.naver.com/sugar-tree/222556850608
 
 ## 마인크래프트 버젼
 ### Current Versions
-- 1.18.2 (Release 1.4.1) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v1.4.1/InventoryShare-1.4.1.jar)]
-- 1.18.1 (Release 1.4) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v1.4/InventoryShare-1.4.jar)]
+- 1.17, 1.18 (Release 2.0-beta) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v2.0-beta/InventoryShare-2.0-beta.jar)]
 
 ## 주의사항
 **이 플러그인은 페이퍼 기반입니다!**   
