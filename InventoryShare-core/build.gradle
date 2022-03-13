@@ -5,10 +5,9 @@ configurations {
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
-    priority 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
-    compileOnly files("libs/spigot-1.18.2-R0.1-SNAPSHOT.jar")
     implementation project(':v1_18_R2')
     implementation project(':v1_18_R1')
+    implementation project(':v1_17_R1')
     implementation project(':InventoryShare-api')
 }
 

@@ -15,10 +15,9 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.v1_18_R1.Inventory_1_18_R1;
-import com.sugar_tree.inventoryshare.v1_18_R1.fileManager_1_18_R1;
-import com.sugar_tree.inventoryshare.v1_18_R2.Inventory_1_18_R2;
-import com.sugar_tree.inventoryshare.v1_18_R2.fileManager_1_18_R2;
+import com.sugar_tree.inventoryshare.v1_18_R2.*;
+import com.sugar_tree.inventoryshare.v1_18_R1.*;
+import com.sugar_tree.inventoryshare.v1_17_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -33,24 +32,37 @@ import static com.sugar_tree.inventoryshare.api.variables.*;
 
 public final class InventoryShare extends JavaPlugin {
     private static String sversion;
-    private boolean enable = true;
+    private boolean isSupportedVersion = true;
+    private boolean isPaper = false;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
-        enable = setupManager();
-        if (!enable) {
+        isSupportedVersion = checkVersion();
+        isPaper = checkPaper();
+        if (!isSupportedVersion) {
             this.getLogger().severe("This plugin doesn't support this version: " + sversion);
             this.setEnabled(false);
             return;
         }
-        if (sversion.equals("v1_18_R2")) {
-            InventoryClass = new Inventory_1_18_R2(this);
-            fileManagerClass = new fileManager_1_18_R2(this);
+        if (!isPaper) {
+            this.getLogger().severe("This plugin only supports Paper");
+            this.setEnabled(false);
+            return;
         }
-        else if (sversion.equals("v1_18_R1")) {
-            InventoryClass = new Inventory_1_18_R1(this);
-            fileManagerClass = new fileManager_1_18_R1(this);
+        switch (sversion) {
+            case "v1_18_R2" -> {
+                InventoryClass = new Inventory_1_18_R2(this);
+                fileManagerClass = new fileManager_1_18_R2(this);
+            }
+            case "v1_18_R1" -> {
+                InventoryClass = new Inventory_1_18_R1(this);
+                fileManagerClass = new fileManager_1_18_R1(this);
+            }
+            case "v1_17_R1" -> {
+                InventoryClass = new Inventory_1_17_R1(this);
+                fileManagerClass = new fileManager_1_17_R1(this);
+            }
         }
         invfile = new File(getDataFolder(), "inventory.yml");
         advfile = new File(getDataFolder(), "advancements.yml");
@@ -70,7 +82,8 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (!enable) return;
+        if (!isSupportedVersion) return;
+        if (!isPaper) return;
         for (UUID puuid : invList.keySet()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
@@ -80,16 +93,18 @@ public final class InventoryShare extends JavaPlugin {
         fileManagerClass.save();
     }
 
-    private boolean setupManager() {
+    private boolean checkVersion() {
         sversion = "N/A";
         try {
             sversion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         } catch (ArrayIndexOutOfBoundsException e) {
             return false;
         }
-        return sversion.equals("v1_18_R2") || sversion.equals("v1_18_R1");
+        return sversion.equals("v1_18_R2") || sversion.equals("v1_18_R1") || sversion.equals("v1_17_R1");
     }
-
+    private boolean checkPaper() {
+        return Bukkit.getVersion().contains("Paper");
+    }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void saveDefaultConfigs() {

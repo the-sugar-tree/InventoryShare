@@ -16,6 +16,7 @@
 package com.sugar_tree.inventoryshare.v1_18_R1;
 
 import com.sugar_tree.inventoryshare.api.fileManager;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
@@ -102,6 +103,10 @@ public class fileManager_1_18_R1 implements fileManager {
             try { itemslist.get(i); } catch (IndexOutOfBoundsException e) { break; }
             if (itemslist.get(i).isEmpty()) {
                 continue;
+            }
+            if (!((Map<String, Object>) itemslist.get(i)).get("v").equals(2865)) {
+                Bukkit.getLogger().severe("Newer version! Server downgrades are not supported!");
+                return;
             }
             items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
         }
