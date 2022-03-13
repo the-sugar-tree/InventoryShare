@@ -16,46 +16,44 @@
 
 package com.sugar_tree.inventoryshare;
 
-import net.minecraft.world.entity.player.PlayerInventory;
+import com.sugar_tree.inventoryshare.v1_18_R1.Inventory_1_18_R1;
+import com.sugar_tree.inventoryshare.v1_18_R1.fileManager_1_18_R1;
+import com.sugar_tree.inventoryshare.v1_18_R2.Inventory_1_18_R2;
+import com.sugar_tree.inventoryshare.v1_18_R2.fileManager_1_18_R2;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.*;
+import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.Advancement.AdvancementPatch;
-import static com.sugar_tree.inventoryshare.Inventory.*;
-import static com.sugar_tree.inventoryshare.fileManager.*;
+import static com.sugar_tree.inventoryshare.api.variables.*;
 
-public final class InventoryShare extends JavaPlugin implements Listener {
-
-    public static boolean inventory = true;
-    public static boolean advancement = true;
-    public static boolean AnnounceDeath = false;
-    public static boolean teaminventory = false;
-
-    public static final String PREFIX = ChatColor.LIGHT_PURPLE + "[" + ChatColor.AQUA + "InventoryShare" + ChatColor.LIGHT_PURPLE + "] " + ChatColor.RESET;
-
-    private static File invfile;
-    private static File advfile;
-    public static FileConfiguration invconfig;
-    public static FileConfiguration advconfig;
-
-    public static Map<FileConfiguration, File> teamInvList = new HashMap<>();
-
-    public static List<NamespacedKey> advlist = new ArrayList<>();
-
-    public static Map<UUID, PlayerInventory> invList = new HashMap<>();
+public final class InventoryShare extends JavaPlugin {
+    private static String sversion;
+    private boolean enable = true;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
+        enable = setupManager();
+        if (!enable) {
+            this.getLogger().severe("This plugin doesn't support this version: " + sversion);
+            this.setEnabled(false);
+            return;
+        }
+        if (sversion.equals("v1_18_R2")) {
+            Inventory = new Inventory_1_18_R2(this);
+            fileManager = new fileManager_1_18_R2(this);
+        }
+        else if (sversion.equals("v1_18_R1")) {
+            Inventory = new Inventory_1_18_R1(this);
+            fileManager = new fileManager_1_18_R1(this);
+        }
         invfile = new File(getDataFolder(), "inventory.yml");
         advfile = new File(getDataFolder(), "advancements.yml");
         invconfig = YamlConfiguration.loadConfiguration(invfile);
@@ -64,9 +62,9 @@ public final class InventoryShare extends JavaPlugin implements Listener {
         getCommand("inventoryshare").setExecutor(new Commands());
         getCommand("inventoryshare").setTabCompleter(new Commands());
         Bukkit.getPluginManager().registerEvents(new Listeners(), this);
-        load();
+        fileManager.load();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (inventory) invApply(player);
+            if (inventory) Inventory.invApply(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementPatch(player), 1);
         }
         getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"인벤토리 공유 플러그인\" by. " + ChatColor.GREEN + "sugar_tree");
@@ -74,13 +72,24 @@ public final class InventoryShare extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        if (!enable) return;
         for (UUID puuid : invList.keySet()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
-                invDisApply(p);
+                Inventory.invDisApply(p);
             }
         }
-        save();
+        fileManager.save();
+    }
+
+    private boolean setupManager() {
+        sversion = "N/A";
+        try {
+            sversion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
+        return sversion.equals("v1_18_R2") || sversion.equals("v1_18_R1");
     }
 
 
@@ -95,16 +104,6 @@ public final class InventoryShare extends JavaPlugin implements Listener {
         }
         if (!(new File(getDataFolder(), "\\teams")).exists()) {
             (new File(getDataFolder(), "\\teams")).mkdir();
-        }
-    }
-
-    public static void saveConfigs() {
-        deleteWasteFiles();
-        plugin.saveConfig();
-        try { invconfig.save(invfile); } catch (Exception e) { e.printStackTrace(); }
-        try { advconfig.save(advfile); } catch (Exception e) { e.printStackTrace(); }
-        for (FileConfiguration fileConfiguration : teamInvList.keySet()) {
-            try { fileConfiguration.save(teamInvList.get(fileConfiguration)); } catch (Exception e) { e.printStackTrace(); }
         }
     }
 }

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.sugar_tree.inventoryshare;
+package com.sugar_tree.inventoryshare.v1_18_R2;
 
 import com.google.common.collect.ImmutableList;
+import com.sugar_tree.inventoryshare.api.Inventory;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.player.PlayerInventory;
@@ -26,25 +27,28 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.sugar_tree.inventoryshare.InventoryShare.*;
+import static com.sugar_tree.inventoryshare.api.Inventory.setField;
+import static com.sugar_tree.inventoryshare.api.variables.*;
 
-public class Inventory {
-    final static Plugin plugin = getPlugin(InventoryShare.class);
+public class Inventory_1_18_R2 implements Inventory {
+    private final Plugin plugin;
+    public Inventory_1_18_R2(Plugin plugin) {
+        this.plugin = plugin;
+    }
 
-    public static final NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
-    public static final NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
-    public static final NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
+    public final NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
+    public final NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
+    public final NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
 
-    public static final List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
+    public final List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
 
-    public static final Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
+    public final Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
 
-    public static void invApplyAll(@NotNull Player p) {
+    public void invApplyAll(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.fr();
         try {
@@ -58,7 +62,7 @@ public class Inventory {
     }
 
     @SuppressWarnings("SuspiciousMethodCalls")
-    public static void invDisApply(@NotNull Player p) {
+    public void invDisApply(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.fr();
         if (invList.containsKey(entityPlayer.cm())) {
@@ -94,7 +98,7 @@ public class Inventory {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static void invApply(@NotNull Player p) {
+    public void invApply(@NotNull Player p) {
         if (!(teaminventory)) {
             invApplyAll(p);
             return;
@@ -136,7 +140,7 @@ public class Inventory {
         }
     }
 
-    public static void savePlayerInventory(@NotNull Player p) {
+    public void savePlayerInventory(@NotNull Player p) {
         PlayerInventory pinv = new PlayerInventory(null);
         try {
             setField(pinv, "h", ((CraftPlayer) p).getHandle().fr().h);
@@ -147,18 +151,5 @@ public class Inventory {
             e.printStackTrace();
         }
         invList.put(p.getUniqueId(), pinv);
-    }
-
-    /**
-     * @param obj Object which you want to change field
-     * @param name Field name
-     * @param value Value to change field
-     * @throws NoSuchFieldException if a field with the specified name is not found.
-     * @throws IllegalAccessException if this Field object is enforcing Java language access control and the underlying field is inaccessible or final; or if this Field object has no write access.
-     */
-    private static void setField(Object obj, String name, Object value) throws NoSuchFieldException, IllegalAccessException {
-        Field field = obj.getClass().getDeclaredField(name);
-        field.setAccessible(true);
-        field.set(obj, value);
     }
 }

@@ -1,12 +1,14 @@
-package com.sugar_tree.inventoryshare;
+package com.sugar_tree.inventoryshare.v1_18_R1;
 
+import com.sugar_tree.inventoryshare.api.fileManager;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
@@ -14,25 +16,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.sugar_tree.inventoryshare.Inventory.*;
-import static com.sugar_tree.inventoryshare.InventoryShare.*;
+import static com.sugar_tree.inventoryshare.api.variables.*;
 
-public class fileManager {
-    public static void save() {
+@SuppressWarnings("ClassCanBeRecord")
+public class fileManager_1_18_R1 implements fileManager {
+    private final Plugin plugin;
+    public fileManager_1_18_R1(Plugin plugin) {
+        this.plugin = plugin;
+    }
+
+    public void save() {
         List<Map<?, ?>> itemslist = new ArrayList<>();
-        for (ItemStack itemStack : items) {
+        for (ItemStack itemStack : Inventory.items) {
             itemslist.add(CraftItemStack.asCraftMirror(itemStack).serialize());
         }
         invconfig.set("items", itemslist);
 
         List<Map<?, ?>> armorlist = new ArrayList<>();
-        for (ItemStack itemStack : armor) {
+        for (ItemStack itemStack : Inventory.armor) {
             armorlist.add(CraftItemStack.asCraftMirror(itemStack).serialize());
         }
         invconfig.set("armor", armorlist);
 
         List<Map<?, ?>> extraSlotsList = new ArrayList<>();
-        for (ItemStack itemStack : extraSlots) {
+        for (ItemStack itemStack : Inventory.extraSlots) {
             extraSlotsList.add(CraftItemStack.asCraftMirror(itemStack).serialize());
         }
         invconfig.set("extraSlots", extraSlotsList);
@@ -51,7 +58,7 @@ public class fileManager {
             File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             List<Map<?, ?>> itemslistT = new ArrayList<>();
-            Map<String, NonNullList<ItemStack>> invT = InventoryList.get(team.getName());
+            Map<String, NonNullList<ItemStack>> invT = Inventory.InventoryList.get(team.getName());
             for (ItemStack itemStack : invT.get("items")) {
                 itemslistT.add(CraftItemStack.asCraftMirror(itemStack).serialize());
             }
@@ -68,20 +75,20 @@ public class fileManager {
                 extraSlotsListT.add(CraftItemStack.asCraftMirror(itemStack).serialize());
             }
             fileConfiguration.set("extraSlots", extraSlotsListT);
-            teamInvList.put(fileConfiguration, file);
+            teamInvFileList.put(fileConfiguration, file);
         }
-        saveConfigs();
+        saveConfigs(plugin);
     }
 
     @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored", "ConstantConditions"})
-    public static void load() {
+    public void load() {
         var itemslist = invconfig.getMapList("items");
         for (int i = 0; i <= itemslist.size(); i++) {
             try { itemslist.get(i); } catch (IndexOutOfBoundsException e) { break; }
             if (itemslist.get(i).isEmpty()) {
                 continue;
             }
-            items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
+            Inventory.items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
         }
 
         var armorlist = invconfig.getMapList("armor");
@@ -90,7 +97,7 @@ public class fileManager {
             if (armorlist.get(i).isEmpty()) {
                 continue;
             }
-            armor.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) armorlist.get(i))));
+            Inventory.armor.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) armorlist.get(i))));
         }
 
         var extraSlotslist = invconfig.getMapList("extraSlots");
@@ -99,7 +106,7 @@ public class fileManager {
             if (extraSlotslist.get(i).isEmpty()) {
                 continue;
             }
-            extraSlots.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) extraSlotslist.get(i))));
+            Inventory.extraSlots.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) extraSlotslist.get(i))));
         }
 
         var alist = advconfig.getStringList("advancement");
@@ -131,7 +138,7 @@ public class fileManager {
                     if (itemslistT.get(i).isEmpty()) {
                         continue;
                     }
-                    items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslistT.get(i))));
+                    Inventory.items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslistT.get(i))));
                 }
 
                 var armorlistT = fileConfiguration.getMapList("armor");
@@ -140,7 +147,7 @@ public class fileManager {
                     if (armorlistT.get(i).isEmpty()) {
                         continue;
                     }
-                    armor.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) armorlistT.get(i))));
+                    Inventory.armor.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) armorlistT.get(i))));
                 }
 
                 var extraSlotslistT = fileConfiguration.getMapList("extraSlots");
@@ -149,14 +156,14 @@ public class fileManager {
                     if (extraSlotslistT.get(i).isEmpty()) {
                         continue;
                     }
-                    extraSlots.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) extraSlotslistT.get(i))));
+                    Inventory.extraSlots.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) extraSlotslistT.get(i))));
                 }
             }
         }
     }
 
     @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
-    public static void deleteWasteFiles() {
+    public void deleteWasteFiles() {
         if (new File(plugin.getDataFolder(), "\\teams").listFiles() != null) {
             for (File file : (new File(plugin.getDataFolder(), "\\teams").listFiles())) {
                 List<String> list = new ArrayList<>();

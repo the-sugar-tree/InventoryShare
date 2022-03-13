@@ -1,4 +1,4 @@
-# 인벤토리 공유 플러그인 (v1.4.1)
+# 인벤토리 공유 플러그인 (v2.0)
 
 <span style="color:red">
     <b>먼저 README파일(아래)를 다 읽어주세요!!!</b>
@@ -23,7 +23,7 @@
 [![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.18.2-green)](https://github.com/the-sugar-tree/InventoryShare)   
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![Java](https://img.shields.io/badge/java-16,%2017-ED8B00.svg?logo=java)](https://www.azul.com/)
-[![Gradle](https://img.shields.io/badge/gradle-7.2-02303A.svg?logo=gradle)](https://gradle.org)
+[![Gradle](https://img.shields.io/badge/gradle-7.4.1-02303A.svg?logo=gradle)](https://gradle.org)
 
 ---
 

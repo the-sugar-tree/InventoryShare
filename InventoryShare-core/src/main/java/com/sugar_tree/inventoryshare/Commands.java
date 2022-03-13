@@ -22,18 +22,20 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sugar_tree.inventoryshare.Inventory.*;
 import static com.sugar_tree.inventoryshare.InventoryShare.*;
+import static com.sugar_tree.inventoryshare.api.variables.*;
 
 public class Commands implements TabExecutor {
+    private static final Plugin plugin = getPlugin(InventoryShare.class);
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (command.getName().equalsIgnoreCase("inventoryshare")) {
@@ -44,12 +46,12 @@ public class Commands implements TabExecutor {
                             if (args[1].equalsIgnoreCase("true")) {
                                 if (!inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        savePlayerInventory(p);
+                                        Inventory.savePlayerInventory(p);
                                     }
                                     inventory = true;
                                     sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        invApply(p);
+                                        Inventory.invApply(p);
                                     }
                                 }
                                 else {
@@ -61,7 +63,7 @@ public class Commands implements TabExecutor {
                                     inventory = false;
                                     sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        invDisApply(p);
+                                        Inventory.invDisApply(p);
                                     }
                                 }
                                 else {
@@ -121,7 +123,7 @@ public class Commands implements TabExecutor {
                                     sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다.");
                                     if (inventory) {
                                         for (Player p : Bukkit.getOnlinePlayers()) {
-                                            invApply(p);
+                                            Inventory.invApply(p);
                                         }
                                     }
                                 }
@@ -135,7 +137,7 @@ public class Commands implements TabExecutor {
                                     sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다.");
                                     if (inventory) {
                                         for (Player p : Bukkit.getOnlinePlayers()) {
-                                            invApply(p);
+                                            Inventory.invApply(p);
                                         }
                                     }
                                 }

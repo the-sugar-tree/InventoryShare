@@ -36,34 +36,32 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.sugar_tree.inventoryshare.Advancement.AdvancementPatch;
-import static com.sugar_tree.inventoryshare.Inventory.*;
-import static com.sugar_tree.inventoryshare.InventoryShare.*;
-import static com.sugar_tree.inventoryshare.fileManager.save;
+import static com.sugar_tree.inventoryshare.api.variables.*;
 
 public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree"));
-        savePlayerInventory(event.getPlayer());
-        if (inventory) invApply(event.getPlayer());
+        Inventory.savePlayerInventory(event.getPlayer());
+        if (inventory) Inventory.invApply(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        invDisApply(event.getPlayer());
-        save();
+        Inventory.invDisApply(event.getPlayer());
+        fileManager.save();
     }
 
     @EventHandler
     public void onWorldSave(WorldSaveEvent event){
-        save();
+        fileManager.save();
         if (inventory) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                invDisApply(p);
+                Inventory.invDisApply(p);
                 p.saveData();
-                invApply(p);
+                Inventory.invApply(p);
             }
         }
     }
@@ -96,7 +94,7 @@ public class Listeners implements Listener {
                     if (teaminventory) {
                         if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p))) {
                             teamMap.put(p, Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
-                            invApply(p);
+                            Inventory.invApply(p);
                         }
                     }
                 }

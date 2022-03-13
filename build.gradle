@@ -1,48 +1,41 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-plugins {
-    id 'java'
-}
+allprojects {
+    apply plugin: 'java'
 
-configurations {
-    priority
-    sourceSets.main.compileClasspath = configurations.priority + sourceSets.main.compileClasspath
-}
+    group = 'com.sugar_tree.inventoryshare'
+    version = '2.0-beta'
 
-group = 'com.sugar_tree'
-version = '1.4.1'
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
 
-sourceCompatibility = '17'
-targetCompatibility = '17'
+    compileJava.options.encoding = 'UTF-8'
 
-compileJava.options.encoding = 'UTF-8'
-
-repositories {
-    mavenCentral()
-    maven {
-        name = 'papermc-repo'
-        url = "https://papermc.io/repo/repository/maven-public/"
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'papermc-repo'
+            url = "https://papermc.io/repo/repository/maven-public/"
+        }
+        maven {
+            name = 'sonatype'
+            url = 'https://oss.sonatype.org/content/groups/public/'
+        }
     }
-//    maven {
-//        name = 'spigotmc-repo'
-//        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
-//    }
-    maven {
-        name = 'sonatype'
-        url = 'https://oss.sonatype.org/content/groups/public/'
+
+    processResources {
+        duplicatesStrategy = 'EXCLUDE'
+        from(sourceSets.main.resources.srcDirs) {
+            filter ReplaceTokens, tokens: [version: version]
+        }
     }
 }
 
 dependencies {
-    compileOnly "io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT"
-    priority 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
-//    compileOnly 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
-    compileOnly files('libs/spigot-1.18.2-R0.1-SNAPSHOT.jar')
+    implementation project(':InventoryShare-core')
 }
 
-processResources {
+jar {
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     duplicatesStrategy = 'EXCLUDE'
-    from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: version]
-    }
 }
