@@ -24,9 +24,6 @@
 
 ### 추가 안내
 
-현재 Multi Version Support를 준비중입니다.   
-조금만 기다려 주세요
-
 유튜브에 사용하실분은 제 깃허브 링크 [ https://github.com/the-sugar-tree/InventoryShare ] 를 설명란에 추가해주세요.   
 (가능하면 언급도 해주시면 감사하겠습니다.)   
 
