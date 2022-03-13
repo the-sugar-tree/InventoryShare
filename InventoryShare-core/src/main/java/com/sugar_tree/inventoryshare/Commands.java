@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.sugar_tree.inventoryshare;
 
 import org.bukkit.Bukkit;
@@ -46,12 +45,12 @@ public class Commands implements TabExecutor {
                             if (args[1].equalsIgnoreCase("true")) {
                                 if (!inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        Inventory.savePlayerInventory(p);
+                                        InventoryClass.savePlayerInventory(p);
                                     }
                                     inventory = true;
                                     sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        Inventory.invApply(p);
+                                        InventoryClass.invApply(p);
                                     }
                                 }
                                 else {
@@ -63,7 +62,7 @@ public class Commands implements TabExecutor {
                                     inventory = false;
                                     sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        Inventory.invDisApply(p);
+                                        InventoryClass.invDisApply(p);
                                     }
                                 }
                                 else {
@@ -123,7 +122,7 @@ public class Commands implements TabExecutor {
                                     sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다.");
                                     if (inventory) {
                                         for (Player p : Bukkit.getOnlinePlayers()) {
-                                            Inventory.invApply(p);
+                                            InventoryClass.invApply(p);
                                         }
                                     }
                                 }
@@ -137,7 +136,7 @@ public class Commands implements TabExecutor {
                                     sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다.");
                                     if (inventory) {
                                         for (Player p : Bukkit.getOnlinePlayers()) {
-                                            Inventory.invApply(p);
+                                            InventoryClass.invApply(p);
                                         }
                                     }
                                 }

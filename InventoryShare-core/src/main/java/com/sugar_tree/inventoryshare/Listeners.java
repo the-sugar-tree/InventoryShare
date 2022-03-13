@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.sugar_tree.inventoryshare;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
@@ -43,25 +42,25 @@ public class Listeners implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree"));
-        Inventory.savePlayerInventory(event.getPlayer());
-        if (inventory) Inventory.invApply(event.getPlayer());
+        InventoryClass.savePlayerInventory(event.getPlayer());
+        if (inventory) InventoryClass.invApply(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Inventory.invDisApply(event.getPlayer());
-        fileManager.save();
+        InventoryClass.invDisApply(event.getPlayer());
+        fileManagerClass.save();
     }
 
     @EventHandler
     public void onWorldSave(WorldSaveEvent event){
-        fileManager.save();
+        fileManagerClass.save();
         if (inventory) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                Inventory.invDisApply(p);
+                InventoryClass.invDisApply(p);
                 p.saveData();
-                Inventory.invApply(p);
+                InventoryClass.invApply(p);
             }
         }
     }
@@ -94,7 +93,7 @@ public class Listeners implements Listener {
                     if (teaminventory) {
                         if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p))) {
                             teamMap.put(p, Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
-                            Inventory.invApply(p);
+                            InventoryClass.invApply(p);
                         }
                     }
                 }

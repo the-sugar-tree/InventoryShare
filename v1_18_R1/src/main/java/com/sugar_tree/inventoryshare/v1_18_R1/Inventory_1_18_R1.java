@@ -33,19 +33,12 @@ import java.util.Map;
 
 import static com.sugar_tree.inventoryshare.api.variables.*;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class Inventory_1_18_R1 implements Inventory {
     private final Plugin plugin;
     public Inventory_1_18_R1(Plugin plugin) {
         this.plugin = plugin;
     }
-
-    public final NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
-    public final NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
-    public final NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
-
-    public final List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
-
-    public final Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
 
     public void invApplyAll(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();

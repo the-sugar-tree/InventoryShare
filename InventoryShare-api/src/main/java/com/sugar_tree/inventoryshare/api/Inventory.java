@@ -15,24 +15,12 @@
  */
 package com.sugar_tree.inventoryshare.api;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.ItemStack;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public interface Inventory {
-
-    NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
-    NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
-    NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
-    List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
-    Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
 
     void invApplyAll(@NotNull Player p);
     void invDisApply(@NotNull Player p);

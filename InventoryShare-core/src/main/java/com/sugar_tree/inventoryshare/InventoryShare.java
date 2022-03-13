@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.v1_18_R1.Inventory_1_18_R1;
@@ -22,7 +21,6 @@ import com.sugar_tree.inventoryshare.v1_18_R2.Inventory_1_18_R2;
 import com.sugar_tree.inventoryshare.v1_18_R2.fileManager_1_18_R2;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -47,12 +45,12 @@ public final class InventoryShare extends JavaPlugin {
             return;
         }
         if (sversion.equals("v1_18_R2")) {
-            Inventory = new Inventory_1_18_R2(this);
-            fileManager = new fileManager_1_18_R2(this);
+            InventoryClass = new Inventory_1_18_R2(this);
+            fileManagerClass = new fileManager_1_18_R2(this);
         }
         else if (sversion.equals("v1_18_R1")) {
-            Inventory = new Inventory_1_18_R1(this);
-            fileManager = new fileManager_1_18_R1(this);
+            InventoryClass = new Inventory_1_18_R1(this);
+            fileManagerClass = new fileManager_1_18_R1(this);
         }
         invfile = new File(getDataFolder(), "inventory.yml");
         advfile = new File(getDataFolder(), "advancements.yml");
@@ -62,9 +60,9 @@ public final class InventoryShare extends JavaPlugin {
         getCommand("inventoryshare").setExecutor(new Commands());
         getCommand("inventoryshare").setTabCompleter(new Commands());
         Bukkit.getPluginManager().registerEvents(new Listeners(), this);
-        fileManager.load();
+        fileManagerClass.load();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (inventory) Inventory.invApply(player);
+            if (inventory) InventoryClass.invApply(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementPatch(player), 1);
         }
         getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"인벤토리 공유 플러그인\" by. " + ChatColor.GREEN + "sugar_tree");
@@ -76,10 +74,10 @@ public final class InventoryShare extends JavaPlugin {
         for (UUID puuid : invList.keySet()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
-                Inventory.invDisApply(p);
+                InventoryClass.invDisApply(p);
             }
         }
-        fileManager.save();
+        fileManagerClass.save();
     }
 
     private boolean setupManager() {
