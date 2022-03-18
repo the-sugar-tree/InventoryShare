@@ -16,7 +16,6 @@
 package com.sugar_tree.inventoryshare.v1_18_R1;
 
 import com.sugar_tree.inventoryshare.api.fileManager;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
