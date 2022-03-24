@@ -2,8 +2,13 @@ configurations {
     priority
     sourceSets.main.compileClasspath = configurations.priority + sourceSets.main.compileClasspath
 }
+repositories {
+    mavenCentral()
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
+}
 
 dependencies {
+    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0"
     compileOnly 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
     implementation project(':v1_18_R2')
     implementation project(':v1_18_R1')
@@ -14,4 +19,13 @@ dependencies {
 
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
 }

@@ -28,18 +28,22 @@ import java.io.File;
 import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.Advancement.AdvancementPatch;
+import static com.sugar_tree.inventoryshare.ProtocolLib.protocolLib;
 import static com.sugar_tree.inventoryshare.api.variables.*;
 
 public final class InventoryShare extends JavaPlugin {
     private static String sversion;
     private boolean isSupportedVersion = true;
     private boolean isPaper = false;
+    @SuppressWarnings("FieldCanBeLocal")
+    private boolean isProtocolLib = false;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
         isSupportedVersion = checkVersion();
         isPaper = checkPaper();
+        isProtocolLib = checkProtocolLib();
         if (!isSupportedVersion) {
             this.getLogger().severe("This plugin doesn't support this version: " + sversion);
             this.setEnabled(false);
@@ -49,6 +53,12 @@ public final class InventoryShare extends JavaPlugin {
             this.getLogger().severe("This plugin only supports Paper");
             this.setEnabled(false);
             return;
+        }
+        if (isProtocolLib) {
+            protocolLib(this);
+        }
+        else {
+            getLogger().warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
         }
         switch (sversion) {
             case "v1_18_R2" -> {
@@ -104,6 +114,9 @@ public final class InventoryShare extends JavaPlugin {
     }
     private boolean checkPaper() {
         return Bukkit.getVersion().contains("Paper");
+    }
+    private boolean checkProtocolLib() {
+        return getServer().getPluginManager().getPlugin("ProtocolLib") != null;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

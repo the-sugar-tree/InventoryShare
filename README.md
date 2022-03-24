@@ -1,4 +1,4 @@
-# 인벤토리 공유 플러그인 (v2.0-beta)
+# 인벤토리 공유 플러그인 (v2.0)
 
 <span style="color:red">
     <b>먼저 README파일(아래)를 다 읽어주세요!!!</b>
@@ -6,14 +6,14 @@
 
 ---
 <p align="center">
-    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v2.0-beta/InventoryShare-2.0-beta.jar">
+    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v2.0/InventoryShare-2.0.jar">
         <img src="https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb" height="40" width="260">
     </a>
 </p>
 
 ---
 [![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
-[![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v2.0-beta)
+[![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v2.0)
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total)](https://github.com/the-sugar-tree/InventoryShare/releases)
 [![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.17,%201.18-green)](https://github.com/the-sugar-tree/InventoryShare)   
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare)](https://www.gnu.org/licenses/gpl-3.0.html)
@@ -36,7 +36,7 @@ https://blog.naver.com/sugar-tree/222556850608
 
 ## 마인크래프트 버젼
 ### Current Versions
-- 1.17, 1.18 (Release 2.0-beta) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v2.0-beta/InventoryShare-2.0-beta.jar)]
+- 1.17, 1.18 (Release 2.0) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v2.0/InventoryShare-2.0.jar)]
 
 ## 주의사항
 **이 플러그인은 페이퍼 기반입니다!**   
