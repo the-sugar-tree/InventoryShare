@@ -32,6 +32,8 @@ https://blog.naver.com/sugar-tree/222556850608
 
 위 게시물 및 현 깃허브 주소 이외의 다른 사이트에서 배포를 하고 있다면 <sugar_tree@outlook.kr> 로 알려주시면 감사하겠습니다.
 
+\[[ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997)] 이라는 외부 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.
+
 ---
 
 ## 마인크래프트 버젼
