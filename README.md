@@ -17,7 +17,7 @@
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total)](https://github.com/the-sugar-tree/InventoryShare/releases)
 [![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.17,%201.18-green)](https://github.com/the-sugar-tree/InventoryShare)   
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare)](https://www.gnu.org/licenses/gpl-3.0.html)
-[![Java](https://img.shields.io/badge/java-16,%2017-ED8B00.svg?logo=java)](https://www.azul.com/)
+[![Java](https://img.shields.io/badge/java-17-ED8B00.svg?logo=java)](https://www.azul.com/)
 [![Gradle](https://img.shields.io/badge/gradle-7.4.1-02303A.svg?logo=gradle)](https://gradle.org)
 
 ---
@@ -59,14 +59,12 @@ https://blog.naver.com/sugar-tree/222556850608
 그러나 페이퍼 서버의 한계로, 아무도 없는팀은 서버를 재시작할때 삭제되오니 이 점 참고 바랍니다.
 
 ## 명령어
-- /inventoryshare inventory (인벤토리 공유설정을 확인합니다. 초기값 true)
-- /inventoryshare inventory \[true|false] (인벤토리 공유설정을 활성화/비활성화 합니다.)
-- /inventoryshare advancement (발전과제 공유설정을 확인합니다. 초기값 true)
-- /inventoryshare advancement \[true|false] (발전과제 공유설정을 활성화/비활성화 합니다.)
-- /inventoryshare AnnounceDeath (죽었을때 좌표가 뜨는지 확인합니다. 초기값 false)
-- /inventoryshare AnnounceDeath \[true|false] (죽었을때 좌표가 뜨는것을 활성화/비활성화 합니다.)
-- /inventoryshare teaminventory (팀 인벤토리 공유설정을 확인합니다. 초기값 false)
-- /inventoryshare teaminventory \[true|false] (팀 인벤토리 공유설정을 활성화/비활성화 합니다.)
+![](https://raw.githubusercontent.com/the-sugar-tree/InventoryShare/master/help_message.png)   
+###기본 값
+- inventory: true
+- advancement: true
+- AnnounceDeath: false
+- teaminventory: false
 
 ## License / 라이센스
 
