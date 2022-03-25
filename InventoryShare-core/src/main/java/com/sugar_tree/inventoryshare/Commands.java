@@ -48,9 +48,10 @@ public class Commands implements TabExecutor {
                                         InventoryClass.savePlayerInventory(p);
                                     }
                                     inventory = true;
-                                    sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
+                                    Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다");
                                     for (Player p : Bukkit.getOnlinePlayers()) {
                                         InventoryClass.invApply(p);
+                                        p.updateInventory();
                                     }
                                 }
                                 else {
@@ -60,9 +61,10 @@ public class Commands implements TabExecutor {
                             else if (args[1].equalsIgnoreCase("false")) {
                                 if (inventory) {
                                     inventory = false;
-                                    sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다.");
+                                    Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다");
                                     for (Player p : Bukkit.getOnlinePlayers()) {
                                         InventoryClass.invDisApply(p);
+                                        p.updateInventory();
                                     }
                                 }
                                 else {
@@ -81,12 +83,11 @@ public class Commands implements TabExecutor {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("true")) {
                                 advancement = true;
-                                sender.sendMessage(PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.GOLD + "로 설정되었습니다.");
-
+                                Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.GOLD + "로 설정되었습니다");
                             }
                             else if (args[1].equalsIgnoreCase("false")) {
                                 advancement = false;
-                                sender.sendMessage(PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.GOLD + "로 설정되었습니다.");
+                                Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.GOLD + "로 설정되었습니다");
                             }
                             else {
                                 sender.sendMessage(usageMessage);
@@ -100,11 +101,11 @@ public class Commands implements TabExecutor {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("true")) {
                                 AnnounceDeath = true;
-                                sender.sendMessage(PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.GOLD + "로 설정되었습니다.");
+                                Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.GOLD + "로 설정되었습니다");
                             }
                             else if (args[1].equalsIgnoreCase("false")) {
                                 AnnounceDeath = false;
-                                sender.sendMessage(PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.GOLD + "로 설정되었습니다.");
+                                Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.GOLD + "로 설정되었습니다");
                             }
                             else {
                                 sender.sendMessage(usageMessage);
@@ -119,10 +120,11 @@ public class Commands implements TabExecutor {
                             if (args[1].equalsIgnoreCase("true")) {
                                 if (!teaminventory) {
                                     teaminventory = true;
-                                    sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다.");
+                                    Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다");
                                     if (inventory) {
                                         for (Player p : Bukkit.getOnlinePlayers()) {
                                             InventoryClass.invApply(p);
+                                            p.updateInventory();
                                         }
                                     }
                                 }
@@ -133,10 +135,11 @@ public class Commands implements TabExecutor {
                             else if (args[1].equalsIgnoreCase("false")) {
                                 if (teaminventory) {
                                     teaminventory = false;
-                                    sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다.");
+                                    Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다");
                                     if (inventory) {
                                         for (Player p : Bukkit.getOnlinePlayers()) {
                                             InventoryClass.invApply(p);
+                                            p.updateInventory();
                                         }
                                     }
                                 }
