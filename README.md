@@ -60,7 +60,7 @@ https://blog.naver.com/sugar-tree/222556850608
 
 ## 명령어
 ![](https://raw.githubusercontent.com/the-sugar-tree/InventoryShare/master/help_message.png)   
-###기본 값
+### 기본 값
 - inventory: true
 - advancement: true
 - AnnounceDeath: false
