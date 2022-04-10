@@ -70,8 +70,7 @@ public class Inventory_1_18_R2 implements Inventory {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             // 사용될 일이 없지만, 혹시 모른 버그 방지
             try {
                 NonNullList<ItemStack> items1 = NonNullList.a(36, ItemStack.b);
@@ -112,8 +111,7 @@ public class Inventory_1_18_R2 implements Inventory {
             map.put("armor", armorT);
             map.put("extraSlots", extraSlotsT);
             InventoryList.put(teamName, map);
-        }
-        else {
+        } else {
             Map<String, NonNullList<ItemStack>> map = InventoryList.get(teamName);
             itemsT = map.get("items");
             armorT = map.get("armor");

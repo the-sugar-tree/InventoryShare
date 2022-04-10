@@ -53,12 +53,10 @@ public class Commands implements TabExecutor {
                                         InventoryClass.invApply(p);
                                         p.updateInventory();
                                     }
-                                }
-                                else {
+                                } else {
                                     sender.sendMessage(PREFIX + ChatColor.RED + "이미 인벤토리 공유가 활성화 되어 있습니다!");
                                 }
-                            }
-                            else if (args[1].equalsIgnoreCase("false")) {
+                            } else if (args[1].equalsIgnoreCase("false")) {
                                 if (inventory) {
                                     inventory = false;
                                     Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다");
@@ -66,56 +64,44 @@ public class Commands implements TabExecutor {
                                         InventoryClass.invDisApply(p);
                                         p.updateInventory();
                                     }
-                                }
-                                else {
+                                } else {
                                     sender.sendMessage(PREFIX + ChatColor.RED + "이미 인벤토리 공유가 비활성화 되어 있습니다!");
                                 }
-                            }
-                            else {
+                            } else {
                                 sender.sendMessage(usageMessage);
                             }
-                        }
-                        else {
+                        } else {
                             sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory);
                         }
-                    }
-                    else if (args[0].equalsIgnoreCase("advancement")) {
+                    } else if (args[0].equalsIgnoreCase("advancement")) {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("true")) {
                                 advancement = true;
                                 Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.GOLD + "로 설정되었습니다");
-                            }
-                            else if (args[1].equalsIgnoreCase("false")) {
+                            } else if (args[1].equalsIgnoreCase("false")) {
                                 advancement = false;
                                 Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.GOLD + "로 설정되었습니다");
-                            }
-                            else {
+                            } else {
                                 sender.sendMessage(usageMessage);
                             }
-                        }
-                        else {
+                        } else {
                             sender.sendMessage(PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement);
                         }
-                    }
-                    else if (args[0].equalsIgnoreCase("AnnounceDeath")) {
+                    } else if (args[0].equalsIgnoreCase("AnnounceDeath")) {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("true")) {
                                 AnnounceDeath = true;
                                 Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.GOLD + "로 설정되었습니다");
-                            }
-                            else if (args[1].equalsIgnoreCase("false")) {
+                            } else if (args[1].equalsIgnoreCase("false")) {
                                 AnnounceDeath = false;
                                 Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.GOLD + "로 설정되었습니다");
-                            }
-                            else {
+                            } else {
                                 sender.sendMessage(usageMessage);
                             }
-                        }
-                        else {
+                        } else {
                             sender.sendMessage(PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath);
                         }
-                    }
-                    else if (args[0].equalsIgnoreCase("teaminventory")) {
+                    } else if (args[0].equalsIgnoreCase("teaminventory")) {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("true")) {
                                 if (!teaminventory) {
@@ -127,12 +113,10 @@ public class Commands implements TabExecutor {
                                             p.updateInventory();
                                         }
                                     }
-                                }
-                                else {
+                                } else {
                                     sender.sendMessage(PREFIX + ChatColor.RED + "이미 팀 아이템 공유가 활성화 되어 있습니다!");
                                 }
-                            }
-                            else if (args[1].equalsIgnoreCase("false")) {
+                            } else if (args[1].equalsIgnoreCase("false")) {
                                 if (teaminventory) {
                                     teaminventory = false;
                                     Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다");
@@ -142,40 +126,32 @@ public class Commands implements TabExecutor {
                                             p.updateInventory();
                                         }
                                     }
-                                }
-                                else {
+                                } else {
                                     sender.sendMessage(PREFIX + ChatColor.RED + "이미 팀 아이템 공유가 비활성화 되어 있습니다!");
                                 }
-                            }
-                            else {
+                            } else {
                                 sender.sendMessage(usageMessage);
                             }
-                        }
-                        else {
+                        } else {
                             sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory);
                         }
-                    }
-                    else if (args[0].equalsIgnoreCase("reload")) {
+                    } else if (args[0].equalsIgnoreCase("reload")) {
                         if (args.length == 1) {
                             if (plugin.getConfig().contains("inventory")) advancement = plugin.getConfig().getBoolean("inventory");
                             if (plugin.getConfig().contains("advancement")) advancement = plugin.getConfig().getBoolean("advancement");
                             if (plugin.getConfig().contains("AnnounceDeath")) AnnounceDeath = plugin.getConfig().getBoolean("AnnounceDeath");
                             if (plugin.getConfig().contains("teaminventory")) AnnounceDeath = plugin.getConfig().getBoolean("teaminventory");
                             sender.sendMessage(PREFIX + ChatColor.GREEN + "Config 파일이 새로고침 되었습니다!");
-                        }
-                        else {
+                        } else {
                             sender.sendMessage(usageMessage);
                         }
-                    }
-                    else {
+                    } else {
                         sender.sendMessage(usageMessage);
                     }
-                }
-                else {
+                } else {
                     sender.sendMessage(usageMessage);
                 }
-            }
-            else {
+            } else {
                 sender.sendMessage(PREFIX + Bukkit.getPermissionMessage());
             }
             return true;
@@ -194,14 +170,12 @@ public class Commands implements TabExecutor {
                 arrayList.add("teaminventory");
                 arrayList.add("reload");
                 return arrayList;
-            }
-            else if (args.length == 2) {
+            } else if (args.length == 2) {
                 ArrayList<String> arrayList = new ArrayList<>();
                 arrayList.add("true");
                 arrayList.add("false");
                 return arrayList;
-            }
-            else {
+            } else {
                 return new ArrayList<>();
             }
         }

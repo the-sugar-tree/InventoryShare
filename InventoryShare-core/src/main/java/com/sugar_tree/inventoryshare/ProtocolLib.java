@@ -28,7 +28,7 @@ public class ProtocolLib {
                     var slot = event.getPacket().getModifier().read(2);
                     if ((event.getPlayer().getInventory().getHeldItemSlot() + 36) == ((int) slot)) {
                         ItemStack handItem = event.getPlayer().getInventory().getItemInMainHand();
-                        if ((handItem.hasItemMeta() && handItem.getItemMeta() instanceof Damageable && ((Damageable) handItem.getItemMeta()).getDamage() > 0)) {
+                        if (handItem.hasItemMeta() && handItem.getItemMeta() instanceof Damageable && ((Damageable) handItem.getItemMeta()).getDamage() > 0) {
                             event.setCancelled(true);
                         }
                     }

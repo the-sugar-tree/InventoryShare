@@ -45,19 +45,18 @@ public final class InventoryShare extends JavaPlugin {
         isPaper = checkPaper();
         isProtocolLib = checkProtocolLib();
         if (!isSupportedVersion) {
-            this.getLogger().severe("This plugin doesn't support this version: " + sversion);
+            this.getLogger().severe("이 플러그인은 이 버젼을 지원하지 않습니다: " + sversion);
             this.setEnabled(false);
             return;
         }
         if (!isPaper) {
-            this.getLogger().severe("This plugin only supports Paper");
+            this.getLogger().severe("이 플러그인은 페이퍼 버킷만 지원합니다");
             this.setEnabled(false);
             return;
         }
         if (isProtocolLib) {
             protocolLib(this);
-        }
-        else {
+        } else {
             getLogger().warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
         }
         switch (sversion) {
