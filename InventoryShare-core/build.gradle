@@ -16,6 +16,7 @@ dependencies {
     implementation project(':InventoryShare-api')
 }
 
+processResources.enabled(true)
 
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
