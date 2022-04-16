@@ -16,8 +16,6 @@ allprojects {
             url = "https://papermc.io/repo/repository/maven-public/"
         }
     }
-
-    processResources.enabled(false)
 }
 
 compileJava.enabled(false)

@@ -169,11 +169,13 @@ public class Commands implements TabExecutor {
                 arrayList.add("AnnounceDeath");
                 arrayList.add("teaminventory");
                 arrayList.add("reload");
+                arrayList.removeIf(s -> !s.startsWith(args[0]));
                 return arrayList;
             } else if (args.length == 2) {
                 ArrayList<String> arrayList = new ArrayList<>();
                 arrayList.add("true");
                 arrayList.add("false");
+                arrayList.removeIf(s -> !s.startsWith(args[1]));
                 return arrayList;
             } else {
                 return new ArrayList<>();
