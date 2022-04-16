@@ -194,4 +194,12 @@ public class Commands implements TabExecutor {
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " reload" + ChatColor.YELLOW + " - config 파일을 새로고침 합니다.\n" +
             ChatColor.DARK_AQUA + "-----------------------------------------------------"
             ;
+    String check = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
+            PREFIX + ChatColor.GREEN + "커맨드 도움말\n" +
+            PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory +
+            PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement +
+            PREFIX + ChatColor.GOLD + "AnnounceDeath: " + ChatColor.GREEN + AnnounceDeath +
+            PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + teaminventory +
+            ChatColor.DARK_AQUA + "-----------------------------------------------------"
+            ;
 }
