@@ -195,7 +195,6 @@ public class Commands implements TabExecutor {
             ChatColor.DARK_AQUA + "-----------------------------------------------------"
             ;
     String check = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
-            PREFIX + ChatColor.GREEN + "커맨드 도움말\n" +
             PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory +
             PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement +
             PREFIX + ChatColor.GOLD + "AnnounceDeath: " + ChatColor.GREEN + AnnounceDeath +
