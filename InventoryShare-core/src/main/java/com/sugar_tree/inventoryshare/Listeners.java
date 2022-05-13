@@ -15,7 +15,7 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.destroystokyo.paper.event.server.ServerTickStartEvent;
+import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -86,7 +86,7 @@ public class Listeners implements Listener {
 
     Map<Player, Team> teamMap = new HashMap<>();
     @EventHandler(priority = EventPriority.LOW)
-    public void onTick(ServerTickStartEvent event) {
+    public void onTick(ServerTickEndEvent event) {
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (teamMap.containsKey(p)) {
                 if (inventory) {
