@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.v1_18_R2;
+package com.sugar_tree.inventoryshare.v1_17_R1;
 
-import com.sugar_tree.inventoryshare.api.fileManager;
+import com.sugar_tree.inventoryshare.api.FileManager;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Team;
 
@@ -33,12 +34,12 @@ import java.util.Map;
 
 import static com.sugar_tree.inventoryshare.api.variables.*;
 
-@SuppressWarnings("ClassCanBeRecord")
-public class fileManager_1_18_R2 implements fileManager {
+public class FileManager_1_17_R1 implements FileManager {
     private final Plugin plugin;
-    public fileManager_1_18_R2(Plugin plugin) {
+    public FileManager_1_17_R1(Plugin plugin) {
         this.plugin = plugin;
     }
+
     public void save() {
         List<Map<?, ?>> itemslist = new ArrayList<>();
         for (ItemStack itemStack : items) {
@@ -102,7 +103,7 @@ public class fileManager_1_18_R2 implements fileManager {
             if (itemslist.get(i).isEmpty()) {
                 continue;
             }
-            if (!((Map<String, Object>) itemslist.get(i)).get("v").equals(2975)) /* SharedConstants */ {
+            if (!((Map<String, Object>) itemslist.get(i)).get("v").equals(SharedConstants.getGameVersion().getWorldVersion())) {
                 Bukkit.getLogger().severe("Newer version! Server downgrades are not supported!");
                 return;
             }

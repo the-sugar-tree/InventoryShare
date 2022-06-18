@@ -15,6 +15,7 @@
  */
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.v1_19_R1.*;
 import com.sugar_tree.inventoryshare.v1_18_R2.*;
 import com.sugar_tree.inventoryshare.v1_18_R1.*;
 import com.sugar_tree.inventoryshare.v1_17_R1.*;
@@ -60,17 +61,21 @@ public final class InventoryShare extends JavaPlugin {
             getLogger().warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
         }
         switch (sversion) {
+            case "v1_19_R1" -> {
+                InventoryClass = new Inventory_1_19_R1(this);
+                fileManagerClass = new FileManager_1_19_R1(this);
+            }
             case "v1_18_R2" -> {
                 InventoryClass = new Inventory_1_18_R2(this);
-                fileManagerClass = new fileManager_1_18_R2(this);
+                fileManagerClass = new FileManager_1_18_R2(this);
             }
             case "v1_18_R1" -> {
                 InventoryClass = new Inventory_1_18_R1(this);
-                fileManagerClass = new fileManager_1_18_R1(this);
+                fileManagerClass = new FileManager_1_18_R1(this);
             }
             case "v1_17_R1" -> {
                 InventoryClass = new Inventory_1_17_R1(this);
-                fileManagerClass = new fileManager_1_17_R1(this);
+                fileManagerClass = new FileManager_1_17_R1(this);
             }
         }
         invfile = new File(getDataFolder(), "inventory.yml");
@@ -109,7 +114,7 @@ public final class InventoryShare extends JavaPlugin {
         } catch (ArrayIndexOutOfBoundsException e) {
             return false;
         }
-        return sversion.equals("v1_18_R2") || sversion.equals("v1_18_R1") || sversion.equals("v1_17_R1");
+        return sversion.equals("v1_19_R1") || sversion.equals("v1_18_R2") || sversion.equals("v1_18_R1") || sversion.equals("v1_17_R1");
     }
     private boolean checkPaper() {
         return Bukkit.getVersion().contains("Paper");

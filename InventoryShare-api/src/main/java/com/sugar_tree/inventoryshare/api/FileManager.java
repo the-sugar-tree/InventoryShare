@@ -15,7 +15,7 @@
  */
 package com.sugar_tree.inventoryshare.api;
 
-public interface fileManager {
+public interface FileManager {
     void save();
     void load();
     void deleteWasteFiles();

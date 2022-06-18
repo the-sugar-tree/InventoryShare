@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.v1_17_R1;
+package com.sugar_tree.inventoryshare.v1_19_R1;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.Inventory;
@@ -21,7 +21,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -33,15 +33,15 @@ import java.util.Map;
 import static com.sugar_tree.inventoryshare.api.Inventory.setField;
 import static com.sugar_tree.inventoryshare.api.variables.*;
 
-public class Inventory_1_17_R1 implements Inventory {
+public class Inventory_1_19_R1 implements Inventory {
     private final Plugin plugin;
-    public Inventory_1_17_R1(Plugin plugin) {
+    public Inventory_1_19_R1(Plugin plugin) {
         this.plugin = plugin;
     }
 
     public void invApplyAll(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.getInventory();
+        PlayerInventory playerInventory = entityPlayer.fB();
         try {
             setField(playerInventory, "h", items);
             setField(playerInventory, "i", armor);
@@ -55,12 +55,12 @@ public class Inventory_1_17_R1 implements Inventory {
     @SuppressWarnings("SuspiciousMethodCalls")
     public void invDisApply(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.getInventory();
-        if (invList.containsKey(entityPlayer.getUniqueID())) {
+        PlayerInventory playerInventory = entityPlayer.fB();
+        if (invList.containsKey(entityPlayer.cm())) {
             try {
-                NonNullList<ItemStack> items1 = invList.get(entityPlayer.getUniqueID()).h;
-                NonNullList<ItemStack> armor1 = invList.get(entityPlayer.getUniqueID()).i;
-                NonNullList<ItemStack> extraSlots1 = invList.get(entityPlayer.getUniqueID()).j;
+                NonNullList<ItemStack> items1 = invList.get(entityPlayer.cm()).h;
+                NonNullList<ItemStack> armor1 = invList.get(entityPlayer.cm()).i;
+                NonNullList<ItemStack> extraSlots1 = invList.get(entityPlayer.cm()).j;
                 List<NonNullList<ItemStack>> contents1 = ImmutableList.of(items1, armor1, extraSlots1);
                 setField(playerInventory, "h", items1);
                 setField(playerInventory, "i", armor1);
@@ -87,7 +87,7 @@ public class Inventory_1_17_R1 implements Inventory {
         invList.remove(entityPlayer);
     }
 
-    @SuppressWarnings({"ConstantConditions", "deprecation"})
+    @SuppressWarnings("ConstantConditions")
     public void invApply(@NotNull Player p) {
         if (!(teaminventory)) {
             invApplyAll(p);
@@ -118,7 +118,7 @@ public class Inventory_1_17_R1 implements Inventory {
         }
         List<NonNullList<ItemStack>> contentsT = ImmutableList.of(itemsT, armorT, extraSlotsT);
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.getInventory();
+        PlayerInventory playerInventory = entityPlayer.fB();
         try {
             setField(playerInventory, "h", itemsT);
             setField(playerInventory, "i", armorT);
@@ -132,10 +132,10 @@ public class Inventory_1_17_R1 implements Inventory {
     public void savePlayerInventory(@NotNull Player p) {
         PlayerInventory pinv = new PlayerInventory(null);
         try {
-            setField(pinv, "h", ((CraftPlayer) p).getHandle().getInventory().h);
-            setField(pinv, "i", ((CraftPlayer) p).getHandle().getInventory().i);
-            setField(pinv, "j", ((CraftPlayer) p).getHandle().getInventory().j);
-            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().getInventory().h,((CraftPlayer) p).getHandle().getInventory().i, ((CraftPlayer) p).getHandle().getInventory().j));
+            setField(pinv, "h", ((CraftPlayer) p).getHandle().fB().h);
+            setField(pinv, "i", ((CraftPlayer) p).getHandle().fB().i);
+            setField(pinv, "j", ((CraftPlayer) p).getHandle().fB().j);
+            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().fB().h,((CraftPlayer) p).getHandle().fB().i, ((CraftPlayer) p).getHandle().fB().j));
         } catch (Exception e) {
             e.printStackTrace();
         }

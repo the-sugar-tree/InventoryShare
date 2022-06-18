@@ -33,7 +33,6 @@ import java.util.Map;
 
 import static com.sugar_tree.inventoryshare.api.variables.*;
 
-@SuppressWarnings("ClassCanBeRecord")
 public class Inventory_1_18_R1 implements Inventory {
     private final Plugin plugin;
     public Inventory_1_18_R1(Plugin plugin) {

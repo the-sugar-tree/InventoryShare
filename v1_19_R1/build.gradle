@@ -7,4 +7,5 @@ dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT'
     priority 'io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT'
     compileOnly files("libs/spigot-1.19-R0.1-SNAPSHOT.jar")
+    compileOnly project(':InventoryShare-api')
 }

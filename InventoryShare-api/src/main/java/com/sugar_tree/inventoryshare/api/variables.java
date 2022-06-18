@@ -39,7 +39,7 @@ public class variables {
     public static Map<FileConfiguration, File> teamInvFileList = new HashMap<>();
     public static List<NamespacedKey> advlist = new ArrayList<>();
     public static Inventory InventoryClass;
-    public static fileManager fileManagerClass;
+    public static FileManager fileManagerClass;
     public static File invfile;
     public static File advfile;
 
