@@ -30,7 +30,7 @@ import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.Advancement.AdvancementPatch;
 import static com.sugar_tree.inventoryshare.ProtocolLib.protocolLib;
-import static com.sugar_tree.inventoryshare.api.variables.*;
+import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public final class InventoryShare extends JavaPlugin {
     private static String sversion;
@@ -42,6 +42,7 @@ public final class InventoryShare extends JavaPlugin {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
+        logger = getLogger();
         isSupportedVersion = checkVersion();
         isPaper = checkPaper();
         isProtocolLib = checkProtocolLib();

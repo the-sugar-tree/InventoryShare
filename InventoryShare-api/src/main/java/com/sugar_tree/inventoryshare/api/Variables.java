@@ -26,8 +26,12 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.util.*;
+import java.util.logging.Logger;
 
-public class variables {
+public class Variables {
+
+    public static Logger logger;
+
     public static boolean inventory = true;
     public static boolean advancement = true;
     public static boolean AnnounceDeath = false;

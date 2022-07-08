@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.sugar_tree.inventoryshare.api.Inventory.setField;
-import static com.sugar_tree.inventoryshare.api.variables.*;
+import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public class Inventory_1_19_R1 implements Inventory {
     private final Plugin plugin;

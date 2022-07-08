@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.sugar_tree.inventoryshare.api.variables.*;
+import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public class FileManager_1_17_R1 implements FileManager {
     private final Plugin plugin;
@@ -70,6 +70,7 @@ public class FileManager_1_17_R1 implements FileManager {
         plugin.getConfig().set("AnnounceDeath", AnnounceDeath);
         plugin.getConfig().set("teaminventory", teaminventory);
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
+            if (team == null) continue;
             File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             List<Map<?, ?>> itemslistT = new ArrayList<>();

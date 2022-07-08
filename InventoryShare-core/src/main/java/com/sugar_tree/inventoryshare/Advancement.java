@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.sugar_tree.inventoryshare.api.variables.*;
+import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public class Advancement {
 

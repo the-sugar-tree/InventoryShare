@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.sugar_tree.inventoryshare.Advancement.AdvancementPatch;
-import static com.sugar_tree.inventoryshare.api.variables.*;
+import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public class Listeners implements Listener {
 
