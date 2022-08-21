@@ -50,12 +50,12 @@ public class Listeners implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         InventoryClass.invDisApply(event.getPlayer());
-        fileManagerClass.save();
+        FileManagerClass.save();
     }
 
     @EventHandler
     public void onWorldSave(WorldSaveEvent event){
-        fileManagerClass.save();
+        FileManagerClass.save();
         if (inventory) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 InventoryClass.invDisApply(p);

@@ -16,6 +16,8 @@
 package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.v1_19_R1.*;
+import com.sugar_tree.inventoryshare.v1_19_R1_P0.*;
+import com.sugar_tree.inventoryshare.v1_19_R1_P1.*;
 import com.sugar_tree.inventoryshare.v1_18_R2.*;
 import com.sugar_tree.inventoryshare.v1_18_R1.*;
 import com.sugar_tree.inventoryshare.v1_17_R1.*;
@@ -33,7 +35,8 @@ import static com.sugar_tree.inventoryshare.ProtocolLib.protocolLib;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public final class InventoryShare extends JavaPlugin {
-    private static String sversion;
+    private static String minorVersion;
+    private static String patchVersion;
     private boolean isSupportedVersion = true;
     private boolean isPaper = false;
     @SuppressWarnings("FieldCanBeLocal")
@@ -47,12 +50,12 @@ public final class InventoryShare extends JavaPlugin {
         isPaper = checkPaper();
         isProtocolLib = checkProtocolLib();
         if (!isSupportedVersion) {
-            this.getLogger().severe("이 플러그인은 이 버젼을 지원하지 않습니다: " + sversion);
+            this.getLogger().severe("이 플러그인은 이 버젼을 지원하지 않습니다: " + minorVersion);
             this.setEnabled(false);
             return;
         }
         if (!isPaper) {
-            this.getLogger().severe("이 플러그인은 페이퍼 버킷만 지원합니다");
+            this.getLogger().severe("이 플러그인은 페이퍼 버킷만 지원합니다.");
             this.setEnabled(false);
             return;
         }
@@ -61,22 +64,32 @@ public final class InventoryShare extends JavaPlugin {
         } else {
             getLogger().warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
         }
-        switch (sversion) {
+        switch (minorVersion) {
             case "v1_19_R1" -> {
-                InventoryClass = new Inventory_1_19_R1(this);
-                fileManagerClass = new FileManager_1_19_R1(this);
+                if (patchVersion.equals("1.19-R0.1-SNAPSHOT")) {
+                    InventoryClass = new Inventory_1_19_R1_P0(this);
+                    FileManagerClass = new FileManager_1_19_R1_P0(this);
+                }
+                else if (patchVersion.equals("1.19.1-R0.1-SNAPSHOT")) {
+                    InventoryClass = new Inventory_1_19_R1_P1(this);
+                    FileManagerClass = new FileManager_1_19_R1_P1(this);
+                }
+                else {
+                    InventoryClass = new Inventory_1_19_R1(this);
+                    FileManagerClass = new FileManager_1_19_R1(this);
+                }
             }
             case "v1_18_R2" -> {
                 InventoryClass = new Inventory_1_18_R2(this);
-                fileManagerClass = new FileManager_1_18_R2(this);
+                FileManagerClass = new FileManager_1_18_R2(this);
             }
             case "v1_18_R1" -> {
                 InventoryClass = new Inventory_1_18_R1(this);
-                fileManagerClass = new FileManager_1_18_R1(this);
+                FileManagerClass = new FileManager_1_18_R1(this);
             }
             case "v1_17_R1" -> {
                 InventoryClass = new Inventory_1_17_R1(this);
-                fileManagerClass = new FileManager_1_17_R1(this);
+                FileManagerClass = new FileManager_1_17_R1(this);
             }
         }
         invfile = new File(getDataFolder(), "inventory.yml");
@@ -87,7 +100,7 @@ public final class InventoryShare extends JavaPlugin {
         getCommand("inventoryshare").setExecutor(new Commands());
         getCommand("inventoryshare").setTabCompleter(new Commands());
         Bukkit.getPluginManager().registerEvents(new Listeners(), this);
-        fileManagerClass.load();
+        FileManagerClass.load();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (inventory) InventoryClass.invApply(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementPatch(player), 1);
@@ -105,17 +118,19 @@ public final class InventoryShare extends JavaPlugin {
                 InventoryClass.invDisApply(p);
             }
         }
-        fileManagerClass.save();
+        FileManagerClass.save();
     }
 
     private boolean checkVersion() {
-        sversion = "N/A";
+        minorVersion = "N/A";
+        patchVersion = "N/A";
         try {
-            sversion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+            minorVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         } catch (ArrayIndexOutOfBoundsException e) {
             return false;
         }
-        return sversion.equals("v1_19_R1") || sversion.equals("v1_18_R2") || sversion.equals("v1_18_R1") || sversion.equals("v1_17_R1");
+        patchVersion = Bukkit.getBukkitVersion();
+        return minorVersion.equals("v1_19_R1") || minorVersion.equals("v1_18_R2") || minorVersion.equals("v1_18_R1") || minorVersion.equals("v1_17_R1");
     }
     private boolean checkPaper() {
         return Bukkit.getVersion().contains("Paper");

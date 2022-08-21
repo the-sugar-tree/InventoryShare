@@ -39,7 +39,6 @@ public class FileManager_1_17_R1 implements FileManager {
     public FileManager_1_17_R1(Plugin plugin) {
         this.plugin = plugin;
     }
-
     public void save() {
         List<Map<?, ?>> itemslist = new ArrayList<>();
         for (ItemStack itemStack : items) {
@@ -75,6 +74,7 @@ public class FileManager_1_17_R1 implements FileManager {
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             List<Map<?, ?>> itemslistT = new ArrayList<>();
             Map<String, NonNullList<ItemStack>> invT = InventoryList.get(team.getName());
+            if (invT == null) continue;
             for (ItemStack itemStack : invT.get("items")) {
                 itemslistT.add(CraftItemStack.asCraftMirror(itemStack).serialize());
             }
@@ -104,7 +104,7 @@ public class FileManager_1_17_R1 implements FileManager {
             if (itemslist.get(i).isEmpty()) {
                 continue;
             }
-            if (!((Map<String, Object>) itemslist.get(i)).get("v").equals(SharedConstants.getGameVersion().getWorldVersion())) {
+            if (Integer.parseInt(((Map<String, Object>) itemslist.get(i)).get("v").toString()) > SharedConstants.getGameVersion().getWorldVersion()) {
                 Bukkit.getLogger().severe("Newer version! Server downgrades are not supported!");
                 return;
             }

@@ -43,7 +43,7 @@ public class Variables {
     public static Map<FileConfiguration, File> teamInvFileList = new HashMap<>();
     public static List<NamespacedKey> advlist = new ArrayList<>();
     public static Inventory InventoryClass;
-    public static FileManager fileManagerClass;
+    public static FileManager FileManagerClass;
     public static File invfile;
     public static File advfile;
 
@@ -54,7 +54,7 @@ public class Variables {
     public static Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
 
     public static void saveConfigs(Plugin p) {
-        fileManagerClass.deleteWasteFiles();
+        FileManagerClass.deleteWasteFiles();
         p.saveConfig();
         try { invconfig.save(invfile); } catch (Exception e) { e.printStackTrace(); }
         try { advconfig.save(advfile); } catch (Exception e) { e.printStackTrace(); }

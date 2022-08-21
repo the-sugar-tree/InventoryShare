@@ -73,6 +73,7 @@ public class FileManager_1_19_R1 implements FileManager {
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             List<Map<?, ?>> itemslistT = new ArrayList<>();
             Map<String, NonNullList<ItemStack>> invT = InventoryList.get(team.getName());
+            if (invT == null) continue;
             for (ItemStack itemStack : invT.get("items")) {
                 itemslistT.add(CraftItemStack.asCraftMirror(itemStack).serialize());
             }
@@ -102,7 +103,7 @@ public class FileManager_1_19_R1 implements FileManager {
             if (itemslist.get(i).isEmpty()) {
                 continue;
             }
-            if (!((Map<String, Object>) itemslist.get(i)).get("v").equals(3105)) /* SharedConstants */ {
+            if (Integer.parseInt(((Map<String, Object>) itemslist.get(i)).get("v").toString()) > 3120) /* SharedConstants */ {
                 Bukkit.getLogger().severe("Newer version! Server downgrades are not supported!");
                 return;
             }

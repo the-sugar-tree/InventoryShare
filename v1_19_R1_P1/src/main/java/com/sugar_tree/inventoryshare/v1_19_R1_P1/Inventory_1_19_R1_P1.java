@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.v1_19_R1;
+package com.sugar_tree.inventoryshare.v1_19_R1_P1;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.Inventory;
@@ -33,9 +33,9 @@ import java.util.Map;
 import static com.sugar_tree.inventoryshare.api.Inventory.setField;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
-public class Inventory_1_19_R1 implements Inventory {
+public class Inventory_1_19_R1_P1 implements Inventory {
     private final Plugin plugin;
-    public Inventory_1_19_R1(Plugin plugin) {
+    public Inventory_1_19_R1_P1(Plugin plugin) {
         this.plugin = plugin;
     }
 
