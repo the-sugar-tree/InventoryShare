@@ -1,7 +1,7 @@
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
-Copyright (C) 2021 the-sugar-tree
+Copyright (C) 2021 the-sugar-tree <sugar_tree@outlook.kr>   
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
 
