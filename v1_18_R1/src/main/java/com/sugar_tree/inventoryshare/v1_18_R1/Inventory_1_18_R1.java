@@ -73,8 +73,8 @@ public class Inventory_1_18_R1 implements Inventory {
             // 사용될 일이 없지만, 혹시 모른 버그 방지
             try {
                 NonNullList<ItemStack> items1 = NonNullList.a(36, ItemStack.b);
-                NonNullList<ItemStack> armor1 = NonNullList.a(36, ItemStack.b);
-                NonNullList<ItemStack> extraSlots1 = NonNullList.a(36, ItemStack.b);
+                NonNullList<ItemStack> armor1 = NonNullList.a(4, ItemStack.b);
+                NonNullList<ItemStack> extraSlots1 = NonNullList.a(1, ItemStack.b);
                 List<NonNullList<ItemStack>> contents1 = ImmutableList.of(items1, armor1, extraSlots1);
                 setField(playerInventory, "h", items1);
                 setField(playerInventory, "i", armor1);
