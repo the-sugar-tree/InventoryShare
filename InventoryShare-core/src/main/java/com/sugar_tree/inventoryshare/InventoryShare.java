@@ -15,12 +15,18 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.v1_19_R1.*;
-import com.sugar_tree.inventoryshare.v1_19_R1_P0.*;
-import com.sugar_tree.inventoryshare.v1_19_R1_P1.*;
-import com.sugar_tree.inventoryshare.v1_18_R2.*;
-import com.sugar_tree.inventoryshare.v1_18_R1.*;
-import com.sugar_tree.inventoryshare.v1_17_R1.*;
+import com.sugar_tree.inventoryshare.v1_17_R1.FileManager_1_17_R1;
+import com.sugar_tree.inventoryshare.v1_17_R1.Inventory_1_17_R1;
+import com.sugar_tree.inventoryshare.v1_18_R1.FileManager_1_18_R1;
+import com.sugar_tree.inventoryshare.v1_18_R1.Inventory_1_18_R1;
+import com.sugar_tree.inventoryshare.v1_18_R2.FileManager_1_18_R2;
+import com.sugar_tree.inventoryshare.v1_18_R2.Inventory_1_18_R2;
+import com.sugar_tree.inventoryshare.v1_19_R1.FileManager_1_19_R1;
+import com.sugar_tree.inventoryshare.v1_19_R1.Inventory_1_19_R1;
+import com.sugar_tree.inventoryshare.v1_19_R1_P0.FileManager_1_19_R1_P0;
+import com.sugar_tree.inventoryshare.v1_19_R1_P0.Inventory_1_19_R1_P0;
+import com.sugar_tree.inventoryshare.v1_19_R1_P1.FileManager_1_19_R1_P1;
+import com.sugar_tree.inventoryshare.v1_19_R1_P1.Inventory_1_19_R1_P1;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,27 +41,30 @@ import static com.sugar_tree.inventoryshare.ProtocolLib.protocolLib;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public final class InventoryShare extends JavaPlugin {
-    private static String minorVersion;
-    private static String patchVersion;
+    private String minorVersion;
+    private String patchVersion;
     private boolean isSupportedVersion = true;
-    private boolean isPaper = false;
+    private boolean isSupportedBukkit = false;
     @SuppressWarnings("FieldCanBeLocal")
     private boolean isProtocolLib = false;
+
+    private Listeners listener;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
+        plugin = this;
         logger = getLogger();
         isSupportedVersion = checkVersion();
-        isPaper = checkPaper();
+        isSupportedBukkit = checkBukkit();
         isProtocolLib = checkProtocolLib();
         if (!isSupportedVersion) {
-            this.getLogger().severe("이 플러그인은 이 버젼을 지원하지 않습니다: " + minorVersion);
+            logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + minorVersion);
             this.setEnabled(false);
             return;
         }
-        if (!isPaper) {
-            this.getLogger().severe("이 플러그인은 페이퍼 버킷만 지원합니다.");
+        if (!isSupportedBukkit) {
+            this.getLogger().severe("이 플러그인은 Spigot, Paper 버킷만 지원합니다: " + Bukkit.getVersion());
             this.setEnabled(false);
             return;
         }
@@ -66,17 +75,19 @@ public final class InventoryShare extends JavaPlugin {
         }
         switch (minorVersion) {
             case "v1_19_R1" -> {
-                if (patchVersion.equals("1.19-R0.1-SNAPSHOT")) {
-                    InventoryClass = new Inventory_1_19_R1_P0(this);
-                    FileManagerClass = new FileManager_1_19_R1_P0(this);
-                }
-                else if (patchVersion.equals("1.19.1-R0.1-SNAPSHOT")) {
-                    InventoryClass = new Inventory_1_19_R1_P1(this);
-                    FileManagerClass = new FileManager_1_19_R1_P1(this);
-                }
-                else {
-                    InventoryClass = new Inventory_1_19_R1(this);
-                    FileManagerClass = new FileManager_1_19_R1(this);
+                switch (patchVersion) {
+                    case "1.19-R0.1-SNAPSHOT" -> {
+                        InventoryClass = new Inventory_1_19_R1_P0(this);
+                        FileManagerClass = new FileManager_1_19_R1_P0(this);
+                    }
+                    case "1.19.1-R0.1-SNAPSHOT" -> {
+                        InventoryClass = new Inventory_1_19_R1_P1(this);
+                        FileManagerClass = new FileManager_1_19_R1_P1(this);
+                    }
+                    default -> {
+                        InventoryClass = new Inventory_1_19_R1(this);
+                        FileManagerClass = new FileManager_1_19_R1(this);
+                    }
                 }
             }
             case "v1_18_R2" -> {
@@ -99,7 +110,8 @@ public final class InventoryShare extends JavaPlugin {
         saveDefaultConfigs();
         getCommand("inventoryshare").setExecutor(new Commands());
         getCommand("inventoryshare").setTabCompleter(new Commands());
-        Bukkit.getPluginManager().registerEvents(new Listeners(), this);
+        listener = new Listeners();
+        Bukkit.getPluginManager().registerEvents(listener, this);
         FileManagerClass.load();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (inventory) InventoryClass.invApply(player);
@@ -111,13 +123,14 @@ public final class InventoryShare extends JavaPlugin {
     @Override
     public void onDisable() {
         if (!isSupportedVersion) return;
-        if (!isPaper) return;
-        for (UUID puuid : invList.keySet()) {
+        if (!isSupportedBukkit) return;
+        for (UUID puuid : InventoryClass.getRegisteredPlayers()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
                 InventoryClass.invDisApply(p);
             }
         }
+        Bukkit.getScheduler().cancelTask(listener.getTaskId());
         FileManagerClass.save();
     }
 
@@ -132,8 +145,8 @@ public final class InventoryShare extends JavaPlugin {
         patchVersion = Bukkit.getBukkitVersion();
         return minorVersion.equals("v1_19_R1") || minorVersion.equals("v1_18_R2") || minorVersion.equals("v1_18_R1") || minorVersion.equals("v1_17_R1");
     }
-    private boolean checkPaper() {
-        return Bukkit.getVersion().contains("Paper");
+    private boolean checkBukkit() {
+        return Bukkit.getVersion().contains("Paper") || Bukkit.getVersion().contains("Spigot");
     }
     private boolean checkProtocolLib() {
         return getServer().getPluginManager().getPlugin("ProtocolLib") != null;

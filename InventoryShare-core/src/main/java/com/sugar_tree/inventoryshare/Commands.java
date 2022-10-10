@@ -152,7 +152,7 @@ public class Commands implements TabExecutor {
                     sender.sendMessage(usageMessage);
                 }
             } else {
-                sender.sendMessage(PREFIX + Bukkit.getPermissionMessage());
+                sender.sendMessage(ChatColor.RED + "I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is a mistake.");
             }
             return true;
         }

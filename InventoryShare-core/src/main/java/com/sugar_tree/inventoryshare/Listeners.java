@@ -15,13 +15,10 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.destroystokyo.paper.event.server.ServerTickEndEvent;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
@@ -39,9 +36,19 @@ import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public class Listeners implements Listener {
 
+    private final int taskId;
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public Listeners() {
+        taskId = Bukkit.getScheduler().runTaskTimer(plugin, this::onTick, 0L, 0L).getTaskId();
+    }
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().sendMessage(Component.text(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree"));
+        event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree");
         InventoryClass.savePlayerInventory(event.getPlayer());
         if (inventory) InventoryClass.invApply(event.getPlayer());
         AdvancementPatch(event.getPlayer());
@@ -78,15 +85,15 @@ public class Listeners implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (AnnounceDeath) {
-            Bukkit.broadcast(Component.text(PREFIX + ChatColor.RED + event.getEntity().getName() + "(이)가 [" + event.getEntity().getLocation().getWorld().getKey().getKey() + "] x: "
+            Bukkit.broadcastMessage(PREFIX + ChatColor.RED + event.getEntity().getName() + "(이)가 [" + event.getEntity().getLocation().getWorld().getName() + "] x: "
                     + event.getEntity().getLocation().getBlockX() + ", y: " + event.getEntity().getLocation().getBlockY() + ", z: " + event.getEntity().getLocation().getBlockZ()
-                    + "에서 사망했습니다."));
+                    + "에서 사망했습니다.");
         }
     }
 
     Map<Player, Team> teamMap = new HashMap<>();
-    @EventHandler(priority = EventPriority.LOW)
-    public void onTick(ServerTickEndEvent event) {
+
+    public void onTick() {
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (teamMap.containsKey(p)) {
                 if (inventory) {

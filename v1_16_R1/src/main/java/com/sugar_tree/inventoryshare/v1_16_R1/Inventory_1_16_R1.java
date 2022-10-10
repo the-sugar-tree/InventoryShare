@@ -1,51 +1,32 @@
-/*
- * Copyright (c) 2021 the-sugar-tree
- *
- *  Licensed under the General Public License, Version 3.0 (the "License");
- *  you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://opensource.org/licenses/lgpl-3.0.html
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.sugar_tree.inventoryshare.v1_17_R1;
+package com.sugar_tree.inventoryshare.v1_16_R1;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.Inventory;
-import net.minecraft.core.NonNullList;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.entity.player.PlayerInventory;
-import net.minecraft.world.item.ItemStack;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import net.minecraft.server.v1_16_R1.EntityPlayer;
+import net.minecraft.server.v1_16_R1.ItemStack;
+import net.minecraft.server.v1_16_R1.NonNullList;
+import net.minecraft.server.v1_16_R1.PlayerInventory;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.Inventory.setField;
-import static com.sugar_tree.inventoryshare.api.Variables.*;
-import static com.sugar_tree.inventoryshare.v1_17_R1.FileManager_1_17_R1.*;
+import static com.sugar_tree.inventoryshare.api.Variables.plugin;
+import static com.sugar_tree.inventoryshare.api.Variables.teaminventory;
+import static com.sugar_tree.inventoryshare.v1_16_R1.FileManager_1_16_R1.*;
 
-public class Inventory_1_17_R1 implements Inventory {
-    private final Plugin plugin;
-    public Inventory_1_17_R1(Plugin plugin) {
-        this.plugin = plugin;
-    }
+public class Inventory_1_16_R1 implements Inventory {
 
     public void invApplyAll(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.getInventory();
+        PlayerInventory playerInventory = entityPlayer.inventory;
         try {
-            setField(playerInventory, "h", items);
-            setField(playerInventory, "i", armor);
-            setField(playerInventory, "j", extraSlots);
-            setField(playerInventory, "n", contents);
+            setField(playerInventory, "items", items);
+            setField(playerInventory, "armor", armor);
+            setField(playerInventory, "extraSlots", extraSlots);
+            setField(playerInventory, "contents", contents);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,17 +35,17 @@ public class Inventory_1_17_R1 implements Inventory {
     @SuppressWarnings("SuspiciousMethodCalls")
     public void invDisApply(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.getInventory();
+        PlayerInventory playerInventory = entityPlayer.inventory;
         if (invList.containsKey(entityPlayer.getUniqueID())) {
             try {
-                NonNullList<ItemStack> items1 = invList.get(entityPlayer.getUniqueID()).h;
-                NonNullList<ItemStack> armor1 = invList.get(entityPlayer.getUniqueID()).i;
-                NonNullList<ItemStack> extraSlots1 = invList.get(entityPlayer.getUniqueID()).j;
+                NonNullList<ItemStack> items1 = invList.get(entityPlayer.getUniqueID()).items;
+                NonNullList<ItemStack> armor1 = invList.get(entityPlayer.getUniqueID()).armor;
+                NonNullList<ItemStack> extraSlots1 = invList.get(entityPlayer.getUniqueID()).extraSlots;
                 List<NonNullList<ItemStack>> contents1 = ImmutableList.of(items1, armor1, extraSlots1);
-                setField(playerInventory, "h", items1);
-                setField(playerInventory, "i", armor1);
-                setField(playerInventory, "j", extraSlots1);
-                setField(playerInventory, "n", contents1);
+                setField(playerInventory, "items", items1);
+                setField(playerInventory, "armor", armor1);
+                setField(playerInventory, "extraSlots", extraSlots1);
+                setField(playerInventory, "contents", contents1);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -75,10 +56,10 @@ public class Inventory_1_17_R1 implements Inventory {
                 NonNullList<ItemStack> armor1 = NonNullList.a(4, ItemStack.b);
                 NonNullList<ItemStack> extraSlots1 = NonNullList.a(1, ItemStack.b);
                 List<NonNullList<ItemStack>> contents1 = ImmutableList.of(items1, armor1, extraSlots1);
-                setField(playerInventory, "h", items1);
-                setField(playerInventory, "i", armor1);
-                setField(playerInventory, "j", extraSlots1);
-                setField(playerInventory, "n", contents1);
+                setField(playerInventory, "items", items1);
+                setField(playerInventory, "armor", armor1);
+                setField(playerInventory, "extraSlots", extraSlots1);
+                setField(playerInventory, "contents", contents1);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -117,12 +98,12 @@ public class Inventory_1_17_R1 implements Inventory {
         }
         List<NonNullList<ItemStack>> contentsT = ImmutableList.of(itemsT, armorT, extraSlotsT);
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.getInventory();
+        PlayerInventory playerInventory = entityPlayer.inventory;
         try {
-            setField(playerInventory, "h", itemsT);
-            setField(playerInventory, "i", armorT);
-            setField(playerInventory, "j", extraSlotsT);
-            setField(playerInventory, "n", contentsT);
+            setField(playerInventory, "items", itemsT);
+            setField(playerInventory, "armor", armorT);
+            setField(playerInventory, "extraSlots", extraSlotsT);
+            setField(playerInventory, "contents", contentsT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -131,16 +112,16 @@ public class Inventory_1_17_R1 implements Inventory {
     public void savePlayerInventory(@NotNull Player p) {
         PlayerInventory pinv = new PlayerInventory(null);
         try {
-            setField(pinv, "h", ((CraftPlayer) p).getHandle().getInventory().h);
-            setField(pinv, "i", ((CraftPlayer) p).getHandle().getInventory().i);
-            setField(pinv, "j", ((CraftPlayer) p).getHandle().getInventory().j);
-            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().getInventory().h,((CraftPlayer) p).getHandle().getInventory().i, ((CraftPlayer) p).getHandle().getInventory().j));
+            setField(pinv, "items", ((CraftPlayer) p).getHandle().inventory.items);
+            setField(pinv, "armor", ((CraftPlayer) p).getHandle().inventory.armor);
+            setField(pinv, "extraSlots", ((CraftPlayer) p).getHandle().inventory.extraSlots);
+            setField(pinv, "contents", ImmutableList.of(((CraftPlayer) p).getHandle().inventory.items,((CraftPlayer) p).getHandle().inventory.armor, ((CraftPlayer) p).getHandle().inventory.extraSlots));
         } catch (Exception e) {
             e.printStackTrace();
         }
         invList.put(p.getUniqueId(), pinv);
     }
-
+    
     public Set<UUID> getRegisteredPlayers() {
         return invList.keySet();
     }

@@ -19,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
+import java.util.Set;
+import java.util.UUID;
 
 public interface Inventory {
 
@@ -26,6 +28,7 @@ public interface Inventory {
     void invDisApply(@NotNull Player p);
     void invApply(@NotNull Player p);
     void savePlayerInventory(@NotNull Player p);
+    Set<UUID> getRegisteredPlayers();
 
     /**
      * @param obj Object which you want to change field

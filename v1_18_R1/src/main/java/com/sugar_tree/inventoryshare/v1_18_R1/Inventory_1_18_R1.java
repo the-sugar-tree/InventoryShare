@@ -27,11 +27,10 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.Variables.*;
+import static com.sugar_tree.inventoryshare.v1_18_R1.FileManager_1_18_R1.*;
 
 public class Inventory_1_18_R1 implements Inventory {
     private final Plugin plugin;
@@ -153,5 +152,9 @@ public class Inventory_1_18_R1 implements Inventory {
         Field field = obj.getClass().getDeclaredField(name);
         field.setAccessible(true);
         field.set(obj, value);
+    }
+
+    public Set<UUID> getRegisteredPlayers() {
+        return invList.keySet();
     }
 }

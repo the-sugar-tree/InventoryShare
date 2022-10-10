@@ -26,14 +26,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.Inventory.setField;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
+import static com.sugar_tree.inventoryshare.v1_19_R1_P1.FileManager_1_19_R1_P1.*;
 
 public class Inventory_1_19_R1_P1 implements Inventory {
+
     private final Plugin plugin;
     public Inventory_1_19_R1_P1(Plugin plugin) {
         this.plugin = plugin;
@@ -140,5 +140,9 @@ public class Inventory_1_19_R1_P1 implements Inventory {
             e.printStackTrace();
         }
         invList.put(p.getUniqueId(), pinv);
+    }
+
+    public Set<UUID> getRegisteredPlayers() {
+        return invList.keySet();
     }
 }

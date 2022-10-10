@@ -15,9 +15,11 @@
  */
 package com.sugar_tree.inventoryshare.v1_17_R1;
 
+import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.FileManager;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -28,13 +30,18 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public class FileManager_1_17_R1 implements FileManager {
+    protected static Map<UUID, PlayerInventory> invList = new HashMap<>();
+
+    protected static NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
+    protected static NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
+    protected static NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
+    protected static List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
+    protected static Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
     private final Plugin plugin;
     public FileManager_1_17_R1(Plugin plugin) {
         this.plugin = plugin;

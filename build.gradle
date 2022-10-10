@@ -4,17 +4,22 @@ allprojects {
     group = 'com.sugar_tree.inventoryshare'
     version = '2.0.1'
 
-    sourceCompatibility = '17'
-    targetCompatibility = '17'
+    sourceCompatibility = '16'
+    targetCompatibility = '16'
 
     compileJava.options.encoding = 'UTF-8'
 
     repositories {
         mavenCentral()
+        mavenLocal()
         maven {
             name = 'papermc-repo'
             url = "https://papermc.io/repo/repository/maven-public/"
         }
+    }
+
+    dependencies {
+        compileOnly 'org.jetbrains:annotations:23.0.0'
     }
 }
 

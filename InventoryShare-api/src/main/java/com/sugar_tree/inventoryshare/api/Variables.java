@@ -15,17 +15,16 @@
  */
 package com.sugar_tree.inventoryshare.api;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.entity.player.PlayerInventory;
-import net.minecraft.world.item.ItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class Variables {
@@ -39,7 +38,6 @@ public class Variables {
     public static final String PREFIX = ChatColor.LIGHT_PURPLE + "[" + ChatColor.AQUA + "InventoryShare" + ChatColor.LIGHT_PURPLE + "] " + ChatColor.RESET;
     public static FileConfiguration invconfig;
     public static FileConfiguration advconfig;
-    public static Map<UUID, PlayerInventory> invList = new HashMap<>();
     public static Map<FileConfiguration, File> teamInvFileList = new HashMap<>();
     public static List<NamespacedKey> advlist = new ArrayList<>();
     public static Inventory InventoryClass;
@@ -47,11 +45,13 @@ public class Variables {
     public static File invfile;
     public static File advfile;
 
-    public static NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
-    public static NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
-    public static NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
-    public static List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
-    public static Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
+    public static Plugin plugin;
+
+//    public static NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
+//    public static NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
+//    public static NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
+//    public static List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
+//    public static Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
 
     public static void saveConfigs(Plugin p) {
         FileManagerClass.deleteWasteFiles();

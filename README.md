@@ -36,7 +36,7 @@ https://blog.naver.com/sugar-tree/222556850608
 
 ---
 
-## 마인크래프트 버젼
+## 마인크래프트 버전
 ### Current Versions
 - 1.17, 1.18, 1.19 (Release 2.0.1) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v2.0.1/InventoryShare-2.0.1.jar)]
 

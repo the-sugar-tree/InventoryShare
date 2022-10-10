@@ -1,31 +1,16 @@
-/*
- * Copyright (c) 2021 the-sugar-tree
- *
- *  Licensed under the General Public License, Version 3.0 (the "License");
- *  you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://opensource.org/licenses/lgpl-3.0.html
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.sugar_tree.inventoryshare.v1_19_R1;
+package com.sugar_tree.inventoryshare.v1_16_R1;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.FileManager;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.entity.player.PlayerInventory;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.v1_16_R1.ItemStack;
+import net.minecraft.server.v1_16_R1.NonNullList;
+import net.minecraft.server.v1_16_R1.PlayerInventory;
+import net.minecraft.server.v1_16_R1.SharedConstants;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
@@ -33,7 +18,7 @@ import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
-public class FileManager_1_19_R1 implements FileManager {
+public class FileManager_1_16_R1 implements FileManager {
     protected static Map<UUID, PlayerInventory> invList = new HashMap<>();
 
     protected static NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
@@ -41,10 +26,7 @@ public class FileManager_1_19_R1 implements FileManager {
     protected static NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
     protected static List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
     protected static Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
-    private final Plugin plugin;
-    public FileManager_1_19_R1(Plugin plugin) {
-        this.plugin = plugin;
-    }
+
     public void save() {
         List<Map<?, ?>> itemslist = new ArrayList<>();
         for (ItemStack itemStack : items) {
@@ -110,7 +92,7 @@ public class FileManager_1_19_R1 implements FileManager {
             if (itemslist.get(i).isEmpty()) {
                 continue;
             }
-            if (Integer.parseInt(((Map<String, Object>) itemslist.get(i)).get("v").toString()) > 3120) /* SharedConstants */ {
+            if (Integer.parseInt(((Map<String, Object>) itemslist.get(i)).get("v").toString()) > SharedConstants.getGameVersion().getWorldVersion()) {
                 Bukkit.getLogger().severe("Newer version! Server downgrades are not supported!");
                 return;
             }
@@ -138,7 +120,7 @@ public class FileManager_1_19_R1 implements FileManager {
         var alist = advconfig.getStringList("advancement");
         for (int i = 0; i <= alist.size(); i++) {
             try { alist.get(i); } catch (IndexOutOfBoundsException e) { break; }
-            advlist.add(plugin.getServer().getAdvancement(NamespacedKey.fromString(alist.get(i))).getKey());
+            advlist.add(plugin.getServer().getAdvancement(NamespacedKey.minecraft(alist.get(i))).getKey());
         }
 
         if (plugin.getConfig().contains("inventory")) {
