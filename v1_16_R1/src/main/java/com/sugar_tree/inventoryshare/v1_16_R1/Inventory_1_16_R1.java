@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.sugar_tree.inventoryshare.api.Inventory.setField;
 import static com.sugar_tree.inventoryshare.api.Variables.plugin;
 import static com.sugar_tree.inventoryshare.api.Variables.teaminventory;
 import static com.sugar_tree.inventoryshare.v1_16_R1.FileManager_1_16_R1.*;

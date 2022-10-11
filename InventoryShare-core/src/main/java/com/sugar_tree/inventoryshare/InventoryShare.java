@@ -15,18 +15,18 @@
  */
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.v1_16_R1.FileManager_1_16_R1;
+import com.sugar_tree.inventoryshare.v1_16_R1.Inventory_1_16_R1;
 import com.sugar_tree.inventoryshare.v1_17_R1.FileManager_1_17_R1;
 import com.sugar_tree.inventoryshare.v1_17_R1.Inventory_1_17_R1;
 import com.sugar_tree.inventoryshare.v1_18_R1.FileManager_1_18_R1;
 import com.sugar_tree.inventoryshare.v1_18_R1.Inventory_1_18_R1;
 import com.sugar_tree.inventoryshare.v1_18_R2.FileManager_1_18_R2;
 import com.sugar_tree.inventoryshare.v1_18_R2.Inventory_1_18_R2;
+import com.sugar_tree.inventoryshare.v1_19_1_R1.FileManager_1_19_1_R1;
+import com.sugar_tree.inventoryshare.v1_19_1_R1.Inventory_1_19_1_R1;
 import com.sugar_tree.inventoryshare.v1_19_R1.FileManager_1_19_R1;
 import com.sugar_tree.inventoryshare.v1_19_R1.Inventory_1_19_R1;
-import com.sugar_tree.inventoryshare.v1_19_R1_P0.FileManager_1_19_R1_P0;
-import com.sugar_tree.inventoryshare.v1_19_R1_P0.Inventory_1_19_R1_P0;
-import com.sugar_tree.inventoryshare.v1_19_R1_P1.FileManager_1_19_R1_P1;
-import com.sugar_tree.inventoryshare.v1_19_R1_P1.Inventory_1_19_R1_P1;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -34,6 +34,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.Advancement.AdvancementPatch;
@@ -41,6 +43,7 @@ import static com.sugar_tree.inventoryshare.ProtocolLib.protocolLib;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public final class InventoryShare extends JavaPlugin {
+    private final Set<String> versions = new HashSet<>(Set.of("v1_19_R1", "v1_18_R2", "v1_18_R1", "v1_17_R1", "v1_16_R3", "v1_16_R2", "v1_16_R1"));
     private String minorVersion;
     private String patchVersion;
     private boolean isSupportedVersion = true;
@@ -71,36 +74,40 @@ public final class InventoryShare extends JavaPlugin {
         if (isProtocolLib) {
             protocolLib(this);
         } else {
-            getLogger().warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
+            logger.warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
+            logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
+            logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
         }
         switch (minorVersion) {
             case "v1_19_R1" -> {
-                switch (patchVersion) {
-                    case "1.19-R0.1-SNAPSHOT" -> {
-                        InventoryClass = new Inventory_1_19_R1_P0(this);
-                        FileManagerClass = new FileManager_1_19_R1_P0(this);
-                    }
-                    case "1.19.1-R0.1-SNAPSHOT" -> {
-                        InventoryClass = new Inventory_1_19_R1_P1(this);
-                        FileManagerClass = new FileManager_1_19_R1_P1(this);
-                    }
-                    default -> {
-                        InventoryClass = new Inventory_1_19_R1(this);
-                        FileManagerClass = new FileManager_1_19_R1(this);
-                    }
+                if (patchVersion.equals("1.19-R0.1-SNAPSHOT")) {
+                    InventoryClass = new Inventory_1_19_R1();
+                    FileManagerClass = new FileManager_1_19_R1();
+                } else {
+                    InventoryClass = new Inventory_1_19_1_R1();
+                    FileManagerClass = new FileManager_1_19_1_R1();
                 }
             }
             case "v1_18_R2" -> {
-                InventoryClass = new Inventory_1_18_R2(this);
-                FileManagerClass = new FileManager_1_18_R2(this);
+                InventoryClass = new Inventory_1_18_R2();
+                FileManagerClass = new FileManager_1_18_R2();
             }
             case "v1_18_R1" -> {
-                InventoryClass = new Inventory_1_18_R1(this);
-                FileManagerClass = new FileManager_1_18_R1(this);
+                InventoryClass = new Inventory_1_18_R1();
+                FileManagerClass = new FileManager_1_18_R1();
             }
             case "v1_17_R1" -> {
-                InventoryClass = new Inventory_1_17_R1(this);
-                FileManagerClass = new FileManager_1_17_R1(this);
+                InventoryClass = new Inventory_1_17_R1();
+                FileManagerClass = new FileManager_1_17_R1();
+            }
+            case "v1_16_R1" -> {
+                InventoryClass = new Inventory_1_16_R1();
+                FileManagerClass = new FileManager_1_16_R1();
+            }
+            default -> {
+                logger.severe("알 수 없는 오류로 이 버전을 지원하지 않습니다!");
+                this.setEnabled(false);
+                return;
             }
         }
         invfile = new File(getDataFolder(), "inventory.yml");
@@ -117,7 +124,7 @@ public final class InventoryShare extends JavaPlugin {
             if (inventory) InventoryClass.invApply(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementPatch(player), 1);
         }
-        getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"인벤토리 공유 플러그인\" by. " + ChatColor.GREEN + "sugar_tree");
+        logger.info(PREFIX + ChatColor.YELLOW + "\"인벤토리 공유 플러그인\" by. " + ChatColor.GREEN + "sugar_tree");
     }
 
     @Override
@@ -143,7 +150,7 @@ public final class InventoryShare extends JavaPlugin {
             return false;
         }
         patchVersion = Bukkit.getBukkitVersion();
-        return minorVersion.equals("v1_19_R1") || minorVersion.equals("v1_18_R2") || minorVersion.equals("v1_18_R1") || minorVersion.equals("v1_17_R1");
+        return versions.contains(minorVersion);
     }
     private boolean checkBukkit() {
         return Bukkit.getVersion().contains("Paper") || Bukkit.getVersion().contains("Spigot");

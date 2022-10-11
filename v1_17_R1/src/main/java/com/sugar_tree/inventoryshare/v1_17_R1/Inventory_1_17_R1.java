@@ -23,20 +23,15 @@ import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.sugar_tree.inventoryshare.api.Inventory.setField;
-import static com.sugar_tree.inventoryshare.api.Variables.*;
+import static com.sugar_tree.inventoryshare.api.Variables.plugin;
+import static com.sugar_tree.inventoryshare.api.Variables.teaminventory;
 import static com.sugar_tree.inventoryshare.v1_17_R1.FileManager_1_17_R1.*;
 
 public class Inventory_1_17_R1 implements Inventory {
-    private final Plugin plugin;
-    public Inventory_1_17_R1(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     public void invApplyAll(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();

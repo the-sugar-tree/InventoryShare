@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.v1_19_R1_P1;
+package com.sugar_tree.inventoryshare.v1_19_1_R1;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.Inventory;
@@ -23,21 +23,15 @@ import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.sugar_tree.inventoryshare.api.Inventory.setField;
-import static com.sugar_tree.inventoryshare.api.Variables.*;
-import static com.sugar_tree.inventoryshare.v1_19_R1_P1.FileManager_1_19_R1_P1.*;
+import static com.sugar_tree.inventoryshare.api.Variables.plugin;
+import static com.sugar_tree.inventoryshare.api.Variables.teaminventory;
+import static com.sugar_tree.inventoryshare.v1_19_1_R1.FileManager_1_19_1_R1.*;
 
-public class Inventory_1_19_R1_P1 implements Inventory {
-
-    private final Plugin plugin;
-    public Inventory_1_19_R1_P1(Plugin plugin) {
-        this.plugin = plugin;
-    }
+public class Inventory_1_19_1_R1 implements Inventory {
 
     public void invApplyAll(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
@@ -87,7 +81,7 @@ public class Inventory_1_19_R1_P1 implements Inventory {
         invList.remove(entityPlayer);
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "deprecation"})
     public void invApply(@NotNull Player p) {
         if (!(teaminventory)) {
             invApplyAll(p);

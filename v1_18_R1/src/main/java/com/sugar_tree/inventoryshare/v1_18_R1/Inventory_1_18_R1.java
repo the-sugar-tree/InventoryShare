@@ -23,20 +23,15 @@ import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
-import static com.sugar_tree.inventoryshare.api.Variables.*;
+import static com.sugar_tree.inventoryshare.api.Variables.plugin;
+import static com.sugar_tree.inventoryshare.api.Variables.teaminventory;
 import static com.sugar_tree.inventoryshare.v1_18_R1.FileManager_1_18_R1.*;
 
 public class Inventory_1_18_R1 implements Inventory {
-    private final Plugin plugin;
-    public Inventory_1_18_R1(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     public void invApplyAll(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
@@ -86,7 +81,7 @@ public class Inventory_1_18_R1 implements Inventory {
         invList.remove(entityPlayer);
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "deprecation"})
     public void invApply(@NotNull Player p) {
         if (!(teaminventory)) {
             invApplyAll(p);
@@ -139,19 +134,6 @@ public class Inventory_1_18_R1 implements Inventory {
             e.printStackTrace();
         }
         invList.put(p.getUniqueId(), pinv);
-    }
-
-    /**
-     * @param obj Object which you want to change field
-     * @param name Field name
-     * @param value Value to change field
-     * @throws NoSuchFieldException if a field with the specified name is not found.
-     * @throws IllegalAccessException if this Field object is enforcing Java language access control and the underlying field is inaccessible or final; or if this Field object has no write access.
-     */
-    private void setField(Object obj, String name, Object value) throws NoSuchFieldException, IllegalAccessException {
-        Field field = obj.getClass().getDeclaredField(name);
-        field.setAccessible(true);
-        field.set(obj, value);
     }
 
     public Set<UUID> getRegisteredPlayers() {

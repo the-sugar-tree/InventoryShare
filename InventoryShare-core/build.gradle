@@ -9,15 +9,13 @@ repositories {
 
 dependencies {
     compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0"
-//    compileOnly 'com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT'
-//    compileOnly 'io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT'
+    implementation project(':v1_19_1_R1')
     implementation project(':v1_19_R1')
-    implementation project(':v1_19_R1_P1')
-    implementation project(':v1_19_R1_P0')
     implementation project(':v1_18_R2')
     implementation project(':v1_18_R1')
     implementation project(':v1_17_R1')
+    implementation project(':v1_16_R1')
     implementation project(':InventoryShare-api')
 }
 

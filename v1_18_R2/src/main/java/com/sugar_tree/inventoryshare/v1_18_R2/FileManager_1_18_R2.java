@@ -17,6 +17,7 @@ package com.sugar_tree.inventoryshare.v1_18_R2;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.FileManager;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +26,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
@@ -41,10 +41,8 @@ public class FileManager_1_18_R2 implements FileManager {
     protected static NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
     protected static List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
     protected static Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
-    private final Plugin plugin;
-    public FileManager_1_18_R2(Plugin plugin) {
-        this.plugin = plugin;
-    }
+
+    @SuppressWarnings("ConstantConditions")
     public void save() {
         List<Map<?, ?>> itemslist = new ArrayList<>();
         for (ItemStack itemStack : items) {
@@ -102,7 +100,7 @@ public class FileManager_1_18_R2 implements FileManager {
         saveConfigs(plugin);
     }
 
-    @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored", "ConstantConditions"})
+    @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored", "ConstantConditions", "deprecation"})
     public void load() {
         var itemslist = invconfig.getMapList("items");
         for (int i = 0; i <= itemslist.size(); i++) {
@@ -110,7 +108,7 @@ public class FileManager_1_18_R2 implements FileManager {
             if (itemslist.get(i).isEmpty()) {
                 continue;
             }
-            if (Integer.parseInt(((Map<String, Object>) itemslist.get(i)).get("v").toString()) > 2975) /* SharedConstants */ {
+            if (Integer.parseInt(((Map<String, Object>) itemslist.get(i)).get("v").toString()) > SharedConstants.b().getWorldVersion()) {
                 Bukkit.getLogger().severe("Newer version! Server downgrades are not supported!");
                 return;
             }

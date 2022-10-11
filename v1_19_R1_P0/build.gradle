@@ -1,5 +1,0 @@
-dependencies {
-    compileOnly files("libs/spigot-1.19-R0.1-SNAPSHOT.jar")
-    compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
-    compileOnly project(':InventoryShare-api')
-}

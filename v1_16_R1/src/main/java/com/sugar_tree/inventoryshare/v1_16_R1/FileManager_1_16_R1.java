@@ -27,6 +27,7 @@ public class FileManager_1_16_R1 implements FileManager {
     protected static List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
     protected static Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
 
+    @SuppressWarnings("ConstantConditions")
     public void save() {
         List<Map<?, ?>> itemslist = new ArrayList<>();
         for (ItemStack itemStack : items) {

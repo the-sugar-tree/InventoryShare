@@ -26,7 +26,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
@@ -42,10 +41,8 @@ public class FileManager_1_17_R1 implements FileManager {
     protected static NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
     protected static List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
     protected static Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
-    private final Plugin plugin;
-    public FileManager_1_17_R1(Plugin plugin) {
-        this.plugin = plugin;
-    }
+
+    @SuppressWarnings("ConstantConditions")
     public void save() {
         List<Map<?, ?>> itemslist = new ArrayList<>();
         for (ItemStack itemStack : items) {
