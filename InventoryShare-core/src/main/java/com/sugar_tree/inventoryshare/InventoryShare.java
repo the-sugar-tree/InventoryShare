@@ -33,7 +33,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -61,6 +61,11 @@ public final class InventoryShare extends JavaPlugin {
         isSupportedVersion = checkVersion();
         isSupportedBukkit = checkBukkit();
         isProtocolLib = checkProtocolLib();
+        WorldVersion = getWorldVersion();
+        if (WorldVersion == -1) {
+            this.setEnabled(false);
+            return;
+        }
         if (!isSupportedVersion) {
             logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + minorVersion);
             this.setEnabled(false);
@@ -110,6 +115,7 @@ public final class InventoryShare extends JavaPlugin {
                 return;
             }
         }
+
         invfile = new File(getDataFolder(), "inventory.yml");
         advfile = new File(getDataFolder(), "advancements.yml");
         invconfig = YamlConfiguration.loadConfiguration(invfile);
@@ -124,6 +130,7 @@ public final class InventoryShare extends JavaPlugin {
             if (inventory) InventoryClass.invApply(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementPatch(player), 1);
         }
+
         logger.info(PREFIX + ChatColor.YELLOW + "\"인벤토리 공유 플러그인\" by. " + ChatColor.GREEN + "sugar_tree");
     }
 
@@ -157,6 +164,34 @@ public final class InventoryShare extends JavaPlugin {
     }
     private boolean checkProtocolLib() {
         return getServer().getPluginManager().getPlugin("ProtocolLib") != null;
+    }
+
+    private int getWorldVersion() {
+        int r = -1;
+        InputStream is = Bukkit.getServer().getClass().getResourceAsStream("/version.json");
+        if (is == null) {
+            logger.severe("cannot find version.json");
+            return -1;
+        } else {
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String nr;
+            while (true) {
+                try {
+                    if ((nr = br.readLine()) == null) break;
+                    if (nr.contains("world_version")) {
+                        r = Integer.parseInt(nr.split(":")[1].trim().substring(0, 4));
+                        break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (r == -1) {
+                logger.severe("cannot detect world version!");
+                return -1;
+            }
+            return r;
+        }
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

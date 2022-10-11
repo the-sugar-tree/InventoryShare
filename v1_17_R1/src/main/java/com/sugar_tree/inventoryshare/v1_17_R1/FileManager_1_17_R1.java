@@ -17,7 +17,6 @@ package com.sugar_tree.inventoryshare.v1_17_R1;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.FileManager;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
@@ -108,7 +107,7 @@ public class FileManager_1_17_R1 implements FileManager {
             if (itemslist.get(i).isEmpty()) {
                 continue;
             }
-            if (Integer.parseInt(((Map<String, Object>) itemslist.get(i)).get("v").toString()) > SharedConstants.getGameVersion().getWorldVersion()) {
+            if (Integer.parseInt(((Map<String, Object>) itemslist.get(i)).get("v").toString()) > WorldVersion) {
                 Bukkit.getLogger().severe("Newer version! Server downgrades are not supported!");
                 return;
             }

@@ -17,6 +17,7 @@ package com.sugar_tree.inventoryshare;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -85,7 +86,8 @@ public class Listeners implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (AnnounceDeath) {
-            Bukkit.broadcastMessage(PREFIX + ChatColor.RED + event.getEntity().getName() + "(이)가 [" + event.getEntity().getLocation().getWorld().getName() + "] x: "
+            World w = event.getEntity().getLocation().getWorld();
+            Bukkit.broadcastMessage(PREFIX + ChatColor.RED + event.getEntity().getName() + "(이)가 [" + (w == null ? null : w.getName()) + "] x: "
                     + event.getEntity().getLocation().getBlockX() + ", y: " + event.getEntity().getLocation().getBlockY() + ", z: " + event.getEntity().getLocation().getBlockZ()
                     + "에서 사망했습니다.");
         }
@@ -93,6 +95,7 @@ public class Listeners implements Listener {
 
     Map<Player, Team> teamMap = new HashMap<>();
 
+    @SuppressWarnings({"ConstantConditions", "deprecation"})
     public void onTick() {
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (teamMap.containsKey(p)) {

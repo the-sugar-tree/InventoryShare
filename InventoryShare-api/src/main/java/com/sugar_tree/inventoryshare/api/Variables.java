@@ -45,6 +45,8 @@ public class Variables {
     public static File invfile;
     public static File advfile;
 
+    public static int WorldVersion;
+
     public static Plugin plugin;
 
 //    public static NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
