@@ -101,7 +101,7 @@ public class FileManager_1_18_R1 implements FileManager {
 
     @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored", "ConstantConditions"})
     public void load() {
-        var itemslist = invconfig.getMapList("items");
+        List<Map<?, ?>> itemslist = invconfig.getMapList("items");
         for (int i = 0; i <= itemslist.size(); i++) {
             try { itemslist.get(i); } catch (IndexOutOfBoundsException e) { break; }
             if (itemslist.get(i).isEmpty()) {
@@ -114,7 +114,7 @@ public class FileManager_1_18_R1 implements FileManager {
             items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
         }
 
-        var armorlist = invconfig.getMapList("armor");
+        List<Map<?, ?>> armorlist = invconfig.getMapList("armor");
         for (int i = 0; i <= armorlist.size(); i++) {
             try { armorlist.get(i); } catch (IndexOutOfBoundsException e) { break; }
             if (armorlist.get(i).isEmpty()) {
@@ -123,7 +123,7 @@ public class FileManager_1_18_R1 implements FileManager {
             armor.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) armorlist.get(i))));
         }
 
-        var extraSlotslist = invconfig.getMapList("extraSlots");
+        List<Map<?, ?>> extraSlotslist = invconfig.getMapList("extraSlots");
         for (int i = 0; i <= extraSlotslist.size(); i++) {
             try { extraSlotslist.get(i); } catch (IndexOutOfBoundsException e) { break; }
             if (extraSlotslist.get(i).isEmpty()) {
@@ -132,7 +132,7 @@ public class FileManager_1_18_R1 implements FileManager {
             extraSlots.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) extraSlotslist.get(i))));
         }
 
-        var alist = advconfig.getStringList("advancement");
+        List<String> alist = advconfig.getStringList("advancement");
         for (int i = 0; i <= alist.size(); i++) {
             try { alist.get(i); } catch (IndexOutOfBoundsException e) { break; }
             advlist.add(plugin.getServer().getAdvancement(NamespacedKey.fromString(alist.get(i))).getKey());
@@ -155,7 +155,7 @@ public class FileManager_1_18_R1 implements FileManager {
             File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
             if (file.exists()) {
                 FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
-                var itemslistT = fileConfiguration.getMapList("items");
+                List<Map<?, ?>> itemslistT = fileConfiguration.getMapList("items");
                 for (int i = 0; i <= itemslistT.size(); i++) {
                     try { itemslistT.get(i); } catch (IndexOutOfBoundsException e) { break; }
                     if (itemslistT.get(i).isEmpty()) {
@@ -164,7 +164,7 @@ public class FileManager_1_18_R1 implements FileManager {
                     items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslistT.get(i))));
                 }
 
-                var armorlistT = fileConfiguration.getMapList("armor");
+                List<Map<?, ?>> armorlistT = fileConfiguration.getMapList("armor");
                 for (int i = 0; i <= armorlistT.size(); i++) {
                     try { armorlistT.get(i); } catch (IndexOutOfBoundsException e) { break; }
                     if (armorlistT.get(i).isEmpty()) {
@@ -173,7 +173,7 @@ public class FileManager_1_18_R1 implements FileManager {
                     armor.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) armorlistT.get(i))));
                 }
 
-                var extraSlotslistT = fileConfiguration.getMapList("extraSlots");
+                List<Map<?, ?>> extraSlotslistT = fileConfiguration.getMapList("extraSlots");
                 for (int i = 0; i <= extraSlotslistT.size(); i++) {
                     try { extraSlotslistT.get(i); } catch (IndexOutOfBoundsException e) { break; }
                     if (extraSlotslistT.get(i).isEmpty()) {
