@@ -9,11 +9,10 @@ import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.plugin.Plugin;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import org.bukkit.plugin.Plugin;
 
 public class ProtocolLib {
     static Set<Player> breakingBlock = new HashSet<>();
@@ -25,7 +24,7 @@ public class ProtocolLib {
             @Override
             public void onPacketSending(PacketEvent event) {
                 if (breakingBlock.contains(event.getPlayer())) {
-                    var slot = event.getPacket().getModifier().read(2);
+                    Object slot = event.getPacket().getModifier().read(2);
                     if ((event.getPlayer().getInventory().getHeldItemSlot() + 36) == ((int) slot)) {
                         ItemStack handItem = event.getPlayer().getInventory().getItemInMainHand();
                         if (handItem.hasItemMeta() && handItem.getItemMeta() instanceof Damageable && ((Damageable) handItem.getItemMeta()).getDamage() > 0) {
@@ -41,7 +40,7 @@ public class ProtocolLib {
                 PacketType.Play.Client.BLOCK_DIG) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
-                var Status = event.getPacket().getModifier().read(2);
+                Object Status = event.getPacket().getModifier().read(2);
                 try {
                     if (Status.toString().equals("ABORT_DESTROY_BLOCK")) {
                         breakingBlock.remove(event.getPlayer());

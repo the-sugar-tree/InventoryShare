@@ -4,8 +4,8 @@ allprojects {
     group = 'com.sugar_tree.inventoryshare'
     version = '2.0.1'
 
-    sourceCompatibility = '16'
-    targetCompatibility = '16'
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 
     compileJava.options.encoding = 'UTF-8'
 

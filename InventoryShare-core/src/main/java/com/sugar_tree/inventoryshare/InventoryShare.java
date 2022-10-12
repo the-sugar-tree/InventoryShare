@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -45,7 +46,7 @@ import static com.sugar_tree.inventoryshare.ProtocolLib.protocolLib;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public final class InventoryShare extends JavaPlugin {
-    private final Set<String> versions = new HashSet<>(Set.of("v1_19_R1", "v1_18_R2", "v1_18_R1", "v1_17_R1", "v1_16_R3", "v1_16_R2", "v1_16_R1"));
+    private final Set<String> versions = new HashSet<>(Arrays.asList("v1_19_R1", "v1_18_R2", "v1_18_R1", "v1_17_R1", "v1_16_R3", "v1_16_R2", "v1_16_R1"));
     private String minorVersion;
     private String patchVersion;
     private boolean isSupportedVersion = true;
@@ -86,7 +87,7 @@ public final class InventoryShare extends JavaPlugin {
             logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
         }
         switch (minorVersion) {
-            case "v1_19_R1" -> {
+            case "v1_19_R1":
                 if (patchVersion.equals("1.19-R0.1-SNAPSHOT")) {
                     InventoryClass = new Inventory_1_19_R1();
                     FileManagerClass = new FileManager_1_19_R1();
@@ -94,36 +95,35 @@ public final class InventoryShare extends JavaPlugin {
                     InventoryClass = new Inventory_1_19_1_R1();
                     FileManagerClass = new FileManager_1_19_1_R1();
                 }
-            }
-            case "v1_18_R2" -> {
+                break;
+            case "v1_18_R2":
                 InventoryClass = new Inventory_1_18_R2();
                 FileManagerClass = new FileManager_1_18_R2();
-            }
-            case "v1_18_R1" -> {
+                break;
+            case "v1_18_R1":
                 InventoryClass = new Inventory_1_18_R1();
                 FileManagerClass = new FileManager_1_18_R1();
-            }
-            case "v1_17_R1" -> {
+                break;
+            case "v1_17_R1":
                 InventoryClass = new Inventory_1_17_R1();
                 FileManagerClass = new FileManager_1_17_R1();
-            }
-            case "v1_16_R1" -> {
+                break;
+            case "v1_16_R1":
                 InventoryClass = new Inventory_1_16_R1();
                 FileManagerClass = new FileManager_1_16_R1();
-            }
-            case "v1_16_R2" -> {
+                break;
+            case "v1_16_R2":
                 InventoryClass = new Inventory_1_16_R2();
                 FileManagerClass = new FileManager_1_16_R2();
-            }
-            case "v1_16_R3" -> {
+                break;
+            case "v1_16_R3":
                 InventoryClass = new Inventory_1_16_R3();
                 FileManagerClass = new FileManager_1_16_R3();
-            }
-            default -> {
+                break;
+            default:
                 logger.severe("알 수 없는 오류로 이 버전을 지원하지 않습니다!");
                 this.setEnabled(false);
                 return;
-            }
         }
 
         invfile = new File(getDataFolder(), "inventory.yml");
