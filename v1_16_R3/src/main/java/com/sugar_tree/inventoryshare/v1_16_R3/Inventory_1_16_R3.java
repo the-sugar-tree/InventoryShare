@@ -25,7 +25,7 @@ public class Inventory_1_16_R3 implements Inventory {
             setField(playerInventory, "items", items);
             setField(playerInventory, "armor", armor);
             setField(playerInventory, "extraSlots", extraSlots);
-            setField(playerInventory, "contents", contents);
+            setField(playerInventory, "f", contents);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,7 +44,7 @@ public class Inventory_1_16_R3 implements Inventory {
                 setField(playerInventory, "items", items1);
                 setField(playerInventory, "armor", armor1);
                 setField(playerInventory, "extraSlots", extraSlots1);
-                setField(playerInventory, "contents", contents1);
+                setField(playerInventory, "f", contents1);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -58,7 +58,7 @@ public class Inventory_1_16_R3 implements Inventory {
                 setField(playerInventory, "items", items1);
                 setField(playerInventory, "armor", armor1);
                 setField(playerInventory, "extraSlots", extraSlots1);
-                setField(playerInventory, "contents", contents1);
+                setField(playerInventory, "f", contents1);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -102,7 +102,7 @@ public class Inventory_1_16_R3 implements Inventory {
             setField(playerInventory, "items", itemsT);
             setField(playerInventory, "armor", armorT);
             setField(playerInventory, "extraSlots", extraSlotsT);
-            setField(playerInventory, "contents", contentsT);
+            setField(playerInventory, "f", contentsT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,11 +110,12 @@ public class Inventory_1_16_R3 implements Inventory {
 
     public void savePlayerInventory(@NotNull Player p) {
         PlayerInventory pinv = new PlayerInventory(null);
+        EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         try {
-            setField(pinv, "items", ((CraftPlayer) p).getHandle().inventory.items);
-            setField(pinv, "armor", ((CraftPlayer) p).getHandle().inventory.armor);
-            setField(pinv, "extraSlots", ((CraftPlayer) p).getHandle().inventory.extraSlots);
-            setField(pinv, "contents", ImmutableList.of(((CraftPlayer) p).getHandle().inventory.items,((CraftPlayer) p).getHandle().inventory.armor, ((CraftPlayer) p).getHandle().inventory.extraSlots));
+            setField(pinv, "items", entityPlayer.inventory.items);
+            setField(pinv, "armor", entityPlayer.inventory.armor);
+            setField(pinv, "extraSlots", entityPlayer.inventory.extraSlots);
+            setField(pinv, "f", ImmutableList.of(entityPlayer.inventory.items, entityPlayer.inventory.armor, entityPlayer.inventory.extraSlots));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -125,11 +125,12 @@ public class Inventory_1_19_1_R1 implements Inventory {
 
     public void savePlayerInventory(@NotNull Player p) {
         PlayerInventory pinv = new PlayerInventory(null);
+        EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         try {
-            setField(pinv, "h", ((CraftPlayer) p).getHandle().fA().h);
-            setField(pinv, "i", ((CraftPlayer) p).getHandle().fA().i);
-            setField(pinv, "j", ((CraftPlayer) p).getHandle().fA().j);
-            setField(pinv, "n", ImmutableList.of(((CraftPlayer) p).getHandle().fA().h,((CraftPlayer) p).getHandle().fA().i, ((CraftPlayer) p).getHandle().fA().j));
+            setField(pinv, "h", entityPlayer.fA().h);
+            setField(pinv, "i", entityPlayer.fA().i);
+            setField(pinv, "j", entityPlayer.fA().j);
+            setField(pinv, "n", ImmutableList.of(entityPlayer.fA().h, entityPlayer.fA().i, entityPlayer.fA().j));
         } catch (Exception e) {
             e.printStackTrace();
         }
