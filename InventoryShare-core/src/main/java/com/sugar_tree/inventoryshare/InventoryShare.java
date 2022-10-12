@@ -17,6 +17,8 @@ package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.v1_16_R1.FileManager_1_16_R1;
 import com.sugar_tree.inventoryshare.v1_16_R1.Inventory_1_16_R1;
+import com.sugar_tree.inventoryshare.v1_16_R3.FileManager_1_16_R3;
+import com.sugar_tree.inventoryshare.v1_16_R3.Inventory_1_16_R3;
 import com.sugar_tree.inventoryshare.v1_17_R1.FileManager_1_17_R1;
 import com.sugar_tree.inventoryshare.v1_17_R1.Inventory_1_17_R1;
 import com.sugar_tree.inventoryshare.v1_18_R1.FileManager_1_18_R1;
@@ -108,6 +110,14 @@ public final class InventoryShare extends JavaPlugin {
             case "v1_16_R1" -> {
                 InventoryClass = new Inventory_1_16_R1();
                 FileManagerClass = new FileManager_1_16_R1();
+            }
+            case "v1_16_R2" -> {
+                InventoryClass = new Inventory_1_16_R2();
+                FileManagerClass = new FileManager_1_16_R2();
+            }
+            case "v1_16_R3" -> {
+                InventoryClass = new Inventory_1_16_R3();
+                FileManagerClass = new FileManager_1_16_R3();
             }
             default -> {
                 logger.severe("알 수 없는 오류로 이 버전을 지원하지 않습니다!");

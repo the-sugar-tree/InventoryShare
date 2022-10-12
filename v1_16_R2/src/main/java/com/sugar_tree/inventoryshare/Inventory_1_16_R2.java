@@ -1,22 +1,22 @@
-package com.sugar_tree.inventoryshare.v1_16_R1;
+package com.sugar_tree.inventoryshare;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.Inventory;
-import net.minecraft.server.v1_16_R1.EntityPlayer;
-import net.minecraft.server.v1_16_R1.ItemStack;
-import net.minecraft.server.v1_16_R1.NonNullList;
-import net.minecraft.server.v1_16_R1.PlayerInventory;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
+import net.minecraft.server.v1_16_R2.EntityPlayer;
+import net.minecraft.server.v1_16_R2.ItemStack;
+import net.minecraft.server.v1_16_R2.NonNullList;
+import net.minecraft.server.v1_16_R2.PlayerInventory;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+import static com.sugar_tree.inventoryshare.FileManager_1_16_R2.*;
 import static com.sugar_tree.inventoryshare.api.Variables.plugin;
 import static com.sugar_tree.inventoryshare.api.Variables.teaminventory;
-import static com.sugar_tree.inventoryshare.v1_16_R1.FileManager_1_16_R1.*;
 
-public class Inventory_1_16_R1 implements Inventory {
+public class Inventory_1_16_R2 implements Inventory {
 
     public void invApplyAll(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
@@ -125,3 +125,4 @@ public class Inventory_1_16_R1 implements Inventory {
         return invList.keySet();
     }
 }
+
