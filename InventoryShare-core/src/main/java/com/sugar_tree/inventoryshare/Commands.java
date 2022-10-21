@@ -21,18 +21,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sugar_tree.inventoryshare.InventoryShare.*;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public class Commands implements TabExecutor {
-    private static final Plugin plugin = getPlugin(InventoryShare.class);
 
     @SuppressWarnings("ConstantConditions")
     @Override

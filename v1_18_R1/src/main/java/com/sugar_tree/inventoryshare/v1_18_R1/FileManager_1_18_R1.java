@@ -152,6 +152,9 @@ public class FileManager_1_18_R1 implements FileManager {
         }
 
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
+            NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
+            NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.b);
+            NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.b);
             File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
             if (file.exists()) {
                 FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
@@ -182,6 +185,11 @@ public class FileManager_1_18_R1 implements FileManager {
                     extraSlots.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) extraSlotslistT.get(i))));
                 }
             }
+            Map<String, NonNullList<ItemStack>> m = new HashMap<>();
+            m.put("items", items);
+            m.put("armor", armor);
+            m.put("extraSlots", extraSlots);
+            InventoryList.put(team.getName(), m);
         }
     }
 
