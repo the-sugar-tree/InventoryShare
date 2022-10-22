@@ -9,14 +9,15 @@ import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.plugin.Plugin;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.sugar_tree.inventoryshare.api.Variables.plugin;
+
 public class ProtocolLib {
     static Set<Player> breakingBlock = new HashSet<>();
-    public static void protocolLib(Plugin plugin) {
+    public static void protocolLib() {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(new PacketAdapter(plugin,
                 ListenerPriority.NORMAL,

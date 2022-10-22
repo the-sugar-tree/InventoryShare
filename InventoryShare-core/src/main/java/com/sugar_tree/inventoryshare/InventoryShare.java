@@ -80,7 +80,7 @@ public final class InventoryShare extends JavaPlugin {
             return;
         }
         if (isProtocolLib) {
-            protocolLib(this);
+            protocolLib();
         } else {
             logger.warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
             logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
@@ -181,7 +181,6 @@ public final class InventoryShare extends JavaPlugin {
         InputStream is = Bukkit.getServer().getClass().getResourceAsStream("/version.json");
         if (is == null) {
             logger.severe("cannot find version.json");
-            return -1;
         } else {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String nr;
@@ -200,8 +199,8 @@ public final class InventoryShare extends JavaPlugin {
                 logger.severe("cannot detect world version!");
                 return -1;
             }
-            return r;
         }
+        return r;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

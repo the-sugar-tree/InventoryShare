@@ -108,7 +108,7 @@ public class FileManager_1_19_R1 implements FileManager {
                 continue;
             }
             if (Integer.parseInt(((Map<String, Object>) itemslist.get(i)).get("v").toString()) > WorldVersion) {
-                Bukkit.getLogger().severe("Newer version! Server downgrades are not supported!");
+                logger.severe("Newer version! Server downgrades are not supported!");
                 return;
             }
             items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
