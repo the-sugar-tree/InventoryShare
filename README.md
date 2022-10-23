@@ -41,8 +41,8 @@ https://blog.naver.com/sugar-tree/222556850608
 - 1.17, 1.18, 1.19 (Release 2.1) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v2.1/InventoryShare-2.1.jar)]
 
 ## 주의사항
-**이 플러그인은 페이퍼 기반입니다!**   
-**반드시 페이퍼 서버에서 사용해주세요!**
+**이 플러그인은 스피갓, 페이퍼 기반입니다!**   
+**반드시 지원하는 버킷에서 사용해주세요!**
 
 ## 도움말
 팀 공유기능을 사용하시려면 아래 커맨드를 활용해 팀을 정해주시고
