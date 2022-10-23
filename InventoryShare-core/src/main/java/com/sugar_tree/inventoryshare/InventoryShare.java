@@ -41,8 +41,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.sugar_tree.inventoryshare.Advancement.AdvancementPatch;
-import static com.sugar_tree.inventoryshare.ProtocolLib.protocolLib;
+import static com.sugar_tree.inventoryshare.AdvancementUtil.AdvancementPatch;
+import static com.sugar_tree.inventoryshare.ProtocolLibUtil.protocolLib;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public final class InventoryShare extends JavaPlugin {
@@ -64,11 +64,6 @@ public final class InventoryShare extends JavaPlugin {
         isSupportedVersion = checkVersion();
         isSupportedBukkit = checkBukkit();
         isProtocolLib = checkProtocolLib();
-        WorldVersion = getWorldVersion();
-        if (WorldVersion == -1) {
-            this.setEnabled(false);
-            return;
-        }
         if (!isSupportedVersion) {
             logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + minorVersion);
             this.setEnabled(false);
@@ -79,8 +74,14 @@ public final class InventoryShare extends JavaPlugin {
             this.setEnabled(false);
             return;
         }
+        WorldVersion = getWorldVersion();
+        if (WorldVersion == -1) {
+            this.setEnabled(false);
+            return;
+        }
         if (isProtocolLib) {
             protocolLib();
+            logger.info("ProtocolLib 플러그인이 감지되었습니다.");
         } else {
             logger.warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
             logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
@@ -181,6 +182,7 @@ public final class InventoryShare extends JavaPlugin {
         InputStream is = Bukkit.getServer().getClass().getResourceAsStream("/version.json");
         if (is == null) {
             logger.severe("cannot find version.json");
+            return -1;
         } else {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String nr;

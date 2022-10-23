@@ -26,7 +26,7 @@ import java.util.List;
 
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
-public class Advancement {
+public class AdvancementUtil {
 
     @SuppressWarnings("ConstantConditions")
     public static void AdvancementPatch(Player player) {

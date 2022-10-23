@@ -15,7 +15,7 @@ import java.util.Set;
 
 import static com.sugar_tree.inventoryshare.api.Variables.plugin;
 
-public class ProtocolLib {
+public class ProtocolLibUtil {
     static Set<Player> breakingBlock = new HashSet<>();
     public static void protocolLib() {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
