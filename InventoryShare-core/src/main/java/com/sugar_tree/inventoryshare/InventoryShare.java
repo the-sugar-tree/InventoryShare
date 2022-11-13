@@ -42,7 +42,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.AdvancementUtil.AdvancementPatch;
-import static com.sugar_tree.inventoryshare.ProtocolLibUtil.protocolLib;
+import static com.sugar_tree.inventoryshare.ProtocolLibUtil.ProtocolLib;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public final class InventoryShare extends JavaPlugin {
@@ -80,7 +80,7 @@ public final class InventoryShare extends JavaPlugin {
             return;
         }
         if (isProtocolLib) {
-            protocolLib();
+            ProtocolLib();
             logger.info("ProtocolLib 플러그인이 감지되었습니다.");
         } else {
             logger.warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
