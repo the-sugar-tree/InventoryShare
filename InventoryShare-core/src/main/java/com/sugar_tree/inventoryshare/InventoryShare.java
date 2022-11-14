@@ -15,6 +15,7 @@
  */
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.utils.UpdateUtil;
 import com.sugar_tree.inventoryshare.v1_16_R1.FileManager_1_16_R1;
 import com.sugar_tree.inventoryshare.v1_16_R1.Inventory_1_16_R1;
 import com.sugar_tree.inventoryshare.v1_16_R3.FileManager_1_16_R3;
@@ -41,8 +42,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.sugar_tree.inventoryshare.AdvancementUtil.AdvancementPatch;
-import static com.sugar_tree.inventoryshare.ProtocolLibUtil.ProtocolLib;
+import static com.sugar_tree.inventoryshare.utils.AdvancementUtil.AdvancementPatch;
+import static com.sugar_tree.inventoryshare.utils.ProtocolLibUtil.ProtocolLib;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public final class InventoryShare extends JavaPlugin {
@@ -59,6 +60,7 @@ public final class InventoryShare extends JavaPlugin {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
+        UpdateUtil.update();
         plugin = this;
         logger = getLogger();
         isSupportedVersion = checkVersion();
