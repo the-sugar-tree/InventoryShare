@@ -1,4 +1,4 @@
-package com.sugar_tree.inventoryshare;
+package com.sugar_tree.inventoryshare.utils;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;

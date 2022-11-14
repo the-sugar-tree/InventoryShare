@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.sugar_tree.inventoryshare.AdvancementUtil.AdvancementPatch;
+import static com.sugar_tree.inventoryshare.utils.AdvancementUtil.AdvancementPatch;
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public class Listeners implements Listener {
