@@ -11,7 +11,7 @@ import static com.sugar_tree.inventoryshare.api.Variables.plugin;
 
 public class UpdateUtil {
     public static String version;
-    public static void update() {
+    public static void checkUpdate() {
         try {
             URL url = new URL("https://github.com/the-sugar-tree/InventoryShare/releases/latest");
             String line;
