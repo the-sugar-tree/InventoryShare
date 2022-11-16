@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare;
+package com.sugar_tree.inventoryshare.v1_16_R2;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.FileManager;
