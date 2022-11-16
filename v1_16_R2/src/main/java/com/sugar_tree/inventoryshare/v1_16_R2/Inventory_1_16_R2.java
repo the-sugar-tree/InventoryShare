@@ -1,4 +1,4 @@
-package com.sugar_tree.inventoryshare;
+package com.sugar_tree.inventoryshare.v1_16_R2;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.Inventory;
@@ -11,10 +11,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.logging.Level;
 
-import static com.sugar_tree.inventoryshare.FileManager_1_16_R2.*;
-import static com.sugar_tree.inventoryshare.api.Variables.plugin;
-import static com.sugar_tree.inventoryshare.api.Variables.teaminventory;
+import static com.sugar_tree.inventoryshare.api.Variables.*;
+import static com.sugar_tree.inventoryshare.v1_16_R2.FileManager_1_16_R2.*;
 
 public class Inventory_1_16_R2 implements Inventory {
 
@@ -27,7 +27,7 @@ public class Inventory_1_16_R2 implements Inventory {
             setField(playerInventory, "extraSlots", extraSlots);
             setField(playerInventory, "f", contents);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "", e);
         }
     }
 
@@ -46,7 +46,7 @@ public class Inventory_1_16_R2 implements Inventory {
                 setField(playerInventory, "extraSlots", extraSlots1);
                 setField(playerInventory, "f", contents1);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "", e);
             }
         } else {
             // 사용될 일이 없지만, 혹시 모른 버그 방지
@@ -60,7 +60,7 @@ public class Inventory_1_16_R2 implements Inventory {
                 setField(playerInventory, "extraSlots", extraSlots1);
                 setField(playerInventory, "f", contents1);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "", e);
             }
         }
         invList.remove(entityPlayer);
@@ -104,7 +104,7 @@ public class Inventory_1_16_R2 implements Inventory {
             setField(playerInventory, "extraSlots", extraSlotsT);
             setField(playerInventory, "f", contentsT);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "", e);
         }
     }
 
@@ -117,7 +117,7 @@ public class Inventory_1_16_R2 implements Inventory {
             setField(pinv, "extraSlots", entityPlayer.inventory.extraSlots);
             setField(pinv, "f", ImmutableList.of(entityPlayer.inventory.items, entityPlayer.inventory.armor, entityPlayer.inventory.extraSlots));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "", e);
         }
         invList.put(p.getUniqueId(), pinv);
     }

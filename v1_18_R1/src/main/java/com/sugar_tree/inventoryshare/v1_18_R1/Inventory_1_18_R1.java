@@ -26,9 +26,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.logging.Level;
 
-import static com.sugar_tree.inventoryshare.api.Variables.plugin;
-import static com.sugar_tree.inventoryshare.api.Variables.teaminventory;
+import static com.sugar_tree.inventoryshare.api.Variables.*;
 import static com.sugar_tree.inventoryshare.v1_18_R1.FileManager_1_18_R1.*;
 
 public class Inventory_1_18_R1 implements Inventory {
@@ -42,7 +42,7 @@ public class Inventory_1_18_R1 implements Inventory {
             setField(playerInventory, "j", extraSlots);
             setField(playerInventory, "n", contents);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "", e);
         }
     }
 
@@ -61,7 +61,7 @@ public class Inventory_1_18_R1 implements Inventory {
                 setField(playerInventory, "j", extraSlots1);
                 setField(playerInventory, "n", contents1);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "", e);
             }
         } else {
             // 사용될 일이 없지만, 혹시 모른 버그 방지
@@ -75,7 +75,7 @@ public class Inventory_1_18_R1 implements Inventory {
                 setField(playerInventory, "j", extraSlots1);
                 setField(playerInventory, "n", contents1);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "", e);
             }
         }
         invList.remove(entityPlayer);
@@ -119,7 +119,7 @@ public class Inventory_1_18_R1 implements Inventory {
             setField(playerInventory, "j", extraSlotsT);
             setField(playerInventory, "n", contentsT);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "", e);
         }
     }
 
@@ -132,7 +132,7 @@ public class Inventory_1_18_R1 implements Inventory {
             setField(pinv, "j", entityPlayer.fq().j);
             setField(pinv, "n", ImmutableList.of(entityPlayer.fq().h, entityPlayer.fq().i, entityPlayer.fq().j));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "", e);
         }
         invList.put(p.getUniqueId(), pinv);
     }
