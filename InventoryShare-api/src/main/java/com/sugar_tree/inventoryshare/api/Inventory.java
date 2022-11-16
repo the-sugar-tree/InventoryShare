@@ -37,7 +37,7 @@ public interface Inventory {
      * @throws NoSuchFieldException if a field with the specified name is not found.
      * @throws IllegalAccessException if this Field object is enforcing Java language access control and the underlying field is inaccessible or final; or if this Field object has no write access.
      */
-    default void setField(Object obj, String name, Object value) throws NoSuchFieldException, IllegalAccessException {
+    default void setField(@NotNull Object obj, @NotNull String name, Object value) throws NoSuchFieldException, IllegalAccessException {
         Field field = obj.getClass().getDeclaredField(name);
         field.setAccessible(true);
         field.set(obj, value);
