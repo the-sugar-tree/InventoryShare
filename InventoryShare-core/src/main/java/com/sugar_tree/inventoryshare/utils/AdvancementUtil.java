@@ -28,7 +28,6 @@ import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public class AdvancementUtil {
 
-    @SuppressWarnings("ConstantConditions")
     public static void AdvancementPatch(Player player) {
         if (advancement) {
             Iterator<org.bukkit.advancement.Advancement> serveradvancements = Bukkit.getServer().advancementIterator();
