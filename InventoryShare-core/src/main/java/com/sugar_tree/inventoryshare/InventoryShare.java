@@ -15,6 +15,8 @@
  */
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
+import com.sugar_tree.inventoryshare.utils.ProtocolLibUtil;
 import com.sugar_tree.inventoryshare.utils.UpdateUtil;
 import com.sugar_tree.inventoryshare.v1_13_R1.FileManager_1_13_R1;
 import com.sugar_tree.inventoryshare.v1_13_R1.Inventory_1_13_R1;
@@ -46,15 +48,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.api.Variables.*;
-import static com.sugar_tree.inventoryshare.utils.AdvancementUtil.AdvancementPatch;
-import static com.sugar_tree.inventoryshare.utils.ProtocolLibUtil.ProtocolLib;
 
 public final class InventoryShare extends JavaPlugin {
     private final Set<String> versions = new HashSet<>(Arrays.asList("v1_19_R1", "v1_18_R2", "v1_18_R1", "v1_17_R1", "v1_16_R3", "v1_16_R2", "v1_16_R1", "v1_15_R1", "v1_14_R1", "v1_13_R2", "v1_13_R1"));
@@ -87,7 +87,7 @@ public final class InventoryShare extends JavaPlugin {
             return;
         }
         if (isProtocolLib) {
-            ProtocolLib();
+            ProtocolLibUtil.ProtocolLib();
             logger.info("ProtocolLib 플러그인이 감지되었습니다.");
         } else {
             logger.warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
@@ -163,7 +163,7 @@ public final class InventoryShare extends JavaPlugin {
         FileManagerClass.load();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (inventory) InventoryClass.invApply(player);
-            getServer().getScheduler().runTaskLater(this, () -> AdvancementPatch(player), 1);
+            getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
         }
 
         Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"인벤토리 공유 플러그인\" by. " + ChatColor.GREEN + "sugar_tree");
