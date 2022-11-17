@@ -16,7 +16,14 @@
 package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.utils.UpdateUtil;
-import com.sugar_tree.inventoryshare.v1_13_R1.*;
+import com.sugar_tree.inventoryshare.v1_13_R1.FileManager_1_13_R1;
+import com.sugar_tree.inventoryshare.v1_13_R1.Inventory_1_13_R1;
+import com.sugar_tree.inventoryshare.v1_13_R2.FileManager_1_13_R2;
+import com.sugar_tree.inventoryshare.v1_13_R2.Inventory_1_13_R2;
+import com.sugar_tree.inventoryshare.v1_14_R1.FileManager_1_14_R1;
+import com.sugar_tree.inventoryshare.v1_14_R1.Inventory_1_14_R1;
+import com.sugar_tree.inventoryshare.v1_15_R1.FileManager_1_15_R1;
+import com.sugar_tree.inventoryshare.v1_15_R1.Inventory_1_15_R1;
 import com.sugar_tree.inventoryshare.v1_16_R1.FileManager_1_16_R1;
 import com.sugar_tree.inventoryshare.v1_16_R1.Inventory_1_16_R1;
 import com.sugar_tree.inventoryshare.v1_16_R2.FileManager_1_16_R2;
@@ -35,7 +42,6 @@ import com.sugar_tree.inventoryshare.v1_19_R1.FileManager_1_19_R1;
 import com.sugar_tree.inventoryshare.v1_19_R1.Inventory_1_19_R1;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,7 +67,7 @@ public final class InventoryShare extends JavaPlugin {
 
     private Listeners listener;
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("deprecation")
     @Override
     public void onEnable() {
         plugin = this;
@@ -88,19 +94,7 @@ public final class InventoryShare extends JavaPlugin {
             logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
             logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
         }
-        switch (minorVersion) {
-            case "v1_19_R1": case "v1_18_R2": case "v1_18_R1":
-            case "v1_17_R1": case "v1_16_R3": case "v1_16_R2":
-            case "v1_16_R1": case "v1_15_R1": case "v1_14_R1":
-                WorldVersion = getWorldVersion();
-                if (WorldVersion == -1) {
-                    this.setEnabled(false);
-                    return;
-                }
-                break;
-            default:
-                WorldVersion = Integer.parseInt(new org.bukkit.inventory.ItemStack(Material.AIR).serialize().get("v").toString());
-        }
+        WorldVersion = Bukkit.getUnsafe().getDataVersion();
         switch (minorVersion) {
             case "v1_19_R1":
                 if (patchVersion.equals("1.19-R0.1-SNAPSHOT")) {
@@ -207,34 +201,6 @@ public final class InventoryShare extends JavaPlugin {
     }
     private boolean checkProtocolLib() {
         return getServer().getPluginManager().getPlugin("ProtocolLib") != null;
-    }
-
-    private int getWorldVersion() {
-        int r = -1;
-        InputStream is = Bukkit.getServer().getClass().getResourceAsStream("/version.json");
-        if (is == null) {
-            logger.severe("cannot find version.json");
-            return -1;
-        } else {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String nr;
-            while (true) {
-                try {
-                    if ((nr = br.readLine()) == null) break;
-                    if (nr.contains("world_version")) {
-                        r = Integer.parseInt(nr.split(":")[1].trim().substring(0, 4));
-                        break;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (r == -1) {
-                logger.severe("cannot detect world version!");
-                return -1;
-            }
-        }
-        return r;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

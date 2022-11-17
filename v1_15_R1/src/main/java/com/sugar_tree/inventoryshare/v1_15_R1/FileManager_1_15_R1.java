@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.v1_13_R1;
+package com.sugar_tree.inventoryshare.v1_15_R1;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.FileManager;
-import net.minecraft.server.v1_13_R2.ItemStack;
-import net.minecraft.server.v1_13_R2.NonNullList;
-import net.minecraft.server.v1_13_R2.PlayerInventory;
+import net.minecraft.server.v1_15_R1.ItemStack;
+import net.minecraft.server.v1_15_R1.NonNullList;
+import net.minecraft.server.v1_15_R1.PlayerInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
@@ -32,7 +32,7 @@ import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.Variables.*;
 
-public class FileManager_1_13_R2 implements FileManager {
+public class FileManager_1_15_R1 implements FileManager {
     protected static Map<UUID, PlayerInventory> invList = new HashMap<>();
 
     protected static NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.a);

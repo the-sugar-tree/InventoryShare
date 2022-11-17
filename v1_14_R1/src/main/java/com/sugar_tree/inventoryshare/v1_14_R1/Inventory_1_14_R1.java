@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.v1_13_R1;
+package com.sugar_tree.inventoryshare.v1_14_R1;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.Inventory;
@@ -29,7 +29,7 @@ import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.Variables.plugin;
 import static com.sugar_tree.inventoryshare.api.Variables.teaminventory;
-import static com.sugar_tree.inventoryshare.v1_13_R1.FileManager_1_14_R1.*;
+import static com.sugar_tree.inventoryshare.v1_14_R1.FileManager_1_14_R1.*;
 
 public class Inventory_1_14_R1 implements Inventory {
 
