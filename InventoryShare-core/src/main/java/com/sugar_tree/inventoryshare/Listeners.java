@@ -96,7 +96,7 @@ public class Listeners implements Listener {
     }
 
     private final Map<Player, Team> teamMap = new HashMap<>();
-    @SuppressWarnings({"ConstantConditions", "deprecation"})
+    @SuppressWarnings("deprecation")
     public void onTick() {
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (teamMap.containsKey(p)) {
