@@ -15,9 +15,9 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
-import com.sugar_tree.inventoryshare.utils.ProtocolLibUtil;
-import com.sugar_tree.inventoryshare.utils.UpdateUtil;
+import com.sugar_tree.inventoryshare.util.AdvancementUtil;
+import com.sugar_tree.inventoryshare.util.ProtocolLibUtil;
+import com.sugar_tree.inventoryshare.util.UpdateUtil;
 import com.sugar_tree.inventoryshare.v1_13_R1.FileManager_1_13_R1;
 import com.sugar_tree.inventoryshare.v1_13_R1.Inventory_1_13_R1;
 import com.sugar_tree.inventoryshare.v1_13_R2.FileManager_1_13_R2;
