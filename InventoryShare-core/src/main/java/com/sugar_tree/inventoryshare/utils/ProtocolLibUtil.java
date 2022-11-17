@@ -28,7 +28,7 @@ import org.bukkit.inventory.meta.Damageable;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.sugar_tree.inventoryshare.api.Variables.plugin;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
 
 public class ProtocolLibUtil {
     static Set<Player> breakingBlock = new HashSet<>();

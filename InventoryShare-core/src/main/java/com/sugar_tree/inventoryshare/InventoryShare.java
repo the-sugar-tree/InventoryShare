@@ -54,7 +54,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.sugar_tree.inventoryshare.api.Variables.*;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
     private final Set<String> versions = new HashSet<>(Arrays.asList("v1_19_R1", "v1_18_R2", "v1_18_R1", "v1_17_R1", "v1_16_R3", "v1_16_R2", "v1_16_R1", "v1_15_R1", "v1_14_R1", "v1_13_R2", "v1_13_R1"));

@@ -27,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.sugar_tree.inventoryshare.api.Variables.plugin;
-import static com.sugar_tree.inventoryshare.api.Variables.teaminventory;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.teaminventory;
 import static com.sugar_tree.inventoryshare.v1_13_R2.FileManager_1_13_R2.*;
 
 public class Inventory_1_13_R2 implements Inventory {

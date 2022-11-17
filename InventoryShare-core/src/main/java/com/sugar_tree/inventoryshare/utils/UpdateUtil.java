@@ -21,8 +21,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import static com.sugar_tree.inventoryshare.api.Variables.logger;
-import static com.sugar_tree.inventoryshare.api.Variables.plugin;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.logger;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
 
 public class UpdateUtil {
     public static String version;

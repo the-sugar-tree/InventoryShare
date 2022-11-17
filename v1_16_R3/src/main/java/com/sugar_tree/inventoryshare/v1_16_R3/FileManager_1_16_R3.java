@@ -30,7 +30,7 @@ import org.bukkit.scoreboard.Team;
 import java.io.File;
 import java.util.*;
 
-import static com.sugar_tree.inventoryshare.api.Variables.*;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public class FileManager_1_16_R3 implements FileManager {
     protected static Map<UUID, PlayerInventory> invList = new HashMap<>();

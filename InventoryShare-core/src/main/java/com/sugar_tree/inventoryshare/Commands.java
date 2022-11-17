@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sugar_tree.inventoryshare.api.Variables.*;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public class Commands implements TabExecutor {
 
