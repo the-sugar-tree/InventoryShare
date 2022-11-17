@@ -36,6 +36,7 @@ public class UpdateUtil {
             while ((line = br.readLine()) != null) {
                 if (line.contains("<a aria-current=\"page\" href=\"/the-sugar-tree/InventoryShare/releases/tag/")) {
                     version = line.substring(line.lastIndexOf(" ") + 1);
+                    break;
                 }
             }
             br.close();
@@ -44,7 +45,7 @@ public class UpdateUtil {
         }
 
         if (!plugin.getDescription().getVersion().equals(version)) {
-            logger.warning("플러그인 업데이트가 가능합니다! 현재 버전: v" + plugin.getDescription().getVersion() + "새 버전: " + version);
+            logger.warning("플러그인 업데이트가 가능합니다! 현재 버전: v" + plugin.getDescription().getVersion() + " 새 버전: " + version);
             logger.warning("https://github.com/the-sugar-tree/InventoryShare/releases/latest");
         }
     }

@@ -1,0 +1,5 @@
+dependencies {
+    compileOnly files("libs/spigot-1.15.2.jar")
+    compileOnly 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
+    compileOnly project(':InventoryShare-api')
+}

@@ -16,8 +16,11 @@
 package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.utils.UpdateUtil;
+import com.sugar_tree.inventoryshare.v1_13_R1.*;
 import com.sugar_tree.inventoryshare.v1_16_R1.FileManager_1_16_R1;
 import com.sugar_tree.inventoryshare.v1_16_R1.Inventory_1_16_R1;
+import com.sugar_tree.inventoryshare.v1_16_R2.FileManager_1_16_R2;
+import com.sugar_tree.inventoryshare.v1_16_R2.Inventory_1_16_R2;
 import com.sugar_tree.inventoryshare.v1_16_R3.FileManager_1_16_R3;
 import com.sugar_tree.inventoryshare.v1_16_R3.Inventory_1_16_R3;
 import com.sugar_tree.inventoryshare.v1_17_R1.FileManager_1_17_R1;
@@ -32,6 +35,7 @@ import com.sugar_tree.inventoryshare.v1_19_R1.FileManager_1_19_R1;
 import com.sugar_tree.inventoryshare.v1_19_R1.Inventory_1_19_R1;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,12 +46,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.sugar_tree.inventoryshare.api.Variables.*;
 import static com.sugar_tree.inventoryshare.utils.AdvancementUtil.AdvancementPatch;
 import static com.sugar_tree.inventoryshare.utils.ProtocolLibUtil.ProtocolLib;
-import static com.sugar_tree.inventoryshare.api.Variables.*;
 
 public final class InventoryShare extends JavaPlugin {
-    private final Set<String> versions = new HashSet<>(Arrays.asList("v1_19_R1", "v1_18_R2", "v1_18_R1", "v1_17_R1", "v1_16_R3", "v1_16_R2", "v1_16_R1"));
+    private final Set<String> versions = new HashSet<>(Arrays.asList("v1_19_R1", "v1_18_R2", "v1_18_R1", "v1_17_R1", "v1_16_R3", "v1_16_R2", "v1_16_R1", "v1_15_R1", "v1_14_R1", "v1_13_R2", "v1_13_R1"));
     private String minorVersion;
     private String patchVersion;
     private boolean isSupportedVersion = true;
@@ -60,12 +64,12 @@ public final class InventoryShare extends JavaPlugin {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
-        UpdateUtil.update();
         plugin = this;
         logger = getLogger();
         isSupportedVersion = checkVersion();
         isSupportedBukkit = checkBukkit();
         isProtocolLib = checkProtocolLib();
+        UpdateUtil.checkUpdate();
         if (!isSupportedVersion) {
             logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + minorVersion);
             this.setEnabled(false);
@@ -76,11 +80,6 @@ public final class InventoryShare extends JavaPlugin {
             this.setEnabled(false);
             return;
         }
-        WorldVersion = getWorldVersion();
-        if (WorldVersion == -1) {
-            this.setEnabled(false);
-            return;
-        }
         if (isProtocolLib) {
             ProtocolLib();
             logger.info("ProtocolLib 플러그인이 감지되었습니다.");
@@ -88,6 +87,19 @@ public final class InventoryShare extends JavaPlugin {
             logger.warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
             logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
             logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
+        }
+        switch (minorVersion) {
+            case "v1_19_R1": case "v1_18_R2": case "v1_18_R1":
+            case "v1_17_R1": case "v1_16_R3": case "v1_16_R2":
+            case "v1_16_R1": case "v1_15_R1": case "v1_14_R1":
+                WorldVersion = getWorldVersion();
+                if (WorldVersion == -1) {
+                    this.setEnabled(false);
+                    return;
+                }
+                break;
+            default:
+                WorldVersion = Integer.parseInt(new org.bukkit.inventory.ItemStack(Material.AIR).serialize().get("v").toString());
         }
         switch (minorVersion) {
             case "v1_19_R1":
@@ -111,7 +123,7 @@ public final class InventoryShare extends JavaPlugin {
                 InventoryClass = new Inventory_1_17_R1();
                 FileManagerClass = new FileManager_1_17_R1();
                 break;
-            case "v1_16_R1":
+            case "v1_16_R3":
                 InventoryClass = new Inventory_1_16_R1();
                 FileManagerClass = new FileManager_1_16_R1();
                 break;
@@ -119,9 +131,25 @@ public final class InventoryShare extends JavaPlugin {
                 InventoryClass = new Inventory_1_16_R2();
                 FileManagerClass = new FileManager_1_16_R2();
                 break;
-            case "v1_16_R3":
+            case "v1_16_R1":
                 InventoryClass = new Inventory_1_16_R3();
                 FileManagerClass = new FileManager_1_16_R3();
+                break;
+            case "v1_15_R1":
+                InventoryClass = new Inventory_1_15_R1();
+                FileManagerClass = new FileManager_1_15_R1();
+                break;
+            case "v1_14_R1":
+                InventoryClass = new Inventory_1_14_R1();
+                FileManagerClass = new FileManager_1_14_R1();
+                break;
+            case "v1_13_R2":
+                InventoryClass = new Inventory_1_13_R2();
+                FileManagerClass = new FileManager_1_13_R2();
+                break;
+            case "v1_13_R1":
+                InventoryClass = new Inventory_1_13_R1();
+                FileManagerClass = new FileManager_1_13_R1();
                 break;
             default:
                 logger.severe("알 수 없는 오류로 이 버전을 지원하지 않습니다!");
@@ -151,10 +179,12 @@ public final class InventoryShare extends JavaPlugin {
     public void onDisable() {
         if (!isSupportedVersion) return;
         if (!isSupportedBukkit) return;
-        for (UUID puuid : InventoryClass.getRegisteredPlayers()) {
-            if (getServer().getOfflinePlayer(puuid).isOnline()) {
-                Player p = (Player) getServer().getOfflinePlayer(puuid);
-                InventoryClass.invDisApply(p);
+        if (InventoryClass != null) {
+            for (UUID puuid : InventoryClass.getRegisteredPlayers()) {
+                if (getServer().getOfflinePlayer(puuid).isOnline()) {
+                    Player p = (Player) getServer().getOfflinePlayer(puuid);
+                    InventoryClass.invDisApply(p);
+                }
             }
         }
         Bukkit.getScheduler().cancelTask(listener.getTaskId());
