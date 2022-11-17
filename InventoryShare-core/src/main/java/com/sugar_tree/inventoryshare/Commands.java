@@ -142,6 +142,8 @@ public class Commands implements TabExecutor {
                         } else {
                             sender.sendMessage(usageMessage);
                         }
+                    } else if (args[0].equalsIgnoreCase("check")) {
+                        sender.sendMessage(check);
                     } else {
                         sender.sendMessage(usageMessage);
                     }
@@ -165,15 +167,21 @@ public class Commands implements TabExecutor {
                 arrayList.add("advancement");
                 arrayList.add("AnnounceDeath");
                 arrayList.add("teaminventory");
+                arrayList.add("check");
                 arrayList.add("reload");
                 arrayList.removeIf(s -> !s.startsWith(args[0]));
                 return arrayList;
             } else if (args.length == 2) {
-                ArrayList<String> arrayList = new ArrayList<>();
-                arrayList.add("true");
-                arrayList.add("false");
-                arrayList.removeIf(s -> !s.startsWith(args[1]));
-                return arrayList;
+                if (args[0].equalsIgnoreCase("inventory") || args[0].equalsIgnoreCase("advancement")
+                        || args[0].equalsIgnoreCase("announcedeath") || args[0].equalsIgnoreCase("teaminventory")) {
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    arrayList.add("true");
+                    arrayList.add("false");
+                    arrayList.removeIf(s -> !s.startsWith(args[1]));
+                    return arrayList;
+                } else {
+                    return new ArrayList<>();
+                }
             } else {
                 return new ArrayList<>();
             }
@@ -188,6 +196,7 @@ public class Commands implements TabExecutor {
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " advancement " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 발전과제 공유 설정을 수정합니다.\n" +
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " AnnounceDeath " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 사망시 좌표 공유 설정을 수정합니다.\n" +
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " teaminventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 팀 아이템 공유 설정을 수정합니다.\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " check" + ChatColor.YELLOW + " - 현재 설정값들을 확인합니다.\n" +
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " reload" + ChatColor.YELLOW + " - config 파일을 새로고침 합니다.\n" +
             ChatColor.DARK_AQUA + "-----------------------------------------------------"
             ;
