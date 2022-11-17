@@ -5,9 +5,9 @@ repositories {
 
 dependencies {
     compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0"
-    compileOnly 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
-    implementation project(':v1_19_1_R1')
+    compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
     implementation project(':v1_19_R1')
+    implementation project(':v1_19_1_R1')
     implementation project(':v1_18_R2')
     implementation project(':v1_18_R1')
     implementation project(':v1_17_R1')
