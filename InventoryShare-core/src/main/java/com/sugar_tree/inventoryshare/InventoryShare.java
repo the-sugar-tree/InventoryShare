@@ -171,12 +171,13 @@ public final class InventoryShare extends JavaPlugin {
     public void onDisable() {
         if (!isSupportedVersion) return;
         if (!isSupportedBukkit) return;
-        if (InventoryClass != null) {
-            for (UUID puuid : InventoryClass.getRegisteredPlayers()) {
-                if (getServer().getOfflinePlayer(puuid).isOnline()) {
-                    Player p = (Player) getServer().getOfflinePlayer(puuid);
-                    InventoryClass.invDisApply(p);
-                }
+        if (InventoryClass == null) {
+            return;
+        }
+        for (UUID puuid : InventoryClass.getRegisteredPlayers()) {
+            if (getServer().getOfflinePlayer(puuid).isOnline()) {
+                Player p = (Player) getServer().getOfflinePlayer(puuid);
+                InventoryClass.invDisApply(p);
             }
         }
         Bukkit.getScheduler().cancelTask(listener.getTaskId());
