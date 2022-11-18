@@ -67,7 +67,6 @@ public final class InventoryShare extends JavaPlugin {
 
     private Listeners listener;
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onEnable() {
         plugin = this;
@@ -94,7 +93,6 @@ public final class InventoryShare extends JavaPlugin {
             logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
             logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
         }
-        WorldVersion = Bukkit.getUnsafe().getDataVersion();
         switch (minorVersion) {
             case "v1_19_R1":
                 if (patchVersion.equals("1.19-R0.1-SNAPSHOT")) {

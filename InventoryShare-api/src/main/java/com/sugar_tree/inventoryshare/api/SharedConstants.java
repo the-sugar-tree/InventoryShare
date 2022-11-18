@@ -15,6 +15,7 @@
  */
 package com.sugar_tree.inventoryshare.api;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -45,13 +46,14 @@ public class SharedConstants {
     public static File invfile;
     public static File advfile;
 
-    public static int WorldVersion;
+    @SuppressWarnings("deprecation")
+    public static final int WORLD_VERSION = Bukkit.getUnsafe().getDataVersion();
 
     public static Plugin plugin;
 
-    public static void saveConfigs(Plugin p) {
+    public static void saveConfigs() {
         FileManagerClass.deleteWasteFiles();
-        p.saveConfig();
+        plugin.saveConfig();
         try { invconfig.save(invfile); } catch (Exception e) { e.printStackTrace(); }
         try { advconfig.save(advfile); } catch (Exception e) { e.printStackTrace(); }
         for (FileConfiguration fileConfiguration : teamInvFileList.keySet()) {
