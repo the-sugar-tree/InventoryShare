@@ -29,6 +29,7 @@ import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.teaminventory;
+import static com.sugar_tree.inventoryshare.v1_15_R1.FileManager_1_15_R1.*;
 
 public class Inventory_1_15_R1  implements Inventory {
 
@@ -36,10 +37,10 @@ public class Inventory_1_15_R1  implements Inventory {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.inventory;
         try {
-            setField(playerInventory, "items", FileManager_1_15_R1.items);
-            setField(playerInventory, "armor", FileManager_1_15_R1.armor);
-            setField(playerInventory, "extraSlots", FileManager_1_15_R1.extraSlots);
-            setField(playerInventory, "f", FileManager_1_15_R1.contents);
+            setField(playerInventory, "items", items);
+            setField(playerInventory, "armor", armor);
+            setField(playerInventory, "extraSlots", extraSlots);
+            setField(playerInventory, "f", contents);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,11 +50,11 @@ public class Inventory_1_15_R1  implements Inventory {
     public void invDisApply(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.inventory;
-        if (FileManager_1_15_R1.invList.containsKey(entityPlayer.getUniqueID())) {
+        if (invList.containsKey(entityPlayer.getUniqueID())) {
             try {
-                NonNullList<ItemStack> items1 = FileManager_1_15_R1.invList.get(entityPlayer.getUniqueID()).items;
-                NonNullList<ItemStack> armor1 = FileManager_1_15_R1.invList.get(entityPlayer.getUniqueID()).armor;
-                NonNullList<ItemStack> extraSlots1 = FileManager_1_15_R1.invList.get(entityPlayer.getUniqueID()).extraSlots;
+                NonNullList<ItemStack> items1 = invList.get(entityPlayer.getUniqueID()).items;
+                NonNullList<ItemStack> armor1 = invList.get(entityPlayer.getUniqueID()).armor;
+                NonNullList<ItemStack> extraSlots1 = invList.get(entityPlayer.getUniqueID()).extraSlots;
                 List<NonNullList<ItemStack>> contents1 = ImmutableList.of(items1, armor1, extraSlots1);
                 setField(playerInventory, "items", items1);
                 setField(playerInventory, "armor", armor1);
@@ -77,7 +78,7 @@ public class Inventory_1_15_R1  implements Inventory {
                 e.printStackTrace();
             }
         }
-        FileManager_1_15_R1.invList.remove(entityPlayer);
+        invList.remove(entityPlayer);
     }
 
     @SuppressWarnings({"ConstantConditions", "deprecation"})
@@ -94,7 +95,7 @@ public class Inventory_1_15_R1  implements Inventory {
         NonNullList<ItemStack> itemsT;
         NonNullList<ItemStack> armorT;
         NonNullList<ItemStack> extraSlotsT;
-        if (!FileManager_1_15_R1.InventoryList.containsKey(teamName)) {
+        if (!InventoryList.containsKey(teamName)) {
             Map<String, NonNullList<ItemStack>> map = new HashMap<>();
             itemsT = NonNullList.a(36, ItemStack.a);
             armorT = NonNullList.a(4, ItemStack.a);
@@ -102,9 +103,9 @@ public class Inventory_1_15_R1  implements Inventory {
             map.put("items", itemsT);
             map.put("armor", armorT);
             map.put("extraSlots", extraSlotsT);
-            FileManager_1_15_R1.InventoryList.put(teamName, map);
+            InventoryList.put(teamName, map);
         } else {
-            Map<String, NonNullList<ItemStack>> map = FileManager_1_15_R1.InventoryList.get(teamName);
+            Map<String, NonNullList<ItemStack>> map = InventoryList.get(teamName);
             itemsT = map.get("items");
             armorT = map.get("armor");
             extraSlotsT = map.get("extraSlots");
@@ -133,10 +134,10 @@ public class Inventory_1_15_R1  implements Inventory {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        FileManager_1_15_R1.invList.put(p.getUniqueId(), pinv);
+        invList.put(p.getUniqueId(), pinv);
     }
 
     public Set<UUID> getRegisteredPlayers() {
-        return FileManager_1_15_R1.invList.keySet();
+        return invList.keySet();
     }
 }
