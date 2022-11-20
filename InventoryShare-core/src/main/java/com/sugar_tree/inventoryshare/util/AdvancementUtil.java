@@ -17,6 +17,7 @@ package com.sugar_tree.inventoryshare.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
 
@@ -24,13 +25,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.advancement;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.advlist;
 
 public class AdvancementUtil {
 
     public static void AdvancementPatch(Player player) {
         if (advancement) {
-            Iterator<org.bukkit.advancement.Advancement> serveradvancements = Bukkit.getServer().advancementIterator();
+            Iterator<Advancement> serveradvancements = Bukkit.getServer().advancementIterator();
             while (serveradvancements.hasNext()) {
                 AdvancementProgress progress = player.getAdvancementProgress(serveradvancements.next());
                 if (progress.isDone()) {
@@ -40,7 +42,7 @@ public class AdvancementUtil {
                 }
             }
             for (NamespacedKey namespacedKey : advlist) {
-                org.bukkit.advancement.Advancement adv = Bukkit.getServer().getAdvancement(namespacedKey);
+                Advancement adv = Bukkit.getServer().getAdvancement(namespacedKey);
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (!(p.getAdvancementProgress(adv).isDone())) {
                         AdvancementProgress progress = p.getAdvancementProgress(adv);
