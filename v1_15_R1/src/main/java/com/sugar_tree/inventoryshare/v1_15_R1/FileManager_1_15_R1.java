@@ -107,7 +107,7 @@ public class FileManager_1_15_R1 implements FileManager {
             if (itemslist.get(i).isEmpty()) {
                 continue;
             }
-            if (Integer.parseInt(((Map<String, Object>) itemslist.get(i)).get("v").toString()) > WORLD_VERSION) {
+            if (itemslist.get(i).containsKey("v") && Integer.parseInt(itemslist.get(i).get("v").toString()) > WORLD_VERSION) {
                 logger.severe("Newer version! Server downgrades are not supported!");
                 return;
             }

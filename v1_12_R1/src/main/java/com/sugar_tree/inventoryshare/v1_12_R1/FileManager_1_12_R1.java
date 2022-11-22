@@ -106,6 +106,10 @@ public class FileManager_1_12_R1 implements FileManager {
             if (itemslist.get(i).isEmpty()) {
                 continue;
             }
+            if (itemslist.get(i).containsKey("v")) {
+                logger.severe("Newer version! Server downgrades are not supported!");
+                return;
+            }
             items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
         }
 
