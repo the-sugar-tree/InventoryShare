@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+@SuppressWarnings("deprecation")
 public class SharedConstants {
 
     public static Logger logger;
@@ -46,8 +47,15 @@ public class SharedConstants {
     public static File invfile;
     public static File advfile;
 
-    @SuppressWarnings("deprecation")
-    public static final int WORLD_VERSION = Bukkit.getUnsafe().getDataVersion();
+    public static final int WORLD_VERSION;
+
+    static {
+        int t;
+        try {
+            t = Bukkit.getUnsafe().getDataVersion();
+        } catch (NoSuchMethodError e) { t = -1; }
+        WORLD_VERSION = t;
+    }
 
     public static Plugin plugin;
 

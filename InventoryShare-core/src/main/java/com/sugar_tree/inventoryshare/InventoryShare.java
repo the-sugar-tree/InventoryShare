@@ -18,6 +18,8 @@ package com.sugar_tree.inventoryshare;
 import com.sugar_tree.inventoryshare.util.AdvancementUtil;
 import com.sugar_tree.inventoryshare.util.ProtocolLibUtil;
 import com.sugar_tree.inventoryshare.util.UpdateUtil;
+import com.sugar_tree.inventoryshare.v1_12_R1.FileManager_1_12_R1;
+import com.sugar_tree.inventoryshare.v1_12_R1.Inventory_1_12_R1;
 import com.sugar_tree.inventoryshare.v1_13_R1.FileManager_1_13_R1;
 import com.sugar_tree.inventoryshare.v1_13_R1.Inventory_1_13_R1;
 import com.sugar_tree.inventoryshare.v1_13_R2.FileManager_1_13_R2;
@@ -57,7 +59,8 @@ import java.util.UUID;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
-    private final Set<String> versions = new HashSet<>(Arrays.asList("v1_19_R1", "v1_18_R2", "v1_18_R1", "v1_17_R1", "v1_16_R3", "v1_16_R2", "v1_16_R1", "v1_15_R1", "v1_14_R1", "v1_13_R2", "v1_13_R1"));
+    private final Set<String> versions = new HashSet<>(Arrays.asList("v1_19_R1", "v1_18_R2", "v1_18_R1", "v1_17_R1",
+            "v1_16_R3", "v1_16_R2", "v1_16_R1", "v1_15_R1", "v1_14_R1", "v1_13_R2", "v1_13_R1", "v1_12_R1"));
     private String minorVersion;
     private String patchVersion;
     private boolean isSupportedVersion = true;
@@ -116,16 +119,16 @@ public final class InventoryShare extends JavaPlugin {
                 FileManagerClass = new FileManager_1_17_R1();
                 break;
             case "v1_16_R3":
-                InventoryClass = new Inventory_1_16_R1();
-                FileManagerClass = new FileManager_1_16_R1();
+                InventoryClass = new Inventory_1_16_R3();
+                FileManagerClass = new FileManager_1_16_R3();
                 break;
             case "v1_16_R2":
                 InventoryClass = new Inventory_1_16_R2();
                 FileManagerClass = new FileManager_1_16_R2();
                 break;
             case "v1_16_R1":
-                InventoryClass = new Inventory_1_16_R3();
-                FileManagerClass = new FileManager_1_16_R3();
+                InventoryClass = new Inventory_1_16_R1();
+                FileManagerClass = new FileManager_1_16_R1();
                 break;
             case "v1_15_R1":
                 InventoryClass = new Inventory_1_15_R1();
@@ -142,6 +145,10 @@ public final class InventoryShare extends JavaPlugin {
             case "v1_13_R1":
                 InventoryClass = new Inventory_1_13_R1();
                 FileManagerClass = new FileManager_1_13_R1();
+                break;
+            case "v1_12_R1":
+                InventoryClass = new Inventory_1_12_R1();
+                FileManagerClass = new FileManager_1_12_R1();
                 break;
             default:
                 logger.severe("알 수 없는 오류로 이 버전을 지원하지 않습니다!");
