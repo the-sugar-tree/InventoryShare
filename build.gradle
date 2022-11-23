@@ -13,8 +13,8 @@ allprojects {
         mavenCentral()
         mavenLocal()
         maven {
-            name = 'papermc-repo'
-            url = "https://papermc.io/repo/repository/maven-public/"
+            name = 'dmulloy2(ProtocolLib)-repo'
+            url "https://repo.dmulloy2.net/repository/public/"
         }
     }
 
