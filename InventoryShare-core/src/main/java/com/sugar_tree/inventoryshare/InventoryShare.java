@@ -44,6 +44,8 @@ import com.sugar_tree.inventoryshare.v1_19_1_R1.FileManager_1_19_1_R1;
 import com.sugar_tree.inventoryshare.v1_19_1_R1.Inventory_1_19_1_R1;
 import com.sugar_tree.inventoryshare.v1_19_R1.FileManager_1_19_R1;
 import com.sugar_tree.inventoryshare.v1_19_R1.Inventory_1_19_R1;
+import com.sugar_tree.inventoryshare.v1_19_R2.FileManager_1_19_R2;
+import com.sugar_tree.inventoryshare.v1_19_R2.Inventory_1_19_R2;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -59,8 +61,8 @@ import java.util.UUID;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
-    private final Set<String> versions = new HashSet<>(Arrays.asList("v1_19_R1", "v1_18_R2", "v1_18_R1", "v1_17_R1",
-            "v1_16_R3", "v1_16_R2", "v1_16_R1", "v1_15_R1", "v1_14_R1", "v1_13_R2", "v1_13_R1", "v1_12_R1"));
+    private final Set<String> versions = new HashSet<>(Arrays.asList("v1_19_R2", "v1_19_R1", "v1_18_R2", "v1_18_R1",
+            "v1_17_R1", "v1_16_R3", "v1_16_R2", "v1_16_R1", "v1_15_R1", "v1_14_R1", "v1_13_R2", "v1_13_R1", "v1_12_R1"));
     private String minorVersion;
     private String patchVersion;
     private boolean isSupportedVersion = true;
@@ -97,6 +99,9 @@ public final class InventoryShare extends JavaPlugin {
             logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
         }
         switch (minorVersion) {
+            case "v1_19_R2":
+                InventoryClass = new Inventory_1_19_R2();
+                FileManagerClass = new FileManager_1_19_R2();
             case "v1_19_R1":
                 if (patchVersion.equals("1.19-R0.1-SNAPSHOT")) {
                     InventoryClass = new Inventory_1_19_R1();
