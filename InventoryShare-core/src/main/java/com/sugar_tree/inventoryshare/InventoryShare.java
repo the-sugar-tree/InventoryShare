@@ -55,19 +55,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
-    private final Set<String> versions = new HashSet<>(Arrays.asList("v1_19_R2", "v1_19_R1", "v1_18_R2", "v1_18_R1",
-            "v1_17_R1", "v1_16_R3", "v1_16_R2", "v1_16_R1", "v1_15_R1", "v1_14_R1", "v1_13_R2", "v1_13_R1", "v1_12_R1"));
-    private String minorVersion;
-    private String patchVersion;
-    private boolean isSupportedVersion = true;
     private boolean isSupportedBukkit = false;
     @SuppressWarnings("FieldCanBeLocal")
     private boolean isProtocolLib = false;
@@ -78,12 +70,11 @@ public final class InventoryShare extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         logger = getLogger();
-        isSupportedVersion = checkVersion();
         isSupportedBukkit = checkBukkit();
         isProtocolLib = checkProtocolLib();
         UpdateUtil.checkUpdate();
-        if (!isSupportedVersion) {
-            logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + minorVersion);
+        if (!Version.isSupported()) {
+            logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + Version.getVersion().name());
             this.setEnabled(false);
             return;
         }
@@ -100,15 +91,17 @@ public final class InventoryShare extends JavaPlugin {
             logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
             logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
         }
-        switch (minorVersion) {
-            case "v1_19_R3":
+        switch (Version.getVersion()) {
+            case v1_19_R3:
                 InventoryClass = new Inventory_1_19_R3();
                 FileManagerClass = new FileManager_1_19_R3();
-            case "v1_19_R2":
+                break;
+            case v1_19_R2:
                 InventoryClass = new Inventory_1_19_R2();
                 FileManagerClass = new FileManager_1_19_R2();
-            case "v1_19_R1":
-                if (patchVersion.equals("1.19-R0.1-SNAPSHOT")) {
+                break;
+            case v1_19_R1:
+                if (Version.getUnusual() == 1) {
                     InventoryClass = new Inventory_1_19_R1();
                     FileManagerClass = new FileManager_1_19_R1();
                 } else {
@@ -116,47 +109,47 @@ public final class InventoryShare extends JavaPlugin {
                     FileManagerClass = new FileManager_1_19_1_R1();
                 }
                 break;
-            case "v1_18_R2":
+            case v1_18_R2:
                 InventoryClass = new Inventory_1_18_R2();
                 FileManagerClass = new FileManager_1_18_R2();
                 break;
-            case "v1_18_R1":
+            case v1_18_R1:
                 InventoryClass = new Inventory_1_18_R1();
                 FileManagerClass = new FileManager_1_18_R1();
                 break;
-            case "v1_17_R1":
+            case v1_17_R1:
                 InventoryClass = new Inventory_1_17_R1();
                 FileManagerClass = new FileManager_1_17_R1();
                 break;
-            case "v1_16_R3":
+            case v1_16_R3:
                 InventoryClass = new Inventory_1_16_R3();
                 FileManagerClass = new FileManager_1_16_R3();
                 break;
-            case "v1_16_R2":
+            case v1_16_R2:
                 InventoryClass = new Inventory_1_16_R2();
                 FileManagerClass = new FileManager_1_16_R2();
                 break;
-            case "v1_16_R1":
+            case v1_16_R1:
                 InventoryClass = new Inventory_1_16_R1();
                 FileManagerClass = new FileManager_1_16_R1();
                 break;
-            case "v1_15_R1":
+            case v1_15_R1:
                 InventoryClass = new Inventory_1_15_R1();
                 FileManagerClass = new FileManager_1_15_R1();
                 break;
-            case "v1_14_R1":
+            case v1_14_R1:
                 InventoryClass = new Inventory_1_14_R1();
                 FileManagerClass = new FileManager_1_14_R1();
                 break;
-            case "v1_13_R2":
+            case v1_13_R2:
                 InventoryClass = new Inventory_1_13_R2();
                 FileManagerClass = new FileManager_1_13_R2();
                 break;
-            case "v1_13_R1":
+            case v1_13_R1:
                 InventoryClass = new Inventory_1_13_R1();
                 FileManagerClass = new FileManager_1_13_R1();
                 break;
-            case "v1_12_R1":
+            case v1_12_R1:
                 InventoryClass = new Inventory_1_12_R1();
                 FileManagerClass = new FileManager_1_12_R1();
                 break;
@@ -186,7 +179,7 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (!isSupportedVersion) return;
+        if (!Version.isSupported()) return;
         if (!isSupportedBukkit) return;
         if (InventoryClass == null) {
             return;
@@ -201,17 +194,6 @@ public final class InventoryShare extends JavaPlugin {
         FileManagerClass.save();
     }
 
-    private boolean checkVersion() {
-        minorVersion = "N/A";
-        patchVersion = "N/A";
-        try {
-            minorVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return false;
-        }
-        patchVersion = Bukkit.getBukkitVersion();
-        return versions.contains(minorVersion);
-    }
     private boolean checkBukkit() {
         return Bukkit.getVersion().contains("Paper") || Bukkit.getVersion().contains("Spigot");
     }
