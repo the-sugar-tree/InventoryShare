@@ -46,6 +46,8 @@ import com.sugar_tree.inventoryshare.v1_19_R1.FileManager_1_19_R1;
 import com.sugar_tree.inventoryshare.v1_19_R1.Inventory_1_19_R1;
 import com.sugar_tree.inventoryshare.v1_19_R2.FileManager_1_19_R2;
 import com.sugar_tree.inventoryshare.v1_19_R2.Inventory_1_19_R2;
+import com.sugar_tree.inventoryshare.v1_19_R3.FileManager_1_19_R3;
+import com.sugar_tree.inventoryshare.v1_19_R3.Inventory_1_19_R3;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -99,6 +101,9 @@ public final class InventoryShare extends JavaPlugin {
             logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
         }
         switch (minorVersion) {
+            case "v1_19_R3":
+                InventoryClass = new Inventory_1_19_R3();
+                FileManagerClass = new FileManager_1_19_R3();
             case "v1_19_R2":
                 InventoryClass = new Inventory_1_19_R2();
                 FileManagerClass = new FileManager_1_19_R2();
