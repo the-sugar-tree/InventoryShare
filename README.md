@@ -20,7 +20,7 @@
 [![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.16%201.17%201.18%201.19-green)](https://github.com/the-sugar-tree/InventoryShare)   
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![Java](https://img.shields.io/badge/java-17-ED8B00.svg?logo=java)](https://www.azul.com/)
-[![Gradle](https://img.shields.io/badge/gradle-7.4.1-02303A.svg?logo=gradle)](https://gradle.org)
+[![Gradle](https://img.shields.io/badge/gradle-7.6.1-02303A.svg?logo=gradle)](https://gradle.org)
 
 ---
 
