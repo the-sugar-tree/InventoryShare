@@ -25,7 +25,7 @@ import static com.sugar_tree.inventoryshare.api.SharedConstants.logger;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
 
 public class UpdateUtil {
-    public static String version;
+    private static String version;
     public static void checkUpdate() {
         try {
             URL url = new URL("https://github.com/the-sugar-tree/InventoryShare/releases/latest");
@@ -44,7 +44,7 @@ public class UpdateUtil {
             e.printStackTrace();
         }
 
-        if (!plugin.getDescription().getVersion().equals(version)) {
+        if (!("v"+plugin.getDescription().getVersion()).equals(version)) {
             logger.warning("플러그인 업데이트가 가능합니다! 현재 버전: v" + plugin.getDescription().getVersion() + " 새 버전: " + version);
             logger.warning("https://github.com/the-sugar-tree/InventoryShare/releases/latest");
         }
