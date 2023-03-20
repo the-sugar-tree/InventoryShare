@@ -1,10 +1,10 @@
-package com.sugar_tree.inventoryshare;
+package com.sugar_tree.inventoryshare.util;
 
 import com.google.common.collect.ImmutableSet;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 
-public class Version {
+public class VersionUtil {
     private static final SupportedVersions version;
     private static final boolean supported;
     private static final byte unusual;
@@ -35,7 +35,7 @@ public class Version {
         return supported;
     }
 
-    enum SupportedVersions {
+    public enum SupportedVersions {
         v1_19_R3("1.19.4-R0.1-SNAPSHOT"),
         v1_19_R2("1.19.3-R0.1-SNAPSHOT"),
         /**
@@ -68,7 +68,7 @@ public class Version {
          * @param bukkitVersion {@link Bukkit#getBukkitVersion()}
          * @return {@link SupportedVersions} value or null if not supported
          */
-        public static @Nullable Version.SupportedVersions getFromBukkitVersion(String bukkitVersion) {
+        public static @Nullable VersionUtil.SupportedVersions getFromBukkitVersion(String bukkitVersion) {
             for (SupportedVersions value : SupportedVersions.values()) {
                 if (value.getVersions().contains(bukkitVersion)) {
                     if (isCurrent(value)) return value;

@@ -18,6 +18,7 @@ package com.sugar_tree.inventoryshare;
 import com.sugar_tree.inventoryshare.util.AdvancementUtil;
 import com.sugar_tree.inventoryshare.util.ProtocolLibUtil;
 import com.sugar_tree.inventoryshare.util.UpdateUtil;
+import com.sugar_tree.inventoryshare.util.VersionUtil;
 import com.sugar_tree.inventoryshare.v1_12_R1.FileManager_1_12_R1;
 import com.sugar_tree.inventoryshare.v1_12_R1.Inventory_1_12_R1;
 import com.sugar_tree.inventoryshare.v1_13_R1.FileManager_1_13_R1;
@@ -73,8 +74,8 @@ public final class InventoryShare extends JavaPlugin {
         isSupportedBukkit = checkBukkit();
         isProtocolLib = checkProtocolLib();
         UpdateUtil.checkUpdate();
-        if (!Version.isSupported()) {
-            logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + Version.getVersion().name());
+        if (!VersionUtil.isSupported()) {
+            logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + VersionUtil.getVersion().name());
             this.setEnabled(false);
             return;
         }
@@ -91,7 +92,7 @@ public final class InventoryShare extends JavaPlugin {
             logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
             logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
         }
-        switch (Version.getVersion()) {
+        switch (VersionUtil.getVersion()) {
             case v1_19_R3:
                 InventoryClass = new Inventory_1_19_R3();
                 FileManagerClass = new FileManager_1_19_R3();
@@ -101,7 +102,7 @@ public final class InventoryShare extends JavaPlugin {
                 FileManagerClass = new FileManager_1_19_R2();
                 break;
             case v1_19_R1:
-                if (Version.getUnusual() == 1) {
+                if (VersionUtil.getUnusual() == 1) {
                     InventoryClass = new Inventory_1_19_R1();
                     FileManagerClass = new FileManager_1_19_R1();
                 } else {
@@ -179,7 +180,7 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (!Version.isSupported()) return;
+        if (!VersionUtil.isSupported()) return;
         if (!isSupportedBukkit) return;
         if (InventoryClass == null) {
             return;
