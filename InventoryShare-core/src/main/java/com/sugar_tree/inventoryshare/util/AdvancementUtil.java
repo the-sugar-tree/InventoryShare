@@ -31,26 +31,29 @@ import static com.sugar_tree.inventoryshare.api.SharedConstants.advlist;
 public class AdvancementUtil {
 
     public static void AdvancementPatch(Player player) {
-        if (advancement) {
-            Iterator<Advancement> serveradvancements = Bukkit.getServer().advancementIterator();
-            while (serveradvancements.hasNext()) {
-                AdvancementProgress progress = player.getAdvancementProgress(serveradvancements.next());
-                if (progress.isDone()) {
-                    if (!(advlist.contains(progress.getAdvancement().getKey()))) {
-                        advlist.add(progress.getAdvancement().getKey());
-                    }
-                }
+        if (!advancement) {
+            return;
+        }
+        Iterator<Advancement> serveradvancements = Bukkit.getServer().advancementIterator();
+        while (serveradvancements.hasNext()) {
+            AdvancementProgress progress = player.getAdvancementProgress(serveradvancements.next());
+            if (!progress.isDone()) {
+                continue;
             }
-            for (NamespacedKey namespacedKey : advlist) {
-                Advancement adv = Bukkit.getServer().getAdvancement(namespacedKey);
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (!(p.getAdvancementProgress(adv).isDone())) {
-                        AdvancementProgress progress = p.getAdvancementProgress(adv);
-                        List<String> crl = new ArrayList<>(progress.getRemainingCriteria());
-                        for (String cr : crl) {
-                            progress.awardCriteria(cr);
-                        }
-                    }
+            if (!(advlist.contains(progress.getAdvancement().getKey()))) {
+                advlist.add(progress.getAdvancement().getKey());
+            }
+        }
+        for (NamespacedKey namespacedKey : advlist) {
+            Advancement adv = Bukkit.getServer().getAdvancement(namespacedKey);
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (p.getAdvancementProgress(adv).isDone()) {
+                    continue;
+                }
+                AdvancementProgress progress = p.getAdvancementProgress(adv);
+                List<String> crl = new ArrayList<>(progress.getRemainingCriteria());
+                for (String cr : crl) {
+                    progress.awardCriteria(cr);
                 }
             }
         }
