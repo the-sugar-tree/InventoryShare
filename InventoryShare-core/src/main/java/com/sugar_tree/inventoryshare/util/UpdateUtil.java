@@ -15,11 +15,8 @@
  */
 package com.sugar_tree.inventoryshare.util;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.logger;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
@@ -29,17 +26,8 @@ public class UpdateUtil {
     public static void checkUpdate() {
         try {
             URL url = new URL("https://github.com/the-sugar-tree/InventoryShare/releases/latest");
-            String line;
-            HttpURLConnection httpURLConnection = ((HttpURLConnection) url.openConnection());
-            httpURLConnection.setRequestMethod("GET");
-            BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), StandardCharsets.UTF_8));
-            while ((line = br.readLine()) != null) {
-                if (line.contains("<a aria-current=\"page\" href=\"/the-sugar-tree/InventoryShare/releases/tag/")) {
-                    version = line.substring(line.lastIndexOf(" ") + 1);
-                    break;
-                }
-            }
-            br.close();
+            String urls = getFinalURL(url).toString();
+            version = urls.substring(urls.lastIndexOf('/') + 1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,5 +36,31 @@ public class UpdateUtil {
             logger.warning("플러그인 업데이트가 가능합니다! 현재 버전: v" + plugin.getDescription().getVersion() + " 새 버전: " + version);
             logger.warning("https://github.com/the-sugar-tree/InventoryShare/releases/latest");
         }
+    }
+
+    public static URL getFinalURL(URL url) {
+        try {
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setInstanceFollowRedirects(false);
+            con.setRequestProperty("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36");
+            con.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+            con.addRequestProperty("Referer", "https://www.google.com/");
+            con.connect();
+            // Header에서 Status Code를 뽑는다.
+            int resCode = con.getResponseCode();
+            // http코드가 301(영구이동), 302(임시 이동), 303(기타 위치 보기) 이면 또다시 이 함수를 태운다. 재귀함수.
+            if (resCode == HttpURLConnection.HTTP_SEE_OTHER || resCode == HttpURLConnection.HTTP_MOVED_PERM
+                    || resCode == HttpURLConnection.HTTP_MOVED_TEMP) {
+                String Location = con.getHeaderField("Location");
+                if (Location.startsWith("/")) {
+                    Location = url.getProtocol() + "://" + url.getHost() + Location;
+                }
+                return getFinalURL(new URL(Location));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return url;
     }
 }

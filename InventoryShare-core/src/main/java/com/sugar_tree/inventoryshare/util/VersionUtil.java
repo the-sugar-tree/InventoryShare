@@ -12,11 +12,13 @@ public class VersionUtil {
         version = SupportedVersions.getFromBukkitVersion(Bukkit.getBukkitVersion());
         byte t = 0;
         if (version != null) {
-            //noinspection SwitchStatementWithTooFewBranches
-            switch (version) {
-                case v1_19_R1:
-                    if (Bukkit.getBukkitVersion().equals("1.19-R0.1-SNAPSHOT")) t = 1;
+            if (version == SupportedVersions.v1_19_R1) {
+                if (Bukkit.getBukkitVersion().equals("1.19-R0.1-SNAPSHOT")) t = 1;
             }
+//            switch (version) {
+//                case v1_19_R1:
+//                    if (Bukkit.getBukkitVersion().equals("1.19-R0.1-SNAPSHOT")) t = 1;
+//            }
         }
         unusual = t;
         supported = (version != null);
