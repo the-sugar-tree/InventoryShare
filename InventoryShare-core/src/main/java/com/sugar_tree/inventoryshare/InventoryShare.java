@@ -61,6 +61,7 @@ import java.util.UUID;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
+    @SuppressWarnings("FieldCanBeLocal")
     private boolean isSupportedBukkit = false;
     @SuppressWarnings("FieldCanBeLocal")
     private boolean isProtocolLib = false;
@@ -180,8 +181,6 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (!VersionUtil.isSupported()) return;
-        if (!isSupportedBukkit) return;
         if (InventoryClass == null) {
             return;
         }
