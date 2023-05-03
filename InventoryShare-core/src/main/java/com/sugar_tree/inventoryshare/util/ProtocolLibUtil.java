@@ -41,11 +41,12 @@ public class ProtocolLibUtil {
             public void onPacketSending(PacketEvent event) {
                 if (breakingBlock.contains(event.getPlayer())) {
                     Object slot = event.getPacket().getModifier().read(2);
-                    if ((event.getPlayer().getInventory().getHeldItemSlot() + 36) == ((int) slot)) {
-                        ItemStack handItem = event.getPlayer().getInventory().getItemInMainHand();
-                        if (handItem.hasItemMeta() && handItem.getItemMeta() instanceof Damageable && ((Damageable) handItem.getItemMeta()).getDamage() > 0) {
-                            event.setCancelled(true);
-                        }
+                    if ((event.getPlayer().getInventory().getHeldItemSlot() + 36) != ((int) slot)) {
+                        return;
+                    }
+                    ItemStack handItem = event.getPlayer().getInventory().getItemInMainHand();
+                    if (handItem.hasItemMeta() && handItem.getItemMeta() instanceof Damageable && ((Damageable) handItem.getItemMeta()).getDamage() > 0) {
+                        event.setCancelled(true);
                     }
                 }
             }
@@ -58,16 +59,16 @@ public class ProtocolLibUtil {
             public void onPacketReceiving(PacketEvent event) {
                 Object Status = event.getPacket().getModifier().read(2);
                 try {
-                    if (Status.toString().equals("ABORT_DESTROY_BLOCK")) {
-                        breakingBlock.remove(event.getPlayer());
-                        event.getPlayer().updateInventory();
-                    }
-                    if (Status.toString().equals("START_DESTROY_BLOCK")) {
-                        breakingBlock.add(event.getPlayer());
-                    }
-                    if (Status.toString().equals("STOP_DESTROY_BLOCK")) {
-                        breakingBlock.remove(event.getPlayer());
-                        event.getPlayer().updateInventory();
+                    String value = Status.toString();
+                    switch (value) {
+                        case "ABORT_DESTROY_BLOCK":
+                        case "STOP_DESTROY_BLOCK":
+                            breakingBlock.remove(event.getPlayer());
+                            event.getPlayer().updateInventory();
+                            break;
+                        case "START_DESTROY_BLOCK":
+                            breakingBlock.add(event.getPlayer());
+                            break;
                     }
                 } catch (Exception exception) {
                     exception.printStackTrace();
