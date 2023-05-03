@@ -15,10 +15,7 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.util.AdvancementUtil;
-import com.sugar_tree.inventoryshare.util.ProtocolLibUtil;
-import com.sugar_tree.inventoryshare.util.UpdateUtil;
-import com.sugar_tree.inventoryshare.util.VersionUtil;
+import com.sugar_tree.inventoryshare.util.*;
 import com.sugar_tree.inventoryshare.v1_12_R1.FileManager_1_12_R1;
 import com.sugar_tree.inventoryshare.v1_12_R1.Inventory_1_12_R1;
 import com.sugar_tree.inventoryshare.v1_13_R1.FileManager_1_13_R1;
@@ -70,6 +67,7 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new Metrics(this, 18372);
         plugin = this;
         logger = getLogger();
         isSupportedBukkit = checkBukkit();
