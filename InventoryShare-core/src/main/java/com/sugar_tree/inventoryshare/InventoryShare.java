@@ -67,11 +67,12 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        new Metrics(this, 18372);
+        Metrics metrics = new Metrics(this, 18372);
         plugin = this;
         logger = getLogger();
         isSupportedBukkit = checkBukkit();
         isProtocolLib = checkProtocolLib();
+        metrics.addCustomChart(new Metrics.SimplePie("ProtocolLib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
         UpdateUtil.checkUpdate();
         if (!VersionUtil.isSupported()) {
             logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + VersionUtil.getVersion().name());
