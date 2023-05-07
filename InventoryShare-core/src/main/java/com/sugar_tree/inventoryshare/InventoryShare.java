@@ -15,7 +15,7 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.api.util.VersionUtil;
+import com.sugar_tree.inventoryshare.nms.util.VersionUtil;
 import com.sugar_tree.inventoryshare.nms.NMSLoader;
 import com.sugar_tree.inventoryshare.util.AdvancementUtil;
 import com.sugar_tree.inventoryshare.util.Metrics;

@@ -3,7 +3,7 @@ package com.sugar_tree.inventoryshare.nms;
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.FileManager;
 import com.sugar_tree.inventoryshare.api.Inventory;
-import com.sugar_tree.inventoryshare.api.util.VersionUtil;
+import com.sugar_tree.inventoryshare.nms.util.VersionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,7 +23,7 @@ import static com.sugar_tree.inventoryshare.nms.NMSLoader.FileManagerLoader.*;
 
 public class NMSLoader {
 
-    // FIXME: 2023-05-07
+    // FIXME: This MUST BE fixed as it is hardcoded for version 1.19.4.
     protected static final String PATH_CLASS_PlayerInventory = "net.minecraft.world.entity.player.PlayerInventory";
     protected static final String PATH_CLASS_ItemStack = "net.minecraft.world.item.ItemStack";
     protected static final String PATH_CLASS_NonNullList = "net.minecraft.core.NonNullList";
@@ -41,7 +41,7 @@ public class NMSLoader {
     protected static final String PATH_PlayerInventory_extraSlots = "k";
     protected static final String PATH_PlayerInventory_contents = "o";
     protected static final String PATH_CLASS_EntityHuman = "net.minecraft.world.entity.player.EntityHuman";
-    // FIXME: 2023-05-07
+    // FIXME: --END HERE
 
     private NMSLoader() {}
 
