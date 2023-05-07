@@ -13,9 +13,11 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
@@ -50,6 +52,7 @@ public class NMSLoader {
         InventoryClass = new InventoryLoader();
     }
 
+    @SuppressWarnings({"unchecked", "JavaReflectionInvocation"})
     static class FileManagerLoader implements FileManager {
 
         private static final Class<?> ItemStack;
@@ -98,7 +101,6 @@ public class NMSLoader {
             try {
                 List<Map<?, ?>> itemslist = new ArrayList<>();
                 for (Object itemStack : items) {
-//                itemslist.add(((org.bukkit.inventory.ItemStack) asCraftMirror.invoke(null, ItemStack.cast(itemStack))).serialize());
                     itemslist.add(((org.bukkit.inventory.ItemStack) asCraftMirror.invoke(null, itemStack)).serialize());
                 }
                 invconfig.set("items", itemslist);
@@ -282,20 +284,26 @@ public class NMSLoader {
         }
 
         public void deleteWasteFiles() {
-            if (new File(plugin.getDataFolder(), "\\teams").listFiles() != null) {
-                for (File file : (new File(plugin.getDataFolder(), "\\teams").listFiles())) {
+            File[] files = new File(plugin.getDataFolder(), "\\teams").listFiles();
+            if (files != null) {
+                for (File file : files) {
                     List<String> list = new ArrayList<>();
                     for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         list.add(team.getName());
                     }
                     if (!list.contains(file.getName())) {
-                        file.delete();
+                        try {
+                            Files.delete(file.toPath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         }
     }
 
+    @SuppressWarnings({"JavaReflectionMemberAccess", "DataFlowIssue", "unchecked", "SuspiciousMethodCalls"})
     static class InventoryLoader implements Inventory {
         private static final Class<?> EntityPlayer;
         private static final Class<?> CraftPlayer;
@@ -394,6 +402,7 @@ public class NMSLoader {
             }
         }
 
+        @SuppressWarnings("deprecation")
         public void invApply(@NotNull Player p) {
             try {
                 if (!(teaminventory)) {
