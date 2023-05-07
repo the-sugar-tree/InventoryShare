@@ -82,11 +82,10 @@ public class NMSLoader {
                 asNMSCopy = CraftItemStack.getMethod("asNMSCopy", org.bukkit.inventory.ItemStack.class);
                 deserialize = CraftItemStack.getMethod("deserialize", Map.class);
 
-                contents = ImmutableList.of(items, armor, extraSlots);
-
                 items = (AbstractList<Object>) createItemList.invoke(null, 36, nullItem);
                 armor = (AbstractList<Object>) createItemList.invoke(null, 4, nullItem);
                 extraSlots = (AbstractList<Object>) createItemList.invoke(null, 1, nullItem);
+                contents = ImmutableList.of(items, armor, extraSlots);
 
                 getAdvName = NamespacedKey.class.getDeclaredMethod(PATH_METHOD_getNameSpacedKey, String.class);
             } catch (NoSuchFieldException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
