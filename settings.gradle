@@ -1,5 +1,6 @@
 rootProject.name = 'InventoryShare'
 include 'InventoryShare-core'
+include 'InventoryShare-nms'
 include 'InventoryShare-api'
 include 'v1_19_R3'
 include 'v1_19_R2'

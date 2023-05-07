@@ -15,7 +15,12 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.util.*;
+import com.sugar_tree.inventoryshare.api.util.VersionUtil;
+import com.sugar_tree.inventoryshare.nms.NMSLoader;
+import com.sugar_tree.inventoryshare.util.AdvancementUtil;
+import com.sugar_tree.inventoryshare.util.Metrics;
+import com.sugar_tree.inventoryshare.util.ProtocolLibUtil;
+import com.sugar_tree.inventoryshare.util.UpdateUtil;
 import com.sugar_tree.inventoryshare.v1_12_R1.FileManager_1_12_R1;
 import com.sugar_tree.inventoryshare.v1_12_R1.Inventory_1_12_R1;
 import com.sugar_tree.inventoryshare.v1_13_R1.FileManager_1_13_R1;
@@ -44,8 +49,6 @@ import com.sugar_tree.inventoryshare.v1_19_R1.FileManager_1_19_R1;
 import com.sugar_tree.inventoryshare.v1_19_R1.Inventory_1_19_R1;
 import com.sugar_tree.inventoryshare.v1_19_R2.FileManager_1_19_R2;
 import com.sugar_tree.inventoryshare.v1_19_R2.Inventory_1_19_R2;
-import com.sugar_tree.inventoryshare.v1_19_R3.FileManager_1_19_R3;
-import com.sugar_tree.inventoryshare.v1_19_R3.Inventory_1_19_R3;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -94,8 +97,9 @@ public final class InventoryShare extends JavaPlugin {
         }
         switch (VersionUtil.getVersion()) {
             case v1_19_R3:
-                InventoryClass = new Inventory_1_19_R3();
-                FileManagerClass = new FileManager_1_19_R3();
+                NMSLoader.init();
+//                InventoryClass = new Inventory_1_19_R3();
+//                FileManagerClass = new FileManager_1_19_R3();
                 break;
             case v1_19_R2:
                 InventoryClass = new Inventory_1_19_R2();

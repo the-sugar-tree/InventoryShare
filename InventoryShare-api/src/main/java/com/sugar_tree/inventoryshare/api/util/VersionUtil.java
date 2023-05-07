@@ -1,4 +1,4 @@
-package com.sugar_tree.inventoryshare.util;
+package com.sugar_tree.inventoryshare.api.util;
 
 import com.google.common.collect.ImmutableSet;
 import org.bukkit.Bukkit;
