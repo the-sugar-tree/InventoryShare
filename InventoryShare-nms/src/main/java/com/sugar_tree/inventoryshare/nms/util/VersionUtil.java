@@ -1,6 +1,7 @@
 package com.sugar_tree.inventoryshare.nms.util;
 
 import com.google.common.collect.ImmutableSet;
+import com.sugar_tree.inventoryshare.api.SharedConstants;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,40 +24,36 @@ public class VersionUtil {
 
     public enum SupportedVersions {
         v1_19_R3(ImmutableSet.of("1.19.4-R0.1-SNAPSHOT"),
-                "net.minecraft.world.entity.player.PlayerInventory", "net.minecraft.world.item.ItemStack",
-                "net.minecraft.core.NonNullList", "a", "b", "minecraft", "net.minecraft.server.level.EntityPlayer",
-                "org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer", "false", "fJ", "i", "j", "k", "o",
-                "net.minecraft.world.entity.player.EntityHuman"),
+                "fJ", "i", "j", "k", "o"),
         v1_19_R2(ImmutableSet.of("1.19.3-R0.1-SNAPSHOT"),
-                "net.minecraft.world.entity.player.PlayerInventory", "net.minecraft.world.item.ItemStack",
-                "net.minecraft.core.NonNullList", "a", "b", "minecraft", "net.minecraft.server.level.EntityPlayer",
-                "org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer", "false", "fE", "h", "i", "j", "n",
-                "net.minecraft.world.entity.player.EntityHuman"),
+                "fE", "h", "i", "j", "n"),
         v1_19_1_R1(ImmutableSet.of("1.19.2-R0.1-SNAPSHOT", "1.19.1-R0.1-SNAPSHOT"),
-                "net.minecraft.world.entity.player.PlayerInventory", "net.minecraft.world.item.ItemStack",
-                "net.minecraft.core.NonNullList", "a", "b", "minecraft", "net.minecraft.server.level.EntityPlayer",
-                "org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer", "false", "fA", "h", "i", "j", "n",
-                "net.minecraft.world.entity.player.EntityHuman"),
+                "fA", "h", "i", "j", "n"),
         v1_19_R1(ImmutableSet.of("1.19-R0.1-SNAPSHOT"),
-                "net.minecraft.world.entity.player.PlayerInventory", "net.minecraft.world.item.ItemStack",
-                "net.minecraft.core.NonNullList", "a", "b", "minecraft", "net.minecraft.server.level.EntityPlayer",
-                "org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer", "false", "fB", "h", "i", "j", "n",
-                "net.minecraft.world.entity.player.EntityHuman"),
+                "fB", "h", "i", "j", "n"),
         v1_18_R2(ImmutableSet.of("1.18.2-R0.1-SNAPSHOT", "1.18.1-R0.1-SNAPSHOT"),
-                "net.minecraft.world.entity.player.PlayerInventory", "net.minecraft.world.item.ItemStack",
-                "net.minecraft.core.NonNullList", "a", "b", "minecraft", "net.minecraft.server.level.EntityPlayer",
-                "org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer", "false", "fr", "h", "i", "j", "n",
-                "net.minecraft.world.entity.player.EntityHuman"),
-        v1_18_R1(ImmutableSet.of("1.18-R0.1-SNAPSHOT")),
-        v1_17_R1(ImmutableSet.of("1.17-R0.1-SNAPSHOT", "1.17.1-R0.1-SNAPSHOT")),
-        v1_16_R3(ImmutableSet.of("1.16.5-R0.1-SNAPSHOT", "1.16.4-R0.1-SNAPSHOT")),
-        v1_16_R2(ImmutableSet.of("1.16.3-R0.1-SNAPSHOT", "1.16.2-R0.1-SNAPSHOT")),
-        v1_16_R1(ImmutableSet.of("1.16.1-R0.1-SNAPSHOT")),
-        v1_15_R1(ImmutableSet.of("1.15.2-R0.1-SNAPSHOT", "1.15.1-R0.1-SNAPSHOT", "1.15-R0.1-SNAPSHOT")),
-        v1_14_R1(ImmutableSet.of("1.14.4-R0.1-SNAPSHOT", "1.14.3-R0.1-SNAPSHOT", "1.14.2-R0.1-SNAPSHOT", "1.14.1-R0.1-SNAPSHOT", "1.14-R0.1-SNAPSHOT")),
+                "fr", "h", "i", "j", "n"),
+        v1_18_R1(ImmutableSet.of("1.18-R0.1-SNAPSHOT"),
+                "fq", "h", "i", "j", "n"),
+        v1_17_R1(ImmutableSet.of("1.17-R0.1-SNAPSHOT", "1.17.1-R0.1-SNAPSHOT"),
+                "getInventory", "h", "i", "j", "n"),
+        v1_16_R3(ImmutableSet.of("1.16.5-R0.1-SNAPSHOT", "1.16.4-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_16_R2(ImmutableSet.of("1.16.3-R0.1-SNAPSHOT", "1.16.2-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_16_R1(ImmutableSet.of("1.16.1-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_15_R1(ImmutableSet.of("1.15.2-R0.1-SNAPSHOT", "1.15.1-R0.1-SNAPSHOT", "1.15-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_14_R1(ImmutableSet.of("1.14.4-R0.1-SNAPSHOT", "1.14.3-R0.1-SNAPSHOT", "1.14.2-R0.1-SNAPSHOT", "1.14.1-R0.1-SNAPSHOT", "1.14-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
         v1_13_R2(ImmutableSet.of("1.13.2-R0.1-SNAPSHOT")),
-        v1_13_R1(ImmutableSet.of("1.13.1-R0.1-SNAPSHOT", "1.13-R0.1-SNAPSHOT")),
-        v1_12_R1(ImmutableSet.of("1.12.2-R0.1-SNAPSHOT", "1.12.1-R0.1-SNAPSHOT", "1.12-R0.1-SNAPSHOT"));
+        v1_13_R1(ImmutableSet.of("1.13.1-R0.1-SNAPSHOT", "1.13-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_12_R1(ImmutableSet.of("1.12.2-R0.1-SNAPSHOT", "1.12.1-R0.1-SNAPSHOT", "1.12-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f");
+
+
 
         private final ImmutableSet<String> versions;
         private final String PATH_CLASS_PlayerInventory;
@@ -65,7 +62,7 @@ public class VersionUtil {
         private final String PATH_METHOD_createItemlist;
         private final String PATH_FIELD_emptyItem;
         private final String PATH_METHOD_getNameSpacedKey;
-        /*****************************************************************************************************************/
+        //*****************************************************************************************************************//
         private final String PATH_CLASS_EntityPlayer;
         private final String PATH_CLASS_CraftPlayer;
         private final boolean DOES_INVENTORY_USE_FIELD;
@@ -82,24 +79,50 @@ public class VersionUtil {
 
         SupportedVersions(ImmutableSet<String> versions, String... args) {
             this.versions = versions;
-            if (args.length != 15) {
+            if (args.length != 5) {
                 throw new IllegalArgumentException("The number of arguments is not satisfied");
             }
-            PATH_CLASS_PlayerInventory = args[0];
-            PATH_CLASS_ItemStack = args[1];
-            PATH_CLASS_NonNullList = args[2];
-            PATH_METHOD_createItemlist = args[3];
-            PATH_FIELD_emptyItem = args[4];
-            PATH_METHOD_getNameSpacedKey = args[5];
-            PATH_CLASS_EntityPlayer = args[6];
-            PATH_CLASS_CraftPlayer = args[7];
-            DOES_INVENTORY_USE_FIELD = Boolean.parseBoolean(args[8]);
-            PATH_EntityPlayer_Inventory = args[9];
-            PATH_PlayerInventory_items = args[10];
-            PATH_PlayerInventory_armor = args[11];
-            PATH_PlayerInventory_extraSlots = args[12];
-            PATH_PlayerInventory_contents = args[13];
-            PATH_CLASS_EntityHuman = args[14];
+            //1.17+
+            if (SharedConstants.WORLD_VERSION >= 2724) {
+                PATH_CLASS_PlayerInventory = "net.minecraft.world.entity.player.PlayerInventory";
+                PATH_CLASS_ItemStack = "net.minecraft.world.item.ItemStack";
+                PATH_CLASS_NonNullList = "net.minecraft.core.NonNullList";
+                PATH_METHOD_getNameSpacedKey = "fromString";
+                PATH_CLASS_EntityPlayer = "net.minecraft.server.level.EntityPlayer";
+                DOES_INVENTORY_USE_FIELD = false;
+                PATH_EntityPlayer_Inventory = args[0];
+                PATH_PlayerInventory_items = args[1];
+                PATH_PlayerInventory_armor = args[2];
+                PATH_PlayerInventory_extraSlots = args[3];
+                PATH_PlayerInventory_contents = args[4];
+                PATH_CLASS_EntityHuman = "net.minecraft.world.entity.player.EntityHuman";
+            } else {
+                PATH_CLASS_PlayerInventory = "net.minecraft.server." + name() + ".PlayerInventory";
+                PATH_CLASS_ItemStack = "net.minecraft.server."+ name() + ".ItemStack";
+                PATH_CLASS_NonNullList = "net.minecraft.server." + name() + ".NonNullList";
+                PATH_METHOD_getNameSpacedKey = "minecraft";
+                PATH_CLASS_EntityPlayer = "org.bukkit.craftbukkit." + name() + ".entity.CraftPlayer";
+                DOES_INVENTORY_USE_FIELD = true;
+                PATH_EntityPlayer_Inventory = args[0];
+                PATH_PlayerInventory_items = args[1];
+                PATH_PlayerInventory_armor = args[2];
+                PATH_PlayerInventory_extraSlots = args[3];
+                PATH_PlayerInventory_contents = args[4];
+                PATH_CLASS_EntityHuman = "net.minecraft.server." + name() + ".EntityHuman";
+            }
+            //1.16+
+            if (SharedConstants.WORLD_VERSION >= 2566) {
+                PATH_METHOD_createItemlist = "a";
+                PATH_FIELD_emptyItem = "b";
+            } else {
+                PATH_METHOD_createItemlist = "a";
+                PATH_FIELD_emptyItem = "a";
+            }
+            String name = name();
+            if (name.equals("v1_19_1_R1")) {
+                name = "v1_19_R1";
+            }
+            PATH_CLASS_CraftPlayer = "org.bukkit.craftbukkit." + name + ".entity.CraftPlayer";
         }
 
         /**
@@ -117,6 +140,7 @@ public class VersionUtil {
         }
 
         //Obly for Debug
+        @SuppressWarnings("unused")
         private static boolean isCurrent(@Nullable SupportedVersions v) {
             if (v == null) {
                 return false;
