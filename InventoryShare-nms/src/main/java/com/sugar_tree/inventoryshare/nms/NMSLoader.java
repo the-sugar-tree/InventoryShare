@@ -66,9 +66,18 @@ public class NMSLoader {
 
     private NMSLoader() {}
 
-    public static void init() {
-        FileManagerClass = new FileManagerLoader();
-        InventoryClass = new InventoryLoader();
+    public static boolean init() {
+        logger.info("Loading Classes...");
+        try {
+            FileManagerClass = new FileManagerLoader();
+            InventoryClass = new InventoryLoader();
+        } catch (ExceptionInInitializerError e) {
+            logger.severe("ERROR while loading Classes");
+            e.printStackTrace();
+            return false;
+        }
+        logger.info("Done!");
+        return true;
     }
 
     @SuppressWarnings({"unchecked", "JavaReflectionInvocation"})
@@ -323,6 +332,7 @@ public class NMSLoader {
         private static final Method CraftPlayer_getHandle;
         private static final Method inventory_method;
         private static final Field inventory_field;
+        private static final Class<?> EntityHuman;
 
         private static final Field inv_items;
         private static final Field inv_armor;
@@ -333,12 +343,12 @@ public class NMSLoader {
                 PlayerInventory = Class.forName(PATH_CLASS_PlayerInventory);
                 EntityPlayer = Class.forName(PATH_CLASS_EntityPlayer);
                 CraftPlayer = Class.forName(PATH_CLASS_CraftPlayer);
+                EntityHuman = Class.forName(PATH_CLASS_EntityHuman);
                 CraftPlayer_getHandle = CraftPlayer.getMethod("getHandle");
                 if (DOES_INVENTORY_USE_FIELD) {
-                    inventory_field = EntityPlayer.getField(PATH_EntityPlayer_Inventory);
+                    inventory_field = EntityHuman.getField(PATH_EntityPlayer_Inventory);
                     inventory_method = null;
-                }
-                else {
+                } else {
                     inventory_method = EntityPlayer.getMethod(PATH_EntityPlayer_Inventory);
                     inventory_field = null;
                 }
@@ -466,7 +476,7 @@ public class NMSLoader {
 
         public void savePlayerInventory(@NotNull Player p) {
             try {
-                Object pinvsecond = PlayerInventory.getConstructor(Class.forName(PATH_CLASS_EntityHuman)).newInstance((Object) null);
+                Object pinvsecond = PlayerInventory.getConstructor(EntityHuman).newInstance((Object) null);
                 Object entityPlayer = CraftPlayer_getHandle.invoke(CraftPlayer.cast(p));
                 Object pinvfirst;
                 if (DOES_INVENTORY_USE_FIELD) {
@@ -484,7 +494,7 @@ public class NMSLoader {
                 }
                 invList.put(p.getUniqueId(), pinvsecond);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |
-                     ClassNotFoundException | NoSuchMethodException | InstantiationException e) {
+                     NoSuchMethodException | InstantiationException e) {
                 throw new RuntimeException(e);
             }
         }

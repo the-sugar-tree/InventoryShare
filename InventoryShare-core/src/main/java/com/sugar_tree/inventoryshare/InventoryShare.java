@@ -15,40 +15,12 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.nms.util.VersionUtil;
 import com.sugar_tree.inventoryshare.nms.NMSLoader;
+import com.sugar_tree.inventoryshare.nms.util.VersionUtil;
 import com.sugar_tree.inventoryshare.util.AdvancementUtil;
 import com.sugar_tree.inventoryshare.util.Metrics;
 import com.sugar_tree.inventoryshare.util.ProtocolLibUtil;
 import com.sugar_tree.inventoryshare.util.UpdateUtil;
-import com.sugar_tree.inventoryshare.v1_12_R1.FileManager_1_12_R1;
-import com.sugar_tree.inventoryshare.v1_12_R1.Inventory_1_12_R1;
-import com.sugar_tree.inventoryshare.v1_13_R1.FileManager_1_13_R1;
-import com.sugar_tree.inventoryshare.v1_13_R1.Inventory_1_13_R1;
-import com.sugar_tree.inventoryshare.v1_13_R2.FileManager_1_13_R2;
-import com.sugar_tree.inventoryshare.v1_13_R2.Inventory_1_13_R2;
-import com.sugar_tree.inventoryshare.v1_14_R1.FileManager_1_14_R1;
-import com.sugar_tree.inventoryshare.v1_14_R1.Inventory_1_14_R1;
-import com.sugar_tree.inventoryshare.v1_15_R1.FileManager_1_15_R1;
-import com.sugar_tree.inventoryshare.v1_15_R1.Inventory_1_15_R1;
-import com.sugar_tree.inventoryshare.v1_16_R1.FileManager_1_16_R1;
-import com.sugar_tree.inventoryshare.v1_16_R1.Inventory_1_16_R1;
-import com.sugar_tree.inventoryshare.v1_16_R2.FileManager_1_16_R2;
-import com.sugar_tree.inventoryshare.v1_16_R2.Inventory_1_16_R2;
-import com.sugar_tree.inventoryshare.v1_16_R3.FileManager_1_16_R3;
-import com.sugar_tree.inventoryshare.v1_16_R3.Inventory_1_16_R3;
-import com.sugar_tree.inventoryshare.v1_17_R1.FileManager_1_17_R1;
-import com.sugar_tree.inventoryshare.v1_17_R1.Inventory_1_17_R1;
-import com.sugar_tree.inventoryshare.v1_18_R1.FileManager_1_18_R1;
-import com.sugar_tree.inventoryshare.v1_18_R1.Inventory_1_18_R1;
-import com.sugar_tree.inventoryshare.v1_18_R2.FileManager_1_18_R2;
-import com.sugar_tree.inventoryshare.v1_18_R2.Inventory_1_18_R2;
-import com.sugar_tree.inventoryshare.v1_19_1_R1.FileManager_1_19_1_R1;
-import com.sugar_tree.inventoryshare.v1_19_1_R1.Inventory_1_19_1_R1;
-import com.sugar_tree.inventoryshare.v1_19_R1.FileManager_1_19_R1;
-import com.sugar_tree.inventoryshare.v1_19_R1.Inventory_1_19_R1;
-import com.sugar_tree.inventoryshare.v1_19_R2.FileManager_1_19_R2;
-import com.sugar_tree.inventoryshare.v1_19_R2.Inventory_1_19_R2;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -95,70 +67,10 @@ public final class InventoryShare extends JavaPlugin {
             logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
             logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
         }
-        switch (VersionUtil.getVersion()) {
-            case v1_19_R3:
-                NMSLoader.init();
-                break;
-            case v1_19_R2:
-                InventoryClass = new Inventory_1_19_R2();
-                FileManagerClass = new FileManager_1_19_R2();
-                break;
-            case v1_19_R1:
-                InventoryClass = new Inventory_1_19_R1();
-                FileManagerClass = new FileManager_1_19_R1();
-                break;
-            case v1_19_1_R1:
-                InventoryClass = new Inventory_1_19_1_R1();
-                FileManagerClass = new FileManager_1_19_1_R1();
-                break;
-            case v1_18_R2:
-                InventoryClass = new Inventory_1_18_R2();
-                FileManagerClass = new FileManager_1_18_R2();
-                break;
-            case v1_18_R1:
-                InventoryClass = new Inventory_1_18_R1();
-                FileManagerClass = new FileManager_1_18_R1();
-                break;
-            case v1_17_R1:
-                InventoryClass = new Inventory_1_17_R1();
-                FileManagerClass = new FileManager_1_17_R1();
-                break;
-            case v1_16_R3:
-                InventoryClass = new Inventory_1_16_R3();
-                FileManagerClass = new FileManager_1_16_R3();
-                break;
-            case v1_16_R2:
-                InventoryClass = new Inventory_1_16_R2();
-                FileManagerClass = new FileManager_1_16_R2();
-                break;
-            case v1_16_R1:
-                InventoryClass = new Inventory_1_16_R1();
-                FileManagerClass = new FileManager_1_16_R1();
-                break;
-            case v1_15_R1:
-                InventoryClass = new Inventory_1_15_R1();
-                FileManagerClass = new FileManager_1_15_R1();
-                break;
-            case v1_14_R1:
-                InventoryClass = new Inventory_1_14_R1();
-                FileManagerClass = new FileManager_1_14_R1();
-                break;
-            case v1_13_R2:
-                InventoryClass = new Inventory_1_13_R2();
-                FileManagerClass = new FileManager_1_13_R2();
-                break;
-            case v1_13_R1:
-                InventoryClass = new Inventory_1_13_R1();
-                FileManagerClass = new FileManager_1_13_R1();
-                break;
-            case v1_12_R1:
-                InventoryClass = new Inventory_1_12_R1();
-                FileManagerClass = new FileManager_1_12_R1();
-                break;
-            default:
-                logger.severe("알 수 없는 오류로 이 버전을 지원하지 않습니다!");
-                this.setEnabled(false);
-                return;
+
+        if (!NMSLoader.init()) {
+            this.setEnabled(false);
+            return;
         }
 
         invfile = new File(getDataFolder(), "inventory.yml");
