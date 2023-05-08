@@ -98,21 +98,18 @@ public final class InventoryShare extends JavaPlugin {
         switch (VersionUtil.getVersion()) {
             case v1_19_R3:
                 NMSLoader.init();
-//                InventoryClass = new Inventory_1_19_R3();
-//                FileManagerClass = new FileManager_1_19_R3();
                 break;
             case v1_19_R2:
                 InventoryClass = new Inventory_1_19_R2();
                 FileManagerClass = new FileManager_1_19_R2();
                 break;
             case v1_19_R1:
-                if (VersionUtil.getUnusual() == 1) {
-                    InventoryClass = new Inventory_1_19_R1();
-                    FileManagerClass = new FileManager_1_19_R1();
-                } else {
-                    InventoryClass = new Inventory_1_19_1_R1();
-                    FileManagerClass = new FileManager_1_19_1_R1();
-                }
+                InventoryClass = new Inventory_1_19_R1();
+                FileManagerClass = new FileManager_1_19_R1();
+                break;
+            case v1_19_1_R1:
+                InventoryClass = new Inventory_1_19_1_R1();
+                FileManagerClass = new FileManager_1_19_1_R1();
                 break;
             case v1_18_R2:
                 InventoryClass = new Inventory_1_18_R2();

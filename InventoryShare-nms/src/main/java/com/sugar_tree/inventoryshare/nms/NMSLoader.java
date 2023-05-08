@@ -45,7 +45,6 @@ public class NMSLoader {
     protected static final String PATH_CLASS_EntityHuman;
 
     static {
-
         PATH_CLASS_PlayerInventory = VersionUtil.getVersion().getPATH_CLASS_PlayerInventory();
         PATH_CLASS_ItemStack = VersionUtil.getVersion().getPATH_CLASS_ItemStack();
         PATH_CLASS_NonNullList = VersionUtil.getVersion().getPATH_CLASS_NonNullList();
