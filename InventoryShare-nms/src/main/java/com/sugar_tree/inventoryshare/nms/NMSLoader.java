@@ -26,24 +26,44 @@ import static com.sugar_tree.inventoryshare.nms.NMSLoader.FileManagerLoader.*;
 public class NMSLoader {
 
     // FIXME: This MUST BE fixed as it is hardcoded for version 1.19.4.
-    protected static final String PATH_CLASS_PlayerInventory = "net.minecraft.world.entity.player.PlayerInventory";
-    protected static final String PATH_CLASS_ItemStack = "net.minecraft.world.item.ItemStack";
-    protected static final String PATH_CLASS_NonNullList = "net.minecraft.core.NonNullList";
-    protected static final String PATH_METHOD_createItemlist = "a";
-    protected static final String PATH_FIELD_emptyItem = "b";
-    protected static final String version = VersionUtil.getVersion().name();
-    protected static final String PATH_METHOD_getNameSpacedKey = "minecraft";
+    protected static final String PATH_CLASS_PlayerInventory;
+    protected static final String PATH_CLASS_ItemStack;
+    protected static final String PATH_CLASS_NonNullList;
+    protected static final String PATH_METHOD_createItemlist;
+    protected static final String PATH_FIELD_emptyItem;
+    protected static final String version;
+    protected static final String PATH_METHOD_getNameSpacedKey;
     /*****************************************************************************************************************/
-    protected static final String PATH_CLASS_EntityPlayer = "net.minecraft.server.level.EntityPlayer";
-    protected static final String PATH_CLASS_CraftPlayer = "org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer";
-    protected static final boolean DOES_INVENTORY_USE_FIELD = false;
-    protected static final String PATH_EntityPlayer_Inventory = "fJ";
-    protected static final String PATH_PlayerInventory_items = "i";
-    protected static final String PATH_PlayerInventory_armor = "j";
-    protected static final String PATH_PlayerInventory_extraSlots = "k";
-    protected static final String PATH_PlayerInventory_contents = "o";
-    protected static final String PATH_CLASS_EntityHuman = "net.minecraft.world.entity.player.EntityHuman";
-    // FIXME: --END HERE
+    protected static final String PATH_CLASS_EntityPlayer;
+    protected static final String PATH_CLASS_CraftPlayer;
+    protected static final boolean DOES_INVENTORY_USE_FIELD;
+    protected static final String PATH_EntityPlayer_Inventory;
+    protected static final String PATH_PlayerInventory_items;
+    protected static final String PATH_PlayerInventory_armor;
+    protected static final String PATH_PlayerInventory_extraSlots;
+    protected static final String PATH_PlayerInventory_contents;
+    protected static final String PATH_CLASS_EntityHuman;
+
+    static {
+
+        PATH_CLASS_PlayerInventory = VersionUtil.getVersion().getPATH_CLASS_PlayerInventory();
+        PATH_CLASS_ItemStack = VersionUtil.getVersion().getPATH_CLASS_ItemStack();
+        PATH_CLASS_NonNullList = VersionUtil.getVersion().getPATH_CLASS_NonNullList();
+        PATH_METHOD_createItemlist = VersionUtil.getVersion().getPATH_METHOD_createItemlist();
+        PATH_FIELD_emptyItem = VersionUtil.getVersion().getPATH_FIELD_emptyItem();
+        version = VersionUtil.getVersion().name();
+        PATH_METHOD_getNameSpacedKey = VersionUtil.getVersion().getPATH_METHOD_getNameSpacedKey();
+        //*****************************************************************************************************************//
+        PATH_CLASS_EntityPlayer = VersionUtil.getVersion().getPATH_CLASS_EntityPlayer();
+        PATH_CLASS_CraftPlayer = VersionUtil.getVersion().getPATH_CLASS_CraftPlayer();
+        DOES_INVENTORY_USE_FIELD = VersionUtil.getVersion().getDOES_INVENTORY_USE_FIELD();
+        PATH_EntityPlayer_Inventory = VersionUtil.getVersion().getPATH_EntityPlayer_Inventory();
+        PATH_PlayerInventory_items = VersionUtil.getVersion().getPATH_PlayerInventory_items();
+        PATH_PlayerInventory_armor = VersionUtil.getVersion().getPATH_PlayerInventory_armor();
+        PATH_PlayerInventory_extraSlots = VersionUtil.getVersion().getPATH_PlayerInventory_extraSlots();
+        PATH_PlayerInventory_contents = VersionUtil.getVersion().getPATH_PlayerInventory_contents();
+        PATH_CLASS_EntityHuman = VersionUtil.getVersion().getPATH_CLASS_EntityHuman();
+    }
 
     private NMSLoader() {}
 
@@ -163,12 +183,11 @@ public class NMSLoader {
                 List<Map<?, ?>> itemslist = invconfig.getMapList("items");
                 for (int i = 0; i <= itemslist.size(); i++) {
                     try {
-                        itemslist.get(i);
+                        if (itemslist.get(i).isEmpty()) {
+                            continue;
+                        }
                     } catch (IndexOutOfBoundsException e) {
                         break;
-                    }
-                    if (itemslist.get(i).isEmpty()) {
-                        continue;
                     }
                     if (itemslist.get(i).containsKey("v") && Integer.parseInt(itemslist.get(i).get("v").toString()) > WORLD_VERSION) {
                         logger.severe("Newer version! Server downgrades are not supported!");
@@ -180,12 +199,11 @@ public class NMSLoader {
                 List<Map<?, ?>> armorlist = invconfig.getMapList("armor");
                 for (int i = 0; i <= armorlist.size(); i++) {
                     try {
-                        armorlist.get(i);
+                        if (armorlist.get(i).isEmpty()) {
+                            continue;
+                        }
                     } catch (IndexOutOfBoundsException e) {
                         break;
-                    }
-                    if (armorlist.get(i).isEmpty()) {
-                        continue;
                     }
                     armor.set(i, asNMSCopy.invoke(null, deserialize.invoke(null, armorlist.get(i))));
                 }
@@ -193,12 +211,11 @@ public class NMSLoader {
                 List<Map<?, ?>> extraSlotslist = invconfig.getMapList("extraSlots");
                 for (int i = 0; i <= extraSlotslist.size(); i++) {
                     try {
-                        extraSlotslist.get(i);
+                        if (extraSlotslist.get(i).isEmpty()) {
+                            continue;
+                        }
                     } catch (IndexOutOfBoundsException e) {
                         break;
-                    }
-                    if (extraSlotslist.get(i).isEmpty()) {
-                        continue;
                     }
                     extraSlots.set(i, asNMSCopy.invoke(null, deserialize.invoke(null, extraSlotslist.get(i))));
                 }
@@ -206,11 +223,10 @@ public class NMSLoader {
                 List<String> alist = advconfig.getStringList("advancement");
                 for (int i = 0; i <= alist.size(); i++) {
                     try {
-                        alist.get(i);
+                        advlist.add(plugin.getServer().getAdvancement((NamespacedKey) getAdvName.invoke(null, alist.get(i))).getKey());
                     } catch (IndexOutOfBoundsException e) {
                         break;
                     }
-                    advlist.add(plugin.getServer().getAdvancement((NamespacedKey) getAdvName.invoke(null, alist.get(i))).getKey());
                 }
 
                 if (plugin.getConfig().contains("inventory")) {
@@ -236,12 +252,11 @@ public class NMSLoader {
                         List<Map<?, ?>> itemslistT = fileConfiguration.getMapList("items");
                         for (int i = 0; i <= itemslistT.size(); i++) {
                             try {
-                                itemslistT.get(i);
+                                if (itemslistT.get(i).isEmpty()) {
+                                    continue;
+                                }
                             } catch (IndexOutOfBoundsException e) {
                                 break;
-                            }
-                            if (itemslistT.get(i).isEmpty()) {
-                                continue;
                             }
                             items.set(i, asNMSCopy.invoke(null, deserialize.invoke(null, itemslistT.get(i))));
                         }
@@ -249,12 +264,11 @@ public class NMSLoader {
                         List<Map<?, ?>> armorlistT = fileConfiguration.getMapList("armor");
                         for (int i = 0; i <= armorlistT.size(); i++) {
                             try {
-                                armorlistT.get(i);
+                                if (armorlistT.get(i).isEmpty()) {
+                                    continue;
+                                }
                             } catch (IndexOutOfBoundsException e) {
                                 break;
-                            }
-                            if (armorlistT.get(i).isEmpty()) {
-                                continue;
                             }
                             armor.set(i, asNMSCopy.invoke(null, deserialize.invoke(null, armorlistT.get(i))));
                         }
@@ -262,12 +276,11 @@ public class NMSLoader {
                         List<Map<?, ?>> extraSlotslistT = fileConfiguration.getMapList("extraSlots");
                         for (int i = 0; i <= extraSlotslistT.size(); i++) {
                             try {
-                                extraSlotslistT.get(i);
+                                if (extraSlotslistT.get(i).isEmpty()) {
+                                    continue;
+                                }
                             } catch (IndexOutOfBoundsException e) {
                                 break;
-                            }
-                            if (extraSlotslistT.get(i).isEmpty()) {
-                                continue;
                             }
                             extraSlots.set(i, asNMSCopy.invoke(null, deserialize.invoke(null, extraSlotslistT.get(i))));
                         }
@@ -303,7 +316,7 @@ public class NMSLoader {
         }
     }
 
-    @SuppressWarnings({"JavaReflectionMemberAccess", "DataFlowIssue", "unchecked", "SuspiciousMethodCalls"})
+    @SuppressWarnings({"DataFlowIssue", "unchecked", "SuspiciousMethodCalls"})
     static class InventoryLoader implements Inventory {
         private static final Class<?> EntityPlayer;
         private static final Class<?> CraftPlayer;
