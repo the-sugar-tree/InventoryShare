@@ -47,7 +47,7 @@ public class VersionUtil {
         v1_19_R1("1.19.2-R0.1-SNAPSHOT", "1.19.1-R0.1-SNAPSHOT", "1.19-R0.1-SNAPSHOT"),
         v1_18_R2("1.18.2-R0.1-SNAPSHOT", "1.18.1-R0.1-SNAPSHOT"),
         v1_18_R1("1.18-R0.1-SNAPSHOT"),
-        v1_17_R1("1.17.1-R0.1-SNAPSHOT", "1.17.1-R0.1-SNAPSHOT"),
+        v1_17_R1("1.17-R0.1-SNAPSHOT", "1.17.1-R0.1-SNAPSHOT"),
         v1_16_R3("1.16.5-R0.1-SNAPSHOT", "1.16.4-R0.1-SNAPSHOT"),
         v1_16_R2("1.16.3-R0.1-SNAPSHOT", "1.16.2-R0.1-SNAPSHOT"),
         v1_16_R1("1.16.1-R0.1-SNAPSHOT"),
