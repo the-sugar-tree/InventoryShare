@@ -25,7 +25,6 @@ import static com.sugar_tree.inventoryshare.nms.NMSLoader.FileManagerLoader.*;
 
 public class NMSLoader {
 
-    // FIXME: This MUST BE fixed as it is hardcoded for version 1.19.4.
     protected static final String PATH_CLASS_PlayerInventory;
     protected static final String PATH_CLASS_ItemStack;
     protected static final String PATH_CLASS_NonNullList;
@@ -33,7 +32,7 @@ public class NMSLoader {
     protected static final String PATH_FIELD_emptyItem;
     protected static final String version;
     protected static final String PATH_METHOD_getNameSpacedKey;
-    /*****************************************************************************************************************/
+    //*****************************************************************************************************************//
     protected static final String PATH_CLASS_EntityPlayer;
     protected static final String PATH_CLASS_CraftPlayer;
     protected static final boolean DOES_INVENTORY_USE_FIELD;
