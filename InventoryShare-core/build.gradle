@@ -1,22 +1,8 @@
 dependencies {
     compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0"
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
-    implementation project(':v1_19_R3')
-    implementation project(':v1_19_R2')
-    implementation project(':v1_19_R1')
-    implementation project(':v1_19_1_R1')
-    implementation project(':v1_18_R2')
-    implementation project(':v1_18_R1')
-    implementation project(':v1_17_R1')
-    implementation project(':v1_16_R3')
-    implementation project(':v1_16_R2')
-    implementation project(':v1_16_R1')
-    implementation project(':v1_15_R1')
-    implementation project(':v1_14_R1')
-    implementation project(':v1_13_R2')
-    implementation project(':v1_13_R1')
-    implementation project(':v1_12_R1')
     implementation project(':InventoryShare-api')
+    implementation project(':InventoryShare-nms')
 }
 
 jar {
