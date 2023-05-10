@@ -149,19 +149,9 @@ public class VersionUtil {
             for (SupportedVersions value : SupportedVersions.values()) {
                 if (value.getVersions().contains(bukkitVersion)) {
                     return value;
-//                    if (isCurrent(value)) return value;
                 }
             }
             return null;
-        }
-
-        //Obly for Debug
-        @SuppressWarnings("unused")
-        private static boolean isCurrent(@Nullable SupportedVersions v) {
-            if (v == null) {
-                return false;
-            }
-            return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].equals(v.name());
         }
 
         public String getPATH_CLASS_PlayerInventory() {
