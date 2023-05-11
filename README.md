@@ -1,6 +1,6 @@
-# 인벤토리 공유 플러그인 (v2.1.1)
+# 인벤토리 공유 플러그인 (1.19.4)
 
-## 이제 1.19.4를 지원합니다.
+## 이 모드는 한 버전만 지원합니다.
 
 <span style="color:red">
     <b>먼저 README파일(아래)를 다 읽어주세요!!!</b>
@@ -8,16 +8,16 @@
 
 ---
 <p align="center">
-    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v2.1.1/InventoryShare-2.1.1.jar">
+    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/single-1.19.4/InventoryShare-1.19.4.jar">
         <img src="https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb" height="40" width="260">
     </a>
 </p>
 
 ---
 [![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
-[![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v2.1.1)
+[![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/single-1.19.4)
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total)](https://github.com/the-sugar-tree/InventoryShare/releases)
-[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12%201.13%201.14%201.15%201.16%201.17%201.18%201.19-green)](https://github.com/the-sugar-tree/InventoryShare)   
+[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.19.4-green)](https://github.com/the-sugar-tree/InventoryShare)   
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![Java](https://img.shields.io/badge/java-17-ED8B00.svg?logo=java)](https://www.azul.com/)
 [![Gradle](https://img.shields.io/badge/gradle-7.6.1-02303A.svg?logo=gradle)](https://gradle.org)
@@ -40,7 +40,7 @@ https://blog.naver.com/sugar-tree/222556850608
 
 ## 마인크래프트 버전
 ### Current Versions
-- 1.12-1.19.4 (Release 2.1.1) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v2.1.1/InventoryShare-2.1.1.jar)]
+- 1.19.4 (Release single-1.19.4) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/single-1.19.4/InventoryShare-1.19.4.jar)]
 
 ## 주의사항
 **이 플러그인은 스피갓, 페이퍼 기반입니다!**   
