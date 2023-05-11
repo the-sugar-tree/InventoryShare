@@ -33,19 +33,18 @@ import java.util.UUID;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
-    @SuppressWarnings("FieldCanBeLocal")
-    private boolean isSupportedBukkit = false;
-    @SuppressWarnings("FieldCanBeLocal")
-    private boolean isProtocolLib = false;
+
+
 
     private Listeners listener;
 
     @Override
     public void onEnable() {
+        boolean isProtocolLib;
+        boolean isSupportedBukkit = checkBukkit();
         Metrics metrics = new Metrics(this, 18372);
         plugin = this;
         logger = getLogger();
-        isSupportedBukkit = checkBukkit();
         isProtocolLib = checkProtocolLib();
         metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
         UpdateUtil.checkUpdate();
@@ -93,7 +92,7 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (InventoryClass == null) {
+        if (InventoryClass == null || FileManagerClass == null) {
             return;
         }
         for (UUID puuid : InventoryClass.getRegisteredPlayers()) {
