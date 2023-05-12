@@ -34,14 +34,11 @@ import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
 
-
-
     private Listeners listener;
 
     @Override
     public void onEnable() {
         boolean isProtocolLib;
-        boolean isSupportedBukkit = checkBukkit();
         Metrics metrics = new Metrics(this, 18372);
         plugin = this;
         logger = getLogger();
@@ -50,11 +47,6 @@ public final class InventoryShare extends JavaPlugin {
         UpdateUtil.checkUpdate();
         if (!VersionUtil.isSupported()) {
             logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + VersionUtil.getVersion().name());
-            this.setEnabled(false);
-            return;
-        }
-        if (!isSupportedBukkit) {
-            this.getLogger().severe("이 플러그인은 Spigot, Paper 버킷만 지원합니다: " + Bukkit.getVersion());
             this.setEnabled(false);
             return;
         }
@@ -105,9 +97,6 @@ public final class InventoryShare extends JavaPlugin {
         FileManagerClass.save();
     }
 
-    private boolean checkBukkit() {
-        return Bukkit.getVersion().contains("Paper") || Bukkit.getVersion().contains("Spigot");
-    }
     private boolean checkProtocolLib() {
         return getServer().getPluginManager().getPlugin("ProtocolLib") != null;
     }
