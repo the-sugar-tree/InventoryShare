@@ -1,6 +1,6 @@
 # 인벤토리 공유 플러그인 (v3.0)
 
-## 버그 수정
+## Use Java Reflection
 
 <span style="color:red">
     <b>먼저 README파일(아래)를 다 읽어주세요!!!</b>
