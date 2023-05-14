@@ -265,9 +265,9 @@ public class NMSLoader {
                 }
 
                 for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
-                    AbstractList<Object> items = (AbstractList<Object>) createItemList.invoke(36, nullItem);
-                    AbstractList<Object> armor = (AbstractList<Object>) createItemList.invoke(4, nullItem);
-                    AbstractList<Object> extraSlots = (AbstractList<Object>) createItemList.invoke(1, nullItem);
+                    AbstractList<Object> items = (AbstractList<Object>) createItemList.invoke(null, 36, nullItem);
+                    AbstractList<Object> armor = (AbstractList<Object>) createItemList.invoke(null, 4, nullItem);
+                    AbstractList<Object> extraSlots = (AbstractList<Object>) createItemList.invoke(null, 1, nullItem);
                     File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
                     if (file.exists()) {
                         FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
