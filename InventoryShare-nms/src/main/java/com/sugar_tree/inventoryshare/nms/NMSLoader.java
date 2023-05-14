@@ -169,6 +169,8 @@ public class NMSLoader {
                 plugin.getConfig().set("advancement", advancement);
                 plugin.getConfig().set("AnnounceDeath", AnnounceDeath);
                 plugin.getConfig().set("teaminventory", teaminventory);
+                StringBuilder sb = new StringBuilder();
+                sb.append("팀이 저장되었습니다: ");
                 for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
                     if (team == null) continue;
                     File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
@@ -193,7 +195,9 @@ public class NMSLoader {
                     }
                     fileConfiguration.set("extraSlots", extraSlotsListT);
                     teamInvFileList.put(fileConfiguration, file);
+                    sb.append("[").append(team.getName()).append("] ");
                 }
+                logger.info(sb.toString());
                 saveConfigs();
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new RuntimeException(e);
@@ -264,6 +268,8 @@ public class NMSLoader {
                     teaminventory = plugin.getConfig().getBoolean("teaminventory");
                 }
 
+                StringBuilder sb = new StringBuilder();
+                sb.append("팀이 로드되었습니다: ");
                 for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
                     AbstractList<Object> items = (AbstractList<Object>) createItemList.invoke(null, 36, nullItem);
                     AbstractList<Object> armor = (AbstractList<Object>) createItemList.invoke(null, 4, nullItem);
@@ -312,7 +318,9 @@ public class NMSLoader {
                     m.put("armor", armor);
                     m.put("extraSlots", extraSlots);
                     InventoryList.put(team.getName(), m);
+                    sb.append("[").append(team.getName()).append("] ");
                 }
+                logger.info(sb.toString());
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
