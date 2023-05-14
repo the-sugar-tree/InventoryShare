@@ -34,15 +34,15 @@ import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
 
+    public final static boolean isProtocolLib = checkProtocolLib();
+
     private Listeners listener;
 
     @Override
     public void onEnable() {
-        boolean isProtocolLib;
         Metrics metrics = new Metrics(this, 18372);
         plugin = this;
         logger = getLogger();
-        isProtocolLib = checkProtocolLib();
         metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
         UpdateUtil.checkUpdate();
         if (!VersionUtil.isSupported()) {
@@ -97,8 +97,8 @@ public final class InventoryShare extends JavaPlugin {
         FileManagerClass.save();
     }
 
-    private boolean checkProtocolLib() {
-        return getServer().getPluginManager().getPlugin("ProtocolLib") != null;
+    private static boolean checkProtocolLib() {
+        return Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
