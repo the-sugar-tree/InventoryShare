@@ -382,7 +382,7 @@ public class NMSLoader {
             }
         }
 
-        public void invApplyAll(@NotNull Player p) {
+        public void applyAllInventory(@NotNull Player p) {
             try {
                 Object playerInventory;
                 if (DOES_INVENTORY_USE_FIELD) {
@@ -403,7 +403,7 @@ public class NMSLoader {
             }
         }
 
-        public void invDisApply(@NotNull Player p) {
+        public void disApplyInventory(@NotNull Player p) {
             try {
                 Object entityPlayer = CraftPlayer_getHandle.invoke(CraftPlayer.cast(p));
                 Object playerInventory;
@@ -447,14 +447,14 @@ public class NMSLoader {
         }
 
         @SuppressWarnings("deprecation")
-        public void invApply(@NotNull Player p) {
+        public void applyInventory(@NotNull Player p) {
             try {
                 if (!(teaminventory)) {
-                    invApplyAll(p);
+                    applyAllInventory(p);
                     return;
                 }
                 if (plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p) == null) {
-                    invApplyAll(p);
+                    applyAllInventory(p);
                     return;
                 }
                 String teamName = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p).getName();

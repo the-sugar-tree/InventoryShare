@@ -75,7 +75,7 @@ public final class InventoryShare extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(listener, this);
         FileManagerClass.load();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (inventory) InventoryClass.invApply(player);
+            if (inventory) InventoryClass.applyInventory(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
         }
 
@@ -90,7 +90,7 @@ public final class InventoryShare extends JavaPlugin {
         for (UUID puuid : InventoryClass.getRegisteredPlayers()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
-                InventoryClass.invDisApply(p);
+                InventoryClass.disApplyInventory(p);
             }
         }
         Bukkit.getScheduler().cancelTask(listener.getTaskId());

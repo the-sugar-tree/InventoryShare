@@ -52,13 +52,13 @@ public class Listeners implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree");
         InventoryClass.savePlayerInventory(event.getPlayer());
-        if (inventory) InventoryClass.invApply(event.getPlayer());
+        if (inventory) InventoryClass.applyInventory(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        InventoryClass.invDisApply(event.getPlayer());
+        InventoryClass.disApplyInventory(event.getPlayer());
         FileManagerClass.save();
     }
 
@@ -67,9 +67,9 @@ public class Listeners implements Listener {
         FileManagerClass.save();
         if (inventory) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                InventoryClass.invDisApply(p);
+                InventoryClass.disApplyInventory(p);
                 p.saveData();
-                InventoryClass.invApply(p);
+                InventoryClass.applyInventory(p);
             }
         }
     }
@@ -104,7 +104,7 @@ public class Listeners implements Listener {
                     if (teaminventory) {
                         if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p))) {
                             teamMap.put(p, Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
-                            InventoryClass.invApply(p);
+                            InventoryClass.applyInventory(p);
                         }
                     }
                 }
