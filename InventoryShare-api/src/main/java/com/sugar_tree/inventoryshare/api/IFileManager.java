@@ -15,7 +15,7 @@
  */
 package com.sugar_tree.inventoryshare.api;
 
-public interface FileManager {
+public interface IFileManager {
     /**
      * Save data to file
      */

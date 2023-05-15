@@ -74,9 +74,9 @@ public final class InventoryShare extends JavaPlugin {
         getCommand("inventoryshare").setTabCompleter(new Commands());
         listener = new Listeners();
         Bukkit.getPluginManager().registerEvents(listener, this);
-        FileManagerClass.load();
+        FileManager.load();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (inventory) InventoryClass.applyInventory(player);
+            if (inventory) InventoryManager.applyInventory(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
         }
 
@@ -85,17 +85,17 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (InventoryClass == null || FileManagerClass == null) {
+        if (InventoryManager == null || FileManager == null) {
             return;
         }
-        for (UUID puuid : InventoryClass.getRegisteredPlayers()) {
+        for (UUID puuid : InventoryManager.getRegisteredPlayers()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
-                InventoryClass.disApplyInventory(p);
+                InventoryManager.disApplyInventory(p);
             }
         }
         Bukkit.getScheduler().cancelTask(listener.getTaskId());
-        FileManagerClass.save();
+        FileManager.save();
     }
 
     private static boolean checkProtocolLib() {

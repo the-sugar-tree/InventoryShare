@@ -42,12 +42,12 @@ public class Commands implements TabExecutor {
                             if (args[1].equalsIgnoreCase("true")) {
                                 if (!inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        InventoryClass.savePlayerInventory(p);
+                                        InventoryManager.savePlayerInventory(p);
                                     }
                                     inventory = true;
                                     Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다");
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        InventoryClass.applyInventory(p);
+                                        InventoryManager.applyInventory(p);
                                         p.updateInventory();
                                     }
                                 } else {
@@ -58,7 +58,7 @@ public class Commands implements TabExecutor {
                                     inventory = false;
                                     Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다");
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        InventoryClass.disApplyInventory(p);
+                                        InventoryManager.disApplyInventory(p);
                                         p.updateInventory();
                                     }
                                 } else {
@@ -106,7 +106,7 @@ public class Commands implements TabExecutor {
                                     Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다");
                                     if (inventory) {
                                         for (Player p : Bukkit.getOnlinePlayers()) {
-                                            InventoryClass.applyInventory(p);
+                                            InventoryManager.applyInventory(p);
                                             p.updateInventory();
                                         }
                                     }
@@ -119,7 +119,7 @@ public class Commands implements TabExecutor {
                                     Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다");
                                     if (inventory) {
                                         for (Player p : Bukkit.getOnlinePlayers()) {
-                                            InventoryClass.applyInventory(p);
+                                            InventoryManager.applyInventory(p);
                                             p.updateInventory();
                                         }
                                     }

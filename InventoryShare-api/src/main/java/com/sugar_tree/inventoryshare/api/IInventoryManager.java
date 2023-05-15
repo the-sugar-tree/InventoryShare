@@ -22,7 +22,7 @@ import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.UUID;
 
-public interface Inventory {
+public interface IInventoryManager {
 
     /**
      * Apply all inventory to specific player

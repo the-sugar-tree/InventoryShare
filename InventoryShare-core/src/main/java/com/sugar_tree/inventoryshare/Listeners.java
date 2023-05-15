@@ -51,25 +51,25 @@ public class Listeners implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree");
-        InventoryClass.savePlayerInventory(event.getPlayer());
-        if (inventory) InventoryClass.applyInventory(event.getPlayer());
+        InventoryManager.savePlayerInventory(event.getPlayer());
+        if (inventory) InventoryManager.applyInventory(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        InventoryClass.disApplyInventory(event.getPlayer());
-        FileManagerClass.save();
+        InventoryManager.disApplyInventory(event.getPlayer());
+        FileManager.save();
     }
 
     @EventHandler
     public void onWorldSave(WorldSaveEvent event){
-        FileManagerClass.save();
+        FileManager.save();
         if (inventory) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                InventoryClass.disApplyInventory(p);
+                InventoryManager.disApplyInventory(p);
                 p.saveData();
-                InventoryClass.applyInventory(p);
+                InventoryManager.applyInventory(p);
             }
         }
     }
@@ -104,7 +104,7 @@ public class Listeners implements Listener {
                     if (teaminventory) {
                         if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p))) {
                             teamMap.put(p, Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
-                            InventoryClass.applyInventory(p);
+                            InventoryManager.applyInventory(p);
                         }
                     }
                 }

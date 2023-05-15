@@ -42,8 +42,8 @@ public class SharedConstants {
     public static FileConfiguration advconfig;
     public static Map<FileConfiguration, File> teamInvFileList = new HashMap<>();
     public static List<NamespacedKey> advlist = new ArrayList<>();
-    public static Inventory InventoryClass;
-    public static FileManager FileManagerClass;
+    public static IInventoryManager InventoryManager;
+    public static IFileManager FileManager;
     public static File invfile;
     public static File advfile;
 
@@ -60,7 +60,7 @@ public class SharedConstants {
     public static Plugin plugin;
 
     public static void saveConfigs() {
-        FileManagerClass.deleteWasteFiles();
+        FileManager.deleteWasteFiles();
         plugin.saveConfig();
         try { invconfig.save(invfile); } catch (Exception e) { e.printStackTrace(); }
         try { advconfig.save(advfile); } catch (Exception e) { e.printStackTrace(); }

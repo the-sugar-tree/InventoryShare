@@ -16,8 +16,8 @@
 package com.sugar_tree.inventoryshare.nms;
 
 import com.google.common.collect.ImmutableList;
-import com.sugar_tree.inventoryshare.api.FileManager;
-import com.sugar_tree.inventoryshare.api.Inventory;
+import com.sugar_tree.inventoryshare.api.IFileManager;
+import com.sugar_tree.inventoryshare.api.IInventoryManager;
 import com.sugar_tree.inventoryshare.nms.util.VersionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -36,7 +36,7 @@ import java.nio.file.Files;
 import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
-import static com.sugar_tree.inventoryshare.nms.NMSLoader.FileManagerLoader.*;
+import static com.sugar_tree.inventoryshare.nms.NMSLoader.FileManager.*;
 
 public class NMSLoader {
 
@@ -83,8 +83,8 @@ public class NMSLoader {
     public static boolean init() {
         logger.info("Loading Classes...");
         try {
-            FileManagerClass = new FileManagerLoader();
-            InventoryClass = new InventoryLoader();
+            FileManager = new FileManager();
+            InventoryManager = new InventoryManager();
         } catch (ExceptionInInitializerError e) {
             logger.severe("ERROR while loading Classes");
             e.printStackTrace();
@@ -95,7 +95,7 @@ public class NMSLoader {
     }
 
     @SuppressWarnings({"unchecked", "JavaReflectionInvocation"})
-    static class FileManagerLoader implements FileManager {
+    static class FileManager implements IFileManager {
 
         private static final Class<?> ItemStack;
         private static final Class<?> NonNullList;
@@ -347,7 +347,7 @@ public class NMSLoader {
     }
 
     @SuppressWarnings({"DataFlowIssue", "unchecked", "SuspiciousMethodCalls"})
-    static class InventoryLoader implements Inventory {
+    static class InventoryManager implements IInventoryManager {
         private static final Class<?> EntityPlayer;
         private static final Class<?> CraftPlayer;
         private static final Class<?> PlayerInventory;
