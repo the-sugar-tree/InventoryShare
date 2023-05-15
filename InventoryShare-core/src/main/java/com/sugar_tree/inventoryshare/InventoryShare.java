@@ -32,6 +32,7 @@ import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
+@SuppressWarnings("unused")
 public final class InventoryShare extends JavaPlugin {
 
     public final static boolean isProtocolLib = checkProtocolLib();
