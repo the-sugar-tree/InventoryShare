@@ -42,6 +42,14 @@ public class I18NUtil {
             logger.severe(language == null ? "Could not load language info from config.yml" : "cannot find lang_" + language + ".yml");
             logger.severe("Attempt to use default language...");
         }
+        if (language == null) {
+            Locale systemLocale = Locale.getDefault();
+            if (systemLocale.equals(Locale.KOREA) || systemLocale.equals(Locale.KOREAN)) {
+                plugin.getConfig().set("language", "ko_kr");
+            } else {
+                plugin.getConfig().set("language", "en_us");
+            }
+        }
         bundle = b;
     }
 
