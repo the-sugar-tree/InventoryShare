@@ -35,7 +35,7 @@ public class SharedConstants {
 
     public static boolean inventory = true;
     public static boolean advancement = true;
-    public static boolean AnnounceDeath = false;
+    public static boolean announcedeath = false;
     public static boolean teaminventory = false;
     public static final String PREFIX = ChatColor.LIGHT_PURPLE + "[" + ChatColor.AQUA + "InventoryShare" + ChatColor.LIGHT_PURPLE + "] " + ChatColor.RESET;
     public static FileConfiguration invconfig;

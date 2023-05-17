@@ -86,7 +86,7 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (AnnounceDeath) {
+        if (announcedeath) {
             Location loc = event.getEntity().getLocation();
             World w = loc.getWorld();
             Bukkit.broadcastMessage(PREFIX + ChatColor.RED + event.getEntity().getName() + "(이)가 [" + (w == null ? null : w.getName()) + "] x: "

@@ -17,10 +17,7 @@ package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.nms.NMSLoader;
 import com.sugar_tree.inventoryshare.nms.util.VersionUtil;
-import com.sugar_tree.inventoryshare.util.AdvancementUtil;
-import com.sugar_tree.inventoryshare.util.Metrics;
-import com.sugar_tree.inventoryshare.util.ProtocolLibUtil;
-import com.sugar_tree.inventoryshare.util.UpdateUtil;
+import com.sugar_tree.inventoryshare.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -32,7 +29,6 @@ import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
-@SuppressWarnings("unused")
 public final class InventoryShare extends JavaPlugin {
 
     public final static boolean isProtocolLib = checkProtocolLib();
@@ -41,23 +37,24 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Metrics metrics = new Metrics(this, 18372);
         plugin = this;
         logger = getLogger();
+        saveDefaultLanguageFiles();
+        Metrics metrics = new Metrics(this, 18372);
         metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
         UpdateUtil.checkUpdate();
         if (!VersionUtil.isSupported()) {
-            logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + VersionUtil.getVersion().name());
+            logger.severe(I18nUtil.get("not_supported_version", VersionUtil.getVersion().name()));
             this.setEnabled(false);
             return;
         }
         if (isProtocolLib) {
             ProtocolLibUtil.ProtocolLib();
-            logger.info("ProtocolLib 플러그인이 감지되었습니다.");
+            logger.info(I18nUtil.get("protocolLib_found"));
         } else {
-            logger.warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
-            logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
-            logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
+            logger.info(I18nUtil.get("protocolLib_need1"));
+            logger.info(I18nUtil.get("protocolLib_need2"));
+            logger.info("https://www.spigotmc.org/resources/protocollib.1997");
         }
 
         if (!NMSLoader.init()) {
@@ -80,7 +77,7 @@ public final class InventoryShare extends JavaPlugin {
             getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
         }
 
-        Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"인벤토리 공유 플러그인\" by. " + ChatColor.GREEN + "sugar_tree");
+        Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"Inventory Sharing Plugin\" by. " + ChatColor.GREEN + "sugar_tree");
     }
 
     @Override
@@ -100,6 +97,10 @@ public final class InventoryShare extends JavaPlugin {
 
     private static boolean checkProtocolLib() {
         return Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
+    }
+
+    private void saveDefaultLanguageFiles() {
+        saveResource("languages/lang_ko_kr.yml", false);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

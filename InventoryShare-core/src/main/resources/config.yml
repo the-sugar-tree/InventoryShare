@@ -1,3 +1,4 @@
 inventory: true
 advancement: true
-AnnounceDeath: false
+announcedeath: false
+language:

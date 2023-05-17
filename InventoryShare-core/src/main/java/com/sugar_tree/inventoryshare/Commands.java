@@ -15,6 +15,7 @@
  */
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.util.I18nUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -45,65 +46,81 @@ public class Commands implements TabExecutor {
                                         InventoryManager.savePlayerInventory(p);
                                     }
                                     inventory = true;
-                                    Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다");
+                                    Command.broadcastCommandMessage(sender, I18nUtil.get("inv_set", true, String.valueOf(inventory)));
                                     for (Player p : Bukkit.getOnlinePlayers()) {
                                         InventoryManager.applyInventory(p);
                                         p.updateInventory();
                                     }
                                 } else {
-                                    sender.sendMessage(PREFIX + ChatColor.RED + "이미 인벤토리 공유가 활성화 되어 있습니다!");
+                                    sender.sendMessage(I18nUtil.get("inv_already_y", true));
                                 }
                             } else if (args[1].equalsIgnoreCase("false")) {
                                 if (inventory) {
                                     inventory = false;
-                                    Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory + ChatColor.GOLD + "로 설정되었습니다");
+                                    Command.broadcastCommandMessage(sender, I18nUtil.get("inv_set", true, String.valueOf(inventory)));
                                     for (Player p : Bukkit.getOnlinePlayers()) {
                                         InventoryManager.disApplyInventory(p);
                                         p.updateInventory();
                                     }
                                 } else {
-                                    sender.sendMessage(PREFIX + ChatColor.RED + "이미 인벤토리 공유가 비활성화 되어 있습니다!");
+                                    sender.sendMessage(I18nUtil.get("inv_already_n", true));
                                 }
                             } else {
                                 sender.sendMessage(usageMessage);
                             }
                         } else {
-                            sender.sendMessage(PREFIX + ChatColor.GOLD + "인벤토리 공유: " + ChatColor.GREEN + inventory);
+                            sender.sendMessage(I18nUtil.get("inv_get", true, String.valueOf(inventory)));
                         }
                     } else if (args[0].equalsIgnoreCase("advancement")) {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("true")) {
-                                advancement = true;
-                                Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.GOLD + "로 설정되었습니다");
+                                if (!advancement) {
+                                    advancement = true;
+                                    Command.broadcastCommandMessage(sender, I18nUtil.get("adv_set", true, String.valueOf(advancement)));
+                                } else {
+                                    sender.sendMessage(I18nUtil.get("adv_already_y", true));
+                                }
                             } else if (args[1].equalsIgnoreCase("false")) {
-                                advancement = false;
-                                Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement + ChatColor.GOLD + "로 설정되었습니다");
+                                if (advancement) {
+                                    advancement = false;
+                                    Command.broadcastCommandMessage(sender, I18nUtil.get("adv_set", true, String.valueOf(advancement)));
+                                } else {
+                                    sender.sendMessage(I18nUtil.get("adv_already_n", true));
+                                }
                             } else {
                                 sender.sendMessage(usageMessage);
                             }
                         } else {
-                            sender.sendMessage(PREFIX + ChatColor.GOLD + "발전과제 공유: " + ChatColor.GREEN + advancement);
+                            sender.sendMessage(I18nUtil.get("adv_get", true, String.valueOf(advancement)));
                         }
-                    } else if (args[0].equalsIgnoreCase("AnnounceDeath")) {
+                    } else if (args[0].equalsIgnoreCase("announcedeath")) {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("true")) {
-                                AnnounceDeath = true;
-                                Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.GOLD + "로 설정되었습니다");
+                                if (!announcedeath) {
+                                    announcedeath = true;
+                                    Command.broadcastCommandMessage(sender, I18nUtil.get("andeath_set", true, String.valueOf(announcedeath)));
+                                } else {
+                                    I18nUtil.get("andeath_already_y", true);
+                                }
                             } else if (args[1].equalsIgnoreCase("false")) {
-                                AnnounceDeath = false;
-                                Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath + ChatColor.GOLD + "로 설정되었습니다");
+                                if (announcedeath) {
+                                    announcedeath = false;
+                                    Command.broadcastCommandMessage(sender, I18nUtil.get("andeath_set", true, String.valueOf(announcedeath)));
+                                } else {
+                                    I18nUtil.get("andeath_already_n", true);
+                                }
                             } else {
                                 sender.sendMessage(usageMessage);
                             }
                         } else {
-                            sender.sendMessage(PREFIX + ChatColor.GOLD + "사망 시 좌표출력: " + ChatColor.GREEN + AnnounceDeath);
+                            sender.sendMessage(I18nUtil.get("andeath_get", true, String.valueOf(teaminventory)));
                         }
                     } else if (args[0].equalsIgnoreCase("teaminventory")) {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("true")) {
                                 if (!teaminventory) {
                                     teaminventory = true;
-                                    Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다");
+                                    Command.broadcastCommandMessage(sender, I18nUtil.get("teaminv_set", true, String.valueOf(teaminventory)));
                                     if (inventory) {
                                         for (Player p : Bukkit.getOnlinePlayers()) {
                                             InventoryManager.applyInventory(p);
@@ -111,12 +128,12 @@ public class Commands implements TabExecutor {
                                         }
                                     }
                                 } else {
-                                    sender.sendMessage(PREFIX + ChatColor.RED + "이미 팀 아이템 공유가 활성화 되어 있습니다!");
+                                    sender.sendMessage(I18nUtil.get("teaminv_already_y", true));
                                 }
                             } else if (args[1].equalsIgnoreCase("false")) {
                                 if (teaminventory) {
                                     teaminventory = false;
-                                    Command.broadcastCommandMessage(sender, PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory + ChatColor.GOLD + "로 설정되었습니다");
+                                    Command.broadcastCommandMessage(sender, I18nUtil.get("teaminv_set", true, String.valueOf(teaminventory)));
                                     if (inventory) {
                                         for (Player p : Bukkit.getOnlinePlayers()) {
                                             InventoryManager.applyInventory(p);
@@ -124,21 +141,21 @@ public class Commands implements TabExecutor {
                                         }
                                     }
                                 } else {
-                                    sender.sendMessage(PREFIX + ChatColor.RED + "이미 팀 아이템 공유가 비활성화 되어 있습니다!");
+                                    sender.sendMessage(I18nUtil.get("teaminv_already_n", true));
                                 }
                             } else {
                                 sender.sendMessage(usageMessage);
                             }
                         } else {
-                            sender.sendMessage(PREFIX + ChatColor.GOLD + "팀 아이템 공유: " + ChatColor.GREEN + teaminventory);
+                            sender.sendMessage(I18nUtil.get("teaminv_get", true, String.valueOf(teaminventory)));
                         }
                     } else if (args[0].equalsIgnoreCase("reload")) {
                         if (args.length == 1) {
                             if (plugin.getConfig().contains("inventory")) advancement = plugin.getConfig().getBoolean("inventory");
                             if (plugin.getConfig().contains("advancement")) advancement = plugin.getConfig().getBoolean("advancement");
-                            if (plugin.getConfig().contains("AnnounceDeath")) AnnounceDeath = plugin.getConfig().getBoolean("AnnounceDeath");
-                            if (plugin.getConfig().contains("teaminventory")) AnnounceDeath = plugin.getConfig().getBoolean("teaminventory");
-                            sender.sendMessage(PREFIX + ChatColor.GREEN + "Config 파일이 새로고침 되었습니다!");
+                            if (plugin.getConfig().contains("announcedeath")) announcedeath = plugin.getConfig().getBoolean("announcedeath");
+                            if (plugin.getConfig().contains("teaminventory")) teaminventory = plugin.getConfig().getBoolean("teaminventory");
+                            sender.sendMessage(I18nUtil.get("config_reloaded", true));
                         } else {
                             sender.sendMessage(usageMessage);
                         }
@@ -165,7 +182,7 @@ public class Commands implements TabExecutor {
                 ArrayList<String> arrayList = new ArrayList<>();
                 arrayList.add("inventory");
                 arrayList.add("advancement");
-                arrayList.add("AnnounceDeath");
+                arrayList.add("announcedeath");
                 arrayList.add("teaminventory");
                 arrayList.add("check");
                 arrayList.add("reload");
@@ -190,21 +207,21 @@ public class Commands implements TabExecutor {
     }
 
     String usageMessage = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
-            PREFIX + ChatColor.GREEN + "커맨드 도움말\n" +
-            ChatColor.LIGHT_PURPLE + "(true나 false를 입력하지 않고 커맨드를 사용하면 현재 설정을 보여줍니다.)\n" +
-            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " inventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 인벤토리 공유 설정을 수정합니다.\n" +
-            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " advancement " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 발전과제 공유 설정을 수정합니다.\n" +
-            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " AnnounceDeath " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 사망시 좌표 공유 설정을 수정합니다.\n" +
-            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " teaminventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - 현재 팀 아이템 공유 설정을 수정합니다.\n" +
-            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " check" + ChatColor.YELLOW + " - 현재 설정값들을 확인합니다.\n" +
-            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " reload" + ChatColor.YELLOW + " - config 파일을 새로고침 합니다.\n" +
+            I18nUtil.get("help_message1") + "\n" +
+            I18nUtil.get("help_message2") + "\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " inventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - " + I18nUtil.get("cmd_inv_info") + "\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " advancement " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - " + I18nUtil.get("cmd_adv_info") + "\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " announcedeath " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - " + I18nUtil.get("cmd_andeath_info") + "\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " teaminventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - " + I18nUtil.get("cmd_teaminv_info") + "\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " check" + ChatColor.YELLOW + " - " + I18nUtil.get("cmd_check_info") + "\n" +
+            ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " reload" + ChatColor.YELLOW + " - " + I18nUtil.get("cmd_reload_config_info") + "\n" +
             ChatColor.DARK_AQUA + "-----------------------------------------------------"
             ;
     String check = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
-            PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory +
-            PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement +
-            PREFIX + ChatColor.GOLD + "AnnounceDeath: " + ChatColor.GREEN + AnnounceDeath +
-            PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + teaminventory +
+            PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory + "\n" +
+            PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement + "\n" +
+            PREFIX + ChatColor.GOLD + "announcedeath: " + ChatColor.GREEN + announcedeath + "\n" +
+            PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + teaminventory + "\n" +
             ChatColor.DARK_AQUA + "-----------------------------------------------------"
             ;
 }

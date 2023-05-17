@@ -65,7 +65,7 @@ https://blog.naver.com/sugar-tree/222556850608
 ### 기본 값
 - inventory: true
 - advancement: true
-- AnnounceDeath: false
+- announcedeath: false
 - teaminventory: false
 
 ## License / 라이센스
