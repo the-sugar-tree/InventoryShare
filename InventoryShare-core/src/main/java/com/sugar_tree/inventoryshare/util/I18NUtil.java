@@ -43,14 +43,18 @@ public class I18NUtil {
             logger.severe("Attempt to use default language...");
         }
         if (language == null) {
-            Locale systemLocale = Locale.getDefault();
-            if (systemLocale.equals(Locale.KOREA) || systemLocale.equals(Locale.KOREAN)) {
-                plugin.getConfig().set("language", "ko_kr");
-            } else {
-                plugin.getConfig().set("language", "en_us");
-            }
+            saveLanguageInfo();
         }
         bundle = b;
+    }
+
+    private static void saveLanguageInfo() {
+        Locale systemLocale = Locale.getDefault();
+        if (systemLocale.equals(Locale.KOREA) || systemLocale.equals(Locale.KOREAN)) {
+            plugin.getConfig().set("language", "ko_kr");
+        } else {
+            plugin.getConfig().set("language", "en_us");
+        }
     }
 
     public static String get(String key) {
