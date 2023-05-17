@@ -54,3 +54,7 @@ cmd_reload_config_info: "config 파일을 새로고침 합니다."
 
 # Update Info
 update_able: "플러그인 업데이트가 가능합니다! 현재 버전: v%s 새 버전: %s"
+
+# File load Info
+team_saved: "팀이 저장되었습니다: "
+team_loaded: "팀이 로드되었습니다: "

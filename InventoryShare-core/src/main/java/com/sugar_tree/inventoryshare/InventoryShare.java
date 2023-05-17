@@ -39,7 +39,11 @@ public final class InventoryShare extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         logger = getLogger();
+
         saveDefaultLanguageFiles();
+
+        I18N_TEAM_SAVED = I18nUtil.get("team_saved");
+        I18N_TEAM_LOADED = I18nUtil.get("team_loaded");
         Metrics metrics = new Metrics(this, 18372);
         metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
         UpdateUtil.checkUpdate();
@@ -91,7 +95,7 @@ public final class InventoryShare extends JavaPlugin {
                 InventoryManager.disApplyInventory(p);
             }
         }
-        Bukkit.getScheduler().cancelTask(listener.getTaskId());
+        if (listener != null) Bukkit.getScheduler().cancelTask(listener.getTaskId());
         FileManager.save();
     }
 
@@ -101,6 +105,7 @@ public final class InventoryShare extends JavaPlugin {
 
     private void saveDefaultLanguageFiles() {
         saveResource("languages/lang_ko_kr.yml", false);
+        saveResource("languages/lang_en_us.yml", false);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

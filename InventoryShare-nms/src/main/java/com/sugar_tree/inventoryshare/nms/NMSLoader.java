@@ -170,7 +170,7 @@ public class NMSLoader {
                 plugin.getConfig().set("announcedeath", announcedeath);
                 plugin.getConfig().set("teaminventory", teaminventory);
                 StringBuilder sb = new StringBuilder();
-                sb.append("팀이 저장되었습니다: ");
+                sb.append(I18N_TEAM_SAVED);
                 for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
                     if (team == null) continue;
                     File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
@@ -269,7 +269,7 @@ public class NMSLoader {
                 }
 
                 StringBuilder sb = new StringBuilder();
-                sb.append("팀이 로드되었습니다: ");
+                sb.append(I18N_TEAM_LOADED);
                 for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
                     AbstractList<Object> items = (AbstractList<Object>) createItemList.invoke(null, 36, nullItem);
                     AbstractList<Object> armor = (AbstractList<Object>) createItemList.invoke(null, 4, nullItem);

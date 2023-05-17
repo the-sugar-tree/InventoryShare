@@ -47,6 +47,9 @@ public class SharedConstants {
     public static File invfile;
     public static File advfile;
 
+    public static String I18N_TEAM_SAVED;
+    public static String I18N_TEAM_LOADED;
+
     public static final int WORLD_VERSION;
 
     static {

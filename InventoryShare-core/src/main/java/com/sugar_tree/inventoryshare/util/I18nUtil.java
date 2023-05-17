@@ -1,27 +1,32 @@
 package com.sugar_tree.inventoryshare.util;
 
+import com.sugar_tree.inventoryshare.InventoryShare;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.NoSuchFileException;
 import java.util.MissingResourceException;
+import java.util.Objects;
 
-import static com.sugar_tree.inventoryshare.api.SharedConstants.PREFIX;
-import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
+import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public class I18nUtil {
 
-    private final static Bundle defaultBundle;
     private final static Bundle bundle;
     static {
-        String defaultLanguage = "ko_kr";
-        defaultBundle = Bundle.getBundle(defaultLanguage);
+        Bundle b = Bundle.getDefaultBundle();
         String language = plugin.getConfig().getString("language");
-        if (language == null) {
-            bundle = Bundle.getBundle(defaultLanguage);
-        } else {
-            bundle = Bundle.getBundle(language);
+        try {
+            b = Bundle.getBundle(language);
+        } catch (NoSuchFileException e) {
+            logger.severe("cannot find lang_" + language + ".yml");
+            logger.severe("using default language...");
         }
+        bundle = b;
     }
 
     public static String get(String key) {
@@ -33,23 +38,15 @@ public class I18nUtil {
     }
 
     public static String get(String key, boolean prefix) {
-        String r;
-        try {
-            r = bundle.get(key);
-        } catch (MissingResourceException e) {
-            r = defaultBundle.get(key);
-        }
-        if (prefix) return PREFIX + r;
-        else return r;
+        String s;
+        s = bundle.get(key);
+        if (prefix) return PREFIX + s;
+        else return s;
     }
 
     public static String get(String key, boolean prefix, String... args) {
         String s;
-        try {
-            s = bundle.get(key);
-        } catch (MissingResourceException e) {
-            s = defaultBundle.get(key);
-        }
+        s = bundle.get(key);
         if (prefix) return PREFIX + String.format(s, (Object[]) args);
         else return String.format(s, (Object[]) args);
     }
@@ -57,8 +54,18 @@ public class I18nUtil {
     private final static class Bundle {
         final FileConfiguration config;
 
-        static Bundle getBundle(String locale) {
-            return new Bundle(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "/languages/lang_" + locale + ".yml")));
+        static Bundle getBundle(String locale) throws NoSuchFileException {
+            File file = new File(plugin.getDataFolder(), "/languages/lang_" + locale + ".yml");
+            if (!file.exists()) {
+                throw new NoSuchFileException("There's no language files with name: " + locale + ".yml");
+            }
+            return new Bundle(YamlConfiguration.loadConfiguration(file));
+        }
+
+        static Bundle getDefaultBundle() {
+            InputStream is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_default.yml"), "default language file does not exist.");
+            InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+            return new Bundle(YamlConfiguration.loadConfiguration(isr));
         }
 
         private Bundle(FileConfiguration config) {
