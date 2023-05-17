@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.NoSuchFileException;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Objects;
 
@@ -78,7 +79,13 @@ public class I18NUtil {
         }
 
         static Bundle getDefaultBundle() {
-            InputStream is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_default.yml"), "default language file does not exist.");
+            Locale systemLocale = Locale.getDefault();
+            InputStream is;
+            if (systemLocale.equals(Locale.KOREA) || systemLocale.equals(Locale.KOREAN)) {
+                is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_default_ko_kr.yml"), "default language file does not exist.");
+            } else {
+                is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_default.yml"), "default language file does not exist.");
+            }
             InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
             return new Bundle(YamlConfiguration.loadConfiguration(isr));
         }

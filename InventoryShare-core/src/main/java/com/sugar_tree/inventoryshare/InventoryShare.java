@@ -104,8 +104,10 @@ public final class InventoryShare extends JavaPlugin {
     }
 
     private void saveDefaultLanguageFiles() {
-        saveResource("languages/lang_ko_kr.yml", false);
-        saveResource("languages/lang_en_us.yml", false);
+        if (!new File(getDataFolder(), "\\languages\\lang_ko_kr.yml").exists())
+            saveResource("languages/lang_ko_kr.yml", false);
+        if (!new File(getDataFolder(), "\\languages\\lang_en_us.yml").exists())
+            saveResource("languages/lang_en_us.yml", false);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

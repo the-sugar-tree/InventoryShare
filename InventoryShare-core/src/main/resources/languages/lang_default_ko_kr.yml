@@ -1,0 +1,63 @@
+FILE_VERSION: '${version}'
+# Use '§' for color code
+
+# Black (black)               §0  Dark Blue (dark_blue)	      §1
+# Dark Green (dark_green)     §2  Dark Aqua (dark_aqua)	      §3
+# Dark Red (dark_red)         §4  Dark Purple (dark_purple)	  §5
+# Gold (gold)                 §6  Gray (gray)	              §7
+# Dark Gray (dark_gray)       §8  Blue (blue)	              §9
+# Green (green)               §a  Aqua (aqua)	              §b
+# Red (red)                   §c  Light Purple (light_purple) §d
+# Yellow (yellow)             §e  White (white)	              §f
+
+# Obfuscated     §k   Bold         §l
+# Strikethrough  §m   Underline    §n
+# Italic         §o   Reset        §r
+
+plugin_name: "인벤토리 공유 플러그인"
+
+not_supported_version: "이 플러그인은 이 버전을 지원하지 않습니다: %s"
+
+# ProtocolLib
+protocolLib_found: "ProtocolLib 플러그인이 감지되었습니다."
+protocolLib_need1: "이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다."
+protocolLib_need2: "ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다."
+
+# Commands
+inv_set: "§6인벤토리 공유 설정값이 이제 §a%s§6입니다."
+inv_already_y: "§c이미 인벤토리 공유가 활성화 되어 있습니다!"
+inv_already_n: "§c이미 인벤토리 공유가 비활성화 되어 있습니다!"
+inv_get: "§6인벤토리 공유의 현재 설정값은 §a%s§6입니다."
+
+adv_set: "§6발전과제 공유 설정값이 이제 §a%s§6입니다"
+adv_already_y: "§c이미 발전과제 공유가 활성화 되어 있습니다!"
+adv_already_n: "§c이미 발전과제 공유가 비활성화 되어 있습니다!"
+adv_get: "§6발전과제 공유의 현재 설정값은 §a%s§6입니다."
+
+andeath_set: "§6사망 시 좌표 표시 설정값이 이제 §a%s§6입니다."
+andeath_already_y: "§c이미 사망 시 좌표 표시가 활성화 되어 있습니다!"
+andeath_already_n: "§c이미 사망 시 좌표 표시가 비활성화 되어 있습니다!"
+andeath_get: "§6사망 시 좌표 표시의 현재 설정값은 §a%s§6입니다."
+
+teaminv_set: "§6팀 아이템 공유 설정값이 이제 §a%s§6입니다."
+teaminv_already_y: "§이미 팀 아이템 공유가 활성화 되어 있습니다!"
+teaminv_already_n: "§이미 팀 아이템 공유가 비활성화 되어 있습니다!"
+teaminv_get: "§6팀 아이템 공유의 현재 설정값은 §a%s§6입니다."
+
+config_reloaded: "§aConfig 파일이 새로고침 되었습니다!"
+
+help_message1: "§a커맨드 도움말"
+help_message2: "§d(true나 false를 입력하지 않고 커맨드를 사용하면 현재 설정을 보여줍니다.)"
+cmd_inv_info: "현재 인벤토리 공유 설정을 수정합니다."
+cmd_adv_info: "현재 발전과제 공유 설정을 수정합니다."
+cmd_andeath_info: "현재 사망 시 좌표 표시 설정을 수정합니다."
+cmd_teaminv_info: "현재 팀 아이템 공유 설정을 수정합니다."
+cmd_check_info: "현재 설정값들을 확인합니다."
+cmd_reload_config_info: "config 파일을 새로고침 합니다."
+
+# Update Info
+update_able: "플러그인 업데이트가 가능합니다! 현재 버전: v%s 새 버전: %s"
+
+# File load Info
+team_saved: "팀이 저장되었습니다: "
+team_loaded: "팀이 로드되었습니다: "
