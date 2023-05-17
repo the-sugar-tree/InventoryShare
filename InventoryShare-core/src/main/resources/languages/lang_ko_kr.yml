@@ -1,3 +1,4 @@
+FILE_VERSION: '${version}'
 # Use '§' for color code
 
 # Black (black)               §0  Dark Blue (dark_blue)	      §1
@@ -33,10 +34,10 @@ adv_already_y: "§c이미 발전과제 공유가 활성화 되어 있습니다!"
 adv_already_n: "§c이미 발전과제 공유가 비활성화 되어 있습니다!"
 adv_get: "§6발전과제 공유의 현재 설정값은 §a%s§6입니다."
 
-andeath_set: "§6사망 시 좌표출력 설정값이 이제 §a%s§6입니다."
-andeath_already_y: "§c이미 사망 시 좌표출력이 활성화 되어 있습니다!"
-andeath_already_n: "§c이미 사망 시 좌표출력이 비활성화 되어 있습니다!"
-andeath_get: "§6사망 시 좌표출력의 현재 설정값은 §a%s§6입니다."
+andeath_set: "§6사망 시 좌표 표시 설정값이 이제 §a%s§6입니다."
+andeath_already_y: "§c이미 사망 시 좌표 표시가 활성화 되어 있습니다!"
+andeath_already_n: "§c이미 사망 시 좌표 표시가 비활성화 되어 있습니다!"
+andeath_get: "§6사망 시 좌표 표시의 현재 설정값은 §a%s§6입니다."
 
 teaminv_set: "§6팀 아이템 공유 설정값이 이제 §a%s§6입니다."
 teaminv_already_y: "§이미 팀 아이템 공유가 활성화 되어 있습니다!"
@@ -49,7 +50,7 @@ help_message1: "§a커맨드 도움말"
 help_message2: "§d(true나 false를 입력하지 않고 커맨드를 사용하면 현재 설정을 보여줍니다.)"
 cmd_inv_info: "현재 인벤토리 공유 설정을 수정합니다."
 cmd_adv_info: "현재 발전과제 공유 설정을 수정합니다."
-cmd_andeath_info: "현재 사망 시 좌표 공유 설정을 수정합니다."
+cmd_andeath_info: "현재 사망 시 좌표 표시 설정을 수정합니다."
 cmd_teaminv_info: "현재 팀 아이템 공유 설정을 수정합니다."
 cmd_check_info: "현재 설정값들을 확인합니다."
 cmd_reload_config_info: "config 파일을 새로고침 합니다."

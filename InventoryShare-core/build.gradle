@@ -16,4 +16,7 @@ processResources {
     filesMatching('plugin.yml') {
         expand props
     }
+    filesMatching('languages/*.yml') {
+        expand props
+    }
 }
