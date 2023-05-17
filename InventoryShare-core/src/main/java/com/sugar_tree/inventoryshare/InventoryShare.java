@@ -42,22 +42,22 @@ public final class InventoryShare extends JavaPlugin {
 
         saveDefaultLanguageFiles();
 
-        I18N_TEAM_SAVED = I18nUtil.get("team_saved");
-        I18N_TEAM_LOADED = I18nUtil.get("team_loaded");
+        I18N_TEAM_SAVED = I18NUtil.get("team_saved");
+        I18N_TEAM_LOADED = I18NUtil.get("team_loaded");
         Metrics metrics = new Metrics(this, 18372);
         metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
         UpdateUtil.checkUpdate();
         if (!VersionUtil.isSupported()) {
-            logger.severe(I18nUtil.get("not_supported_version", VersionUtil.getVersion().name()));
+            logger.severe(I18NUtil.get("not_supported_version", VersionUtil.getVersion().name()));
             this.setEnabled(false);
             return;
         }
         if (isProtocolLib) {
             ProtocolLibUtil.ProtocolLib();
-            logger.info(I18nUtil.get("protocolLib_found"));
+            logger.info(I18NUtil.get("protocolLib_found"));
         } else {
-            logger.info(I18nUtil.get("protocolLib_need1"));
-            logger.info(I18nUtil.get("protocolLib_need2"));
+            logger.info(I18NUtil.get("protocolLib_need1"));
+            logger.info(I18NUtil.get("protocolLib_need2"));
             logger.info("https://www.spigotmc.org/resources/protocollib.1997");
         }
 

@@ -14,7 +14,7 @@ import java.util.Objects;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
-public class I18nUtil {
+public class I18NUtil {
 
     private final static Bundle bundle;
     static {
