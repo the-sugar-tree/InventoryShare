@@ -81,7 +81,7 @@ public final class InventoryShare extends JavaPlugin {
             getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
         }
 
-        Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"Inventory Sharing Plugin\" by. " + ChatColor.GREEN + "sugar_tree");
+        Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"" + I18NUtil.get("plugin_name") + "\" by. " + ChatColor.GREEN + "sugar_tree");
     }
 
     @Override

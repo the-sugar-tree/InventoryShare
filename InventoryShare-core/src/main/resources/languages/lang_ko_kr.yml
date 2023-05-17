@@ -13,6 +13,8 @@
 # Strikethrough  §m   Underline    §n
 # Italic         §o   Reset        §r
 
+plugin_name: "인벤토리 공유 플러그인"
+
 not_supported_version: "이 플러그인은 이 버전을 지원하지 않습니다: %s"
 
 # ProtocolLib

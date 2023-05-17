@@ -13,6 +13,8 @@
 # Strikethrough  §m   Underline    §n
 # Italic         §o   Reset        §r
 
+plugin_name: "Inventory Sharing Plugin"
+
 not_supported_version: "This plugin does not support this version: %s"
 
 # ProtocolLib

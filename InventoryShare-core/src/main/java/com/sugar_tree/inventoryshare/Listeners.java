@@ -15,6 +15,7 @@
  */
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.util.I18NUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -50,7 +51,7 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree");
+        event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \""+ I18NUtil.get("plugin_name") +"\" by." + ChatColor.GREEN + "sugar_tree");
         InventoryManager.savePlayerInventory(event.getPlayer());
         if (inventory) InventoryManager.applyInventory(event.getPlayer());
         AdvancementPatch(event.getPlayer());
