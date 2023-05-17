@@ -17,7 +17,8 @@
 [![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
 [![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v3.0)
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total)](https://github.com/the-sugar-tree/InventoryShare/releases)
-[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12%201.13%201.14%201.15%201.16%201.17%201.18%201.19-green)](https://github.com/the-sugar-tree/InventoryShare)   
+[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12%201.13%201.14%201.15%201.16%201.17%201.18%201.19-green)](https://github.com/the-sugar-tree/InventoryShare) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fthe-sugar-tree%2FInventoryShare.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fthe-sugar-tree%2FInventoryShare?ref=badge_shield)
+  
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![Java](https://img.shields.io/badge/java-17-ED8B00.svg?logo=java)](https://www.azul.com/)
 [![Gradle](https://img.shields.io/badge/gradle-7.6.1-02303A.svg?logo=gradle)](https://gradle.org)
@@ -74,3 +75,6 @@ https://blog.naver.com/sugar-tree/222556850608
 
 
 [![Video Label](http://img.youtube.com/vi/PI6eTCOs-x4/0.jpg)](https://www.youtube.com/watch?v=PI6eTCOs-x4)
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fthe-sugar-tree%2FInventoryShare.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fthe-sugar-tree%2FInventoryShare?ref=badge_large)
