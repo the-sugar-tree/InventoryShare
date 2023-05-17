@@ -46,7 +46,6 @@ public class UpdateUtil {
             con.setRequestProperty("User-Agent",
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36");
             con.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
-            con.addRequestProperty("Referer", "https://www.google.com/");
             con.connect();
             // Header에서 Status Code를 뽑는다.
             int resCode = con.getResponseCode();
