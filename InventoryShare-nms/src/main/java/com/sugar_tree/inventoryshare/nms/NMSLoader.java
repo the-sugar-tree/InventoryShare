@@ -86,7 +86,7 @@ public class NMSLoader {
             FileManager = new FileManager();
             InventoryManager = new InventoryManager();
         } catch (ExceptionInInitializerError e) {
-            logger.severe("ERROR while loading Classes");
+            logger.severe("Error while loading Classes");
             e.printStackTrace();
             return false;
         }
