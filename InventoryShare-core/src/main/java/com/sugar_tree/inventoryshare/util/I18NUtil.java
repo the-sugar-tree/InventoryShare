@@ -39,7 +39,7 @@ public class I18NUtil {
         try {
             b = Bundle.getBundle(language);
         } catch (NoSuchFileException e) {
-            logger.severe(language == null ? "Could not load language info from config.yml" : "cannot find lang_" + language + ".yml");
+            logger.severe(language == null ? "Could not load language info from config.yml" : "Could not find lang_" + language + ".yml");
             logger.severe("Attempt to use default language...");
         }
         if (language == null) {
