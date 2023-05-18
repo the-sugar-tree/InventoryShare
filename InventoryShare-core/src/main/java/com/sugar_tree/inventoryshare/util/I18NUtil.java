@@ -32,8 +32,16 @@ import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public class I18NUtil {
 
-    private final static Bundle bundle;
+    private static Bundle bundle;
     static {
+        init();
+    }
+
+    public static void reload() {
+        init();
+    }
+
+    private static void init() {
         Bundle b = Bundle.getDefaultBundle();
         String language = plugin.getConfig().getString("language");
         try {

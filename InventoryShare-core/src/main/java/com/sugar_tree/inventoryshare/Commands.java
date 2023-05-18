@@ -36,139 +36,162 @@ public class Commands implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (command.getName().equalsIgnoreCase("inventoryshare")) {
-            if (sender.isOp()) {
-                if (args.length >= 1) {
-                    if (args[0].equalsIgnoreCase("inventory")) {
-                        if (args.length == 2) {
-                            if (args[1].equalsIgnoreCase("true")) {
-                                if (!inventory) {
-                                    for (Player p : Bukkit.getOnlinePlayers()) {
-                                        InventoryManager.savePlayerInventory(p);
-                                    }
-                                    inventory = true;
-                                    Command.broadcastCommandMessage(sender, I18NUtil.get("inv_set", true, String.valueOf(inventory)));
+            if (!sender.isOp()) {
+                sender.sendMessage(ChatColor.RED + "I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is a mistake.");
+                return true;
+            }
+            if (args.length < 1) {
+                sender.sendMessage(usageMessage);
+                return true;
+            }
+            switch (args[0].toLowerCase()) {
+                case "inventory":
+                    if (args.length != 2) {
+                        sender.sendMessage(I18NUtil.get("inv_get", true, String.valueOf(inventory)));
+                        break;
+                    }
+                    switch (args[1].toLowerCase()) {
+                        case "true":
+                            if (!inventory) {
+                                for (Player p : Bukkit.getOnlinePlayers()) {
+                                    InventoryManager.savePlayerInventory(p);
+                                }
+                                inventory = true;
+                                Command.broadcastCommandMessage(sender, I18NUtil.get("inv_set", true, String.valueOf(inventory)));
+                                for (Player p : Bukkit.getOnlinePlayers()) {
+                                    InventoryManager.applyInventory(p);
+                                    p.updateInventory();
+                                }
+                            } else {
+                                sender.sendMessage(I18NUtil.get("inv_already_y", true));
+                            }
+                            break;
+                        case "false":
+                            if (inventory) {
+                                inventory = false;
+                                Command.broadcastCommandMessage(sender, I18NUtil.get("inv_set", true, String.valueOf(inventory)));
+                                for (Player p : Bukkit.getOnlinePlayers()) {
+                                    InventoryManager.disApplyInventory(p);
+                                    p.updateInventory();
+                                }
+                            } else {
+                                sender.sendMessage(I18NUtil.get("inv_already_n", true));
+                            }
+                            break;
+                        default:
+                            sender.sendMessage(usageMessage);
+                    }
+                    break;
+                case "advancement":
+                    if (args.length != 2) {
+                        sender.sendMessage(I18NUtil.get("adv_get", true, String.valueOf(advancement)));
+                        break;
+                    }
+                    switch (args[1].toLowerCase()) {
+                        case "true":
+                            if (!advancement) {
+                                advancement = true;
+                                Command.broadcastCommandMessage(sender, I18NUtil.get("adv_set", true, String.valueOf(advancement)));
+                            } else {
+                                sender.sendMessage(I18NUtil.get("adv_already_y", true));
+                            }
+                            break;
+                        case "false":
+                            if (advancement) {
+                                advancement = false;
+                                Command.broadcastCommandMessage(sender, I18NUtil.get("adv_set", true, String.valueOf(advancement)));
+                            } else {
+                                sender.sendMessage(I18NUtil.get("adv_already_n", true));
+                            }
+                            break;
+                        default:
+                            sender.sendMessage(usageMessage);
+                    }
+                    break;
+                case "announcedeath":
+                    if (args.length != 2) {
+                        sender.sendMessage(I18NUtil.get("andeath_get", true, String.valueOf(teaminventory)));
+                        break;
+                    }
+                    switch (args[1].toLowerCase()) {
+                        case "true":
+                            if (!announcedeath) {
+                                announcedeath = true;
+                                Command.broadcastCommandMessage(sender, I18NUtil.get("andeath_set", true, String.valueOf(announcedeath)));
+                            } else {
+                                I18NUtil.get("andeath_already_y", true);
+                            }
+                            break;
+                        case "false":
+                            if (announcedeath) {
+                                announcedeath = false;
+                                Command.broadcastCommandMessage(sender, I18NUtil.get("andeath_set", true, String.valueOf(announcedeath)));
+                            } else {
+                                I18NUtil.get("andeath_already_n", true);
+                            }
+                            break;
+                        default:
+                            sender.sendMessage(usageMessage);
+                    }
+                    break;
+                case "teaminventory":
+                    if (args.length != 2) {
+                        sender.sendMessage(I18NUtil.get("teaminv_get", true, String.valueOf(teaminventory)));
+                        break;
+                    }
+                    switch (args[1].toLowerCase()) {
+                        case "true":
+                            if (!teaminventory) {
+                                teaminventory = true;
+                                Command.broadcastCommandMessage(sender, I18NUtil.get("teaminv_set", true, String.valueOf(teaminventory)));
+                                if (inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
                                         InventoryManager.applyInventory(p);
                                         p.updateInventory();
                                     }
-                                } else {
-                                    sender.sendMessage(I18NUtil.get("inv_already_y", true));
                                 }
-                            } else if (args[1].equalsIgnoreCase("false")) {
+                            } else {
+                                sender.sendMessage(I18NUtil.get("teaminv_already_y", true));
+                            }
+                            break;
+                        case "false":
+                            if (teaminventory) {
+                                teaminventory = false;
+                                Command.broadcastCommandMessage(sender, I18NUtil.get("teaminv_set", true, String.valueOf(teaminventory)));
                                 if (inventory) {
-                                    inventory = false;
-                                    Command.broadcastCommandMessage(sender, I18NUtil.get("inv_set", true, String.valueOf(inventory)));
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        InventoryManager.disApplyInventory(p);
+                                        InventoryManager.applyInventory(p);
                                         p.updateInventory();
                                     }
-                                } else {
-                                    sender.sendMessage(I18NUtil.get("inv_already_n", true));
                                 }
                             } else {
-                                sender.sendMessage(usageMessage);
+                                sender.sendMessage(I18NUtil.get("teaminv_already_n", true));
                             }
-                        } else {
-                            sender.sendMessage(I18NUtil.get("inv_get", true, String.valueOf(inventory)));
-                        }
-                    } else if (args[0].equalsIgnoreCase("advancement")) {
-                        if (args.length == 2) {
-                            if (args[1].equalsIgnoreCase("true")) {
-                                if (!advancement) {
-                                    advancement = true;
-                                    Command.broadcastCommandMessage(sender, I18NUtil.get("adv_set", true, String.valueOf(advancement)));
-                                } else {
-                                    sender.sendMessage(I18NUtil.get("adv_already_y", true));
-                                }
-                            } else if (args[1].equalsIgnoreCase("false")) {
-                                if (advancement) {
-                                    advancement = false;
-                                    Command.broadcastCommandMessage(sender, I18NUtil.get("adv_set", true, String.valueOf(advancement)));
-                                } else {
-                                    sender.sendMessage(I18NUtil.get("adv_already_n", true));
-                                }
-                            } else {
-                                sender.sendMessage(usageMessage);
-                            }
-                        } else {
-                            sender.sendMessage(I18NUtil.get("adv_get", true, String.valueOf(advancement)));
-                        }
-                    } else if (args[0].equalsIgnoreCase("announcedeath")) {
-                        if (args.length == 2) {
-                            if (args[1].equalsIgnoreCase("true")) {
-                                if (!announcedeath) {
-                                    announcedeath = true;
-                                    Command.broadcastCommandMessage(sender, I18NUtil.get("andeath_set", true, String.valueOf(announcedeath)));
-                                } else {
-                                    I18NUtil.get("andeath_already_y", true);
-                                }
-                            } else if (args[1].equalsIgnoreCase("false")) {
-                                if (announcedeath) {
-                                    announcedeath = false;
-                                    Command.broadcastCommandMessage(sender, I18NUtil.get("andeath_set", true, String.valueOf(announcedeath)));
-                                } else {
-                                    I18NUtil.get("andeath_already_n", true);
-                                }
-                            } else {
-                                sender.sendMessage(usageMessage);
-                            }
-                        } else {
-                            sender.sendMessage(I18NUtil.get("andeath_get", true, String.valueOf(teaminventory)));
-                        }
-                    } else if (args[0].equalsIgnoreCase("teaminventory")) {
-                        if (args.length == 2) {
-                            if (args[1].equalsIgnoreCase("true")) {
-                                if (!teaminventory) {
-                                    teaminventory = true;
-                                    Command.broadcastCommandMessage(sender, I18NUtil.get("teaminv_set", true, String.valueOf(teaminventory)));
-                                    if (inventory) {
-                                        for (Player p : Bukkit.getOnlinePlayers()) {
-                                            InventoryManager.applyInventory(p);
-                                            p.updateInventory();
-                                        }
-                                    }
-                                } else {
-                                    sender.sendMessage(I18NUtil.get("teaminv_already_y", true));
-                                }
-                            } else if (args[1].equalsIgnoreCase("false")) {
-                                if (teaminventory) {
-                                    teaminventory = false;
-                                    Command.broadcastCommandMessage(sender, I18NUtil.get("teaminv_set", true, String.valueOf(teaminventory)));
-                                    if (inventory) {
-                                        for (Player p : Bukkit.getOnlinePlayers()) {
-                                            InventoryManager.applyInventory(p);
-                                            p.updateInventory();
-                                        }
-                                    }
-                                } else {
-                                    sender.sendMessage(I18NUtil.get("teaminv_already_n", true));
-                                }
-                            } else {
-                                sender.sendMessage(usageMessage);
-                            }
-                        } else {
-                            sender.sendMessage(I18NUtil.get("teaminv_get", true, String.valueOf(teaminventory)));
-                        }
-                    } else if (args[0].equalsIgnoreCase("reload")) {
-                        if (args.length == 1) {
-                            if (plugin.getConfig().contains("inventory")) advancement = plugin.getConfig().getBoolean("inventory");
-                            if (plugin.getConfig().contains("advancement")) advancement = plugin.getConfig().getBoolean("advancement");
-                            if (plugin.getConfig().contains("announcedeath")) announcedeath = plugin.getConfig().getBoolean("announcedeath");
-                            if (plugin.getConfig().contains("teaminventory")) teaminventory = plugin.getConfig().getBoolean("teaminventory");
-                            sender.sendMessage(I18NUtil.get("config_reloaded", true));
-                        } else {
+                            break;
+                        default:
                             sender.sendMessage(usageMessage);
-                        }
-                    } else if (args[0].equalsIgnoreCase("check")) {
-                        sender.sendMessage(check);
-                    } else {
-                        sender.sendMessage(usageMessage);
                     }
-                } else {
+                    break;
+                case "reload":
+                    if (args.length != 1) {
+                        sender.sendMessage(usageMessage);
+                        break;
+                    }
+                    plugin.reloadConfig();
+                    if (plugin.getConfig().contains("inventory")) advancement = plugin.getConfig().getBoolean("inventory");
+                    if (plugin.getConfig().contains("advancement")) advancement = plugin.getConfig().getBoolean("advancement");
+                    if (plugin.getConfig().contains("announcedeath")) announcedeath = plugin.getConfig().getBoolean("announcedeath");
+                    if (plugin.getConfig().contains("teaminventory")) teaminventory = plugin.getConfig().getBoolean("teaminventory");
+                    updateUsageMessage();
+                    updateCheckMessage();
+                    I18NUtil.reload();
+                    sender.sendMessage(I18NUtil.get("config_reloaded", true));
+                    break;
+                case "check":
+                    sender.sendMessage(check);
+                    break;
+                default:
                     sender.sendMessage(usageMessage);
-                }
-            } else {
-                sender.sendMessage(ChatColor.RED + "I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is a mistake.");
             }
             return true;
         }
@@ -204,6 +227,30 @@ public class Commands implements TabExecutor {
             }
         }
         return null;
+    }
+
+    private void updateUsageMessage() {
+        usageMessage = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
+                I18NUtil.get("help_message1") + "\n" +
+                I18NUtil.get("help_message2") + "\n" +
+                ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " inventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_inv_info") + "\n" +
+                ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " advancement " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_adv_info") + "\n" +
+                ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " announcedeath " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_andeath_info") + "\n" +
+                ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " teaminventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_teaminv_info") + "\n" +
+                ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " check" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_check_info") + "\n" +
+                ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " reload" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_reload_config_info") + "\n" +
+                ChatColor.DARK_AQUA + "-----------------------------------------------------"
+                ;
+    }
+
+    private void updateCheckMessage() {
+        check = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
+                PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory + "\n" +
+                PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement + "\n" +
+                PREFIX + ChatColor.GOLD + "announcedeath: " + ChatColor.GREEN + announcedeath + "\n" +
+                PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + teaminventory + "\n" +
+                ChatColor.DARK_AQUA + "-----------------------------------------------------"
+                ;
     }
 
     String usageMessage = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
