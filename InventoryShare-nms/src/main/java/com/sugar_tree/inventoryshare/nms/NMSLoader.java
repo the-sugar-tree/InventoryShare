@@ -139,6 +139,7 @@ public class NMSLoader {
             }
         }
 
+        @Override
         public void save() {
             try {
                 List<Map<?, ?>> itemslist = new ArrayList<>();
@@ -204,6 +205,7 @@ public class NMSLoader {
             }
         }
 
+        @Override
         public void load() {
             try {
                 List<Map<?, ?>> itemslist = invconfig.getMapList("items");
@@ -326,6 +328,7 @@ public class NMSLoader {
             }
         }
 
+        @Override
         public void deleteWasteFiles() {
             File[] files = new File(plugin.getDataFolder(), "\\teams").listFiles();
             if (files != null) {
@@ -382,6 +385,7 @@ public class NMSLoader {
             }
         }
 
+        @Override
         public void applyAllInventory(@NotNull Player p) {
             try {
                 Object playerInventory;
@@ -403,6 +407,7 @@ public class NMSLoader {
             }
         }
 
+        @Override
         public void disApplyInventory(@NotNull Player p) {
             try {
                 Object entityPlayer = CraftPlayer_getHandle.invoke(CraftPlayer.cast(p));
@@ -447,6 +452,7 @@ public class NMSLoader {
         }
 
         @SuppressWarnings("deprecation")
+        @Override
         public void applyInventory(@NotNull Player p) {
             try {
                 if (!(teaminventory)) {
@@ -496,6 +502,7 @@ public class NMSLoader {
             }
         }
 
+        @Override
         public void savePlayerInventory(@NotNull Player p) {
             try {
                 Object pinvsecond = PlayerInventory.getConstructor(EntityHuman).newInstance((Object) null);
