@@ -42,7 +42,8 @@ public final class InventoryShare extends JavaPlugin {
         plugin = this;
         logger = getLogger();
 
-        saveDefaultLanguageFiles();
+        I18NUtil.I18NFileManager.saveDefaultLanguageFiles();
+        I18NUtil.init();
 
         I18N_TEAM_SAVED = I18NUtil.get("team_saved");
         I18N_TEAM_LOADED = I18NUtil.get("team_loaded");
@@ -104,13 +105,6 @@ public final class InventoryShare extends JavaPlugin {
 
     private static boolean checkProtocolLib() {
         return Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
-    }
-
-    private void saveDefaultLanguageFiles() {
-        if (!new File(getDataFolder(), "\\languages\\lang_ko_kr.yml").exists())
-            saveResource("languages/lang_ko_kr.yml", false);
-        if (!new File(getDataFolder(), "\\languages\\lang_en_us.yml").exists())
-            saveResource("languages/lang_en_us.yml", false);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

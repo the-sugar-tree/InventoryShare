@@ -24,24 +24,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.NoSuchFileException;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.Objects;
+import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public class I18NUtil {
 
     private static Bundle bundle;
-    static {
-        init();
-    }
 
     public static void reload() {
         init();
     }
 
-    private static void init() {
+    public static void init() {
         Bundle b = Bundle.getDefaultBundle();
         String language = plugin.getConfig().getString("language");
         try {
@@ -126,6 +121,36 @@ public class I18NUtil {
                 throw new MissingResourceException("No such key in language file: " + key, getClass().getName(), key);
             }
             return value;
+        }
+    }
+
+    public final static class I18NFileManager {
+        public static void saveDefaultLanguageFiles() {
+            Set<String> fileNames = new HashSet<>(Arrays.asList("ko_kr", "en_us"));
+            for (String locale : fileNames) {
+                File file = new File(plugin.getDataFolder(), "\\languages\\lang_" + locale + ".yml");
+                if (!file.exists()) {
+                    plugin.saveResource("languages/lang_" + locale + ".yml", false);
+                } else {
+                    updateFile(locale);
+                }
+            }
+        }
+        private static void updateFile(String locale) {
+            FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "\\languages\\lang_" + locale + ".yml"));
+            String version = fileConfiguration.getString("FILE_VERSION");
+            if (!version.equals(plugin.getDescription().getVersion())) {
+                logger.warning("Updating Langauge File... [" + locale + "]");
+                Set<String> changed = fileConfiguration.getKeys(true);
+                InputStream is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_" + locale + ".yml"), "Default language file ("+ locale +") does not exist.");
+                InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+                FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(isr);
+                for (String str : defaultConfig.getKeys(true)) {
+                    if (!changed.contains(str)) {
+                        fileConfiguration.set(str, defaultConfig.get(str));
+                    }
+                }
+            }
         }
     }
 }
