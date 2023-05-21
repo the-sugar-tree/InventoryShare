@@ -182,9 +182,8 @@ public class Commands implements TabExecutor {
                     if (plugin.getConfig().contains("advancement")) advancement = plugin.getConfig().getBoolean("advancement");
                     if (plugin.getConfig().contains("announcedeath")) announcedeath = plugin.getConfig().getBoolean("announcedeath");
                     if (plugin.getConfig().contains("teaminventory")) teaminventory = plugin.getConfig().getBoolean("teaminventory");
-                    updateUsageMessage();
-                    updateCheckMessage();
                     I18NUtil.reload();
+                    updateUsageMessage();
                     sender.sendMessage(I18NUtil.get("config_reloaded", true));
                     break;
                 case "check":
@@ -239,16 +238,6 @@ public class Commands implements TabExecutor {
                 ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " teaminventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_teaminv_info") + "\n" +
                 ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " check" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_check_info") + "\n" +
                 ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " reload" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_reload_config_info") + "\n" +
-                ChatColor.DARK_AQUA + "-----------------------------------------------------"
-                ;
-    }
-
-    private void updateCheckMessage() {
-        check = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
-                PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory + "\n" +
-                PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement + "\n" +
-                PREFIX + ChatColor.GOLD + "announcedeath: " + ChatColor.GREEN + announcedeath + "\n" +
-                PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + teaminventory + "\n" +
                 ChatColor.DARK_AQUA + "-----------------------------------------------------"
                 ;
     }
