@@ -102,9 +102,9 @@ public class I18NUtil {
             Locale systemLocale = Locale.getDefault();
             InputStream is;
             if (systemLocale.equals(Locale.KOREA) || systemLocale.equals(Locale.KOREAN)) {
-                is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_default_ko_kr.yml"), "default language file does not exist.");
+                is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_ko_kr.yml"), "Default language file (en_us) does not exist.");
             } else {
-                is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_default.yml"), "default language file does not exist.");
+                is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_en_us.yml"), "Default language file (ko_kr) does not exist.");
             }
             InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
             return new Bundle(YamlConfiguration.loadConfiguration(isr));
