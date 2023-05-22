@@ -19,6 +19,8 @@ allprojects {
     }
 
     dependencies {
+        compileOnly 'org.projectlombok:lombok:1.18.26'
+        annotationProcessor 'org.projectlombok:lombok:1.18.26'
         compileOnly 'org.jetbrains:annotations:23.0.0'
     }
 }
@@ -27,9 +29,17 @@ compileJava.enabled(false)
 
 dependencies {
     implementation project(':InventoryShare-core')
+
+    testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     duplicatesStrategy = 'EXCLUDE'
+}
+
+test {
+    useJUnitPlatform()
 }
