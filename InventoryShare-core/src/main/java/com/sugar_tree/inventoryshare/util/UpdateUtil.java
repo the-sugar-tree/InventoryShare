@@ -33,8 +33,8 @@ public class UpdateUtil {
         }
 
         if (!("v"+plugin.getDescription().getVersion()).equals(version)) {
-//            logger.warning(I18nUtil.get("update_able", plugin.getDescription().getVersion(), version));
-            logger.warning(I18NUtil.get("update_able", "3.1-beta", "3.0"));
+            logger.warning(I18NUtil.get("update_able", plugin.getDescription().getVersion(), version));
+//            logger.warning(I18NUtil.get("update_able", "3.1-beta", "3.0"));
             logger.warning("https://github.com/the-sugar-tree/InventoryShare/releases/latest");
         }
     }
