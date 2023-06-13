@@ -13,9 +13,9 @@ import java.util.Locale;
 @Slf4j
 public class SimpleTest {
 
-    public static void main(String... args) throws IOException, InterruptedException {
+    public static void main(String... args) throws IOException {
         long startTime = System.currentTimeMillis();
-        
+
         /*
         Properties properties = System.getProperties();
         properties.setProperty("user.language", "ko");
@@ -28,8 +28,35 @@ public class SimpleTest {
 
 //        checkLanguageConfig();
         log.info("test");
-
-        new Task().start1().join();
+        try {
+            new Task().start1().join();
+        } catch (InterruptedException e) {
+            try {
+                throw e;
+            } catch (InterruptedException ex) {
+                try {
+                    throw ex;
+                } catch (InterruptedException exc) {
+                    try {
+                        throw exc;
+                    } catch (InterruptedException interruptedException) {
+                        try {
+                            throw interruptedException;
+                        } catch (InterruptedException exception) {
+                            try {
+                                throw exception;
+                            } catch (InterruptedException e1) {
+                                try {
+                                    throw e1;
+                                } catch (InterruptedException e2) {
+                                    throw new RuntimeException(e2);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         log.info("{}s elapsed", ((float) (System.currentTimeMillis() - startTime) / 1000));
     }
 
