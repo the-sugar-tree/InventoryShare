@@ -171,6 +171,7 @@ public class NMSLoader {
                 plugin.getConfig().set("announcedeath", announcedeath);
                 plugin.getConfig().set("teaminventory", teaminventory);
                 StringBuilder sb = new StringBuilder();
+                boolean temp = false;
                 sb.append(I18N_TEAM_SAVED);
                 for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
                     if (team == null) continue;
@@ -197,8 +198,9 @@ public class NMSLoader {
                     fileConfiguration.set("extraSlots", extraSlotsListT);
                     teamInvFileList.put(fileConfiguration, file);
                     sb.append("[").append(team.getName()).append("] ");
+                    temp = true;
                 }
-                logger.info(sb.toString());
+                if (temp) logger.info(sb.toString());
                 saveConfigs();
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new RuntimeException(e);
@@ -271,6 +273,7 @@ public class NMSLoader {
                 }
 
                 StringBuilder sb = new StringBuilder();
+                boolean temp = false;
                 sb.append(I18N_TEAM_LOADED);
                 for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
                     AbstractList<Object> items = (AbstractList<Object>) createItemList.invoke(null, 36, nullItem);
@@ -321,8 +324,9 @@ public class NMSLoader {
                     m.put("extraSlots", extraSlots);
                     InventoryList.put(team.getName(), m);
                     sb.append("[").append(team.getName()).append("] ");
+                    temp = true;
                 }
-                logger.info(sb.toString());
+                if (temp) logger.info(sb.toString());
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
