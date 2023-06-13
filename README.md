@@ -9,18 +9,18 @@
 ---
 <p align="center">
     <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v3.0/InventoryShare-3.0.jar">
-        <img src="https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb" height="40" width="260">
+        <img src="https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb?style=for-the-badge" height="40" width="260">
     </a>
 </p>
 
 ---
-[![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
-[![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v3.0)
-[![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total)](https://github.com/the-sugar-tree/InventoryShare/releases)
-[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12‐1.19-green)](https://github.com/the-sugar-tree/InventoryShare)   
-[![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare)](https://www.gnu.org/licenses/gpl-3.0.html)
-[![Java](https://img.shields.io/badge/java-17-ED8B00.svg?logo=java)](https://www.azul.com/)
-[![Gradle](https://img.shields.io/badge/gradle-8.1.1-02303A.svg?logo=gradle)](https://gradle.org)
+[![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube&style=for-the-badge)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
+[![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v3.0)
+[![Java](https://img.shields.io/badge/java-17-ED8B00.svg?logo=java&style=for-the-badge)](https://www.azul.com/)
+[![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare/releases)   
+[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12‐1.19-green?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare)
+[![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![Gradle](https://img.shields.io/badge/gradle-8.1.1-02303A.svg?logo=gradle&style=for-the-badge)](https://gradle.org)
 
 ---
 
