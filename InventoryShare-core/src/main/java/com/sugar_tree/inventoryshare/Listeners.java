@@ -15,6 +15,7 @@
  */
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.util.I18NUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -50,26 +51,26 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \"인벤토리 공유 플러그인\" by." + ChatColor.GREEN + "sugar_tree");
-        InventoryClass.savePlayerInventory(event.getPlayer());
-        if (inventory) InventoryClass.invApply(event.getPlayer());
+        event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \""+ I18NUtil.get("plugin_name") +"\" by." + ChatColor.GREEN + "sugar_tree");
+        InventoryManager.savePlayerInventory(event.getPlayer());
+        if (inventory) InventoryManager.applyAllInventory(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        InventoryClass.invDisApply(event.getPlayer());
-        FileManagerClass.save();
+        InventoryManager.disApplyInventory(event.getPlayer());
+        FileManager.save();
     }
 
     @EventHandler
     public void onWorldSave(WorldSaveEvent event){
-        FileManagerClass.save();
+        FileManager.save();
         if (inventory) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                InventoryClass.invDisApply(p);
+                InventoryManager.disApplyInventory(p);
                 p.saveData();
-                InventoryClass.invApply(p);
+                InventoryManager.applyAllInventory(p);
             }
         }
     }
@@ -86,7 +87,7 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (AnnounceDeath) {
+        if (announcedeath) {
             Location loc = event.getEntity().getLocation();
             World w = loc.getWorld();
             Bukkit.broadcastMessage(PREFIX + ChatColor.RED + event.getEntity().getName() + "(이)가 [" + (w == null ? null : w.getName()) + "] x: "
@@ -104,7 +105,7 @@ public class Listeners implements Listener {
                     if (teaminventory) {
                         if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p))) {
                             teamMap.put(p, Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
-                            InventoryClass.invApply(p);
+                            InventoryManager.applyAllInventory(p);
                         }
                     }
                 }

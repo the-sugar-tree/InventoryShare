@@ -35,15 +35,15 @@ public class SharedConstants {
 
     public static boolean inventory = true;
     public static boolean advancement = true;
-    public static boolean AnnounceDeath = false;
+    public static boolean announcedeath = false;
     public static boolean teaminventory = false;
     public static final String PREFIX = ChatColor.LIGHT_PURPLE + "[" + ChatColor.AQUA + "InventoryShare" + ChatColor.LIGHT_PURPLE + "] " + ChatColor.RESET;
     public static FileConfiguration invconfig;
     public static FileConfiguration advconfig;
     public static Map<FileConfiguration, File> teamInvFileList = new HashMap<>();
     public static List<NamespacedKey> advlist = new ArrayList<>();
-    public static Inventory InventoryClass;
-    public static FileManager FileManagerClass;
+    public static IInventory InventoryManager;
+    public static IFileManager FileManager;
     public static File invfile;
     public static File advfile;
 
@@ -60,7 +60,7 @@ public class SharedConstants {
     public static Plugin plugin;
 
     public static void saveConfigs() {
-        FileManagerClass.deleteWasteFiles();
+        FileManager.deleteWasteFiles();
         plugin.saveConfig();
         try { invconfig.save(invfile); } catch (Exception e) { e.printStackTrace(); }
         try { advconfig.save(advfile); } catch (Exception e) { e.printStackTrace(); }

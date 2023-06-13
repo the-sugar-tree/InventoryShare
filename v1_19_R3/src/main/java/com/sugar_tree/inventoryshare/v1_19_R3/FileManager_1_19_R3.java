@@ -16,7 +16,7 @@
 package com.sugar_tree.inventoryshare.v1_19_R3;
 
 import com.google.common.collect.ImmutableList;
-import com.sugar_tree.inventoryshare.api.FileManager;
+import com.sugar_tree.inventoryshare.api.IFileManager;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +32,7 @@ import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
-public class FileManager_1_19_R3 implements FileManager {
+public class FileManager_1_19_R3 implements IFileManager {
     protected static Map<UUID, PlayerInventory> invList = new HashMap<>();
 
     protected static NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.b);
@@ -69,7 +69,7 @@ public class FileManager_1_19_R3 implements FileManager {
 
         plugin.getConfig().set("inventory", inventory);
         plugin.getConfig().set("advancement", advancement);
-        plugin.getConfig().set("AnnounceDeath", AnnounceDeath);
+        plugin.getConfig().set("AnnounceDeath", announcedeath);
         plugin.getConfig().set("teaminventory", teaminventory);
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
             if (team == null) continue;
@@ -145,7 +145,7 @@ public class FileManager_1_19_R3 implements FileManager {
             advancement = plugin.getConfig().getBoolean("advancement");
         }
         if (plugin.getConfig().contains("AnnounceDeath")) {
-            AnnounceDeath = plugin.getConfig().getBoolean("AnnounceDeath");
+            announcedeath = plugin.getConfig().getBoolean("AnnounceDeath");
         }
         if (plugin.getConfig().contains("teaminventory")) {
             teaminventory = plugin.getConfig().getBoolean("teaminventory");

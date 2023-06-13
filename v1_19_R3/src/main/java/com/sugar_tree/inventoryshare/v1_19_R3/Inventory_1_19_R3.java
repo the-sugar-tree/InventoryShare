@@ -16,7 +16,7 @@
 package com.sugar_tree.inventoryshare.v1_19_R3;
 
 import com.google.common.collect.ImmutableList;
-import com.sugar_tree.inventoryshare.api.Inventory;
+import com.sugar_tree.inventoryshare.api.IInventory;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.player.PlayerInventory;
@@ -31,9 +31,9 @@ import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.teaminventory;
 import static com.sugar_tree.inventoryshare.v1_19_R3.FileManager_1_19_R3.*;
 
-public class Inventory_1_19_R3 implements Inventory {
+public class Inventory_1_19_R3 implements IInventory {
 
-    public void invApplyAll(@NotNull Player p) {
+    public void applyAllInventory(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.fJ();
         try {
@@ -47,7 +47,7 @@ public class Inventory_1_19_R3 implements Inventory {
     }
 
     @SuppressWarnings("SuspiciousMethodCalls")
-    public void invDisApply(@NotNull Player p) {
+    public void disApplyInventory(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.fJ();
         if (invList.containsKey(p.getUniqueId())) {
@@ -82,13 +82,13 @@ public class Inventory_1_19_R3 implements Inventory {
     }
 
     @SuppressWarnings({"ConstantConditions", "deprecation"})
-    public void invApply(@NotNull Player p) {
+    public void applyInventory(@NotNull Player p) {
         if (!(teaminventory)) {
-            invApplyAll(p);
+            applyAllInventory(p);
             return;
         }
         if (plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p) == null) {
-            invApplyAll(p);
+            applyAllInventory(p);
             return;
         }
         String teamName = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p).getName();

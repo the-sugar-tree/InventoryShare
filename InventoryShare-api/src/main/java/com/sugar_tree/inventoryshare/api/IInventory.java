@@ -22,11 +22,11 @@ import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.UUID;
 
-public interface Inventory {
+public interface IInventory {
 
-    void invApplyAll(@NotNull Player p);
-    void invDisApply(@NotNull Player p);
-    void invApply(@NotNull Player p);
+    void applyAllInventory(@NotNull Player p);
+    void disApplyInventory(@NotNull Player p);
+    void applyInventory(@NotNull Player p);
     void savePlayerInventory(@NotNull Player p);
     Set<UUID> getRegisteredPlayers();
 

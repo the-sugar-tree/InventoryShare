@@ -16,6 +16,7 @@
 package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.util.AdvancementUtil;
+import com.sugar_tree.inventoryshare.util.I18NUtil;
 import com.sugar_tree.inventoryshare.util.Metrics;
 import com.sugar_tree.inventoryshare.util.ProtocolLibUtil;
 import com.sugar_tree.inventoryshare.v1_19_R3.FileManager_1_19_R3;
@@ -46,12 +47,17 @@ public final class InventoryShare extends JavaPlugin {
         Metrics metrics = new Metrics(this, 18372);
         plugin = this;
         logger = getLogger();
+
+        I18NUtil.I18NFileManager.saveDefaultLanguageFiles();
+        I18NUtil.init();
+
         isSupportedBukkit = checkBukkit();
         isProtocolLib = checkProtocolLib();
         metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
+        metrics.addCustomChart(new Metrics.SimplePie("single_version", () -> "v1_19_R3"));
         String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         if (!isSupported()) {
-            logger.severe("이 플러그인은 이 버전을 지원하지 않습니다: " + version);
+            logger.severe(I18NUtil.get("not_supported_version", version));
             this.setEnabled(false);
             return;
         }
@@ -62,15 +68,15 @@ public final class InventoryShare extends JavaPlugin {
         }
         if (isProtocolLib) {
             ProtocolLibUtil.ProtocolLib();
-            logger.info("ProtocolLib 플러그인이 감지되었습니다.");
+            logger.info(I18NUtil.get("protocolLib_found"));
         } else {
-            logger.warning("이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다.");
-            logger.warning("ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다.");
-            logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
+            logger.info(I18NUtil.get("protocolLib_need1"));
+            logger.info(I18NUtil.get("protocolLib_need2"));
+            logger.info("https://www.spigotmc.org/resources/protocollib.1997");
         }
         if (isSupported()) {
-            InventoryClass = new Inventory_1_19_R3();
-            FileManagerClass = new FileManager_1_19_R3();
+            InventoryManager = new Inventory_1_19_R3();
+            FileManager = new FileManager_1_19_R3();
         } else {
             logger.severe("알 수 없는 오류로 이 버전을 지원하지 않습니다!");
             this.setEnabled(false);
@@ -86,13 +92,13 @@ public final class InventoryShare extends JavaPlugin {
         getCommand("inventoryshare").setTabCompleter(new Commands());
         listener = new Listeners();
         Bukkit.getPluginManager().registerEvents(listener, this);
-        FileManagerClass.load();
+        FileManager.load();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (inventory) InventoryClass.invApply(player);
+            if (inventory) InventoryManager.applyInventory(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
         }
 
-        Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"인벤토리 공유 플러그인\" by. " + ChatColor.GREEN + "sugar_tree");
+        Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"" + I18NUtil.get("plugin_name") + "\" by. " + ChatColor.GREEN + "sugar_tree");
     }
 
     public boolean isSupported() {
@@ -101,17 +107,17 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (InventoryClass == null) {
+        if (InventoryManager == null) {
             return;
         }
-        for (UUID puuid : InventoryClass.getRegisteredPlayers()) {
+        for (UUID puuid : InventoryManager.getRegisteredPlayers()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
-                InventoryClass.invDisApply(p);
+                InventoryManager.disApplyInventory(p);
             }
         }
         Bukkit.getScheduler().cancelTask(listener.getTaskId());
-        FileManagerClass.save();
+        FileManager.save();
     }
 
     private boolean checkBukkit() {
