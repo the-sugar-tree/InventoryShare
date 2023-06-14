@@ -16,7 +16,18 @@
 package com.sugar_tree.inventoryshare.api;
 
 public interface IFileManager {
+    /**
+     * Save data to file
+     */
     void save();
+
+    /**
+     * Load data from file
+     */
     void load();
+
+    /**
+     * Delete old team files
+     */
     void deleteWasteFiles();
 }

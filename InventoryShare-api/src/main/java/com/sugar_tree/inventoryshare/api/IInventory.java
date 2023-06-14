@@ -23,11 +23,36 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface IInventory {
-
+    /**
+     * Apply all inventory to specific player
+     * @param p Player to apply
+     * @deprecated Do not directly refer this
+     */
+    @Deprecated
     void applyAllInventory(@NotNull Player p);
+
+    /**
+     * Disapply inventory to specific player
+     * @param p Player to disapply
+     */
     void disApplyInventory(@NotNull Player p);
+
+    /**
+     * Apply inventory to specific player automatically
+     * @param p Player to apply
+     */
     void applyInventory(@NotNull Player p);
+
+    /**
+     * Save player's inventory to list
+     * @param p Player to save
+     */
     void savePlayerInventory(@NotNull Player p);
+
+    /**
+     * used for plugin disenable logic
+     * @return saved player's uuid list
+     */
     Set<UUID> getRegisteredPlayers();
 
     /**
