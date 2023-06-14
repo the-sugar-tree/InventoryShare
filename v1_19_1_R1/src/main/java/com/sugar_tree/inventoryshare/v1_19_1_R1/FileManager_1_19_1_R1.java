@@ -69,7 +69,7 @@ public class FileManager_1_19_1_R1 implements FileManager {
 
         plugin.getConfig().set("inventory", inventory);
         plugin.getConfig().set("advancement", advancement);
-        plugin.getConfig().set("AnnounceDeath", AnnounceDeath);
+        plugin.getConfig().set("announcedeath", announcedeath);
         plugin.getConfig().set("teaminventory", teaminventory);
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
             if (team == null) continue;
@@ -144,8 +144,8 @@ public class FileManager_1_19_1_R1 implements FileManager {
         if (plugin.getConfig().contains("advancement")) {
             advancement = plugin.getConfig().getBoolean("advancement");
         }
-        if (plugin.getConfig().contains("AnnounceDeath")) {
-            AnnounceDeath = plugin.getConfig().getBoolean("AnnounceDeath");
+        if (plugin.getConfig().contains("announcedeath")) {
+            announcedeath = plugin.getConfig().getBoolean("announcedeath");
         }
         if (plugin.getConfig().contains("teaminventory")) {
             teaminventory = plugin.getConfig().getBoolean("teaminventory");
