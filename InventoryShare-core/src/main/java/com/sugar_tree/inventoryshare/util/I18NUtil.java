@@ -20,6 +20,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -137,19 +138,28 @@ public class I18NUtil {
             }
         }
         private static void updateFile(String locale) {
-            FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "\\languages\\lang_" + locale + ".yml"));
+            File file = new File(plugin.getDataFolder(), "\\languages\\lang_" + locale + ".yml");
+            FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             String version = fileConfiguration.getString("FILE_VERSION");
             if (!version.equals(plugin.getDescription().getVersion())) {
                 logger.warning("Updating Langauge File... [" + locale + "]");
-                Set<String> changed = fileConfiguration.getKeys(true);
-                InputStream is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_" + locale + ".yml"), "Default language file ("+ locale +") does not exist.");
+                InputStream is = InventoryShare.class.getResourceAsStream("/languages/lang_" + locale + ".yml");
+                if (is == null) {
+                    logger.severe("Default language file ("+ locale +") does not exist.");
+                    return;
+                }
                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
                 FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(isr);
-                for (String str : defaultConfig.getKeys(true)) {
-                    if (!changed.contains(str)) {
-                        fileConfiguration.set(str, defaultConfig.get(str));
+                for (String key : defaultConfig.getKeys(true)) {
+                    if (fileConfiguration.get(key) == null) {
+                        fileConfiguration.set(key, defaultConfig.get(key));
                     }
                 }
+            }
+            try {
+                fileConfiguration.save(file);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
