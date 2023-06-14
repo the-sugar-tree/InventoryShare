@@ -17,7 +17,7 @@ package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.util.AdvancementUtil;
 import com.sugar_tree.inventoryshare.util.I18NUtil;
-import com.sugar_tree.inventoryshare.util.Metrics;
+import com.sugar_tree.inventoryshare.metrics.Metrics;
 import com.sugar_tree.inventoryshare.util.ProtocolLibUtil;
 import com.sugar_tree.inventoryshare.v1_19_R3.FileManager_1_19_R3;
 import com.sugar_tree.inventoryshare.v1_19_R3.Inventory_1_19_R3;
@@ -34,8 +34,6 @@ import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
     @SuppressWarnings("FieldCanBeLocal")
-    private boolean isSupportedBukkit = false;
-    @SuppressWarnings("FieldCanBeLocal")
     private boolean isProtocolLib = false;
 
     private Listeners listener;
@@ -51,18 +49,12 @@ public final class InventoryShare extends JavaPlugin {
         I18NUtil.I18NFileManager.saveDefaultLanguageFiles();
         I18NUtil.init();
 
-        isSupportedBukkit = checkBukkit();
         isProtocolLib = checkProtocolLib();
         metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
         metrics.addCustomChart(new Metrics.SimplePie("single_version", () -> "v1_19_R3"));
         String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         if (!isSupported()) {
             logger.severe(I18NUtil.get("not_supported_version", version));
-            this.setEnabled(false);
-            return;
-        }
-        if (!isSupportedBukkit) {
-            this.getLogger().severe("이 플러그인은 Spigot, Paper 버킷만 지원합니다: " + Bukkit.getVersion());
             this.setEnabled(false);
             return;
         }
@@ -120,9 +112,6 @@ public final class InventoryShare extends JavaPlugin {
         FileManager.save();
     }
 
-    private boolean checkBukkit() {
-        return Bukkit.getVersion().contains("Paper") || Bukkit.getVersion().contains("Spigot");
-    }
     private boolean checkProtocolLib() {
         return getServer().getPluginManager().getPlugin("ProtocolLib") != null;
     }

@@ -90,9 +90,8 @@ public class Listeners implements Listener {
         if (announcedeath) {
             Location loc = event.getEntity().getLocation();
             World w = loc.getWorld();
-            Bukkit.broadcastMessage(PREFIX + ChatColor.RED + event.getEntity().getName() + "(이)가 [" + (w == null ? null : w.getName()) + "] x: "
-                    + loc.getBlockX() + ", y: " + loc.getBlockY() + ", z: " + loc.getBlockZ()
-                    + "에서 사망했습니다.");
+            Bukkit.broadcastMessage(PREFIX + I18NUtil.get("death_info", event.getEntity().getName(), (w == null ? null : w.getName()),
+                    loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
         }
     }
 
