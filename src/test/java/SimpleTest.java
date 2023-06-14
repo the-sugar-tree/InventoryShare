@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.util.Locale;
 
 @Slf4j
+@SuppressWarnings("ALL")
 public class SimpleTest {
 
     public static void main(String... args) throws IOException {
@@ -28,35 +29,8 @@ public class SimpleTest {
 
 //        checkLanguageConfig();
         log.info("test");
-        try {
-            new Task().start1().join();
-        } catch (InterruptedException e) {
-            try {
-                throw e;
-            } catch (InterruptedException ex) {
-                try {
-                    throw ex;
-                } catch (InterruptedException exc) {
-                    try {
-                        throw exc;
-                    } catch (InterruptedException interruptedException) {
-                        try {
-                            throw interruptedException;
-                        } catch (InterruptedException exception) {
-                            try {
-                                throw exception;
-                            } catch (InterruptedException e1) {
-                                try {
-                                    throw e1;
-                                } catch (InterruptedException e2) {
-                                    throw new RuntimeException(e2);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        String s = null;
+        System.out.println(s.equals("sads"));
         log.info("{}s elapsed", ((float) (System.currentTimeMillis() - startTime) / 1000));
     }
 

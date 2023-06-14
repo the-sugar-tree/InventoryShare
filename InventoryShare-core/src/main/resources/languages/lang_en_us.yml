@@ -1,4 +1,6 @@
 FILE_VERSION: '${version}'
+# If the base language file is not included in the plugin, an error may occur.
+
 # Use '§' for color code
 
 # Black (black)               §0  Dark Blue (dark_blue)	      §1
@@ -54,6 +56,9 @@ cmd_andeath_info: "Modify the current death coordinates display setting."
 cmd_teaminv_info: "Modify the current team item sharing setting."
 cmd_check_info: "Check the current settings."
 cmd_reload_config_info: "Reload the config file."
+
+# Death Message
+death_info: "§c%s has died at [%s] x: %d, y: %d, z: %d"
 
 # Update Info
 update_able: "Plugin update is available! Current version: v%s New version: %s"

@@ -64,7 +64,7 @@ public class I18NUtil {
         return get(key, false);
     }
 
-    public static String get(String key, String... args) {
+    public static String get(String key, Object... args) {
         return get(key, false, args);
     }
 
@@ -75,11 +75,11 @@ public class I18NUtil {
         else return s;
     }
 
-    public static String get(String key, boolean prefix, String... args) {
+    public static String get(String key, boolean prefix, Object... args) {
         String s;
         s = bundle.get(key);
-        if (prefix) return PREFIX + String.format(s, (Object[]) args);
-        else return String.format(s, (Object[]) args);
+        if (prefix) return PREFIX + String.format(s, args);
+        else return String.format(s, args);
     }
 
     private final static class Bundle {

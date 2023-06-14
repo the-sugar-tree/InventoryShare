@@ -55,6 +55,9 @@ cmd_teaminv_info: "현재 팀 아이템 공유 설정을 수정합니다."
 cmd_check_info: "현재 설정값들을 확인합니다."
 cmd_reload_config_info: "config 파일을 새로고침 합니다."
 
+# Death Message
+death_info: "§c%s(이)가 [%s] x: %d, y: %d, z: %d에서 사망했습니다."
+
 # Update Info
 update_able: "플러그인 업데이트가 가능합니다! 현재 버전: v%s 새 버전: %s"
 
