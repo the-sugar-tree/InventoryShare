@@ -72,15 +72,15 @@ public class I18NUtil {
     public static String get(boolean prefix, String key) {
         String s;
         s = bundle.get(key);
-        if (prefix) return PREFIX + s;
-        else return s;
+        if (prefix) return PREFIX + s + "§r";
+        else return s + "§r";
     }
 
     public static String get(boolean prefix, String key, Object... args) {
         String s;
         s = bundle.get(key);
-        if (prefix) return PREFIX + String.format(s, args);
-        else return String.format(s, args);
+        if (prefix) return PREFIX + String.format(s + "§r", args);
+        else return String.format(s + "§r", args);
     }
 
     private final static class Bundle {
