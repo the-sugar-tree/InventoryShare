@@ -62,21 +62,21 @@ public class I18NUtil {
     }
 
     public static String get(String key) {
-        return get(key, false);
+        return get(false, key);
     }
 
     public static String get(String key, Object... args) {
-        return get(key, false, args);
+        return get(false, key, args);
     }
 
-    public static String get(String key, boolean prefix) {
+    public static String get(boolean prefix, String key) {
         String s;
         s = bundle.get(key);
         if (prefix) return PREFIX + s;
         else return s;
     }
 
-    public static String get(String key, boolean prefix, Object... args) {
+    public static String get(boolean prefix, String key, Object... args) {
         String s;
         s = bundle.get(key);
         if (prefix) return PREFIX + String.format(s, args);

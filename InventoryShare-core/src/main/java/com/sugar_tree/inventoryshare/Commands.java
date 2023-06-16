@@ -47,7 +47,7 @@ public class Commands implements TabExecutor {
             switch (args[0].toLowerCase()) {
                 case "inventory":
                     if (args.length != 2) {
-                        sender.sendMessage(I18NUtil.get("inv_get", true, String.valueOf(inventory)));
+                        sender.sendMessage(I18NUtil.get(true, "inv_get", String.valueOf(inventory)));
                         break;
                     }
                     switch (args[1].toLowerCase()) {
@@ -57,25 +57,25 @@ public class Commands implements TabExecutor {
                                     InventoryManager.savePlayerInventory(p);
                                 }
                                 inventory = true;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get("inv_set", true, String.valueOf(inventory)));
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                                 for (Player p : Bukkit.getOnlinePlayers()) {
                                     InventoryManager.applyInventory(p);
                                     p.updateInventory();
                                 }
                             } else {
-                                sender.sendMessage(I18NUtil.get("inv_already_y", true));
+                                sender.sendMessage(I18NUtil.get(true, "inv_already_y"));
                             }
                             break;
                         case "false":
                             if (inventory) {
                                 inventory = false;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get("inv_set", true, String.valueOf(inventory)));
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                                 for (Player p : Bukkit.getOnlinePlayers()) {
                                     InventoryManager.disApplyInventory(p);
                                     p.updateInventory();
                                 }
                             } else {
-                                sender.sendMessage(I18NUtil.get("inv_already_n", true));
+                                sender.sendMessage(I18NUtil.get(true, "inv_already_n"));
                             }
                             break;
                         default:
@@ -84,24 +84,24 @@ public class Commands implements TabExecutor {
                     break;
                 case "advancement":
                     if (args.length != 2) {
-                        sender.sendMessage(I18NUtil.get("adv_get", true, String.valueOf(advancement)));
+                        sender.sendMessage(I18NUtil.get(true, "adv_get", String.valueOf(advancement)));
                         break;
                     }
                     switch (args[1].toLowerCase()) {
                         case "true":
                             if (!advancement) {
                                 advancement = true;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get("adv_set", true, String.valueOf(advancement)));
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "adv_set", String.valueOf(advancement)));
                             } else {
-                                sender.sendMessage(I18NUtil.get("adv_already_y", true));
+                                sender.sendMessage(I18NUtil.get(true, "adv_already_y"));
                             }
                             break;
                         case "false":
                             if (advancement) {
                                 advancement = false;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get("adv_set", true, String.valueOf(advancement)));
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "adv_set", String.valueOf(advancement)));
                             } else {
-                                sender.sendMessage(I18NUtil.get("adv_already_n", true));
+                                sender.sendMessage(I18NUtil.get(true, "adv_already_n"));
                             }
                             break;
                         default:
@@ -110,24 +110,24 @@ public class Commands implements TabExecutor {
                     break;
                 case "announcedeath":
                     if (args.length != 2) {
-                        sender.sendMessage(I18NUtil.get("andeath_get", true, String.valueOf(teaminventory)));
+                        sender.sendMessage(I18NUtil.get(true, "andeath_get", String.valueOf(teaminventory)));
                         break;
                     }
                     switch (args[1].toLowerCase()) {
                         case "true":
                             if (!announcedeath) {
                                 announcedeath = true;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get("andeath_set", true, String.valueOf(announcedeath)));
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "andeath_set", String.valueOf(announcedeath)));
                             } else {
-                                I18NUtil.get("andeath_already_y", true);
+                                I18NUtil.get(true, "andeath_already_y");
                             }
                             break;
                         case "false":
                             if (announcedeath) {
                                 announcedeath = false;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get("andeath_set", true, String.valueOf(announcedeath)));
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "andeath_set", String.valueOf(announcedeath)));
                             } else {
-                                I18NUtil.get("andeath_already_n", true);
+                                I18NUtil.get(true, "andeath_already_n");
                             }
                             break;
                         default:
@@ -136,14 +136,14 @@ public class Commands implements TabExecutor {
                     break;
                 case "teaminventory":
                     if (args.length != 2) {
-                        sender.sendMessage(I18NUtil.get("teaminv_get", true, String.valueOf(teaminventory)));
+                        sender.sendMessage(I18NUtil.get(true, "teaminv_get", String.valueOf(teaminventory)));
                         break;
                     }
                     switch (args[1].toLowerCase()) {
                         case "true":
                             if (!teaminventory) {
                                 teaminventory = true;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get("teaminv_set", true, String.valueOf(teaminventory)));
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
                                 if (inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
                                         InventoryManager.applyInventory(p);
@@ -151,13 +151,13 @@ public class Commands implements TabExecutor {
                                     }
                                 }
                             } else {
-                                sender.sendMessage(I18NUtil.get("teaminv_already_y", true));
+                                sender.sendMessage(I18NUtil.get(true, "teaminv_already_y"));
                             }
                             break;
                         case "false":
                             if (teaminventory) {
                                 teaminventory = false;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get("teaminv_set", true, String.valueOf(teaminventory)));
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
                                 if (inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
                                         InventoryManager.applyInventory(p);
@@ -165,7 +165,7 @@ public class Commands implements TabExecutor {
                                     }
                                 }
                             } else {
-                                sender.sendMessage(I18NUtil.get("teaminv_already_n", true));
+                                sender.sendMessage(I18NUtil.get(true, "teaminv_already_n"));
                             }
                             break;
                         default:
@@ -184,7 +184,7 @@ public class Commands implements TabExecutor {
                     if (plugin.getConfig().contains("teaminventory")) teaminventory = plugin.getConfig().getBoolean("teaminventory");
                     I18NUtil.reload();
                     updateUsageMessage();
-                    sender.sendMessage(I18NUtil.get("config_reloaded", true));
+                    sender.sendMessage(I18NUtil.get(true, "config_reloaded"));
                     break;
                 case "check":
                     sender.sendMessage(check);
