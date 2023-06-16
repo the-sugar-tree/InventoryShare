@@ -39,22 +39,32 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Assign shared variable
         plugin = this;
         logger = getLogger();
 
+        // Load language model(s)
         I18NUtil.I18NFileManager.saveDefaultLanguageFiles();
         I18NUtil.init();
-
+        // Store an inaccessible language variable in a shared variable in advance.
         I18N_TEAM_SAVED = I18NUtil.get("team_saved");
         I18N_TEAM_LOADED = I18NUtil.get("team_loaded");
+
+        // Metrics https://bstats.org/plugin/bukkit/InventoryShare/18372
         Metrics metrics = new Metrics(this, 18372);
         metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
+
+        // Check Update
         UpdateUtil.checkUpdate();
+
+        // Check version
         if (!VersionUtil.isSupported()) {
             logger.severe(I18NUtil.get("not_supported_version", VersionUtil.getVersion().name()));
             this.setEnabled(false);
             return;
         }
+
+        // Check the server is using ProtocolLib plugin
         if (isProtocolLib) {
             ProtocolLibUtil.ProtocolLib();
             logger.info(I18NUtil.get("protocolLib_found"));
@@ -64,22 +74,30 @@ public final class InventoryShare extends JavaPlugin {
             logger.info("https://www.spigotmc.org/resources/protocollib.1997");
         }
 
+        // Load NMS contents
+        // FileManager, InventoryManager are loaded here
         if (!NMSLoader.init()) {
+            // if NOT supported version or unexpected exception occurs
             this.setEnabled(false);
             return;
         }
 
+        // Load files
         invfile = new File(getDataFolder(), "inventory.yml");
         advfile = new File(getDataFolder(), "advancements.yml");
         invconfig = YamlConfiguration.loadConfiguration(invfile);
         advconfig = YamlConfiguration.loadConfiguration(advfile);
         saveDefaultConfigs();
+        FileManager.load();
+
+        // Load commands and Listeners
         TabExecutor commands = new Commands();
         getCommand("inventoryshare").setExecutor(commands);
         getCommand("inventoryshare").setTabCompleter(commands);
         listener = new Listeners();
         Bukkit.getPluginManager().registerEvents(listener, this);
-        FileManager.load();
+
+        // if the server is reloaded
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (inventory) InventoryManager.applyInventory(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
