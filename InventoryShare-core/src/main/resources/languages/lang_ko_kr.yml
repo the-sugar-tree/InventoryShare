@@ -64,3 +64,5 @@ update_able: "플러그인 업데이트가 가능합니다! 현재 버전: v%s �
 # File load Info
 team_saved: "팀이 저장되었습니다: "
 team_loaded: "팀이 로드되었습니다: "
+
+update_error: "업데이트 서버에 연결하는 과정에서 오류가 발생했습니다: %s"

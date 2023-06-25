@@ -66,3 +66,5 @@ update_able: "Plugin update is available! Current version: v%s New version: %s"
 # File load Info
 team_saved: "Team has been saved: "
 team_loaded: "Team has been loaded: "
+
+update_error: "An error occurred while connecting to the update server: %s"

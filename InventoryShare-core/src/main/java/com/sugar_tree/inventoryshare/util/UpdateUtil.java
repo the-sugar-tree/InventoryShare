@@ -15,8 +15,8 @@
  */
 package com.sugar_tree.inventoryshare.util;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
+import java.net.*;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.logger;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
@@ -28,8 +28,8 @@ public class UpdateUtil {
             URL url = new URL("https://github.com/the-sugar-tree/InventoryShare/releases/latest");
             String urls = getFinalURL(url).toString();
             version = urls.substring(urls.lastIndexOf('/') + 1);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            logger.severe(I18NUtil.get("update_error", e.getMessage()));
         }
 
         if (!("v"+plugin.getDescription().getVersion()).equals(version)) {
@@ -58,8 +58,11 @@ public class UpdateUtil {
                 }
                 return getFinalURL(new URL(Location));
             }
-        } catch (Exception e) {
+        } catch (UnknownHostException | SocketTimeoutException | ConnectException e) {
+            logger.severe(I18NUtil.get("update_error", e.getMessage()));
             System.out.println(e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return url;
     }

@@ -47,7 +47,7 @@ public class NMSLoader {
     protected static final String PATH_FIELD_emptyItem;
     protected static final String version;
     protected static final String PATH_METHOD_getNameSpacedKey;
-    //*****************************************************************************************************************//
+//*****************************************************************************************************************//
     protected static final String PATH_CLASS_EntityPlayer;
     protected static final String PATH_CLASS_CraftPlayer;
     protected static final boolean DOES_INVENTORY_USE_FIELD;
@@ -66,7 +66,7 @@ public class NMSLoader {
         PATH_FIELD_emptyItem = VersionUtil.getVersion().getPATH_FIELD_emptyItem();
         version = VersionUtil.getVersion().name();
         PATH_METHOD_getNameSpacedKey = VersionUtil.getVersion().getPATH_METHOD_getNameSpacedKey();
-        //*****************************************************************************************************************//
+//*****************************************************************************************************************//
         PATH_CLASS_EntityPlayer = VersionUtil.getVersion().getPATH_CLASS_EntityPlayer();
         PATH_CLASS_CraftPlayer = VersionUtil.getVersion().getPATH_CLASS_CraftPlayer();
         DOES_INVENTORY_USE_FIELD = VersionUtil.getVersion().getDOES_INVENTORY_USE_FIELD();
@@ -86,7 +86,7 @@ public class NMSLoader {
             FileManager = new FileManager();
             InventoryManager = new InventoryManager();
         } catch (ExceptionInInitializerError e) {
-            logger.severe("Error while loading Classes");
+            logger.severe("An error occurred while loading the classes!");
             e.printStackTrace();
             return false;
         }
@@ -118,6 +118,7 @@ public class NMSLoader {
 
         static {
             try {
+                // Load Reflections
                 ItemStack = Class.forName(PATH_CLASS_ItemStack);
                 NonNullList = Class.forName(PATH_CLASS_NonNullList);
                 createItemList = NonNullList.getDeclaredMethod(PATH_METHOD_createItemlist, int.class, Object.class);
