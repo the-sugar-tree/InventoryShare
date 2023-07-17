@@ -38,6 +38,8 @@ public class VersionUtil {
     }
 
     public enum SupportedVersions {
+        v1_20_R1(ImmutableSet.of("1.20-R0.1-SNAPSHOT", "1.20.1-R0.1-SNAPSHOT"),
+                "fN", "i", "j", "k", "o"),
         v1_19_R3(ImmutableSet.of("1.19.4-R0.1-SNAPSHOT"),
                 "fJ", "i", "j", "k", "o"),
         v1_19_R2(ImmutableSet.of("1.19.3-R0.1-SNAPSHOT"),
