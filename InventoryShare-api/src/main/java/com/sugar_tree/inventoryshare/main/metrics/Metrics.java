@@ -14,7 +14,7 @@
  *
  * Violations will result in a ban of your plugin and account from bStats.
  */
-package com.sugar_tree.inventoryshare.metrics;
+package com.sugar_tree.inventoryshare.main.metrics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

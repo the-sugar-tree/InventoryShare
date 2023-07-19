@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare;
+package com.sugar_tree.inventoryshare.main;
 
-import com.sugar_tree.inventoryshare.util.I18NUtil;
+import com.sugar_tree.inventoryshare.main.util.I18NUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -34,8 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.sugar_tree.inventoryshare.util.AdvancementUtil.AdvancementPatch;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
+import static com.sugar_tree.inventoryshare.main.util.AdvancementUtil.AdvancementPatch;
 
 public class Listeners implements Listener {
 

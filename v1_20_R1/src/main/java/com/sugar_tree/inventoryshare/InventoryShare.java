@@ -15,12 +15,14 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.util.AdvancementUtil;
-import com.sugar_tree.inventoryshare.util.I18NUtil;
-import com.sugar_tree.inventoryshare.metrics.Metrics;
-import com.sugar_tree.inventoryshare.util.ProtocolLibUtil;
-import com.sugar_tree.inventoryshare.v1_19_R3.FileManager_1_19_R3;
-import com.sugar_tree.inventoryshare.v1_19_R3.Inventory_1_19_R3;
+import com.sugar_tree.inventoryshare.main.Commands;
+import com.sugar_tree.inventoryshare.main.Listeners;
+import com.sugar_tree.inventoryshare.main.metrics.Metrics;
+import com.sugar_tree.inventoryshare.main.util.AdvancementUtil;
+import com.sugar_tree.inventoryshare.main.util.I18NUtil;
+import com.sugar_tree.inventoryshare.main.util.ProtocolLibUtil;
+import com.sugar_tree.inventoryshare.v1_20_R1.FileManager_1_20_R1;
+import com.sugar_tree.inventoryshare.v1_20_R1.Inventory_1_20_R1;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,7 +40,7 @@ public final class InventoryShare extends JavaPlugin {
 
     private Listeners listener;
 
-    final String supportedVersion = "v1_19_R3";
+    final String supportedVersion = "v1_20_R1";
 
     @Override
     public void onEnable() {
@@ -51,7 +53,7 @@ public final class InventoryShare extends JavaPlugin {
 
         isProtocolLib = checkProtocolLib();
         metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
-        metrics.addCustomChart(new Metrics.SimplePie("single_version", () -> "v1_19_R3"));
+        metrics.addCustomChart(new Metrics.SimplePie("single_version", () -> supportedVersion));
         String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         if (!isSupported()) {
             logger.severe(I18NUtil.get("not_supported_version", version));
@@ -67,8 +69,8 @@ public final class InventoryShare extends JavaPlugin {
             logger.info("https://www.spigotmc.org/resources/protocollib.1997");
         }
         if (isSupported()) {
-            InventoryManager = new Inventory_1_19_R3();
-            FileManager = new FileManager_1_19_R3();
+            InventoryManager = new Inventory_1_20_R1();
+            FileManager = new FileManager_1_20_R1();
         } else {
             logger.severe("알 수 없는 오류로 이 버전을 지원하지 않습니다!");
             this.setEnabled(false);

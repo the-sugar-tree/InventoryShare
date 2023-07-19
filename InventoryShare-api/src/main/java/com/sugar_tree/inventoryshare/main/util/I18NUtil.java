@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.util;
+package com.sugar_tree.inventoryshare.main.util;
 
-import com.sugar_tree.inventoryshare.InventoryShare;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -27,6 +26,7 @@ import java.nio.file.NoSuchFileException;
 import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
+import static jdk.xml.internal.SecuritySupport.getResourceAsStream;
 
 public class I18NUtil {
 
@@ -97,9 +97,9 @@ public class I18NUtil {
             Locale systemLocale = Locale.getDefault();
             InputStream is;
             if (systemLocale.equals(Locale.KOREA) || systemLocale.equals(Locale.KOREAN)) {
-                is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_ko_kr.yml"), "Default language file (en_us) does not exist.");
+                is = Objects.requireNonNull(getResourceAsStream("/languages/lang_ko_kr.yml"), "Default language file (en_us) does not exist.");
             } else {
-                is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_en_us.yml"), "Default language file (ko_kr) does not exist.");
+                is = Objects.requireNonNull(getResourceAsStream("/languages/lang_en_us.yml"), "Default language file (ko_kr) does not exist.");
             }
             InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
             return new Bundle(YamlConfiguration.loadConfiguration(isr));
@@ -142,7 +142,7 @@ public class I18NUtil {
             if (!version.equals(plugin.getDescription().getVersion())) {
                 logger.warning("Updating Langauge File... [" + locale + "]");
                 Set<String> changed = fileConfiguration.getKeys(true);
-                InputStream is = Objects.requireNonNull(InventoryShare.class.getResourceAsStream("/languages/lang_" + locale + ".yml"), "Default language file ("+ locale +") does not exist.");
+                InputStream is = Objects.requireNonNull(getResourceAsStream("/languages/lang_" + locale + ".yml"), "Default language file ("+ locale +") does not exist.");
                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
                 FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(isr);
                 for (String str : defaultConfig.getKeys(true)) {

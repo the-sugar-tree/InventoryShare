@@ -2,7 +2,6 @@ allprojects {
     apply plugin: 'java'
 
     group = 'com.sugar_tree.inventoryshare'
-    version = '1.19.4'
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'

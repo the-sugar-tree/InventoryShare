@@ -1,4 +1,23 @@
+version = '1.20.1'
+
 dependencies {
     compileOnly 'org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT'
-    compileOnly project(':InventoryShare-api')
+    implementation project(':InventoryShare-api')
+}
+
+jar {
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = 'EXCLUDE'
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+    filesMatching('languages/*.yml') {
+        expand props
+    }
 }
