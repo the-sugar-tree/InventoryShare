@@ -1,6 +1,10 @@
 # 인벤토리 공유 플러그인 (v3.1)
 
-## 1.20 Support
+## Change Log   
+1.20 Support
+
+---
+
 
 <span style="color:red">
     <b>먼저 README파일(아래)를 다 읽어주세요!!!</b>
