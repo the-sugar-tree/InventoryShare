@@ -30,11 +30,13 @@ compileJava.enabled(false)
 dependencies {
     implementation project(':InventoryShare-core')
 
-    testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
     testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+
+    testCompileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+//    testCompileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
 }
 
 jar {
