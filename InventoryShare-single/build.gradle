@@ -1,0 +1,56 @@
+allprojects {
+    apply plugin: 'java'
+
+    group = 'com.sugar_tree.inventoryshare'
+    version = '3.1'
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    compileJava.options.encoding = 'UTF-8'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven {
+            name = 'dmulloy2(ProtocolLib)-repo'
+            url "https://repo.dmulloy2.net/repository/public/"
+        }
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok:1.18.26'
+        annotationProcessor 'org.projectlombok:lombok:1.18.26'
+        compileOnly 'org.jetbrains:annotations:23.0.0'
+    }
+
+    processResources {
+        def props = [version: version]
+        inputs.properties props
+        filteringCharset 'UTF-8'
+        filesMatching('plugin.yml') {
+            expand props
+        }
+        filesMatching('languages/*.yml') {
+            expand props
+        }
+    }
+
+    jar {
+        from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+        duplicatesStrategy = 'EXCLUDE'
+
+        doLast {
+            copy {
+                from("build/libs") {
+                    include '*.jar'
+                    exclude "InventoryShare-api-${version}.jar"
+                }
+                into(rootProject.file("build/libs"))
+            }
+        }
+    }
+}
+
+jar.enabled(false)
+compileJava.enabled(false)

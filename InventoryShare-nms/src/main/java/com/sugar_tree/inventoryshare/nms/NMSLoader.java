@@ -87,6 +87,7 @@ public class NMSLoader {
             InventoryManager = new InventoryManager();
         } catch (ExceptionInInitializerError e) {
             logger.severe("An error occurred while loading the classes!");
+            logger.severe("This is NOT EXPECTED ERROR! Report this issue!");
             e.printStackTrace();
             return false;
         }
