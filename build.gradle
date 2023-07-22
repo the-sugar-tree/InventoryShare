@@ -3,6 +3,7 @@ allprojects {
 
     group = 'com.sugar_tree.inventoryshare'
     version = '3.1.1-beta'
+    description = 'Minecraft Plugin'
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'

@@ -1,0 +1,31 @@
+{
+  "loader": {
+    "name": "java_plain",
+    "version": "1.0"
+  },
+  "license": "GPL-3.0",
+  "plugins": [
+    {
+      "id": "inventoryshare",
+      "name": "InventoryShare",
+      "version": "${version}",
+      "entrypoint": "com.sugar_tree.inventoryshare.Inventoryshare",
+      "description": "A plugin for sharing inventory",
+      "links": {
+        "homepage": "https://github.com/the-sugar-tree/InventoryShare"
+      },
+      "contributors": [
+        {
+          "name": "sugar_tree",
+          "description": "Developer"
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "spongeapi",
+          "version": "8.0.0"
+        }
+      ]
+    }
+  ]
+}

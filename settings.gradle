@@ -4,3 +4,6 @@ include 'InventoryShare-single'
 include 'InventoryShare-single:v1_20_R1'
 findProject(':InventoryShare-single:v1_20_R1')?.name = 'v1_20_R1'
 include 'InventoryShare-single:InventoryShare-api'
+include 'InventoryShare-sponge'
+include 'InventoryShare-sponge'
+

@@ -1,5 +1,6 @@
 name: InventoryShare
 version: '${version}'
+description: A plugin for sharing inventory
 main: com.sugar_tree.inventoryshare.InventoryShare
 website: https://github.com/the-sugar-tree/InventoryShare
 api-version: 1.13
