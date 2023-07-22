@@ -18,7 +18,7 @@ package com.sugar_tree.inventoryshare.nms;
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.interfaces.IFileManager;
 import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
-import com.sugar_tree.inventoryshare.nms.util.VersionUtil;
+import com.sugar_tree.inventoryshare.nms.utils.VersionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;

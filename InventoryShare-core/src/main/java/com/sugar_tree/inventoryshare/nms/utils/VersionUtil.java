@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.nms.util;
+package com.sugar_tree.inventoryshare.nms.utils;
 
 import com.google.common.collect.ImmutableSet;
 import com.sugar_tree.inventoryshare.SharedConstants;
