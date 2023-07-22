@@ -2,3 +2,7 @@ dependencies {
     compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0"
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
 }
+
+jar.actions.removeIf {
+    (it.properties.get("displayName") == "Execute doLast {} action")
+}

@@ -23,13 +23,23 @@ allprojects {
         annotationProcessor 'org.projectlombok:lombok:1.18.26'
         compileOnly 'org.jetbrains:annotations:23.0.0'
     }
+
+    jar {
+        doLast {
+            copy {
+                from("build/libs") {
+                    include '*.jar'
+                }
+                into(rootProject.file("build/libs"))
+            }
+        }
+    }
 }
 
+jar.enabled(false)
 compileJava.enabled(false)
 
 dependencies {
-    implementation project(':InventoryShare-Bukkit')
-
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
     testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'

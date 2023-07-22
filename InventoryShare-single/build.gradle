@@ -14,16 +14,6 @@ allprojects {
     jar {
         from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
         duplicatesStrategy = 'EXCLUDE'
-
-        doLast {
-            copy {
-                from("build/libs") {
-                    include '*.jar'
-                    exclude "InventoryShare-api-${version}.jar"
-                }
-                into(rootProject.file("build/libs"))
-            }
-        }
     }
 }
 
