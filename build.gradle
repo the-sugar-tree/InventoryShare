@@ -28,7 +28,7 @@ allprojects {
 compileJava.enabled(false)
 
 dependencies {
-    implementation project(':InventoryShare-core')
+    implementation project(':InventoryShare-Bukkit')
 
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
