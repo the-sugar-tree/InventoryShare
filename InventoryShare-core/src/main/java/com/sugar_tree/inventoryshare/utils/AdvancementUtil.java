@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.util;
+package com.sugar_tree.inventoryshare.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.sugar_tree.inventoryshare.api.SharedConstants.advancement;
-import static com.sugar_tree.inventoryshare.api.SharedConstants.advlist;
+import static com.sugar_tree.inventoryshare.SharedConstants.advancement;
+import static com.sugar_tree.inventoryshare.SharedConstants.advlist;
 
 public class AdvancementUtil {
 

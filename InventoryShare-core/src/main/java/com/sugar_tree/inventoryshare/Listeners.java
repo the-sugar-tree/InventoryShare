@@ -15,7 +15,7 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.util.I18NUtil;
+import com.sugar_tree.inventoryshare.utils.I18NUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -34,8 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.sugar_tree.inventoryshare.util.AdvancementUtil.AdvancementPatch;
-import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
+import static com.sugar_tree.inventoryshare.utils.AdvancementUtil.AdvancementPatch;
+import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public class Listeners implements Listener {
 

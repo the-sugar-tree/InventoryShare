@@ -16,7 +16,7 @@
 package com.sugar_tree.inventoryshare.nms.util;
 
 import com.google.common.collect.ImmutableSet;
-import com.sugar_tree.inventoryshare.api.SharedConstants;
+import com.sugar_tree.inventoryshare.SharedConstants;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 

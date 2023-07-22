@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.util;
+package com.sugar_tree.inventoryshare.utils;
 
 import java.io.IOException;
 import java.net.*;
 
-import static com.sugar_tree.inventoryshare.api.SharedConstants.logger;
-import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
+import static com.sugar_tree.inventoryshare.SharedConstants.logger;
+import static com.sugar_tree.inventoryshare.SharedConstants.plugin;
 
 public class UpdateUtil {
     private static String version;

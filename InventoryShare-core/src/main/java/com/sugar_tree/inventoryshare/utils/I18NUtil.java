@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.util;
+package com.sugar_tree.inventoryshare.utils;
 
 import com.sugar_tree.inventoryshare.InventoryShare;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
 
-import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
+import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public class I18NUtil {
 

@@ -15,7 +15,7 @@
  */
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.util.I18NUtil;
+import com.sugar_tree.inventoryshare.utils.I18NUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
+import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public class Commands implements TabExecutor {
 

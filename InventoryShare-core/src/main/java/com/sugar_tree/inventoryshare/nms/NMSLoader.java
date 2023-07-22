@@ -16,8 +16,8 @@
 package com.sugar_tree.inventoryshare.nms;
 
 import com.google.common.collect.ImmutableList;
-import com.sugar_tree.inventoryshare.api.IFileManager;
-import com.sugar_tree.inventoryshare.api.IInventoryManager;
+import com.sugar_tree.inventoryshare.interfaces.IFileManager;
+import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
 import com.sugar_tree.inventoryshare.nms.util.VersionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.*;
 
-import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
+import static com.sugar_tree.inventoryshare.SharedConstants.*;
 import static com.sugar_tree.inventoryshare.nms.NMSLoader.FileManager.*;
 
 public class NMSLoader {

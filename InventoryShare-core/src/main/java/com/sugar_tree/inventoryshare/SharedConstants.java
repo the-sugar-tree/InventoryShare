@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.api;
+package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.interfaces.IFileManager;
+import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;

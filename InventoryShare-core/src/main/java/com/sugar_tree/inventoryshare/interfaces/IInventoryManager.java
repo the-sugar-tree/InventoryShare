@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sugar_tree.inventoryshare.api;
+package com.sugar_tree.inventoryshare.interfaces;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

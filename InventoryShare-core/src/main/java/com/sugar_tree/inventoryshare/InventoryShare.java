@@ -18,7 +18,10 @@ package com.sugar_tree.inventoryshare;
 import com.sugar_tree.inventoryshare.metrics.Metrics;
 import com.sugar_tree.inventoryshare.nms.NMSLoader;
 import com.sugar_tree.inventoryshare.nms.util.VersionUtil;
-import com.sugar_tree.inventoryshare.util.*;
+import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
+import com.sugar_tree.inventoryshare.utils.I18NUtil;
+import com.sugar_tree.inventoryshare.utils.ProtocolLibUtil;
+import com.sugar_tree.inventoryshare.utils.UpdateUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.TabExecutor;
@@ -29,7 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.UUID;
 
-import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
+import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
 
