@@ -1,11 +1,5 @@
-allprojects {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-}
-
 dependencies {
-    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0"
-    compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+    compileOnly 'dev.folia:folia-api:1.20.1-R0.1-SNAPSHOT'
 }
 
 jar {

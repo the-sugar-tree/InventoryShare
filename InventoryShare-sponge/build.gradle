@@ -1,13 +1,5 @@
-plugins {
-    id 'java'
-}
-
 repositories {
     mavenCentral()
-    maven {
-        name = 'sponge-repo'
-        url = 'https://repo.spongepowered.org/repository/maven-public/'
-    }
 }
 
 dependencies {
