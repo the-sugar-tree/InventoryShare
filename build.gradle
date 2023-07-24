@@ -2,8 +2,6 @@ plugins {
     id ("org.cadixdev.licenser") version "0.6.1"
 }
 
-defaultTasks 'licenseFormat', 'build'
-
 allprojects {
     apply plugin: 'java'
     apply plugin: 'org.cadixdev.licenser'
@@ -21,23 +19,20 @@ allprojects {
         mavenCentral()
         mavenLocal()
         maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        maven {
-            name = "spigotmc-repo"
-            url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+            name 'spigotmc-repo'
+            url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
         }
         maven {
             name 'papermc-repo'
-            url = "https://repo.papermc.io/repository/maven-public/"
+            url = 'https://repo.papermc.io/repository/maven-public/'
         }
         maven {
             name 'sponge-repo'
-            url = "https://repo.spongepowered.org/repository/maven-public/"
+            url 'https://repo.spongepowered.org/repository/maven-public/'
         }
         maven {
             name 'dmulloy2(ProtocolLib)-repo'
-            url = "https://repo.dmulloy2.net/repository/public/"
+            url 'https://repo.dmulloy2.net/repository/public/'
         }
     }
 
@@ -72,6 +67,7 @@ allprojects {
     jar.dependsOn('licenseFormat')
 }
 
+test.enabled(false)
 jar.enabled(false)
 compileJava.enabled(false)
 
