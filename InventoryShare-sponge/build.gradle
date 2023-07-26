@@ -2,6 +2,30 @@ repositories {
     mavenCentral()
 }
 
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
 dependencies {
     compileOnly 'org.spongepowered:spongeapi:8.0.0'
+
+    implementation "net.kyori:adventure-api:4.14.0"
+    compileOnly 'org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT:remapped-mojang'
+}
+
+//jar {
+//    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+//    duplicatesStrategy = 'EXCLUDE'
+//}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('META-INF/sponge_plugins.json') {
+        expand props
+    }
+    filesMatching('languages/*.yml') {
+        expand props
+    }
 }

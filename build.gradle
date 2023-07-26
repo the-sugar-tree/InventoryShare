@@ -24,7 +24,7 @@ allprojects {
         }
         maven {
             name 'papermc-repo'
-            url = 'https://repo.papermc.io/repository/maven-public/'
+            url 'https://repo.papermc.io/repository/maven-public/'
         }
         maven {
             name 'sponge-repo'
@@ -33,6 +33,9 @@ allprojects {
         maven {
             name 'dmulloy2(ProtocolLib)-repo'
             url 'https://repo.dmulloy2.net/repository/public/'
+        }
+        maven {
+            url 'https://libraries.minecraft.net/'
         }
     }
 
