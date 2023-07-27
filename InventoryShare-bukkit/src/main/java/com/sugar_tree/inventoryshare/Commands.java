@@ -65,7 +65,6 @@ public class Commands implements TabExecutor {
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                                 for (Player p : Bukkit.getOnlinePlayers()) {
                                     InventoryManager.applyInventory(p);
-                                    p.updateInventory();
                                 }
                             } else {
                                 sender.sendMessage(I18NUtil.get(true, "inv_already_y"));
@@ -77,7 +76,6 @@ public class Commands implements TabExecutor {
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                                 for (Player p : Bukkit.getOnlinePlayers()) {
                                     InventoryManager.disApplyInventory(p);
-                                    p.updateInventory();
                                 }
                             } else {
                                 sender.sendMessage(I18NUtil.get(true, "inv_already_n"));
@@ -152,7 +150,6 @@ public class Commands implements TabExecutor {
                                 if (inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
                                         InventoryManager.applyInventory(p);
-                                        p.updateInventory();
                                     }
                                 }
                             } else {
@@ -166,7 +163,6 @@ public class Commands implements TabExecutor {
                                 if (inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
                                         InventoryManager.applyInventory(p);
-                                        p.updateInventory();
                                     }
                                 }
                             } else {

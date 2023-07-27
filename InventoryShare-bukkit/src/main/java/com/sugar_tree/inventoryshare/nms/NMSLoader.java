@@ -468,10 +468,12 @@ public class NMSLoader {
             try {
                 if (!(teaminventory)) {
                     applyAllInventory(p);
+                    p.updateInventory();
                     return;
                 }
                 if (plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p) == null) {
                     applyAllInventory(p);
+                    p.updateInventory();
                     return;
                 }
                 String teamName = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p).getName();
@@ -508,6 +510,7 @@ public class NMSLoader {
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
+                p.updateInventory();
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
