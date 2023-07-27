@@ -21,6 +21,7 @@
 package com.sugar_tree.inventoryshare.utils;
 
 import com.sugar_tree.inventoryshare.InventoryShare;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -77,15 +78,15 @@ public class I18NUtil {
     public static String get(boolean prefix, String key) {
         String s;
         s = bundle.get(key);
-        if (prefix) return PREFIX + s + "§r";
-        else return s + "§r";
+        if (prefix) return PREFIX + s + ChatColor.RESET;
+        else return s + ChatColor.RESET;
     }
 
     public static String get(boolean prefix, String key, Object... args) {
         String s;
         s = bundle.get(key);
-        if (prefix) return PREFIX + String.format(s + "§r", args);
-        else return String.format(s + "§r", args);
+        if (prefix) return PREFIX + String.format(s + ChatColor.RESET, args);
+        else return String.format(s + ChatColor.RESET, args);
     }
 
     private final static class Bundle {
