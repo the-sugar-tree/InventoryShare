@@ -76,17 +76,35 @@ public class I18NUtil {
     }
 
     public static String get(boolean prefix, String key) {
-        String s;
-        s = bundle.get(key);
-        if (prefix) return PREFIX + s + ChatColor.RESET;
-        else return s + ChatColor.RESET;
+        return get(prefix, true, key);
     }
 
     public static String get(boolean prefix, String key, Object... args) {
+        return get(prefix, true, key, args);
+    }
+
+    public static String get(boolean prefix, boolean hasResetChar, String key) {
         String s;
         s = bundle.get(key);
-        if (prefix) return PREFIX + String.format(s + ChatColor.RESET, args);
-        else return String.format(s + ChatColor.RESET, args);
+        if (hasResetChar) {
+            if (prefix) return PREFIX + s + ChatColor.RESET;
+            else return s + ChatColor.RESET;
+        } else {
+            if (prefix) return PREFIX + s;
+            else return s;
+        }
+    }
+
+    public static String get(boolean prefix, boolean hasResetChar, String key, Object... args) {
+        String s;
+        s = bundle.get(key);
+        if (hasResetChar) {
+            if (prefix) return PREFIX + String.format(s + ChatColor.RESET, args);
+            else return String.format(s + ChatColor.RESET, args);
+        } else {
+            if (prefix) return PREFIX + String.format(s, args);
+            else return String.format(s, args);
+        }
     }
 
     private final static class Bundle {

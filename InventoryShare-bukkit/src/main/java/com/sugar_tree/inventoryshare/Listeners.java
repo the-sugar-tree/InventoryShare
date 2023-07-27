@@ -56,7 +56,8 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \""+ I18NUtil.get("plugin_name") +"\" by." + ChatColor.GREEN + "sugar_tree");
+        event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \""+ I18NUtil.get("plugin_name")
+                + ChatColor.YELLOW + "\" by." + ChatColor.GREEN + "sugar_tree");
         InventoryManager.savePlayerInventory(event.getPlayer());
         if (inventory) InventoryManager.applyInventory(event.getPlayer());
         AdvancementPatch(event.getPlayer());

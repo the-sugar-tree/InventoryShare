@@ -81,7 +81,7 @@ dependencies {
     testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 
-    testCompileOnly 'org.spigotmc:spigot:1.13-R0.1-SNAPSHOT'
+    testImplementation 'org.spigotmc:spigot:1.13-R0.1-SNAPSHOT'
 //    testCompileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
 }
 

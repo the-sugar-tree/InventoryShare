@@ -55,8 +55,8 @@ public final class InventoryShare extends JavaPlugin {
         I18NUtil.I18NFileManager.saveDefaultLanguageFiles();
         I18NUtil.init();
         // Store an inaccessible language variable in a shared variable in advance.
-        I18N_TEAM_SAVED = I18NUtil.get("team_saved");
-        I18N_TEAM_LOADED = I18NUtil.get("team_loaded");
+        I18N_TEAM_SAVED = I18NUtil.get(false, false, "team_saved");
+        I18N_TEAM_LOADED = I18NUtil.get(false, false, "team_loaded");
 
         // Metrics https://bstats.org/plugin/bukkit/InventoryShare/18372
         Metrics metrics = new Metrics(this, 18372);
@@ -67,7 +67,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Check version
         if (!VersionUtil.isSupported()) {
-            logger.severe(I18NUtil.get("not_supported_version", VersionUtil.getVersion().name()));
+            logger.severe(I18NUtil.get(false, false, "not_supported_version", VersionUtil.getVersion().name()));
             this.setEnabled(false);
             return;
         }
@@ -75,10 +75,10 @@ public final class InventoryShare extends JavaPlugin {
         // Check the server is using ProtocolLib plugin
         if (isProtocolLib) {
             ProtocolLibUtil.ProtocolLib();
-            logger.info(I18NUtil.get("protocolLib_found"));
+            logger.info(I18NUtil.get(false, false, "protocolLib_found"));
         } else {
-            logger.info(I18NUtil.get("protocolLib_need1"));
-            logger.info(I18NUtil.get("protocolLib_need2"));
+            logger.info(I18NUtil.get(false, false, "protocolLib_need1"));
+            logger.info(I18NUtil.get(false, false, "protocolLib_need2"));
             logger.info("https://www.spigotmc.org/resources/protocollib.1997");
         }
 
@@ -111,7 +111,7 @@ public final class InventoryShare extends JavaPlugin {
             getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
         }
 
-        Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"" + I18NUtil.get("plugin_name") + "\" by. " + ChatColor.GREEN + "sugar_tree");
+        Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"" + I18NUtil.get(false, false, "plugin_name") + "\" by. " + ChatColor.GREEN + "sugar_tree");
     }
 
     @Override

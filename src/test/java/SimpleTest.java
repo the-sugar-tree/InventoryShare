@@ -36,6 +36,8 @@ public class SimpleTest {
 
     public static void main(String... args) throws IOException {
         long startTime = System.currentTimeMillis();
+        String test = "testabc&r";
+        System.out.println(test.substring(0, test.length()-2));
 
         /*
         Properties properties = System.getProperties();
@@ -49,8 +51,6 @@ public class SimpleTest {
 
 //        checkLanguageConfig();
         log.info("test");
-        String s = null;
-        System.out.println(s.equals("sads"));
         log.info("{}s elapsed", ((float) (System.currentTimeMillis() - startTime) / 1000));
     }
 
