@@ -24,7 +24,10 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.entity.living.player.Player;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.AbstractList;
+
+import static com.sugar_tree.inventoryshare.InventoryShare.logger;
 
 public class Inventory {
     private static AbstractList<Object> items;
@@ -49,13 +52,52 @@ public class Inventory {
         }
     }
 
-    public static void task(Player p) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+    public static void task(Player p) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 //        setField(Class.forName("net.minecraft.world.entity.player.Inventory").cast(p.inventory()), "items", items);
 //        setField(Class.forName("net.minecraft.world.entity.player.Inventory").cast(p.inventory()), "armor", armor);
 //        setField(Class.forName("net.minecraft.world.entity.player.Inventory").cast(p.inventory()), "offhand", offhand);
         setField(p.inventory(), "items", items);
         setField(p.inventory(), "armor", armor);
         setField(p.inventory(), "offhand", offhand);
+        p.inventory().children().forEach(i -> {
+            try {
+                Class.forName("org.spongepowered.common.entity.player.SpongeUserInventory").getMethod("setChanged")
+                        .invoke(Class.forName("org.spongepowered.common.entity.player.SpongeUserInventory").cast((i)));
+            } catch (IllegalAccessException | ClassNotFoundException | NoSuchMethodException |
+                     InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
+//        Class.forName("org.spongepowered.common.entity.player.SpongeUserInventory").getMethod("setChanged")
+//                .invoke(Class.forName("org.spongepowered.common.entity.player.SpongeUserInventory").cast(((Container) p.inventory())));
+    }
+
+    public static void updateInventory(Player p) {
+        try {
+//            debug(p.inventory().getClass());
+//            logger.info("///////////////////////////////////");
+//            debug(Class.forName("net.minecraft.server.level.ServerPlayer"));
+//            logger.info("///////////////////////////////////");
+//            for (Method method : Class.forName("net.minecraft.server.level.ServerPlayer").getMethods()) {
+//                logger.info(method.getName());
+//            }
+            Class.forName("net.minecraft.server.level.ServerPlayer")
+                    .cast(Class.forName("net.minecraft.world.entity.player.Inventory").getField("player")
+                    .get(Class.forName("net.minecraft.world.entity.player.Inventory").cast(p.inventory())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private static void debug(@NotNull Class<?> clazz) {
+        Class<?> clazz1 = clazz;
+        while (clazz != null) {
+            logger.info(clazz.getCanonicalName());
+            clazz = clazz.getSuperclass();
+        }
+        logger.info("///////////////////////////////////");
+        for (Class<?> anInterface : clazz1.getInterfaces()) {
+            logger.info(anInterface.getCanonicalName());
+        }
     }
 
     /**

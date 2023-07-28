@@ -117,6 +117,7 @@ public class InventoryShare {
                     ServerPlayer player = context.requireOne(playerParameter);
                     try {
                         logger.info(toString(invClass.getField("items").get(player.inventory())));
+                        Inventory.updateInventory(player);
                     } catch (IllegalAccessException | NoSuchFieldException e) {
                         throw new RuntimeException(e);
                     }
