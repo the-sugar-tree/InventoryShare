@@ -74,7 +74,7 @@ public class NMSLoader {
 //*****************************************************************************************************************//
         PATH_CLASS_EntityPlayer = VersionUtil.getVersion().getPATH_CLASS_EntityPlayer();
         PATH_CLASS_CraftPlayer = VersionUtil.getVersion().getPATH_CLASS_CraftPlayer();
-        DOES_INVENTORY_USE_FIELD = VersionUtil.getVersion().getDOES_INVENTORY_USE_FIELD();
+        DOES_INVENTORY_USE_FIELD = VersionUtil.getVersion().isINVENTORY_USE_FIELD();
         PATH_EntityPlayer_Inventory = VersionUtil.getVersion().getPATH_EntityPlayer_Inventory();
         PATH_PlayerInventory_items = VersionUtil.getVersion().getPATH_PlayerInventory_items();
         PATH_PlayerInventory_armor = VersionUtil.getVersion().getPATH_PlayerInventory_armor();

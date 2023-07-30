@@ -22,6 +22,7 @@ package com.sugar_tree.inventoryshare.nms.utils;
 
 import com.google.common.collect.ImmutableSet;
 import com.sugar_tree.inventoryshare.SharedConstants;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +43,7 @@ public class VersionUtil {
         return supported;
     }
 
+    @Getter
     public enum SupportedVersions {
         v1_20_R1(ImmutableSet.of("1.20-R0.1-SNAPSHOT", "1.20.1-R0.1-SNAPSHOT"),
                 "fN", "i", "j", "k", "o"),
@@ -76,8 +78,6 @@ public class VersionUtil {
         v1_12_R1(ImmutableSet.of("1.12.2-R0.1-SNAPSHOT", "1.12.1-R0.1-SNAPSHOT", "1.12-R0.1-SNAPSHOT"),
                 "inventory", "items", "armor", "extraSlots", "f");
 
-
-
         private final ImmutableSet<String> versions;
         private final String PATH_CLASS_PlayerInventory;
         private final String PATH_CLASS_ItemStack;
@@ -88,17 +88,13 @@ public class VersionUtil {
         //*****************************************************************************************************************//
         private final String PATH_CLASS_EntityPlayer;
         private final String PATH_CLASS_CraftPlayer;
-        private final boolean DOES_INVENTORY_USE_FIELD;
+        private final boolean INVENTORY_USE_FIELD;
         private final String PATH_EntityPlayer_Inventory;
         private final String PATH_PlayerInventory_items;
         private final String PATH_PlayerInventory_armor;
         private final String PATH_PlayerInventory_extraSlots;
         private final String PATH_PlayerInventory_contents;
         private final String PATH_CLASS_EntityHuman;
-
-        public ImmutableSet<String> getVersions() {
-            return versions;
-        }
 
         SupportedVersions(ImmutableSet<String> versions, String... args) {
             this.versions = versions;
@@ -112,7 +108,7 @@ public class VersionUtil {
                 PATH_CLASS_NonNullList = "net.minecraft.core.NonNullList";
                 PATH_METHOD_getNameSpacedKey = "fromString";
                 PATH_CLASS_EntityPlayer = "net.minecraft.server.level.EntityPlayer";
-                DOES_INVENTORY_USE_FIELD = false;
+                INVENTORY_USE_FIELD = false;
                 PATH_EntityPlayer_Inventory = args[0];
                 PATH_PlayerInventory_items = args[1];
                 PATH_PlayerInventory_armor = args[2];
@@ -125,7 +121,7 @@ public class VersionUtil {
                 PATH_CLASS_NonNullList = "net.minecraft.server." + name() + ".NonNullList";
                 PATH_METHOD_getNameSpacedKey = "minecraft";
                 PATH_CLASS_EntityPlayer = "org.bukkit.craftbukkit." + name() + ".entity.CraftPlayer";
-                DOES_INVENTORY_USE_FIELD = true;
+                INVENTORY_USE_FIELD = true;
                 PATH_EntityPlayer_Inventory = args[0];
                 PATH_PlayerInventory_items = args[1];
                 PATH_PlayerInventory_armor = args[2];
@@ -159,52 +155,6 @@ public class VersionUtil {
                 }
             }
             return null;
-        }
-
-        public String getPATH_CLASS_PlayerInventory() {
-            return PATH_CLASS_PlayerInventory;
-        }
-        public String getPATH_CLASS_ItemStack() {
-            return PATH_CLASS_ItemStack;
-        }
-        public String getPATH_CLASS_NonNullList() {
-            return PATH_CLASS_NonNullList;
-        }
-        public String getPATH_METHOD_createItemlist() {
-            return PATH_METHOD_createItemlist;
-        }
-        public String getPATH_FIELD_emptyItem() {
-            return PATH_FIELD_emptyItem;
-        }
-        public String getPATH_METHOD_getNameSpacedKey() {
-            return PATH_METHOD_getNameSpacedKey;
-        }
-        public String getPATH_CLASS_EntityPlayer() {
-            return PATH_CLASS_EntityPlayer;
-        }
-        public String getPATH_CLASS_CraftPlayer() {
-            return PATH_CLASS_CraftPlayer;
-        }
-        public boolean getDOES_INVENTORY_USE_FIELD() {
-            return DOES_INVENTORY_USE_FIELD;
-        }
-        public String getPATH_EntityPlayer_Inventory() {
-            return PATH_EntityPlayer_Inventory;
-        }
-        public String getPATH_PlayerInventory_items() {
-            return PATH_PlayerInventory_items;
-        }
-        public String getPATH_PlayerInventory_armor() {
-            return PATH_PlayerInventory_armor;
-        }
-        public String getPATH_PlayerInventory_extraSlots() {
-            return PATH_PlayerInventory_extraSlots;
-        }
-        public String getPATH_PlayerInventory_contents() {
-            return PATH_PlayerInventory_contents;
-        }
-        public String getPATH_CLASS_EntityHuman() {
-            return PATH_CLASS_EntityHuman;
         }
     }
 }
