@@ -67,7 +67,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Check version (If null, it means not supported)
         if (VersionUtil.getVersion() == null) {
-            logger.severe(I18NUtil.get(false, false, "not_supported_version", VersionUtil.getVersion().name()));
+            logger.severe(I18NUtil.get(false, false, "not_supported_version", Bukkit.getBukkitVersion()));
             this.setEnabled(false);
             return;
         }
