@@ -28,19 +28,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class VersionUtil {
     private static final SupportedVersions version;
-    private static final boolean supported;
     static {
         version = SupportedVersions.getFromBukkitVersion(Bukkit.getBukkitVersion());
-        supported = (version != null);
     }
 
+    /**
+     * Return detected version
+     * @return {@link SupportedVersions} or null if not supported
+     */
     public static SupportedVersions getVersion() {
         return version;
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean isSupported() {
-        return supported;
     }
 
     @Getter
@@ -148,7 +145,7 @@ public class VersionUtil {
          * @param bukkitVersion {@link Bukkit#getBukkitVersion()}
          * @return {@link SupportedVersions} value or null if not supported
          */
-        public static @Nullable VersionUtil.SupportedVersions getFromBukkitVersion(String bukkitVersion) {
+        private static @Nullable VersionUtil.SupportedVersions getFromBukkitVersion(String bukkitVersion) {
             for (SupportedVersions value : SupportedVersions.values()) {
                 if (value.getVersions().contains(bukkitVersion)) {
                     return value;
