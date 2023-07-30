@@ -46,7 +46,7 @@ allprojects {
     }
 
     jar {
-        from '../LICENSE.txt'
+        from '../LICENSE.md'
     }
 
     jar.doLast {
