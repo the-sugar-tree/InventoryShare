@@ -61,6 +61,7 @@ allprojects {
     license {
         header = rootProject.file('HEADER.txt')
         include '**/*.java'
+        exclude '**/Metrics.java'
         newLine = true
         properties {
             name = 'the-sugar-tree'
