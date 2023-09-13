@@ -22,7 +22,7 @@
 [![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v3.1)
 [![Java](https://img.shields.io/badge/java-17-ED8B00.svg?logo=java&style=for-the-badge)](https://www.azul.com/)
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare/releases)   
-[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12‐1.20.1-green?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare)
+[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12—1.20.1-green?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare)
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![Gradle](https://img.shields.io/badge/gradle-8.3-02303A.svg?logo=gradle&style=for-the-badge)](https://gradle.org)
 
