@@ -1,4 +1,5 @@
-# 인벤토리 공유 플러그인 (v3.1)
+# Inventory Sharing Plugin (v3.1)
+인벤토리 공유 플러그인 (v3.1)
 
 ## Change Log   
 1.20 Support
@@ -13,7 +14,7 @@
 ---
 <p align="center">
     <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v3.1/InventoryShare-3.1.jar">
-        <img src="https://img.shields.io/badge/플러그인%20다운로드-클릭-bbbbbb?style=for-the-badge" height="40" width="260">
+        <img src="https://img.shields.io/badge/Plugin%20Download-CLICK-bbbbbb?style=for-the-badge" height="40" width="260">
     </a>
 </p>
 
@@ -27,6 +28,9 @@
 [![Gradle](https://img.shields.io/badge/gradle-8.3-02303A.svg?logo=gradle&style=for-the-badge)](https://gradle.org)
 
 ---
+### Contacts
+<sugar_tree@outlook.kr>
+<tjfxkdskan@gmail.com>
 
 ### 추가 안내
 
@@ -42,7 +46,7 @@ https://blog.naver.com/sugar-tree/222556850608
 
 ---
 
-## 마인크래프트 버전
+## Minecraft Version
 ### Current Versions
 - 1.12-1.20.1 (Release 3.1) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v3.1/InventoryShare-3.1.jar)]
 
