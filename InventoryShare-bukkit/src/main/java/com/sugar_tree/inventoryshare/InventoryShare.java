@@ -117,6 +117,7 @@ public final class InventoryShare extends JavaPlugin {
     @Override
     public void onDisable() {
         if (InventoryManager == null || FileManager == null) {
+            // if NOT supported version or unexpected exception occurs {InventoryShare.java-87:9}
             return;
         }
         for (UUID puuid : InventoryManager.getRegisteredPlayers()) {
