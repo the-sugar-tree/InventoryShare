@@ -22,10 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Locale;
@@ -36,8 +33,7 @@ public class SimpleTest {
 
     public static void main(String... args) throws IOException {
         long startTime = System.currentTimeMillis();
-        String test = "testabc&r";
-        System.out.println(test.substring(0, test.length()-2));
+//        GradleUpdater.work("8.3");
 
         /*
         Properties properties = System.getProperties();
@@ -77,6 +73,62 @@ public class SimpleTest {
         public Task start1() {
             super.start();
             return this;
+        }
+    }
+
+
+    private static class GradleUpdater {
+        private static void work(String gradleVersion) throws IOException {
+//            String gradleVersion = "8.3";
+            String fileName = "gradle-wrapper.properties";
+            String exactline = "distributionUrl=https\\\\://services.gradle.org/distributions/gradle-" + gradleVersion + "-bin.zip";
+            String regex = "distributionUrl=https\\\\:\\/\\/services\\.gradle\\.org\\/distributions\\/gradle-(([0-9]\\.)?[0-9]\\.[0-9])-bin\\.zip";
+            for (File dirs1 : new File("C:\\Users\\sugar_tree\\IdeaProjects").listFiles(File::isDirectory)) {
+                for (File dirs2 : dirs1.listFiles(File::isDirectory)) {
+                    for (File dirs3 : dirs2.listFiles((dir, name) -> {
+                        return name.equals("gradle");
+                    })) {
+                        for (File dirs4 : dirs3.listFiles((dir, name) -> {
+                            return name.equals("wrapper");
+                        })) {
+                            for (File file : dirs4.listFiles((dir, name) -> {
+                                return name.equals(fileName);
+                            })) {
+                                log.info("found: " + file.getAbsolutePath());
+
+                                BufferedReader reader = new BufferedReader(new FileReader(file));
+                                StringBuilder sb = new StringBuilder();
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    sb.append(line).append("\n");
+                                }
+                                String str = sb.toString();
+                                if (!str.contains(exactline.replaceAll("\\\\\\\\", "\\\\"))) {
+                                    log.info("deleted and replaced");
+                                    File dotGradle = new File(dirs2, ".gradle");
+                                    if (dotGradle.exists()) {
+                                        delete(dotGradle);
+                                    }
+                                    Files.writeString(file.toPath(), str.replaceAll(regex, exactline));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void delete(File file) throws IOException {
+            if (file.exists()) {
+                if (file.listFiles() == null) {
+                    Files.delete(file.toPath());
+                } else {
+                    for (File child : file.listFiles()) {
+                        delete(child);
+                    }
+                }
+                Files.delete(file.toPath());
+            }
         }
     }
 }
