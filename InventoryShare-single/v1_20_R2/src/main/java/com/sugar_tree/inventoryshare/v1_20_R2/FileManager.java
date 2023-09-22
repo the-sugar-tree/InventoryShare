@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.v1_20_R1;
+package com.sugar_tree.inventoryshare.v1_20_R2;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.IFileManager;
@@ -29,7 +29,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;

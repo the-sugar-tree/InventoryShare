@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.v1_20_R1;
+package com.sugar_tree.inventoryshare.v1_20_R2;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.IInventoryManager;
@@ -26,7 +26,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,13 +34,13 @@ import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.teaminventory;
-import static com.sugar_tree.inventoryshare.v1_20_R1.FileManager.*;
+import static com.sugar_tree.inventoryshare.v1_20_R2.FileManager.*;
 
 public class InventoryManager implements IInventoryManager {
 
     public void applyAllInventory(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.fN();
+        PlayerInventory playerInventory = entityPlayer.fR();
         try {
             setField(playerInventory, "i", items);
             setField(playerInventory, "j", armor);
@@ -54,7 +54,7 @@ public class InventoryManager implements IInventoryManager {
     @SuppressWarnings("SuspiciousMethodCalls")
     public void disApplyInventory(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.fN();
+        PlayerInventory playerInventory = entityPlayer.fR();
         if (invList.containsKey(p.getUniqueId())) {
             try {
                 NonNullList<ItemStack> items1 = invList.get(p.getUniqueId()).i;
@@ -117,7 +117,7 @@ public class InventoryManager implements IInventoryManager {
         }
         List<NonNullList<ItemStack>> contentsT = ImmutableList.of(itemsT, armorT, extraSlotsT);
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        PlayerInventory playerInventory = entityPlayer.fN();
+        PlayerInventory playerInventory = entityPlayer.fR();
         try {
             setField(playerInventory, "i", itemsT);
             setField(playerInventory, "j", armorT);
@@ -132,10 +132,10 @@ public class InventoryManager implements IInventoryManager {
         PlayerInventory pinv = new PlayerInventory(null);
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         try {
-            setField(pinv, "i", entityPlayer.fN().i);
-            setField(pinv, "j", entityPlayer.fN().j);
-            setField(pinv, "k", entityPlayer.fN().k);
-            setField(pinv, "o", ImmutableList.of(entityPlayer.fN().i, entityPlayer.fN().j, entityPlayer.fN().k));
+            setField(pinv, "i", entityPlayer.fR().i);
+            setField(pinv, "j", entityPlayer.fR().j);
+            setField(pinv, "k", entityPlayer.fR().k);
+            setField(pinv, "o", ImmutableList.of(entityPlayer.fR().i, entityPlayer.fR().j, entityPlayer.fR().k));
         } catch (Exception e) {
             e.printStackTrace();
         }
