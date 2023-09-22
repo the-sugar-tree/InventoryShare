@@ -4,7 +4,7 @@ dependencies {
 }
 
 jar {
-    String subVersion = '1.20-1.20.2'
+    String subVersion = '1.20.2'
     manifest {
         archiveFileName.set("InventoryShare-${project.version}-[${subVersion}].jar")
     }
