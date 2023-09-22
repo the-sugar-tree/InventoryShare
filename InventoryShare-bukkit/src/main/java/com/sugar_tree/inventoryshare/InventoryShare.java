@@ -131,7 +131,7 @@ public final class InventoryShare extends JavaPlugin {
     }
 
     private static boolean checkProtocolLib() {
-        return Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
+        return Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null && Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib").isEnabled();
     }
 
     private void saveDefaultConfigs() {
