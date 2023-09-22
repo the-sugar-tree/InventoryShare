@@ -134,7 +134,6 @@ public final class InventoryShare extends JavaPlugin {
         return Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void saveDefaultConfigs() {
         saveDefaultConfig();
         if (!(invfile.exists())) {
@@ -143,8 +142,7 @@ public final class InventoryShare extends JavaPlugin {
         if (!(advfile.exists())) {
             saveResource("advancements.yml", false);
         }
-        if (!(new File(getDataFolder(), "\\teams")).exists()) {
-            (new File(getDataFolder(), "\\teams")).mkdir();
-        }
+        File teamDir = new File(getDataFolder(), "\\teams");
+        if (!teamDir.exists() && !teamDir.mkdir()) logger.severe("폴더 생성에 실패했습니다: " + teamDir.getAbsolutePath());
     }
 }
