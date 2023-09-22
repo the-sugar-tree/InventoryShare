@@ -112,9 +112,6 @@ public class I18NUtil {
 
         private Bundle(FileConfiguration config) {
             this.config = config;
-//            if (!config.getString("FILE_VERSION").equals(plugin.getDescription().getVersion())) {
-                // TODO: 2023-05-17 Add informing need update
-//            }
         }
 
         String get(String key) throws MissingResourceException {
