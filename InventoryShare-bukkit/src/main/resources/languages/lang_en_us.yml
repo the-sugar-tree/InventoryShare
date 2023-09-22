@@ -24,6 +24,7 @@ not_supported_version: "This plugin does not support this version: %s"
 protocolLib_found: "ProtocolLib plugin has been detected."
 protocolLib_need1: "To use all the features of this plugin, you need the ProtocolLib plugin."
 protocolLib_need2: "Using the ProtocolLib plugin can solve the problem of simultaneous block breaking."
+protocolLib_need_update: "An error occured while enabling ProtocolLib plugin! (maybe up to date?)"
 
 # Commands
 inv_set: "§6Inventory sharing setting is now §a%s§6."

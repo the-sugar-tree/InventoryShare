@@ -23,9 +23,10 @@ package com.sugar_tree.inventoryshare;
 import com.sugar_tree.inventoryshare.metrics.Metrics;
 import com.sugar_tree.inventoryshare.nms.NMSLoader;
 import com.sugar_tree.inventoryshare.nms.utils.VersionUtil;
+import com.sugar_tree.inventoryshare.protocollib.ProtocolLibStatus;
 import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
 import com.sugar_tree.inventoryshare.utils.I18NUtil;
-import com.sugar_tree.inventoryshare.utils.ProtocolLibUtil;
+import com.sugar_tree.inventoryshare.protocollib.ProtocolLibUtil;
 import com.sugar_tree.inventoryshare.utils.UpdateUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -41,7 +42,7 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
 
-    public final static boolean isProtocolLib = checkProtocolLib();
+    public final static ProtocolLibStatus protocolLibStatus = checkProtocolLib();
 
     private Listeners listener;
 
@@ -60,7 +61,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Metrics https://bstats.org/plugin/bukkit/InventoryShare/18372
         Metrics metrics = new Metrics(this, 18372);
-        metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (isProtocolLib) return "Using"; else return "Not Using";}));
+        metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (protocolLibStatus == ProtocolLibStatus.ENABLED) return "Using"; else return "Not Using";}));
 
         // Check Update
         UpdateUtil.checkUpdate();
@@ -73,13 +74,20 @@ public final class InventoryShare extends JavaPlugin {
         }
 
         // Check the server is using ProtocolLib plugin
-        if (isProtocolLib) {
-            ProtocolLibUtil.ProtocolLib();
-            logger.info(I18NUtil.get(false, false, "protocolLib_found"));
-        } else {
-            logger.info(I18NUtil.get(false, false, "protocolLib_need1"));
-            logger.info(I18NUtil.get(false, false, "protocolLib_need2"));
-            logger.info("https://www.spigotmc.org/resources/protocollib.1997");
+        switch (protocolLibStatus) {
+            case ENABLED:
+                ProtocolLibUtil.ProtocolLib();
+                logger.info(I18NUtil.get(false, false, "protocolLib_found"));
+                break;
+            case NEED:
+                logger.warning(I18NUtil.get(false, false, "protocolLib_need1"));
+                logger.warning(I18NUtil.get(false, false, "protocolLib_need2"));
+                logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
+                break;
+            case DISABLED:
+                logger.warning(I18NUtil.get(false, false, "protocolLib_need_update"));
+                logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
+                break;
         }
 
         // Load NMS contents
@@ -130,8 +138,14 @@ public final class InventoryShare extends JavaPlugin {
         FileManager.save();
     }
 
-    private static boolean checkProtocolLib() {
-        return Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null && Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib").isEnabled();
+    private static ProtocolLibStatus checkProtocolLib() {
+        if (Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
+            if (Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib").isEnabled()) {
+                return ProtocolLibStatus.ENABLED;
+            }
+            return ProtocolLibStatus.DISABLED;
+        }
+        return ProtocolLibStatus.NEED;
     }
 
     private void saveDefaultConfigs() {

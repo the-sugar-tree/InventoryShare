@@ -34,12 +34,11 @@ public class UpdateUtil {
             String urls = getFinalURL(url).toString();
             version = urls.substring(urls.lastIndexOf('/') + 1);
         } catch (MalformedURLException e) {
-            logger.severe(I18NUtil.get("update_error", e.getMessage()));
+            logger.severe(I18NUtil.get(false, false, "update_error", e.getMessage()));
         }
 
         if (!("v"+plugin.getDescription().getVersion()).equals(version)) {
-            logger.warning(I18NUtil.get("update_able", plugin.getDescription().getVersion(), version));
-//            logger.warning(I18NUtil.get("update_able", "3.1-beta", "3.0"));
+            logger.warning(I18NUtil.get(false, false, "update_able", plugin.getDescription().getVersion(), version));
             logger.warning("https://github.com/the-sugar-tree/InventoryShare/releases/latest");
         }
     }

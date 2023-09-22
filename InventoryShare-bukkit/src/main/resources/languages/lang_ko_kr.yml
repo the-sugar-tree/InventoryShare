@@ -22,6 +22,7 @@ not_supported_version: "이 플러그인은 이 버전을 지원하지 않습니
 protocolLib_found: "ProtocolLib 플러그인이 감지되었습니다."
 protocolLib_need1: "이 플러그인의 모든 기능을 사용하시려면 ProtocolLib 플러그인이 필요합니다."
 protocolLib_need2: "ProtocolLib 플러그인을 사용하시면 블럭을 동시에 캘 때 생기는 문제를 해결 할 수 있습니다."
+protocolLib_need_update: "ProtocolLib 플러그인에 알 수 없는 오류가 발생하였습니다! ProtocolLib 플러그인 업데이트가 필요할 수 있습니다."
 
 # Commands
 inv_set: "§6인벤토리 공유 설정값이 이제 §a%s§6입니다."
