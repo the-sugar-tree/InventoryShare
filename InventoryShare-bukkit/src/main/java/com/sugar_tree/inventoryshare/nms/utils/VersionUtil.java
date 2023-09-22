@@ -42,6 +42,8 @@ public class VersionUtil {
 
     @Getter
     public enum SupportedVersions {
+        v1_20_R2(ImmutableSet.of("1.20.2-R0.1-SNAPSHOT"),
+                "fR", "i", "j", "k", "o"),
         v1_20_R1(ImmutableSet.of("1.20-R0.1-SNAPSHOT", "1.20.1-R0.1-SNAPSHOT"),
                 "fN", "i", "j", "k", "o"),
         v1_19_R3(ImmutableSet.of("1.19.4-R0.1-SNAPSHOT"),
