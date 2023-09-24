@@ -185,7 +185,7 @@ public class Commands implements TabExecutor {
                     if (plugin.getConfig().contains("teaminventory")) teaminventory = plugin.getConfig().getBoolean("teaminventory");
                     I18NUtil.reload();
                     updateUsageMessage();
-                    sender.sendMessage(I18NUtil.get(true, "config_reloaded"));
+                    Command.broadcastCommandMessage(sender, I18NUtil.get(true, "config_reloaded"));
                     break;
                 case "check":
                     sender.sendMessage(check);
