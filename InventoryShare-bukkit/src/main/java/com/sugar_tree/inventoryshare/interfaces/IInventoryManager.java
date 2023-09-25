@@ -32,7 +32,7 @@ public interface IInventoryManager {
     /**
      * Apply all inventory to specific player
      * @param p Player to apply
-     * @deprecated Do not directly refer this
+     * @deprecated For internal use only
      */
     @Deprecated
     void applyAllInventory(@NotNull Player p);
