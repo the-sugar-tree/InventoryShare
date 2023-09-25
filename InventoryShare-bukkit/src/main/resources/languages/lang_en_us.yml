@@ -1,8 +1,6 @@
 FILE_VERSION: '${version}'
-# If the base language file is not included in the plugin, an error may occur.
-
 # Use '§' for color code
-
+#
 # Black (black)               §0  Dark Blue (dark_blue)	      §1
 # Dark Green (dark_green)     §2  Dark Aqua (dark_aqua)	      §3
 # Dark Red (dark_red)         §4  Dark Purple (dark_purple)	  §5
@@ -11,7 +9,7 @@ FILE_VERSION: '${version}'
 # Green (green)               §a  Aqua (aqua)	              §b
 # Red (red)                   §c  Light Purple (light_purple) §d
 # Yellow (yellow)             §e  White (white)	              §f
-
+#
 # Obfuscated     §k   Bold         §l
 # Strikethrough  §m   Underline    §n
 # Italic         §o   Reset        §r
