@@ -42,7 +42,7 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
 
-    public final static ProtocolLibStatus protocolLibStatus = checkProtocolLib();
+    private ProtocolLibStatus protocolLibStatus;
 
     private Listeners listener;
 
@@ -51,6 +51,7 @@ public final class InventoryShare extends JavaPlugin {
         // Assign shared variable
         plugin = this;
         logger = getLogger();
+        protocolLibStatus = checkProtocolLib();
 
         // Load language model(s)
         I18NUtil.I18NFileManager.saveDefaultLanguageFiles();
@@ -138,7 +139,7 @@ public final class InventoryShare extends JavaPlugin {
         FileManager.save();
     }
 
-    private static ProtocolLibStatus checkProtocolLib() {
+    private ProtocolLibStatus checkProtocolLib() {
         if (Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") == null) {
             return ProtocolLibStatus.NEED;
         }
