@@ -24,9 +24,9 @@ import com.sugar_tree.inventoryshare.metrics.Metrics;
 import com.sugar_tree.inventoryshare.nms.NMSLoader;
 import com.sugar_tree.inventoryshare.nms.utils.VersionUtil;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibStatus;
+import com.sugar_tree.inventoryshare.protocollib.ProtocolLibManager;
 import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
 import com.sugar_tree.inventoryshare.utils.I18NUtil;
-import com.sugar_tree.inventoryshare.protocollib.ProtocolLibUtil;
 import com.sugar_tree.inventoryshare.utils.UpdateUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -77,7 +77,7 @@ public final class InventoryShare extends JavaPlugin {
         // Check the server is using ProtocolLib plugin
         switch (protocolLibStatus) {
             case ENABLED:
-                ProtocolLibUtil.ProtocolLib();
+                new ProtocolLibManager(this).enable();
                 logger.info(I18NUtil.get(false, false, "protocolLib_found"));
                 break;
             case NEED:
