@@ -43,25 +43,25 @@ import java.util.*;
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 import static com.sugar_tree.inventoryshare.nms.NMSLoader.FileManager.*;
 
-public class NMSLoader {
+public final class NMSLoader {
 
-    protected static final String PATH_CLASS_PlayerInventory;
-    protected static final String PATH_CLASS_ItemStack;
-    protected static final String PATH_CLASS_NonNullList;
-    protected static final String PATH_METHOD_createItemlist;
-    protected static final String PATH_FIELD_emptyItem;
-    protected static final String version;
-    protected static final String PATH_METHOD_getNameSpacedKey;
+    private static final String PATH_CLASS_PlayerInventory;
+    private static final String PATH_CLASS_ItemStack;
+    private static final String PATH_CLASS_NonNullList;
+    private static final String PATH_METHOD_createItemlist;
+    private static final String PATH_FIELD_emptyItem;
+    private static final String version;
+    private static final String PATH_METHOD_getNameSpacedKey;
 //*****************************************************************************************************************//
-    protected static final String PATH_CLASS_EntityPlayer;
-    protected static final String PATH_CLASS_CraftPlayer;
-    protected static final boolean DOES_INVENTORY_USE_FIELD;
-    protected static final String PATH_EntityPlayer_Inventory;
-    protected static final String PATH_PlayerInventory_items;
-    protected static final String PATH_PlayerInventory_armor;
-    protected static final String PATH_PlayerInventory_extraSlots;
-    protected static final String PATH_PlayerInventory_contents;
-    protected static final String PATH_CLASS_EntityHuman;
+    private static final String PATH_CLASS_EntityPlayer;
+    private static final String PATH_CLASS_CraftPlayer;
+    private static final boolean DOES_INVENTORY_USE_FIELD;
+    private static final String PATH_EntityPlayer_Inventory;
+    private static final String PATH_PlayerInventory_items;
+    private static final String PATH_PlayerInventory_armor;
+    private static final String PATH_PlayerInventory_extraSlots;
+    private static final String PATH_PlayerInventory_contents;
+    private static final String PATH_CLASS_EntityHuman;
 
     static {
         PATH_CLASS_PlayerInventory = VersionUtil.getVersion().getPATH_CLASS_PlayerInventory();
@@ -101,26 +101,26 @@ public class NMSLoader {
     }
 
     @SuppressWarnings({"unchecked", "JavaReflectionInvocation"})
-    static class FileManager implements IFileManager {
+    static final class FileManager implements IFileManager {
 
         private static final Class<?> ItemStack;
         private static final Class<?> NonNullList;
-        protected static final Method createItemList;
-        protected static final Object nullItem;
+        static final Method createItemList;
+        static final Object nullItem;
         private static final Class<?> CraftItemStack;
         private static final Method asCraftMirror;
         private static final Method asNMSCopy;
         private static final Method deserialize;
         private static final Method getAdvName;
 
-        protected static Map<UUID, Object> invList = new HashMap<>();
+        static final Map<UUID, Object> invList = new HashMap<>();
 
-        protected static AbstractList<Object> items;
-        protected static AbstractList<Object> armor;
-        protected static AbstractList<Object> extraSlots;
-        protected static List<AbstractList<Object>> contents;
+        static final AbstractList<Object> items;
+        static final AbstractList<Object> armor;
+        static final AbstractList<Object> extraSlots;
+        static final List<AbstractList<Object>> contents;
 
-        protected static Map<String, Map<String, AbstractList<Object>>> InventoryList = new HashMap<>();
+        static final Map<String, Map<String, AbstractList<Object>>> InventoryList = new HashMap<>();
 
         static {
             try {
@@ -361,7 +361,7 @@ public class NMSLoader {
     }
 
     @SuppressWarnings({"DataFlowIssue", "unchecked", "SuspiciousMethodCalls"})
-    static class InventoryManager implements IInventoryManager {
+    static final class InventoryManager implements IInventoryManager {
         private static final Class<?> EntityPlayer;
         private static final Class<?> CraftPlayer;
         private static final Class<?> PlayerInventory;

@@ -35,8 +35,8 @@ import java.util.Set;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.plugin;
 
-public class ProtocolLibUtil {
-    static Set<Player> breakingBlock = new HashSet<>();
+public final class ProtocolLibUtil {
+    private static final Set<Player> breakingBlock = new HashSet<>();
     public static void ProtocolLib() {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(new PacketAdapter(plugin,
