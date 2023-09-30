@@ -29,15 +29,19 @@ import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.plugin.Plugin;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.sugar_tree.inventoryshare.SharedConstants.plugin;
+public final class ProtocolLibManager {
+    private final Plugin plugin;
+    public ProtocolLibManager(Plugin plugin) {
+        this.plugin = plugin;
+    }
 
-public final class ProtocolLibUtil {
-    private static final Set<Player> breakingBlock = new HashSet<>();
-    public static void ProtocolLib() {
+    private final Set<Player> breakingBlock = new HashSet<>();
+    public void enable() {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(new PacketAdapter(plugin,
                 ListenerPriority.NORMAL,
