@@ -34,6 +34,7 @@ import static com.sugar_tree.inventoryshare.SharedConstants.advancement;
 import static com.sugar_tree.inventoryshare.SharedConstants.advlist;
 
 public class AdvancementUtil {
+    private AdvancementUtil() {}
 
     public static void AdvancementPatch(Player player) {
         if (!advancement) {

@@ -35,7 +35,8 @@ import java.util.*;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
-public class I18NUtil {
+public final class I18NUtil {
+    private I18NUtil() {}
 
     private static Bundle bundle;
 
@@ -107,7 +108,11 @@ public class I18NUtil {
         }
     }
 
-    private final static class Bundle {
+    private static final class Bundle {
+        private Bundle(FileConfiguration config) {
+            this.config = config;
+        }
+
         final FileConfiguration config;
 
         static Bundle getBundle(String locale) throws NoSuchFileException {
@@ -130,10 +135,6 @@ public class I18NUtil {
             return new Bundle(YamlConfiguration.loadConfiguration(isr));
         }
 
-        private Bundle(FileConfiguration config) {
-            this.config = config;
-        }
-
         String get(String key) throws MissingResourceException {
             if (key == null) {
                 throw new IllegalArgumentException("key value is null");
@@ -146,7 +147,9 @@ public class I18NUtil {
         }
     }
 
-    public final static class I18NFileManager {
+    public static final class I18NFileManager {
+        private I18NFileManager() {}
+
         public static void saveDefaultLanguageFiles() {
             Set<String> fileNames = new HashSet<>(Arrays.asList("ko_kr", "en_us"));
             for (String locale : fileNames) {

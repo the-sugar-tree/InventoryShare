@@ -27,6 +27,8 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 
 public class VersionUtil {
+    private VersionUtil() {}
+
     private static final SupportedVersions version;
     static {
         version = SupportedVersions.getFromBukkitVersion(Bukkit.getBukkitVersion());

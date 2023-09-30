@@ -36,7 +36,8 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @SuppressWarnings("deprecation")
-public class SharedConstants {
+public final class SharedConstants {
+    private SharedConstants() {}
 
     public static Logger logger;
 

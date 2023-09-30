@@ -35,7 +35,7 @@ import java.util.List;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
-public class Commands implements TabExecutor {
+public final class Commands implements TabExecutor {
 
     @SuppressWarnings("ConstantConditions")
     @Override

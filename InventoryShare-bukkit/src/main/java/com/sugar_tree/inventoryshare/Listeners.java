@@ -42,7 +42,7 @@ import java.util.Objects;
 import static com.sugar_tree.inventoryshare.utils.AdvancementUtil.AdvancementPatch;
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
-public class Listeners implements Listener {
+public final class Listeners implements Listener {
 
     private final int taskId;
 

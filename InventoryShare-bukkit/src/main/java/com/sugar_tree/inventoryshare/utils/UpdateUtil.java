@@ -26,7 +26,9 @@ import java.net.*;
 import static com.sugar_tree.inventoryshare.SharedConstants.logger;
 import static com.sugar_tree.inventoryshare.SharedConstants.plugin;
 
-public class UpdateUtil {
+public final class UpdateUtil {
+    private UpdateUtil() {}
+
     private static String version;
     public static void checkUpdate() {
         try {

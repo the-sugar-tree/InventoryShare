@@ -44,6 +44,7 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 import static com.sugar_tree.inventoryshare.nms.NMSLoader.FileManager.*;
 
 public final class NMSLoader {
+    private NMSLoader() {}
 
     private static final String PATH_CLASS_PlayerInventory;
     private static final String PATH_CLASS_ItemStack;
@@ -82,8 +83,6 @@ public final class NMSLoader {
         PATH_PlayerInventory_contents = VersionUtil.getVersion().getPATH_PlayerInventory_contents();
         PATH_CLASS_EntityHuman = VersionUtil.getVersion().getPATH_CLASS_EntityHuman();
     }
-
-    private NMSLoader() {}
 
     public static boolean init() {
         logger.info("Loading Classes...");
