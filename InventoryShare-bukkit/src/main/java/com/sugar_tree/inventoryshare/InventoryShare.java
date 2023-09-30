@@ -47,10 +47,14 @@ public final class InventoryShare extends JavaPlugin {
     private Listeners listener;
 
     @Override
-    public void onEnable() {
-        // Assign shared variable
+    public void onLoad() {
         plugin = this;
         logger = getLogger();
+    }
+
+    @Override
+    public void onEnable() {
+        // Assign shared variable
         protocolLibStatus = checkProtocolLib();
 
         // Load language model(s)
