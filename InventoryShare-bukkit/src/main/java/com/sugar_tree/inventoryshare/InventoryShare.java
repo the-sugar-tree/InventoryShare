@@ -61,7 +61,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Metrics https://bstats.org/plugin/bukkit/InventoryShare/18372
         Metrics metrics = new Metrics(this, 18372);
-        metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> {if (protocolLibStatus == ProtocolLibStatus.ENABLED) return "Using"; else return "Not Using";}));
+        metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> protocolLibStatus == ProtocolLibStatus.ENABLED ? "Using" : "Not Using"));
 
         // Check Update
         UpdateUtil.checkUpdate();
@@ -139,13 +139,15 @@ public final class InventoryShare extends JavaPlugin {
     }
 
     private static ProtocolLibStatus checkProtocolLib() {
-        if (Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
-            if (Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib").isEnabled()) {
-                return ProtocolLibStatus.ENABLED;
-            }
-            return ProtocolLibStatus.DISABLED;
+        if (Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") == null) {
+            return ProtocolLibStatus.NEED;
         }
-        return ProtocolLibStatus.NEED;
+
+        if (!Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib").isEnabled()) {
+            return ProtocolLibStatus.DISABLED;
+        } else {
+            return ProtocolLibStatus.ENABLED;
+        }
     }
 
     private void saveDefaultConfigs() {
@@ -157,6 +159,6 @@ public final class InventoryShare extends JavaPlugin {
             saveResource("advancements.yml", false);
         }
         File teamDir = new File(getDataFolder(), "\\teams");
-        if (!teamDir.exists() && !teamDir.mkdir()) logger.severe("폴더 생성에 실패했습니다: " + teamDir.getAbsolutePath());
+        if (!teamDir.exists() && !teamDir.mkdir()) logger.severe("Failed to creat folder: " + teamDir.getAbsolutePath());
     }
 }
