@@ -21,10 +21,11 @@
 package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.metrics.Metrics;
-import com.sugar_tree.inventoryshare.nms.NMSLoader;
+import com.sugar_tree.inventoryshare.nms.FileManager;
+import com.sugar_tree.inventoryshare.nms.InventoryManager;
 import com.sugar_tree.inventoryshare.nms.utils.VersionUtil;
-import com.sugar_tree.inventoryshare.protocollib.ProtocolLibStatus;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibManager;
+import com.sugar_tree.inventoryshare.protocollib.ProtocolLibStatus;
 import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
 import com.sugar_tree.inventoryshare.utils.I18NUtil;
 import com.sugar_tree.inventoryshare.utils.UpdateUtil;
@@ -81,6 +82,7 @@ public final class InventoryShare extends JavaPlugin {
         // Check the server is using ProtocolLib plugin
         switch (protocolLibState) {
             case ENABLED:
+                if (VersionUtil.getVersion().name().equals("v1_12_R1")) break;
                 new ProtocolLibManager(this).enable();
                 logger.info(I18NUtil.get(false, false, "protocolLib_found"));
                 break;
@@ -97,7 +99,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Load NMS contents
         // FileManager, InventoryManager are loaded here
-        if (!NMSLoader.init()) {
+        if (!loadNMS()) {
             // if NOT supported version or unexpected exception occurs
             this.setEnabled(false);
             return;
@@ -141,6 +143,21 @@ public final class InventoryShare extends JavaPlugin {
         }
         if (listener != null) Bukkit.getScheduler().cancelTask(listener.getTaskId());
         FileManager.save();
+    }
+
+    private boolean loadNMS() {
+        logger.info("Loading Classes...");
+        try {
+            FileManager = new FileManager();
+            InventoryManager = new InventoryManager();
+        } catch (ExceptionInInitializerError e) {
+            logger.severe("An error occurred while loading the classes!");
+            logger.severe("This is NOT EXPECTED ERROR! Report this issue!");
+            e.printStackTrace();
+            return false;
+        }
+        logger.info("Done!");
+        return true;
     }
 
     private ProtocolLibStatus checkProtocolLib() {

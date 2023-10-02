@@ -89,6 +89,7 @@ public class VersionUtil {
         //*****************************************************************************************************************//
         private final String PATH_CLASS_EntityPlayer;
         private final String PATH_CLASS_CraftPlayer;
+        private final String PATH_CLASS_CraftItemStack;
         private final boolean INVENTORY_USE_FIELD;
         private final String PATH_EntityPlayer_Inventory;
         private final String PATH_PlayerInventory_items;
@@ -102,6 +103,11 @@ public class VersionUtil {
             if (args.length != 5) {
                 throw new IllegalArgumentException("The number of arguments is not satisfied");
             }
+            PATH_EntityPlayer_Inventory = args[0];
+            PATH_PlayerInventory_items = args[1];
+            PATH_PlayerInventory_armor = args[2];
+            PATH_PlayerInventory_extraSlots = args[3];
+            PATH_PlayerInventory_contents = args[4];
             //1.17+
             if (SharedConstants.WORLD_VERSION >= 2724) {
                 PATH_CLASS_PlayerInventory = "net.minecraft.world.entity.player.PlayerInventory";
@@ -110,11 +116,6 @@ public class VersionUtil {
                 PATH_METHOD_getNameSpacedKey = "fromString";
                 PATH_CLASS_EntityPlayer = "net.minecraft.server.level.EntityPlayer";
                 INVENTORY_USE_FIELD = false;
-                PATH_EntityPlayer_Inventory = args[0];
-                PATH_PlayerInventory_items = args[1];
-                PATH_PlayerInventory_armor = args[2];
-                PATH_PlayerInventory_extraSlots = args[3];
-                PATH_PlayerInventory_contents = args[4];
                 PATH_CLASS_EntityHuman = "net.minecraft.world.entity.player.EntityHuman";
             } else {
                 PATH_CLASS_PlayerInventory = "net.minecraft.server." + name() + ".PlayerInventory";
@@ -123,11 +124,6 @@ public class VersionUtil {
                 PATH_METHOD_getNameSpacedKey = "minecraft";
                 PATH_CLASS_EntityPlayer = "org.bukkit.craftbukkit." + name() + ".entity.CraftPlayer";
                 INVENTORY_USE_FIELD = true;
-                PATH_EntityPlayer_Inventory = args[0];
-                PATH_PlayerInventory_items = args[1];
-                PATH_PlayerInventory_armor = args[2];
-                PATH_PlayerInventory_extraSlots = args[3];
-                PATH_PlayerInventory_contents = args[4];
                 PATH_CLASS_EntityHuman = "net.minecraft.server." + name() + ".EntityHuman";
             }
             //1.16+
@@ -143,6 +139,7 @@ public class VersionUtil {
                 name = "v1_19_R1";
             }
             PATH_CLASS_CraftPlayer = "org.bukkit.craftbukkit." + name + ".entity.CraftPlayer";
+            PATH_CLASS_CraftItemStack = "org.bukkit.craftbukkit." + name + ".inventory.CraftItemStack";
         }
 
         /**
