@@ -42,7 +42,7 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
 
-    private ProtocolLibStatus protocolLibStatus;
+    private ProtocolLibStatus protocolLibState;
 
     private Listeners listener;
 
@@ -55,7 +55,7 @@ public final class InventoryShare extends JavaPlugin {
     @Override
     public void onEnable() {
         // Assign shared variable
-        protocolLibStatus = checkProtocolLib();
+        protocolLibState = checkProtocolLib();
 
         // Load language model(s)
         I18NUtil.I18NFileManager.saveDefaultLanguageFiles();
@@ -66,7 +66,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Metrics https://bstats.org/plugin/bukkit/InventoryShare/18372
         Metrics metrics = new Metrics(this, 18372);
-        metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> protocolLibStatus == ProtocolLibStatus.ENABLED ? "Using" : "Not Using"));
+        metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> protocolLibState == ProtocolLibStatus.ENABLED ? "Using" : "Not Using"));
 
         // Check Update
         UpdateUtil.checkUpdate();
@@ -79,7 +79,7 @@ public final class InventoryShare extends JavaPlugin {
         }
 
         // Check the server is using ProtocolLib plugin
-        switch (protocolLibStatus) {
+        switch (protocolLibState) {
             case ENABLED:
                 new ProtocolLibManager(this).enable();
                 logger.info(I18NUtil.get(false, false, "protocolLib_found"));
