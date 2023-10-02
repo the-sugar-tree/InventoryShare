@@ -48,12 +48,12 @@ public final class SharedConstants {
     public static final String PREFIX = ChatColor.LIGHT_PURPLE + "[" + ChatColor.AQUA + "InventoryShare" + ChatColor.LIGHT_PURPLE + "] " + ChatColor.RESET;
     public static FileConfiguration invconfig;
     public static FileConfiguration advconfig;
+    public static File invfile;
+    public static File advfile;
     public static Map<FileConfiguration, File> teamInvFileList = new HashMap<>();
     public static List<NamespacedKey> advlist = new ArrayList<>();
     public static IInventoryManager InventoryManager;
     public static IFileManager FileManager;
-    public static File invfile;
-    public static File advfile;
 
     public static String I18N_TEAM_SAVED;
     public static String I18N_TEAM_LOADED;
