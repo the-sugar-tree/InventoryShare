@@ -74,24 +74,24 @@ public final class NMSLoader {
 
             // Load Reflections
             CraftPlayer = Class.forName(VERSION_INFO.getPATH_CLASS_CraftPlayer());
-            Class<?> entityPlayer = Class.forName(VERSION_INFO.getPATH_CLASS_EntityPlayer());
+            Class<?> EntityPlayer = Class.forName(VERSION_INFO.getPATH_CLASS_EntityPlayer());
             EntityHuman = Class.forName(VERSION_INFO.getPATH_CLASS_EntityHuman());
             PlayerInventory = Class.forName(VERSION_INFO.getPATH_CLASS_PlayerInventory());
             Class<?> CraftItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_CraftItemStack());
-            Class<?> ItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_ItemStack());
+            Class<?> NMSItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_ItemStack());
             Class<?> NonNullList = Class.forName(VERSION_INFO.getPATH_CLASS_NonNullList());
 
             newPlayerInventory = PlayerInventory.getConstructor(EntityHuman);
 
             asCraftMirror = CraftItemStack
-                    .getMethod("asCraftMirror", ItemStack);
+                    .getMethod("asCraftMirror", NMSItemStack);
             asNMSCopy = CraftItemStack
                     .getMethod("asNMSCopy", ItemStack.class);
             getNamespacedKey = NamespacedKey.class
                     .getDeclaredMethod(VERSION_INFO.getPATH_METHOD_getNameSpacedKey(), String.class);
             createItemList = NonNullList
                     .getDeclaredMethod(VERSION_INFO.getPATH_METHOD_createItemlist(), int.class, Object.class);
-            nullItem = ItemStack
+            nullItem = NMSItemStack
                     .getField(VERSION_INFO.getPATH_FIELD_emptyItem()).get(null);
             toEntityPlayer = CraftPlayer.getMethod("getHandle");
             if (DOES_INVENTORY_USE_FIELD) {
@@ -99,7 +99,7 @@ public final class NMSLoader {
                         .getField(VERSION_INFO.getPATH_EntityPlayer_Inventory());
                 inventory_method = null;
             } else {
-                inventory_method = entityPlayer
+                inventory_method = EntityPlayer
                         .getMethod(VERSION_INFO.getPATH_EntityPlayer_Inventory());
                 inventory_field = null;
             }
@@ -207,4 +207,5 @@ public final class NMSLoader {
             throw new RuntimeException(e);
         }
     }
+
 }

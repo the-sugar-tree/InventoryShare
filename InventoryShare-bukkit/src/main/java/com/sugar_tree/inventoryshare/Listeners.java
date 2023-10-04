@@ -70,7 +70,9 @@ public final class Listeners implements Listener {
     }
 
     @EventHandler
-    public void onWorldSave(WorldSaveEvent event){
+    public void onWorldSave(WorldSaveEvent event) {
+        // FIXME: 3번 저장되는 오류 수정
+
         FileManager.save();
         if (inventory) {
             for (Player p : Bukkit.getOnlinePlayers()) {
@@ -94,10 +96,10 @@ public final class Listeners implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (announcedeath) {
-            Location loc = event.getEntity().getLocation();
-            World w = loc.getWorld();
-            Bukkit.broadcastMessage(PREFIX + I18NUtil.get("death_info", event.getEntity().getName(), (w == null ? null : w.getName()),
-                    loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+            Location deathLocation = event.getEntity().getLocation();
+            World deathWorld = deathLocation.getWorld();
+            Bukkit.broadcastMessage(PREFIX + I18NUtil.get("death_info", event.getEntity().getName(), (deathWorld == null ? null : deathWorld.getName()),
+                    deathLocation.getBlockX(), deathLocation.getBlockY(), deathLocation.getBlockZ()));
         }
     }
 

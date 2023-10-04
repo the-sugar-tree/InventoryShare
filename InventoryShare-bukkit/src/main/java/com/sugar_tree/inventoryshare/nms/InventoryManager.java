@@ -36,6 +36,10 @@ public final class InventoryManager implements IInventoryManager {
 
     public InventoryManager() {}
 
+    /**
+     * UUID - Player's UUID <br>
+     * Object - PlayerInventory
+     */
     private final Map<UUID, Object> originalPlayerInventoryMap = new HashMap<>();
 
     @Override
@@ -130,7 +134,7 @@ public final class InventoryManager implements IInventoryManager {
         originalPlayerInventoryMap.put(p.getUniqueId(), copiedPlayerInventory);
     }
 
-    public Set<UUID> getRegisteredPlayers() {
+    public @NotNull Set<UUID> getRegisteredPlayers() {
         return originalPlayerInventoryMap.keySet();
     }
 
