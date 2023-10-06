@@ -188,7 +188,7 @@ public final class Commands implements TabExecutor {
                     Command.broadcastCommandMessage(sender, I18NUtil.get(true, "config_reloaded"));
                     break;
                 case "check":
-                    sender.sendMessage(check);
+                    sender.sendMessage(checkMessage());
                     break;
                 default:
                     sender.sendMessage(usageMessage);
@@ -243,6 +243,16 @@ public final class Commands implements TabExecutor {
                 ;
     }
 
+    private String checkMessage() {
+        return ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
+                PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory + "\n" +
+                PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement + "\n" +
+                PREFIX + ChatColor.GOLD + "announcedeath: " + ChatColor.GREEN + announcedeath + "\n" +
+                PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + teaminventory + "\n" +
+                ChatColor.DARK_AQUA + "-----------------------------------------------------"
+                ;
+    }
+
     String usageMessage = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
             I18NUtil.get("help_message1") + "\n" +
             I18NUtil.get("help_message2") + "\n" +
@@ -252,13 +262,6 @@ public final class Commands implements TabExecutor {
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " teaminventory " + ChatColor.GOLD + "[true|false]" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_teaminv_info") + "\n" +
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " check" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_check_info") + "\n" +
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " reload" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_reload_config_info") + "\n" +
-            ChatColor.DARK_AQUA + "-----------------------------------------------------"
-            ;
-    String check = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
-            PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory + "\n" +
-            PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement + "\n" +
-            PREFIX + ChatColor.GOLD + "announcedeath: " + ChatColor.GREEN + announcedeath + "\n" +
-            PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + teaminventory + "\n" +
             ChatColor.DARK_AQUA + "-----------------------------------------------------"
             ;
 }
