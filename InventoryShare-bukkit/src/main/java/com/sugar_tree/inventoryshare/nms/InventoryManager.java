@@ -28,9 +28,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.sugar_tree.inventoryshare.SharedConstants.plugin;
-import static com.sugar_tree.inventoryshare.SharedConstants.teaminventory;
-import static com.sugar_tree.inventoryshare.nms.NMSLoader.*;
+import static com.sugar_tree.inventoryshare.SharedConstants.*;
+import static com.sugar_tree.inventoryshare.nms.NMSLoader.sharedItems;
+import static com.sugar_tree.inventoryshare.nms.NMSLoader.sharedArmor;
+import static com.sugar_tree.inventoryshare.nms.NMSLoader.sharedExtraSlots;
+import static com.sugar_tree.inventoryshare.nms.NMSLoader.sharedContents;
+import static com.sugar_tree.inventoryshare.nms.NMSLoader.TeamInventoryMap;
 
 public final class InventoryManager implements IInventoryManager {
 
@@ -40,113 +43,129 @@ public final class InventoryManager implements IInventoryManager {
      * UUID - Player's UUID <br>
      * Object - PlayerInventory
      */
-    private final Map<UUID, Object> originalPlayerInventoryMap = new HashMap<>();
-
-    @Override
-    public void applyAllInventory(@NotNull Player p) {
-        Object playerInventory = NMSLoader.getPlayerInventory(p);
-        try {
-            fillAllInventoryFields(playerInventory, sharedItems, sharedArmor, sharedExtraSlots, sharedContents);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void disApplyInventory(@NotNull Player p) {
-        Object playerInventory = NMSLoader.getPlayerInventory(p);
-        if (originalPlayerInventoryMap.containsKey(p.getUniqueId())) {
-            Object originalPlayerInventory = originalPlayerInventoryMap.get(p.getUniqueId());
-            AbstractList<Object> items = NMSLoader.getInventoryItems(originalPlayerInventory);
-            AbstractList<Object> armor = NMSLoader.getInventoryArmor(originalPlayerInventory);
-            AbstractList<Object> extraSlots = NMSLoader.getInventoryExtraSlots(originalPlayerInventory);
-            List<AbstractList<Object>> contents = ImmutableList.of(items, armor, extraSlots);
-            try {
-                fillAllInventoryFields(playerInventory, items, armor, extraSlots, contents);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        } else {
-            // 사용될 일이 없지만, 혹시 모른 버그 방지
-            AbstractList<Object> items = NMSLoader.createEmptyItemList(36);
-            AbstractList<Object> armor = NMSLoader.createEmptyItemList(4);
-            AbstractList<Object> extraSlots = NMSLoader.createEmptyItemList(1);
-            List<AbstractList<Object>> contents = ImmutableList.of(items, armor, extraSlots);
-            try {
-                fillAllInventoryFields(playerInventory, items, armor, extraSlots, contents);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        originalPlayerInventoryMap.remove(p.getUniqueId());
-    }
+    private final Map<UUID, PlayerInventory> originalPlayerInventoryMap = new HashMap<>();
 
     @SuppressWarnings("deprecation")
     @Override
-    public void applyInventory(@NotNull Player p) {
-        if (!(teaminventory)) {
+    public void updateInventroy(@NotNull final Player p) {
+        if (!inventory) {
+            applyPersonalInventory(p);
+            return;
+        }
+        if (!teaminventory) {
             applyAllInventory(p);
-            p.updateInventory();
             return;
         }
         if (plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p) == null) {
             applyAllInventory(p);
-            p.updateInventory();
             return;
         }
         String teamName = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p).getName();
-        AbstractList<Object> itemsT;
-        AbstractList<Object> armorT;
-        AbstractList<Object> extraSlotsT;
-        if (!TeamInventoryInfo.containsKey(teamName)) {
-            Map<String, AbstractList<Object>> map = new HashMap<>();
-            itemsT = NMSLoader.createEmptyItemList(36);
-            armorT = NMSLoader.createEmptyItemList(4);
-            extraSlotsT = NMSLoader.createEmptyItemList(1);
-            map.put("items", itemsT);
-            map.put("armor", armorT);
-            map.put("extraSlots", extraSlotsT);
-            TeamInventoryInfo.put(teamName, map);
-        } else {
-            Map<String, AbstractList<Object>> map = TeamInventoryInfo.get(teamName);
-            itemsT = map.get("items");
-            armorT = map.get("armor");
-            extraSlotsT = map.get("extraSlots");
-        }
+        applyTeamInventory(p, teamName);
+    }
+
+    @Override
+    public void applyAllInventory(@NotNull final Player p) {
+        if (!InventoryStatus.getInventoryStat(p).equals(InventoryStatus.ALL)) return;
+        if (InventoryStatus.getInventoryStat(p).equals(InventoryStatus.PERSONAL)) savePlayerInventory(p);
         Object playerInventory = NMSLoader.getPlayerInventory(p);
         try {
-            fillAllInventoryFields(playerInventory, itemsT, armorT, extraSlotsT);
+            fillInventoryFields(playerInventory, sharedItems, sharedArmor, sharedExtraSlots, sharedContents);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
+        InventoryStatus.setInventoryStat(p, InventoryStatus.ALL);
         p.updateInventory();
     }
 
     @Override
-    public void savePlayerInventory(@NotNull Player p) {
-        Object copiedPlayerInventory = NMSLoader.createEmptyPlayerInventory();
-        Object originalPlayerInventory = NMSLoader.getPlayerInventory(p);
+    public void applyTeamInventory(@NotNull final Player p, @NotNull final String teamName) {
+        if (!InventoryStatus.getInventoryStat(p).equals(InventoryStatus.TEAM)) return;
+        if (InventoryStatus.getInventoryStat(p).equals(InventoryStatus.PERSONAL)) savePlayerInventory(p);
+        AbstractList<Object> itemsT;
+        AbstractList<Object> armorT;
+        AbstractList<Object> extraSlotsT;
+        if (!TeamInventoryMap.containsKey(teamName)) {
+            // Create Empty Inventory
+            itemsT = NMSLoader.createEmptyItemList(36);
+            armorT = NMSLoader.createEmptyItemList(4);
+            extraSlotsT = NMSLoader.createEmptyItemList(1);
+            TeamInventoryMap.put(teamName, new PlayerInventory(itemsT, armorT, extraSlotsT));
+        } else {
+            PlayerInventory teamInventory = TeamInventoryMap.get(teamName);
+            itemsT = teamInventory.getItems();
+            armorT = teamInventory.getArmor();
+            extraSlotsT = teamInventory.getExtraSlots();
+        }
+        Object playerInventory = NMSLoader.getPlayerInventory(p);
         try {
-            fillAllInventoryFields(copiedPlayerInventory, NMSLoader.getInventoryItems(originalPlayerInventory), NMSLoader.getInventoryArmor(originalPlayerInventory), NMSLoader.getInventoryExtraSlots(originalPlayerInventory));
+            fillInventoryFields(playerInventory, itemsT, armorT, extraSlotsT);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        originalPlayerInventoryMap.put(p.getUniqueId(), copiedPlayerInventory);
+        InventoryStatus.setInventoryStat(p, InventoryStatus.TEAM);
+        p.updateInventory();
+    }
+
+    @Override
+    public void applyPersonalInventory(@NotNull final Player p) {
+        if (InventoryStatus.getInventoryStat(p).equals(InventoryStatus.PERSONAL)) return;
+        Object playerInventory = NMSLoader.getPlayerInventory(p);
+        if (originalPlayerInventoryMap.containsKey(p.getUniqueId())) {
+            PlayerInventory originalPlayerInventory = originalPlayerInventoryMap.get(p.getUniqueId());
+            AbstractList<Object> items = originalPlayerInventory.getItems();
+            AbstractList<Object> armor = originalPlayerInventory.getArmor();
+            AbstractList<Object> extraSlots = originalPlayerInventory.getExtraSlots();
+            try {
+                fillInventoryFields(playerInventory, items, armor, extraSlots);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            originalPlayerInventoryMap.remove(p.getUniqueId());
+        }
+        InventoryStatus.setInventoryStat(p, InventoryStatus.PERSONAL);
+    }
+
+    @Override
+    public void savePlayerInventory(@NotNull final Player p) {
+        if (!InventoryStatus.getInventoryStat(p).equals(InventoryStatus.PERSONAL))
+            throw new IllegalStateException("Currently, the player <" + p.getName() + "> is not in a personal inventory state!");
+        Object originalPlayerInventory = NMSLoader.getPlayerInventory(p);
+        originalPlayerInventoryMap.put(p.getUniqueId(),
+                new PlayerInventory(NMSLoader.getInventoryItems(originalPlayerInventory),
+                        NMSLoader.getInventoryArmor(originalPlayerInventory),
+                        NMSLoader.getInventoryExtraSlots(originalPlayerInventory)));
+        InventoryStatus.setInventoryStat(p, InventoryStatus.SAVED_BUT_NO_INVENTORY_TO_APPLY);
     }
 
     public @NotNull Set<UUID> getRegisteredPlayers() {
         return originalPlayerInventoryMap.keySet();
     }
 
-    private void fillAllInventoryFields(Object playerInventory, Object items, Object armor, Object extraSlots) throws NoSuchFieldException, IllegalAccessException {
-        fillAllInventoryFields(playerInventory, items, armor, extraSlots, ImmutableList.of(items, armor, extraSlots));
+    private void fillInventoryFields(Object playerInventory, Object items, Object armor, Object extraSlots)
+            throws NoSuchFieldException, IllegalAccessException {
+        fillInventoryFields(playerInventory, items, armor, extraSlots, ImmutableList.of(items, armor, extraSlots));
     }
 
-    private void fillAllInventoryFields(Object playerInventory, Object items, Object armor, Object extraSlots, Object contents) throws NoSuchFieldException, IllegalAccessException {
+    private void fillInventoryFields(Object playerInventory, Object items, Object armor, Object extraSlots, Object contents)
+            throws NoSuchFieldException, IllegalAccessException {
         final VersionUtil.SupportedVersions VERSION_INFO = VersionUtil.getVersion();
         setField(playerInventory, VERSION_INFO.getPATH_PlayerInventory_items(), items);
         setField(playerInventory, VERSION_INFO.getPATH_PlayerInventory_armor(), armor);
         setField(playerInventory, VERSION_INFO.getPATH_PlayerInventory_extraSlots(), extraSlots);
         setField(playerInventory, VERSION_INFO.getPATH_PlayerInventory_contents(), contents);
+    }
+
+    private enum InventoryStatus {
+        SAVED_BUT_NO_INVENTORY_TO_APPLY, TEAM, ALL, PERSONAL;
+        private static final Map<Player, InventoryStatus> playerInventoryStatInfo = new HashMap<>();
+
+        public static void setInventoryStat(Player p, InventoryStatus stat) {
+            playerInventoryStatInfo.put(p, stat);
+        }
+
+        public static InventoryStatus getInventoryStat(Player p) {
+            return playerInventoryStatInfo.get(p) == null ? PERSONAL : playerInventoryStatInfo.get(p);
+        }
     }
 }

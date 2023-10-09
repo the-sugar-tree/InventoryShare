@@ -67,7 +67,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Metrics https://bstats.org/plugin/bukkit/InventoryShare/18372
         Metrics metrics = new Metrics(this, 18372);
-        metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> protocolLibState == ProtocolLibStatus.ENABLED ? "Using" : "Not Using"));
+        metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> protocolLibStatus == ProtocolLibStatus.ENABLED ? "Using" : "Not Using"));
 
         // Check Update
         UpdateUtil.showUpdateInformation();
@@ -122,7 +122,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // if the server is reloaded
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (inventory) InventoryManager.applyInventory(player);
+            InventoryManager.updateInventroy(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
         }
 
@@ -138,7 +138,7 @@ public final class InventoryShare extends JavaPlugin {
         for (UUID puuid : InventoryManager.getRegisteredPlayers()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
-                InventoryManager.disApplyInventory(p);
+                InventoryManager.applyPersonalInventory(p);
             }
         }
         if (listener != null) Bukkit.getScheduler().cancelTask(listener.getTaskId());

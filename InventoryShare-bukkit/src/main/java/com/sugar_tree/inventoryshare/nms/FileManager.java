@@ -78,21 +78,21 @@ public final class FileManager implements IFileManager {
             File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             List<Map<?, ?>> serializedTeamItemsList = new ArrayList<>();
-            Map<String, AbstractList<Object>> teamInventory = TeamInventoryInfo.get(team.getName());
+            PlayerInventory teamInventory = TeamInventoryMap.get(team.getName());
             if (teamInventory == null) continue;
-            for (Object itemStack : teamInventory.get("items")) {
+            for (Object itemStack : teamInventory.getItems()) {
                 serializedTeamItemsList.add((NMSLoader.asCraftMirror(itemStack)).serialize());
             }
             fileConfiguration.set("items", serializedTeamItemsList);
 
             List<Map<?, ?>> serializedTeamArmorList = new ArrayList<>();
-            for (Object itemStack : teamInventory.get("armor")) {
+            for (Object itemStack : teamInventory.getArmor()) {
                 serializedTeamArmorList.add((NMSLoader.asCraftMirror(itemStack)).serialize());
             }
             fileConfiguration.set("armor", serializedTeamArmorList);
 
             List<Map<?, ?>> serializedTeamExtraSlotsList = new ArrayList<>();
-            for (Object itemStack : teamInventory.get("extraSlots")) {
+            for (Object itemStack : teamInventory.getExtraSlots()) {
                 serializedTeamExtraSlotsList.add((NMSLoader.asCraftMirror(itemStack)).serialize());
             }
             fileConfiguration.set("extraSlots", serializedTeamExtraSlotsList);
@@ -216,11 +216,7 @@ public final class FileManager implements IFileManager {
                     extraSlots.set(i, NMSLoader.asNMSCopy(ItemStack.deserialize((Map<String, Object>) extraSlotslistT.get(i))));
                 }
             }
-            Map<String, AbstractList<Object>> map = new HashMap<>();
-            map.put("items", items);
-            map.put("armor", armor);
-            map.put("extraSlots", extraSlots);
-            TeamInventoryInfo.put(team.getName(), map);
+            TeamInventoryMap.put(team.getName(), new PlayerInventory(items, armor, extraSlots));
             sb.append("[").append(team.getName()).append("] ");
             temp = true;
         }

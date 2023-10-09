@@ -26,7 +26,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -46,7 +45,7 @@ public final class NMSLoader {
     static final AbstractList<Object> sharedExtraSlots;
     static final List<AbstractList<Object>> sharedContents;
 
-    static final Map<String, Map<String, AbstractList<Object>>> TeamInventoryInfo;
+    static final Map<String, PlayerInventory> TeamInventoryMap;
     //
 
     private static final Class<?> CraftPlayer;
@@ -59,7 +58,6 @@ public final class NMSLoader {
     private static final Field inventory_items;
     private static final Field inventory_armor;
     private static final Field inventory_extraSlots;
-    private static final Constructor<?> newPlayerInventory;
 
     private static final Method asCraftMirror;
     private static final Method asNMSCopy;
@@ -80,8 +78,6 @@ public final class NMSLoader {
             Class<?> CraftItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_CraftItemStack());
             Class<?> NMSItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_ItemStack());
             Class<?> NonNullList = Class.forName(VERSION_INFO.getPATH_CLASS_NonNullList());
-
-            newPlayerInventory = PlayerInventory.getConstructor(EntityHuman);
 
             asCraftMirror = CraftItemStack
                     .getMethod("asCraftMirror", NMSItemStack);
@@ -117,7 +113,7 @@ public final class NMSLoader {
         sharedArmor = createEmptyItemList(4);
         sharedExtraSlots = createEmptyItemList(1);
         sharedContents = ImmutableList.of(sharedItems, sharedArmor, sharedExtraSlots);
-        TeamInventoryInfo = new HashMap<>();
+        TeamInventoryMap = new HashMap<>();
     }
 
     /**
@@ -159,14 +155,6 @@ public final class NMSLoader {
         try {
             return (AbstractList<Object>) createItemList.invoke(null, count, nullItem);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Object createEmptyPlayerInventory() {
-        try {
-            return newPlayerInventory.newInstance((Object) null);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }

@@ -32,22 +32,27 @@ public interface IInventoryManager {
     /**
      * Apply all inventory to specific player
      * @param p Player to apply
-     * @deprecated For internal use only
      */
-    @Deprecated
     void applyAllInventory(@NotNull Player p);
 
     /**
-     * Disapply inventory to specific player
-     * @param p Player to disapply
+     * Apply team inventory to specific player
+     * @param p Player to apply
+     * @param team Team name to apply
      */
-    void disApplyInventory(@NotNull Player p);
+    void applyTeamInventory(@NotNull Player p, @NotNull String team);
+
+    /**
+     * Apply personal(normal) inventory to specific player
+     * @param p Player to apply to
+     */
+    void applyPersonalInventory(@NotNull Player p);
 
     /**
      * Apply inventory to specific player automatically
      * @param p Player to apply
      */
-    void applyInventory(@NotNull Player p);
+    void updateInventroy(@NotNull Player p);
 
     /**
      * Save player's inventory to list

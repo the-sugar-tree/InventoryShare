@@ -59,13 +59,13 @@ public final class Listeners implements Listener {
         event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \""+ I18NUtil.get("plugin_name")
                 + ChatColor.YELLOW + "\" by." + ChatColor.GREEN + "sugar_tree");
         InventoryManager.savePlayerInventory(event.getPlayer());
-        if (inventory) InventoryManager.applyInventory(event.getPlayer());
+        if (inventory) InventoryManager.updateInventroy(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        InventoryManager.disApplyInventory(event.getPlayer());
+        InventoryManager.applyPersonalInventory(event.getPlayer());
         FileManager.save();
     }
 
@@ -76,9 +76,9 @@ public final class Listeners implements Listener {
         FileManager.save();
         if (inventory) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                InventoryManager.disApplyInventory(p);
+                InventoryManager.applyPersonalInventory(p);
                 p.saveData();
-                InventoryManager.applyInventory(p);
+                InventoryManager.updateInventroy(p);
             }
         }
     }
@@ -112,7 +112,7 @@ public final class Listeners implements Listener {
                     if (teaminventory) {
                         if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p))) {
                             teamMap.put(p, Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
-                            InventoryManager.applyInventory(p);
+                            InventoryManager.updateInventroy(p);
                         }
                     }
                 }

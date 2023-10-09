@@ -58,14 +58,11 @@ public final class Commands implements TabExecutor {
                     switch (args[1].toLowerCase()) {
                         case "true":
                             if (!inventory) {
-                                for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.savePlayerInventory(p);
-                                }
                                 inventory = true;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                                 for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.applyInventory(p);
+                                    InventoryManager.updateInventroy(p);
                                 }
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                             } else {
                                 sender.sendMessage(I18NUtil.get(true, "inv_already_y"));
                             }
@@ -73,10 +70,10 @@ public final class Commands implements TabExecutor {
                         case "false":
                             if (inventory) {
                                 inventory = false;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                                 for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.disApplyInventory(p);
+                                    InventoryManager.applyPersonalInventory(p);
                                 }
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                             } else {
                                 sender.sendMessage(I18NUtil.get(true, "inv_already_n"));
                             }
@@ -146,12 +143,12 @@ public final class Commands implements TabExecutor {
                         case "true":
                             if (!teaminventory) {
                                 teaminventory = true;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
                                 if (inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        InventoryManager.applyInventory(p);
+                                        InventoryManager.updateInventroy(p);
                                     }
                                 }
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
                             } else {
                                 sender.sendMessage(I18NUtil.get(true, "teaminv_already_y"));
                             }
@@ -159,12 +156,12 @@ public final class Commands implements TabExecutor {
                         case "false":
                             if (teaminventory) {
                                 teaminventory = false;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
                                 if (inventory) {
                                     for (Player p : Bukkit.getOnlinePlayers()) {
-                                        InventoryManager.applyInventory(p);
+                                        InventoryManager.updateInventroy(p);
                                     }
                                 }
+                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
                             } else {
                                 sender.sendMessage(I18NUtil.get(true, "teaminv_already_n"));
                             }
