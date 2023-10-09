@@ -41,8 +41,8 @@ andeath_already_n: "§c이미 사망 시 좌표 표시가 비활성화 되어 �
 andeath_get: "§6사망 시 좌표 표시의 현재 설정값은 §a%s§6입니다."
 
 teaminv_set: "§6팀 아이템 공유 설정값이 이제 §a%s§6입니다."
-teaminv_already_y: "§이미 팀 아이템 공유가 활성화 되어 있습니다!"
-teaminv_already_n: "§이미 팀 아이템 공유가 비활성화 되어 있습니다!"
+teaminv_already_y: "§c이미 팀 아이템 공유가 활성화 되어 있습니다!"
+teaminv_already_n: "§c이미 팀 아이템 공유가 비활성화 되어 있습니다!"
 teaminv_get: "§6팀 아이템 공유의 현재 설정값은 §a%s§6입니다."
 
 config_reloaded: "§aConfig 파일이 새로고침 되었습니다!"
