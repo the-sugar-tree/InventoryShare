@@ -43,7 +43,7 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public final class InventoryShare extends JavaPlugin {
 
-    private ProtocolLibStatus protocolLibState;
+    private ProtocolLibStatus protocolLibStatus;
 
     private Listeners listener;
 
@@ -56,7 +56,7 @@ public final class InventoryShare extends JavaPlugin {
     @Override
     public void onEnable() {
         // Assign shared variable
-        protocolLibState = checkProtocolLib();
+        protocolLibStatus = checkProtocolLib();
 
         // Load language model(s)
         I18NUtil.I18NFileManager.saveDefaultLanguageFiles();
@@ -70,7 +70,7 @@ public final class InventoryShare extends JavaPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("protocollib", () -> protocolLibState == ProtocolLibStatus.ENABLED ? "Using" : "Not Using"));
 
         // Check Update
-        UpdateUtil.checkUpdate();
+        UpdateUtil.showUpdateInformation();
 
         // Check version (If null, it means not supported)
         if (VersionUtil.getVersion() == null) {
@@ -80,7 +80,7 @@ public final class InventoryShare extends JavaPlugin {
         }
 
         // Check the server is using ProtocolLib plugin
-        switch (protocolLibState) {
+        switch (protocolLibStatus) {
             case ENABLED:
                 if (VersionUtil.getVersion().name().equals("v1_12_R1")) break;
                 new ProtocolLibManager(this).enable();

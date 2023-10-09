@@ -35,7 +35,7 @@ public final class UpdateUtil {
     private UpdateUtil() {}
 
     private static String version;
-    public static void checkUpdate() {
+    public static void showUpdateInformation() {
         try {
             String url = "https://api.github.com/repos/the-sugar-tree/InventoryShare/releases/latest";
             HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
