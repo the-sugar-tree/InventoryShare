@@ -71,7 +71,7 @@ public final class Commands implements TabExecutor {
                             if (inventory) {
                                 inventory = false;
                                 for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.applyPersonalInventory(p);
+                                    InventoryManager.updateInventroy(p);
                                 }
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                             } else {
@@ -143,10 +143,8 @@ public final class Commands implements TabExecutor {
                         case "true":
                             if (!teaminventory) {
                                 teaminventory = true;
-                                if (inventory) {
-                                    for (Player p : Bukkit.getOnlinePlayers()) {
-                                        InventoryManager.updateInventroy(p);
-                                    }
+                                for (Player p : Bukkit.getOnlinePlayers()) {
+                                    InventoryManager.updateInventroy(p);
                                 }
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
                             } else {
@@ -156,10 +154,8 @@ public final class Commands implements TabExecutor {
                         case "false":
                             if (teaminventory) {
                                 teaminventory = false;
-                                if (inventory) {
-                                    for (Player p : Bukkit.getOnlinePlayers()) {
-                                        InventoryManager.updateInventroy(p);
-                                    }
+                                for (Player p : Bukkit.getOnlinePlayers()) {
+                                    InventoryManager.updateInventroy(p);
                                 }
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
                             } else {

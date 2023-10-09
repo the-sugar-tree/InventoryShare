@@ -58,8 +58,7 @@ public final class Listeners implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \""+ I18NUtil.get("plugin_name")
                 + ChatColor.YELLOW + "\" by." + ChatColor.GREEN + "sugar_tree");
-        InventoryManager.savePlayerInventory(event.getPlayer());
-        if (inventory) InventoryManager.updateInventroy(event.getPlayer());
+        InventoryManager.updateInventroy(event.getPlayer());
         AdvancementPatch(event.getPlayer());
     }
 

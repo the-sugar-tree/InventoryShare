@@ -66,7 +66,7 @@ public final class InventoryManager implements IInventoryManager {
 
     @Override
     public void applyAllInventory(@NotNull final Player p) {
-        if (!InventoryStatus.getInventoryStat(p).equals(InventoryStatus.ALL)) return;
+        if (InventoryStatus.getInventoryStat(p).equals(InventoryStatus.ALL)) return;
         if (InventoryStatus.getInventoryStat(p).equals(InventoryStatus.PERSONAL)) savePlayerInventory(p);
         Object playerInventory = NMSLoader.getPlayerInventory(p);
         try {
@@ -80,7 +80,7 @@ public final class InventoryManager implements IInventoryManager {
 
     @Override
     public void applyTeamInventory(@NotNull final Player p, @NotNull final String teamName) {
-        if (!InventoryStatus.getInventoryStat(p).equals(InventoryStatus.TEAM)) return;
+        if (InventoryStatus.getInventoryStat(p).equals(InventoryStatus.TEAM)) return;
         if (InventoryStatus.getInventoryStat(p).equals(InventoryStatus.PERSONAL)) savePlayerInventory(p);
         AbstractList<Object> itemsT;
         AbstractList<Object> armorT;
