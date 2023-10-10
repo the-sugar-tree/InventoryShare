@@ -44,19 +44,19 @@ public final class FileManager implements IFileManager {
     public void save() {
         List<Map<?, ?>> serializedItemsList = new ArrayList<>();
         for (Object itemStack : sharedItems) {
-            serializedItemsList.add((NMSLoader.asCraftMirror(itemStack)).serialize());
+            serializedItemsList.add(NMSLoader.asCraftMirror(itemStack).serialize());
         }
         invconfig.set("items", serializedItemsList);
 
         List<Map<?, ?>> serializedArmorList = new ArrayList<>();
         for (Object itemStack : sharedArmor) {
-            serializedArmorList.add((NMSLoader.asCraftMirror(itemStack)).serialize());
+            serializedArmorList.add(NMSLoader.asCraftMirror(itemStack).serialize());
         }
         invconfig.set("armor", serializedArmorList);
 
         List<Map<?, ?>> serializedExtraSlotsList = new ArrayList<>();
         for (Object itemStack : sharedExtraSlots) {
-            serializedExtraSlotsList.add((NMSLoader.asCraftMirror(itemStack)).serialize());
+            serializedExtraSlotsList.add(NMSLoader.asCraftMirror(itemStack).serialize());
         }
         invconfig.set("extraSlots", serializedExtraSlotsList);
 
@@ -81,19 +81,19 @@ public final class FileManager implements IFileManager {
             PlayerInventory teamInventory = TeamInventoryMap.get(team.getName());
             if (teamInventory == null) continue;
             for (Object itemStack : teamInventory.getItems()) {
-                serializedTeamItemsList.add((NMSLoader.asCraftMirror(itemStack)).serialize());
+                serializedTeamItemsList.add(NMSLoader.asCraftMirror(itemStack).serialize());
             }
             fileConfiguration.set("items", serializedTeamItemsList);
 
             List<Map<?, ?>> serializedTeamArmorList = new ArrayList<>();
             for (Object itemStack : teamInventory.getArmor()) {
-                serializedTeamArmorList.add((NMSLoader.asCraftMirror(itemStack)).serialize());
+                serializedTeamArmorList.add(NMSLoader.asCraftMirror(itemStack).serialize());
             }
             fileConfiguration.set("armor", serializedTeamArmorList);
 
             List<Map<?, ?>> serializedTeamExtraSlotsList = new ArrayList<>();
             for (Object itemStack : teamInventory.getExtraSlots()) {
-                serializedTeamExtraSlotsList.add((NMSLoader.asCraftMirror(itemStack)).serialize());
+                serializedTeamExtraSlotsList.add(NMSLoader.asCraftMirror(itemStack).serialize());
             }
             fileConfiguration.set("extraSlots", serializedTeamExtraSlotsList);
             teamInvFileList.put(fileConfiguration, file);
