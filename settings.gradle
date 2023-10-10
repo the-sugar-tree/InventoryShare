@@ -7,6 +7,6 @@ findProject(':InventoryShare-single:v1_20_R2')?.name = 'v1_20_R2'
 include 'InventoryShare-single:InventoryShare-all'
 
 include 'InventoryShare-sponge'
-include 'InventoryShare-bukkit:InventoryShare-api'
-findProject(':InventoryShare-bukkit:InventoryShare-api')?.name = 'InventoryShare-api'
+//include 'InventoryShare-bukkit:InventoryShare-api'
+//findProject(':InventoryShare-bukkit:InventoryShare-api')?.name = 'InventoryShare-api'
 
