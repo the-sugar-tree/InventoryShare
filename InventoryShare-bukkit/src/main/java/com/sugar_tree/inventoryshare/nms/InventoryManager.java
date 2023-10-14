@@ -135,7 +135,7 @@ public final class InventoryManager implements IInventoryManager {
                 new PlayerInventory(NMSLoader.getInventoryItems(originalPlayerInventory),
                         NMSLoader.getInventoryArmor(originalPlayerInventory),
                         NMSLoader.getInventoryExtraSlots(originalPlayerInventory)));
-        InventoryState.setInventoryState(p, InventoryState.SAVED_BUT_NO_INVENTORY_TO_APPLY);
+        InventoryState.setInventoryState(p, InventoryState.SAVED);
     }
 
     public @NotNull Set<UUID> getRegisteredPlayers() {
@@ -157,7 +157,13 @@ public final class InventoryManager implements IInventoryManager {
     }
 
     private enum InventoryState {
-        SAVED_BUT_NO_INVENTORY_TO_APPLY, TEAM, ALL, PERSONAL;
+        /**
+         * saved and {@link #PERSONAL} inventory state, this state means the player in this state should be applied another inventory now
+         */
+        SAVED,
+        TEAM,
+        ALL,
+        PERSONAL;
         private static final Map<Player, InventoryState> playerInventoryStateInfo = new HashMap<>();
 
         public static void setInventoryState(Player p, InventoryState state) {
@@ -168,4 +174,5 @@ public final class InventoryManager implements IInventoryManager {
             return playerInventoryStateInfo.get(p) == null ? PERSONAL : playerInventoryStateInfo.get(p);
         }
     }
+
 }
