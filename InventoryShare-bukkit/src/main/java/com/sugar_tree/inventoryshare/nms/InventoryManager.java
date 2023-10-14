@@ -165,7 +165,7 @@ public final class InventoryManager implements IInventoryManager {
         }
 
         public static InventoryState getInventoryState(Player p) {
-            return playerInventoryStateInfo.containsKey(p) ? PERSONAL : playerInventoryStateInfo.get(p);
+            return playerInventoryStateInfo.get(p) == null ? PERSONAL : playerInventoryStateInfo.get(p);
         }
     }
 }
