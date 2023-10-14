@@ -25,7 +25,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @SuppressWarnings("ALL")
@@ -46,6 +49,18 @@ public class SimpleTest {
         */
 
 //        checkLanguageConfig();
+
+        Map<UUID, String> map = new HashMap<>();
+        final UUID u1 = UUID.randomUUID();
+        final UUID u2 = UUID.randomUUID();
+        final UUID u3 = UUID.randomUUID();
+        final UUID u4 = UUID.randomUUID();
+        map.put(u1, "a");
+        map.put(u2, "b");
+        map.put(u3, "c");
+        map.put(u4, null);
+        log.info(Boolean.toString(map.containsKey(u4)));
+        log.info(Boolean.toString(map.get(u4) == null));
         log.info("test");
         log.info("{}s elapsed", ((float) (System.currentTimeMillis() - startTime) / 1000));
     }
