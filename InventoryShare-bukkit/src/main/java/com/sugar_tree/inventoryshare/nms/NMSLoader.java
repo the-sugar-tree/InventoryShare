@@ -59,7 +59,7 @@ public final class NMSLoader {
     private static final Field inventory_armor;
     private static final Field inventory_extraSlots;
 
-    private static final Method asCraftMirror;
+    private static final Method asBukkitCopy;
     private static final Method asNMSCopy;
     private static final Method getNamespacedKey;
 
@@ -79,8 +79,8 @@ public final class NMSLoader {
             Class<?> NMSItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_ItemStack());
             Class<?> NonNullList = Class.forName(VERSION_INFO.getPATH_CLASS_NonNullList());
 
-            asCraftMirror = CraftItemStack
-                    .getMethod("asCraftMirror", NMSItemStack);
+            asBukkitCopy = CraftItemStack
+                    .getMethod("asBukkitCopy", NMSItemStack);
             asNMSCopy = CraftItemStack
                     .getMethod("asNMSCopy", ItemStack.class);
             getNamespacedKey = NamespacedKey.class
@@ -121,9 +121,9 @@ public final class NMSLoader {
      * @param nmsItemStack {@link net.minecraft.world.item}.ItemStack or {@link net.minecraft.server}.v1_00.R0.ItemStack
      * @return {@link ItemStack}
      */
-    public static ItemStack asCraftMirror(final Object nmsItemStack) {
+    public static ItemStack asBukkitCopy(final Object nmsItemStack) {
         try {
-            return (ItemStack) asCraftMirror.invoke(null, nmsItemStack);
+            return (ItemStack) asBukkitCopy.invoke(null, nmsItemStack);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
