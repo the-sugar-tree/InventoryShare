@@ -82,6 +82,7 @@ public final class InventoryShare extends JavaPlugin {
         // Check the server is using ProtocolLib plugin
         switch (protocolLibStatus) {
             case ENABLED:
+                // Skip 1.12 due to packet system is not same
                 if (VersionUtil.getVersion().name().equals("v1_12_R1")) break;
                 new ProtocolLibManager(this).enable();
                 logger.info(I18NUtil.get(false, false, "protocolLib_found"));
