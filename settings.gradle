@@ -1,7 +1,5 @@
 rootProject.name = 'InventoryShare'
 include 'InventoryShare-bukkit'
-include 'InventoryShare-bukkit:detector'
-findProject(':InventoryShare-bukkit:detector')?.name = 'detector'
 
 include 'InventoryShare-single'
 include 'InventoryShare-single:v1_20_R2'
