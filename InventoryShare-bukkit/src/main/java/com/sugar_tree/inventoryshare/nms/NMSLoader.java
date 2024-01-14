@@ -34,6 +34,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * [Warning] This class is using Reflection for NMS service
+ */
 @SuppressWarnings("unchecked")
 public final class NMSLoader {
 
@@ -65,7 +68,7 @@ public final class NMSLoader {
 
     private static final Method createItemList;
 
-    static  {
+    static {
         try {
             final VersionUtil.SupportedVersions VERSION_INFO = VersionUtil.getVersion();
             DOES_INVENTORY_USE_FIELD = VERSION_INFO.isINVENTORY_USE_FIELD();
@@ -79,16 +82,11 @@ public final class NMSLoader {
             Class<?> NMSItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_ItemStack());
             Class<?> NonNullList = Class.forName(VERSION_INFO.getPATH_CLASS_NonNullList());
 
-            asBukkitCopy = CraftItemStack
-                    .getMethod("asBukkitCopy", NMSItemStack);
-            asNMSCopy = CraftItemStack
-                    .getMethod("asNMSCopy", ItemStack.class);
-            getNamespacedKey = NamespacedKey.class
-                    .getDeclaredMethod(VERSION_INFO.getPATH_METHOD_getNameSpacedKey(), String.class);
-            createItemList = NonNullList
-                    .getDeclaredMethod(VERSION_INFO.getPATH_METHOD_createItemlist(), int.class, Object.class);
-            nullItem = NMSItemStack
-                    .getField(VERSION_INFO.getPATH_FIELD_emptyItem()).get(null);
+            asBukkitCopy = CraftItemStack.getMethod("asBukkitCopy", NMSItemStack);
+            asNMSCopy = CraftItemStack.getMethod("asNMSCopy", ItemStack.class);
+            getNamespacedKey = NamespacedKey.class.getDeclaredMethod(VERSION_INFO.getPATH_METHOD_getNameSpacedKey(), String.class);
+            createItemList = NonNullList.getDeclaredMethod(VERSION_INFO.getPATH_METHOD_createItemlist(), int.class, Object.class);
+            nullItem = NMSItemStack.getField(VERSION_INFO.getPATH_FIELD_emptyItem()).get(null);
             toEntityPlayer = CraftPlayer.getMethod("getHandle");
             if (DOES_INVENTORY_USE_FIELD) {
                 inventory_field = EntityHuman
