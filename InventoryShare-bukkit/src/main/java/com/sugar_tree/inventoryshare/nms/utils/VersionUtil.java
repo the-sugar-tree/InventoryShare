@@ -45,40 +45,42 @@ public class VersionUtil {
 
     @Getter
     public enum SupportedVersions {
-        v1_20_R2(ImmutableSet.of("1.20.2-R0.1-SNAPSHOT"),
-                "fR", "i", "j", "k", "o"),
-        v1_20_R1(ImmutableSet.of("1.20-R0.1-SNAPSHOT", "1.20.1-R0.1-SNAPSHOT"),
-                "fN", "i", "j", "k", "o"),
-        v1_19_R3(ImmutableSet.of("1.19.4-R0.1-SNAPSHOT"),
-                "fJ", "i", "j", "k", "o"),
-        v1_19_R2(ImmutableSet.of("1.19.3-R0.1-SNAPSHOT"),
-                "fE", "h", "i", "j", "n"),
-        v1_19_1_R1(ImmutableSet.of("1.19.2-R0.1-SNAPSHOT", "1.19.1-R0.1-SNAPSHOT"),
-                "fA", "h", "i", "j", "n"),
-        v1_19_R1(ImmutableSet.of("1.19-R0.1-SNAPSHOT"),
-                "fB", "h", "i", "j", "n"),
-        v1_18_R2(ImmutableSet.of("1.18.2-R0.1-SNAPSHOT", "1.18.1-R0.1-SNAPSHOT"),
-                "fr", "h", "i", "j", "n"),
-        v1_18_R1(ImmutableSet.of("1.18-R0.1-SNAPSHOT"),
-                "fq", "h", "i", "j", "n"),
-        v1_17_R1(ImmutableSet.of("1.17-R0.1-SNAPSHOT", "1.17.1-R0.1-SNAPSHOT"),
-                "getInventory", "h", "i", "j", "n"),
-        v1_16_R3(ImmutableSet.of("1.16.5-R0.1-SNAPSHOT", "1.16.4-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_16_R2(ImmutableSet.of("1.16.3-R0.1-SNAPSHOT", "1.16.2-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_16_R1(ImmutableSet.of("1.16.1-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_15_R1(ImmutableSet.of("1.15.2-R0.1-SNAPSHOT", "1.15.1-R0.1-SNAPSHOT", "1.15-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_14_R1(ImmutableSet.of("1.14.4-R0.1-SNAPSHOT", "1.14.3-R0.1-SNAPSHOT", "1.14.2-R0.1-SNAPSHOT", "1.14.1-R0.1-SNAPSHOT", "1.14-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_13_R2(ImmutableSet.of("1.13.2-R0.1-SNAPSHOT"),
+        v1_12_R1(ImmutableSet.of("1.12.2-R0.1-SNAPSHOT", "1.12.1-R0.1-SNAPSHOT", "1.12-R0.1-SNAPSHOT"),
                 "inventory", "items", "armor", "extraSlots", "f"),
         v1_13_R1(ImmutableSet.of("1.13.1-R0.1-SNAPSHOT", "1.13-R0.1-SNAPSHOT"),
                 "inventory", "items", "armor", "extraSlots", "f"),
-        v1_12_R1(ImmutableSet.of("1.12.2-R0.1-SNAPSHOT", "1.12.1-R0.1-SNAPSHOT", "1.12-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f");
+        v1_13_R2(ImmutableSet.of("1.13.2-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_14_R1(ImmutableSet.of("1.14.4-R0.1-SNAPSHOT", "1.14.3-R0.1-SNAPSHOT", "1.14.2-R0.1-SNAPSHOT", "1.14.1-R0.1-SNAPSHOT", "1.14-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_15_R1(ImmutableSet.of("1.15.2-R0.1-SNAPSHOT", "1.15.1-R0.1-SNAPSHOT", "1.15-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_16_R1(ImmutableSet.of("1.16.1-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_16_R2(ImmutableSet.of("1.16.3-R0.1-SNAPSHOT", "1.16.2-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_16_R3(ImmutableSet.of("1.16.5-R0.1-SNAPSHOT", "1.16.4-R0.1-SNAPSHOT"),
+                "inventory", "items", "armor", "extraSlots", "f"),
+        v1_17_R1(ImmutableSet.of("1.17-R0.1-SNAPSHOT", "1.17.1-R0.1-SNAPSHOT"),
+                "getInventory", "h", "i", "j", "n"),
+        v1_18_R1(ImmutableSet.of("1.18-R0.1-SNAPSHOT"),
+                "fq", "h", "i", "j", "n"),
+        v1_18_R2(ImmutableSet.of("1.18.2-R0.1-SNAPSHOT", "1.18.1-R0.1-SNAPSHOT"),
+                "fr", "h", "i", "j", "n"),
+        v1_19_R1(ImmutableSet.of("1.19-R0.1-SNAPSHOT"),
+                "fB", "h", "i", "j", "n"),
+        v1_19_1_R1(ImmutableSet.of("1.19.2-R0.1-SNAPSHOT", "1.19.1-R0.1-SNAPSHOT"),
+                "fA", "h", "i", "j", "n"),
+        v1_19_R2(ImmutableSet.of("1.19.3-R0.1-SNAPSHOT"),
+                "fE", "h", "i", "j", "n"),
+        v1_19_R3(ImmutableSet.of("1.19.4-R0.1-SNAPSHOT"),
+                "fJ", "i", "j", "k", "o"),
+        v1_20_R1(ImmutableSet.of("1.20-R0.1-SNAPSHOT", "1.20.1-R0.1-SNAPSHOT"),
+                "fN", "i", "j", "k", "o"),
+        v1_20_R2(ImmutableSet.of("1.20.2-R0.1-SNAPSHOT"),
+                "fR", "i", "j", "k", "o"),
+        v1_20_R3(ImmutableSet.of("1.20.4-R0.1-SNAPSHOT", "1.20.3-R0.1-SNAPSHOT"),
+                "fS", "i", "j", "k", "o");
 
         private final ImmutableSet<String> versions;
         private final String PATH_CLASS_PlayerInventory;
@@ -109,8 +111,7 @@ public class VersionUtil {
             PATH_PlayerInventory_armor = args[2];
             PATH_PlayerInventory_extraSlots = args[3];
             PATH_PlayerInventory_contents = args[4];
-            //1.17+
-            if (SharedConstants.WORLD_VERSION >= 2724) {
+            if (SharedConstants.WORLD_VERSION >= 2724 /* 1.17- */) {
                 PATH_CLASS_PlayerInventory = "net.minecraft.world.entity.player.PlayerInventory";
                 PATH_CLASS_ItemStack = "net.minecraft.world.item.ItemStack";
                 PATH_CLASS_NonNullList = "net.minecraft.core.NonNullList";
@@ -127,14 +128,14 @@ public class VersionUtil {
                 INVENTORY_USE_FIELD = true;
                 PATH_CLASS_EntityHuman = "net.minecraft.server." + name() + ".EntityHuman";
             }
-            //1.16+
-            if (SharedConstants.WORLD_VERSION >= 2566) {
-                PATH_METHOD_createItemlist = "a";
+            if (SharedConstants.WORLD_VERSION >= 3698 /* 1.20.3- */) {
+                PATH_FIELD_emptyItem = "f";
+            } else if (SharedConstants.WORLD_VERSION >= 2566 /* 1.16-1.20.2 */) {
                 PATH_FIELD_emptyItem = "b";
             } else {
-                PATH_METHOD_createItemlist = "a";
                 PATH_FIELD_emptyItem = "a";
             }
+            PATH_METHOD_createItemlist = "a";
             String name = name();
             if (name.equals("v1_19_1_R1")) {
                 name = "v1_19_R1";
