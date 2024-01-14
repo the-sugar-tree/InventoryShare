@@ -82,7 +82,7 @@ public final class InventoryShare extends JavaPlugin {
         // Check the server is using ProtocolLib plugin
         switch (protocolLibStatus) {
             case ENABLED:
-                // Skip 1.12 due to packet system is not same
+                // Skip 1.12 due to packet system is not equal
                 if (VersionUtil.getVersion().name().equals("v1_12_R1")) break;
                 new ProtocolLibManager(this).enable();
                 logger.info(I18NUtil.get(false, false, "protocolLib_found"));
@@ -91,10 +91,12 @@ public final class InventoryShare extends JavaPlugin {
                 logger.warning(I18NUtil.get(false, false, "protocolLib_need1"));
                 logger.warning(I18NUtil.get(false, false, "protocolLib_need2"));
                 logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
+                logger.warning("https://ci.dmulloy2.net/job/ProtocolLib/lastBuild");
                 break;
             case DISABLED:
                 logger.warning(I18NUtil.get(false, false, "protocolLib_need_update"));
                 logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
+                logger.warning("https://ci.dmulloy2.net/job/ProtocolLib/lastBuild");
                 break;
         }
 
