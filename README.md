@@ -1,15 +1,17 @@
 # Inventory Sharing Plugin (v3.1)
 인벤토리 공유 플러그인 (v3.1)
 
+> [!note]  
+> 1.20.2 - 1.20.3 버전의 플러그인은 [beta](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v3.1.1-beta) 항목을 참조해주세요!   
+> ProtocolLib 플러그인은 [개발버전](https://ci.dmulloy2.net/job/ProtocolLib/lastBuild/)을 참조해주세요!
+
+
+> [!important]  
+> 먼저 README파일(아래)을 다 읽어주세요!!!
+
+
 ## Change Log   
 1.20 Support
-
----
-
-
-<span style="color:red">
-    <b>먼저 README파일(아래)를 다 읽어주세요!!!</b>
-</span>
 
 ---
 <p align="center">
