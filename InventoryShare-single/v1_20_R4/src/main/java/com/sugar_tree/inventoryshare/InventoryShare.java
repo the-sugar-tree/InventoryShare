@@ -27,8 +27,8 @@ import com.sugar_tree.inventoryshare.main.util.AdvancementUtil;
 import com.sugar_tree.inventoryshare.main.util.I18NUtil;
 import com.sugar_tree.inventoryshare.main.util.ProtocolLibUtil;
 import com.sugar_tree.inventoryshare.main.util.UpdateUtil;
-import com.sugar_tree.inventoryshare.v1_20_R3.FileManager;
-import com.sugar_tree.inventoryshare.v1_20_R3.InventoryManager;
+import com.sugar_tree.inventoryshare.v1_20_R4.FileManager;
+import com.sugar_tree.inventoryshare.v1_20_R4.InventoryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -46,7 +46,7 @@ public final class InventoryShare extends JavaPlugin {
 
     private Listeners listener;
 
-    final String supportedVersion = "v1_20_R3";
+    final String supportedVersion = "v1_20_R4";
 
     @Override
     public void onEnable() {

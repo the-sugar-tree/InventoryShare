@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.v1_20_R3;
+package com.sugar_tree.inventoryshare.v1_20_R4;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.IFileManager;
@@ -29,7 +29,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
@@ -40,9 +40,9 @@ import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 public class FileManager implements IFileManager {
     protected static Map<UUID, PlayerInventory> invList = new HashMap<>();
 
-    protected static NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.f);
-    protected static NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.f);
-    protected static NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.f);
+    protected static NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.l);
+    protected static NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.l);
+    protected static NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.l);
     protected static List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
     protected static Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
 
@@ -157,9 +157,9 @@ public class FileManager implements IFileManager {
         }
 
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
-            NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.f);
-            NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.f);
-            NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.f);
+            NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.l);
+            NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.l);
+            NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.l);
             File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
             if (file.exists()) {
                 FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);

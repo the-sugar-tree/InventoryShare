@@ -80,7 +80,9 @@ public class VersionUtil {
         v1_20_R2(ImmutableSet.of("1.20.2-R0.1-SNAPSHOT"),
                 "fR", "i", "j", "k", "o"),
         v1_20_R3(ImmutableSet.of("1.20.4-R0.1-SNAPSHOT", "1.20.3-R0.1-SNAPSHOT"),
-                "fS", "i", "j", "k", "o");
+                "fS", "i", "j", "k", "o"),
+        v1_20_R4(ImmutableSet.of("1.20.6-R0.1-SNAPSHOT", "1.20.5-R0.1-SNAPSHOT"),
+                "gc", "h", "i", "j", "n");
 
         private final ImmutableSet<String> versions;
         private final String PATH_CLASS_PlayerInventory;
@@ -106,12 +108,16 @@ public class VersionUtil {
             if (args.length != 5) {
                 throw new IllegalArgumentException("The number of arguments is not satisfied");
             }
+            String name = name();
+            if (name.equals("v1_19_1_R1")) {
+                name = "v1_19_R1";
+            }
             PATH_EntityPlayer_Inventory = args[0];
             PATH_PlayerInventory_items = args[1];
             PATH_PlayerInventory_armor = args[2];
             PATH_PlayerInventory_extraSlots = args[3];
             PATH_PlayerInventory_contents = args[4];
-            if (SharedConstants.WORLD_VERSION >= 2724 /* 1.17- */) {
+            if (SharedConstants.WORLD_VERSION >= 2724 /* 1.17+ */) {
                 PATH_CLASS_PlayerInventory = "net.minecraft.world.entity.player.PlayerInventory";
                 PATH_CLASS_ItemStack = "net.minecraft.world.item.ItemStack";
                 PATH_CLASS_NonNullList = "net.minecraft.core.NonNullList";
@@ -120,15 +126,17 @@ public class VersionUtil {
                 INVENTORY_USE_FIELD = false;
                 PATH_CLASS_EntityHuman = "net.minecraft.world.entity.player.EntityHuman";
             } else {
-                PATH_CLASS_PlayerInventory = "net.minecraft.server." + name() + ".PlayerInventory";
-                PATH_CLASS_ItemStack = "net.minecraft.server."+ name() + ".ItemStack";
-                PATH_CLASS_NonNullList = "net.minecraft.server." + name() + ".NonNullList";
+                PATH_CLASS_PlayerInventory = "net.minecraft.server." + name + ".PlayerInventory";
+                PATH_CLASS_ItemStack = "net.minecraft.server."+ name + ".ItemStack";
+                PATH_CLASS_NonNullList = "net.minecraft.server." + name + ".NonNullList";
                 PATH_METHOD_getNameSpacedKey = "minecraft";
-                PATH_CLASS_EntityPlayer = "org.bukkit.craftbukkit." + name() + ".entity.CraftPlayer";
+                PATH_CLASS_EntityPlayer = "org.bukkit.craftbukkit." + name + ".entity.CraftPlayer";
                 INVENTORY_USE_FIELD = true;
-                PATH_CLASS_EntityHuman = "net.minecraft.server." + name() + ".EntityHuman";
+                PATH_CLASS_EntityHuman = "net.minecraft.server." + name + ".EntityHuman";
             }
-            if (SharedConstants.WORLD_VERSION >= 3698 /* 1.20.3- */) {
+            if (SharedConstants.WORLD_VERSION >= 3839 /* 1.20.5+ */) {
+                PATH_FIELD_emptyItem = "l";
+            } else if (SharedConstants.WORLD_VERSION >= 3698 /* 1.20.3-1.20.4 */) {
                 PATH_FIELD_emptyItem = "f";
             } else if (SharedConstants.WORLD_VERSION >= 2566 /* 1.16-1.20.2 */) {
                 PATH_FIELD_emptyItem = "b";
@@ -136,10 +144,6 @@ public class VersionUtil {
                 PATH_FIELD_emptyItem = "a";
             }
             PATH_METHOD_createItemlist = "a";
-            String name = name();
-            if (name.equals("v1_19_1_R1")) {
-                name = "v1_19_R1";
-            }
             PATH_CLASS_CraftPlayer = "org.bukkit.craftbukkit." + name + ".entity.CraftPlayer";
             PATH_CLASS_CraftItemStack = "org.bukkit.craftbukkit." + name + ".inventory.CraftItemStack";
         }
