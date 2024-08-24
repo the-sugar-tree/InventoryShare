@@ -2,7 +2,7 @@ rootProject.name = 'InventoryShare'
 include 'InventoryShare-bukkit'
 
 include 'InventoryShare-single'
-include 'InventoryShare-single:v1_20_R4'
+include 'InventoryShare-single:v1_21_R1'
 findProject(':InventoryShare-single:v1_20_R4')?.name = 'v1_20_R4'
 include 'InventoryShare-single:InventoryShare-all'
 

@@ -49,13 +49,14 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        // Assign shared variable
         plugin = this;
         logger = getLogger();
     }
 
     @Override
     public void onEnable() {
-        // Assign shared variable
+        // ProtocolLib
         protocolLibStatus = checkProtocolLib();
 
         // Load language model(s)
@@ -91,12 +92,12 @@ public final class InventoryShare extends JavaPlugin {
                 logger.warning(I18NUtil.get(false, false, "protocolLib_need1"));
                 logger.warning(I18NUtil.get(false, false, "protocolLib_need2"));
                 logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
-                logger.warning("https://ci.dmulloy2.net/job/ProtocolLib/lastBuild");
+                logger.warning("https://ci.dmulloy2.net/job/ProtocolLib/");
                 break;
             case DISABLED:
                 logger.warning(I18NUtil.get(false, false, "protocolLib_need_update"));
                 logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
-                logger.warning("https://ci.dmulloy2.net/job/ProtocolLib/lastBuild");
+                logger.warning("https://ci.dmulloy2.net/job/ProtocolLib/");
                 break;
         }
 

@@ -1,9 +1,11 @@
-# Inventory Sharing Plugin (v3.1)
-인벤토리 공유 플러그인 (v3.1)
+# Inventory Sharing Plugin (v3.1.1)
+인벤토리 공유 플러그인 (v3.1.1)
 
 > [!note]  
-> 1.20.2 - 1.20.3 버전의 플러그인은 [beta](https://github.com/the-sugar-tree/InventoryShare/releases/tag/v3.1.1-beta) 항목을 참조해주세요!   
-> ProtocolLib 플러그인은 [개발버전](https://ci.dmulloy2.net/job/ProtocolLib/lastBuild/)을 참조해주세요!
+> [1.12-1.20.4]버전의 ProtocolLib 플러그인은 (https://github.com/dmulloy2/ProtocolLib/releases)을 참조해주세요!
+
+> [!note]   
+> [1.20.5+]버전의 ProtocolLib 플러그인은 (https://ci.dmulloy2.net/job/ProtocolLib/lastBuild/)을 참조해주세요!
 
 
 > [!important]  
@@ -11,11 +13,11 @@
 
 
 ## Change Log   
-1.20 Support
+Added 1.20.1-1.21.1 Support
 
 ---
 <p align="center">
-    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v3.1/InventoryShare-3.1.jar">
+    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v3.1.1/InventoryShare-3.1.1.jar">
         <img src="https://img.shields.io/badge/Plugin%20Download-CLICK-bbbbbb?style=for-the-badge" height="40" width="260">
     </a>
 </p>
@@ -23,11 +25,11 @@
 ---
 [![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube&style=for-the-badge)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
 [![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare/releases/latest)
-[![Java](https://img.shields.io/badge/java-17-ED8B00.svg?logo=java&style=for-the-badge)](https://www.azul.com/)
+[![Java](https://img.shields.io/badge/java-21-ED8B00.svg?logo=java&style=for-the-badge)](https://www.azul.com/)
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare/releases)   
-[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12—1.20.1-green?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare)
+[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12—1.21.1-green?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare)
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0.html)
-[![Gradle](https://img.shields.io/badge/gradle-8.3-02303A.svg?logo=gradle&style=for-the-badge)](https://gradle.org)
+[![Gradle](https://img.shields.io/badge/gradle-8.9-02303A.svg?logo=gradle&style=for-the-badge)](https://gradle.org)
 
 ---
 ### Contacts
@@ -50,7 +52,7 @@ https://blog.naver.com/sugar-tree/222556850608
 
 ## Minecraft Version
 ### Current Versions
-- 1.12-1.20.1 (Release 3.1) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v3.1/InventoryShare-3.1.jar)]
+- 1.12-1.21.1 (Release 3.1.1) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v3.1.1/InventoryShare-3.1.1.jar)]
 
 ## 주의사항
 **이 플러그인은 스피갓, 페이퍼 기반입니다!**   

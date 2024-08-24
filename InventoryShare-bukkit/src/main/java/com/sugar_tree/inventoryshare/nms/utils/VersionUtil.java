@@ -82,7 +82,9 @@ public class VersionUtil {
         v1_20_R3(ImmutableSet.of("1.20.4-R0.1-SNAPSHOT", "1.20.3-R0.1-SNAPSHOT"),
                 "fS", "i", "j", "k", "o"),
         v1_20_R4(ImmutableSet.of("1.20.6-R0.1-SNAPSHOT", "1.20.5-R0.1-SNAPSHOT"),
-                "gc", "h", "i", "j", "n");
+                "gc", "h", "i", "j", "n"),
+        v1_21_R1(ImmutableSet.of("1.21.1-R0.1-SNAPSHOT", "1.21-R0.1-SNAPSHOT"),
+                "fY", "h", "i", "j", "n");
 
         private final ImmutableSet<String> versions;
         private final String PATH_CLASS_PlayerInventory;
