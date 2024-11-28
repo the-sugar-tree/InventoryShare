@@ -62,9 +62,6 @@ public final class InventoryShare extends JavaPlugin {
         // Load language model(s)
         I18NUtil.I18NFileManager.saveDefaultLanguageFiles();
         I18NUtil.init();
-        // Store an inaccessible language variable in a shared variable in advance.
-        I18N_TEAM_SAVED = I18NUtil.get(false, false, "team_saved");
-        I18N_TEAM_LOADED = I18NUtil.get(false, false, "team_loaded");
 
         // Metrics https://bstats.org/plugin/bukkit/InventoryShare/18372
         Metrics metrics = new Metrics(this, 18372);
@@ -185,6 +182,6 @@ public final class InventoryShare extends JavaPlugin {
             saveResource("advancements.yml", false);
         }
         File teamDir = new File(getDataFolder(), "\\teams");
-        if (!teamDir.exists() && !teamDir.mkdir()) logger.severe("Failed to creat folder: " + teamDir.getAbsolutePath());
+        if (!teamDir.exists() && !teamDir.mkdir()) logger.severe("Failed to create folder: " + teamDir.getAbsolutePath());
     }
 }

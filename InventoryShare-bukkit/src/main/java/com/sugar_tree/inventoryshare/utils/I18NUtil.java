@@ -57,6 +57,10 @@ public final class I18NUtil {
             saveLanguageInfo();
         }
         bundle = b;
+
+        // Store an inaccessible language variable in a shared variable in advance.
+        I18N_TEAM_SAVED = I18NUtil.get("team_saved");
+        I18N_TEAM_LOADED = I18NUtil.get("team_loaded");
     }
 
     private static void saveLanguageInfo() {
@@ -68,6 +72,11 @@ public final class I18NUtil {
         }
     }
 
+    /**
+     * Returns the translated value, including the reset character. In other words, the value corresponding to {@link ChatColor#RESET} is added at the beginning of the translated value.
+     * @param key The key value
+     * @return The translated value with the reset character included (does not include the prefix)
+     */
     public static String get(String key) {
         return get(false, key);
     }
@@ -100,8 +109,8 @@ public final class I18NUtil {
         String s;
         s = bundle.get(key);
         if (hasResetChar) {
-            if (prefix) return PREFIX + String.format(s + ChatColor.RESET, args);
-            else return String.format(s + ChatColor.RESET, args);
+            if (prefix) return PREFIX + String.format(s, args) + ChatColor.RESET;
+            else return String.format(s, args) + ChatColor.RESET;
         } else {
             if (prefix) return PREFIX + String.format(s, args);
             else return String.format(s, args);
@@ -178,6 +187,7 @@ public final class I18NUtil {
                     if (fileConfiguration.get(key) == null) {
                         fileConfiguration.set(key, defaultConfig.get(key));
                     }
+                    fileConfiguration.set("FILE_VERSION", defaultConfig.get("FILE_VERSION"));
                 }
             }
             try {
