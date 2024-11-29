@@ -39,7 +39,6 @@ Added 1.20.1-1.21.1 Support
 ### 추가 안내
 
 유튜브에 사용하실분은 제 깃허브 링크 [ https://github.com/the-sugar-tree/InventoryShare ] 를 설명란에 추가해주세요.   
-(가능하면 언급도 해주시면 감사하겠습니다.)   
 
 https://www.koreaminecraft.net/plugins/2902818   
 https://blog.naver.com/sugar-tree/222556850608   
