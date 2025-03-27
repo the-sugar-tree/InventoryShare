@@ -1,14 +1,17 @@
 # Inventory Sharing Plugin (v3.1.1)
 인벤토리 공유 플러그인 (v3.1.1)
 
-> [!note]  
+> [!important]   
+> 죄송합니다 고3 이슈로 플러그인 업데이트가 늦어지고 있습니다. 현재 1.21.1까지만 플러그인을 지원합니다. 양해 부탁드립니다.
+
+> [!note]   
 > [1.12-1.20.4]버전의 ProtocolLib 플러그인은 [링크](https://github.com/dmulloy2/ProtocolLib/releases)를 참조해주세요!
 
 > [!note]   
 > [1.20.5+]버전의 ProtocolLib 플러그인은 [링크](https://ci.dmulloy2.net/job/ProtocolLib/lastBuild/)를 참조해주세요! ([다운로드 방법](https://github.com/the-sugar-tree/InventoryShare/wiki/How-to-download-ProtocolLib))
 
 
-> [!important]  
+> [!important]   
 > 먼저 README파일(아래)을 다 읽어주세요!!!
 
 
@@ -84,4 +87,5 @@ https://blog.naver.com/sugar-tree/222556850608
 이 프로젝트는 \[GNU General Public License v3.0] 라이센스가 부여되어 있습니다. 자세한 내용은 [LICENSE](https://github.com/the-sugar-tree/InventoryShare/blob/master/LICENSE.md) 파일을 참고하세요.
 
 ## Youtube
+
 [![Video Label](http://img.youtube.com/vi/PI6eTCOs-x4/0.jpg)](https://www.youtube.com/watch?v=PI6eTCOs-x4)
