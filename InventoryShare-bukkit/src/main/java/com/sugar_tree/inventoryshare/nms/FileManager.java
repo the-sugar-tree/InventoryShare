@@ -31,7 +31,10 @@ import org.bukkit.scoreboard.Team;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 import static com.sugar_tree.inventoryshare.nms.NMSLoader.*;
@@ -104,56 +107,22 @@ public final class FileManager implements IFileManager {
         saveConfigs();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void load() {
         List<Map<?, ?>> itemslist = invconfig.getMapList("items");
-        for (int i = 0; i <= itemslist.size(); i++) {
-            try {
-                if (itemslist.get(i).isEmpty()) {
-                    continue;
-                }
-            } catch (IndexOutOfBoundsException e) {
-                break;
-            }
-            if (itemslist.get(i).containsKey("v") && Integer.parseInt(itemslist.get(i).get("v").toString()) > WORLD_VERSION) {
-                logger.severe("Newer version! Server downgrades are not supported!");
-                return;
-            }
-            sharedItems.set(i, NMSLoader.asNMSCopy(ItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
-        }
+        deserializeItems(itemslist, sharedItems, "ALL:items");
 
         List<Map<?, ?>> armorlist = invconfig.getMapList("armor");
-        for (int i = 0; i <= armorlist.size(); i++) {
-            try {
-                if (armorlist.get(i).isEmpty()) {
-                    continue;
-                }
-            } catch (IndexOutOfBoundsException e) {
-                break;
-            }
-            sharedArmor.set(i, NMSLoader.asNMSCopy(ItemStack.deserialize((Map<String, Object>) armorlist.get(i))));
-        }
+        deserializeItems(armorlist, sharedArmor, "ALL:armor");
 
         List<Map<?, ?>> extraSlotslist = invconfig.getMapList("extraSlots");
-        for (int i = 0; i <= extraSlotslist.size(); i++) {
-            try {
-                if (extraSlotslist.get(i).isEmpty()) {
-                    continue;
-                }
-            } catch (IndexOutOfBoundsException e) {
-                break;
-            }
-            sharedExtraSlots.set(i, NMSLoader.asNMSCopy(ItemStack.deserialize((Map<String, Object>) extraSlotslist.get(i))));
-        }
+        deserializeItems(extraSlotslist, sharedExtraSlots, "ALL:extraSlots");
 
-        List<String> alist = advconfig.getStringList("advancement");
-        for (int i = 0; i <= alist.size(); i++) {
+        List<String> advancementlist = advconfig.getStringList("advancement");
+        for (String advancement : advancementlist) {
             try {
-                advlist.add(plugin.getServer().getAdvancement(NMSLoader.getNamespacedKey(alist.get(i))).getKey());
+                advlist.add(plugin.getServer().getAdvancement(NMSLoader.getNamespacedKey(advancement)).getKey());
             } catch (NullPointerException ignored) {
-            } catch (IndexOutOfBoundsException e) {
-                break;
             }
         }
 
@@ -181,46 +150,44 @@ public final class FileManager implements IFileManager {
             if (file.exists()) {
                 FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
                 List<Map<?, ?>> itemslistT = fileConfiguration.getMapList("items");
-                for (int i = 0; i <= itemslistT.size(); i++) {
-                    try {
-                        if (itemslistT.get(i).isEmpty()) {
-                            continue;
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-                        break;
-                    }
-                    items.set(i, NMSLoader.asNMSCopy(ItemStack.deserialize((Map<String, Object>) itemslistT.get(i))));
-                }
+                deserializeItems(itemslistT, items, "Team:" + team.getName() + ":items");
 
                 List<Map<?, ?>> armorlistT = fileConfiguration.getMapList("armor");
-                for (int i = 0; i <= armorlistT.size(); i++) {
-                    try {
-                        if (armorlistT.get(i).isEmpty()) {
-                            continue;
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-                        break;
-                    }
-                    armor.set(i, NMSLoader.asNMSCopy(ItemStack.deserialize((Map<String, Object>) armorlistT.get(i))));
-                }
+                deserializeItems(armorlistT, armor, "Team:" + team.getName() + ":armor");
 
                 List<Map<?, ?>> extraSlotslistT = fileConfiguration.getMapList("extraSlots");
-                for (int i = 0; i <= extraSlotslistT.size(); i++) {
-                    try {
-                        if (extraSlotslistT.get(i).isEmpty()) {
-                            continue;
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-                        break;
-                    }
-                    extraSlots.set(i, NMSLoader.asNMSCopy(ItemStack.deserialize((Map<String, Object>) extraSlotslistT.get(i))));
-                }
+                deserializeItems(extraSlotslistT, extraSlots, "Team:" + team.getName() + ":extraSlots");
             }
             TeamInventoryMap.put(team.getName(), new PlayerInventory(items, armor, extraSlots));
             sb.append("[").append(team.getName()).append("] ");
             temp = true;
         }
         if (temp) logger.info(sb.toString());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void deserializeItems(List<Map<?, ?>> from, AbstractList<Object> to, String itemCategory) {
+        for (int i = 0; i < from.size(); i++) {
+            Map<?, ?> items = from.get(i);
+            if (items.isEmpty()) {
+                continue;
+            }
+            try {
+                if (items.containsKey("v") && Integer.parseInt(items.get("v").toString()) > WORLD_VERSION) {
+                    logger.severe("Newer version! Server downgrades are not supported!");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                logger.warning("An error occurred while loading " + itemCategory + ": Invalid version format at index " + i);
+                continue;
+            }
+            try {
+                to.set(i, NMSLoader.asNMSCopy(ItemStack.deserialize((Map<String, Object>) items)));
+            } catch (Exception e) {
+                logger.warning("An error occurred while loading " + itemCategory + ": Failed to deserialize item at index " + i);
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
