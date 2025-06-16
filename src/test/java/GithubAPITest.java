@@ -45,7 +45,7 @@ public class GithubAPITest {
 
                 if (resCode == HttpURLConnection.HTTP_OK) {
                     JSONObject value = (JSONObject) new JSONParser().parse(new InputStreamReader(con.getInputStream()));
-                    assertEquals(value.get("tag_name"), "v3.1");
+                    assertEquals("v3.1.1", value.get("tag_name"));
                 }
                 con.disconnect();
             }

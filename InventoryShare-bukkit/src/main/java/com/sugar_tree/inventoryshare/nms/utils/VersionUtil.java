@@ -21,7 +21,6 @@
 package com.sugar_tree.inventoryshare.nms.utils;
 
 import com.google.common.collect.ImmutableSet;
-import com.sugar_tree.inventoryshare.SharedConstants;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
@@ -119,7 +118,7 @@ public class VersionUtil {
             PATH_PlayerInventory_armor = args[2];
             PATH_PlayerInventory_extraSlots = args[3];
             PATH_PlayerInventory_contents = args[4];
-            if (SharedConstants.WORLD_VERSION >= 2724 /* 1.17+ */) {
+            if (ordinal() >= 8 /* 1.17+ */) {                       // if (SharedConstants.WORLD_VERSION >= 2724 /* 1.17+ */) {
                 PATH_CLASS_PlayerInventory = "net.minecraft.world.entity.player.PlayerInventory";
                 PATH_CLASS_ItemStack = "net.minecraft.world.item.ItemStack";
                 PATH_CLASS_NonNullList = "net.minecraft.core.NonNullList";
@@ -136,11 +135,11 @@ public class VersionUtil {
                 INVENTORY_USE_FIELD = true;
                 PATH_CLASS_EntityHuman = "net.minecraft.server." + name + ".EntityHuman";
             }
-            if (SharedConstants.WORLD_VERSION >= 3839 /* 1.20.5+ */) {
+            if (ordinal() >= 18 /* 1.20.5+ */) {                    // if (SharedConstants.WORLD_VERSION >= 3839 /* 1.20.5+ */) {
                 PATH_FIELD_emptyItem = "l";
-            } else if (SharedConstants.WORLD_VERSION >= 3698 /* 1.20.3-1.20.4 */) {
+            } else if (ordinal() == 17 /* 1.20.3-1.20.4 */) {       // } else if (SharedConstants.WORLD_VERSION >= 3698 /* 1.20.3-1.20.4 */) {
                 PATH_FIELD_emptyItem = "f";
-            } else if (SharedConstants.WORLD_VERSION >= 2566 /* 1.16-1.20.2 */) {
+            } else if (ordinal() >= 5 /* 1.16-1.20.2 */) {          // } else if (SharedConstants.WORLD_VERSION >= 2566 /* 1.16-1.20.2 */) {
                 PATH_FIELD_emptyItem = "b";
             } else {
                 PATH_FIELD_emptyItem = "a";

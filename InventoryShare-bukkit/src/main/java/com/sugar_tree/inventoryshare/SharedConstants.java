@@ -67,7 +67,7 @@ public final class SharedConstants {
         int t;
         try {
             t = Bukkit.getUnsafe().getDataVersion();
-        } catch (NoSuchMethodError e) { t = -1; }
+        } catch (NoSuchMethodError | NullPointerException e) { t = -1; }
         WORLD_VERSION = t;
     }
 

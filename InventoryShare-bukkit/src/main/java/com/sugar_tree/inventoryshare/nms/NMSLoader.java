@@ -53,7 +53,6 @@ public final class NMSLoader {
 
     private static final Class<?> CraftPlayer;
     private static final Method toEntityPlayer;
-    private static final Class<?> EntityHuman;
     private static final Method inventory_method;
     private static final Field inventory_field;
     private static final boolean DOES_INVENTORY_USE_FIELD;
@@ -76,7 +75,7 @@ public final class NMSLoader {
             // Load Reflections
             CraftPlayer = Class.forName(VERSION_INFO.getPATH_CLASS_CraftPlayer());
             Class<?> EntityPlayer = Class.forName(VERSION_INFO.getPATH_CLASS_EntityPlayer());
-            EntityHuman = Class.forName(VERSION_INFO.getPATH_CLASS_EntityHuman());
+            Class<?> EntityHuman = Class.forName(VERSION_INFO.getPATH_CLASS_EntityHuman());
             PlayerInventory = Class.forName(VERSION_INFO.getPATH_CLASS_PlayerInventory());
             Class<?> CraftItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_CraftItemStack());
             Class<?> NMSItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_ItemStack());

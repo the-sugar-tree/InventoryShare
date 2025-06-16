@@ -77,8 +77,8 @@ jar.enabled(false)
 compileJava.enabled(false)
 
 dependencies {
-    testCompileOnly 'org.projectlombok:lombok:1.18.26'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
     testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 
