@@ -2,7 +2,7 @@ name: InventoryShare
 version: '${version}'
 main: com.sugar_tree.inventoryshare.InventoryShare
 website: https://github.com/the-sugar-tree/InventoryShare
-api-version: 1.20
+api-version: 1.21
 author: sugar_tree
 softdepend: [ProtocolLib]
 commands:

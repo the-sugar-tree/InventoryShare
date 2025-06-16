@@ -46,7 +46,7 @@ public final class InventoryShare extends JavaPlugin {
 
     private Listeners listener;
 
-    final String supportedVersion = "v1_20_R4";
+    final String supportedVersion = "v1_21_R1";
 
     @Override
     public void onEnable() {
