@@ -86,6 +86,10 @@ public class VersionUtil {
                 "fY", "h", "i", "j", "n"),
         v1_21_R2(ImmutableSet.of("1.21.3-R0.1-SNAPSHOT", "1.21.2-R0.1-SNAPSHOT"),
                 "gi", "g", "h", "i", "l"),
+        v1_21_R3(ImmutableSet.of("1.21.4-R0.1-SNAPSHOT"),
+                "gi", "g", "h", "i", "l"),
+        v1_21_R4(ImmutableSet.of("1.21.5-R0.1-SNAPSHOT"),
+                "gj", "g", "h", "i", "l"),
         ;
 
         private final ImmutableSet<String> versions;
@@ -138,9 +142,11 @@ public class VersionUtil {
                 INVENTORY_USE_FIELD = true;
                 PATH_CLASS_EntityHuman = "net.minecraft.server." + name + ".EntityHuman";
             }
-            if (ordinal() >= 19 /* 1.21.2+ */) {
+            if (ordinal() >= 22) {
+                PATH_FIELD_emptyItem = "l";
+            } else if (ordinal() >= 20 /* 1.21.2+ */) {
                 PATH_FIELD_emptyItem = "j";
-            } else if (ordinal() == 18 /* 1.20.5-1.21.1 */) {       // if (SharedConstants.WORLD_VERSION >= 3839 /* 1.20.5+ */) {
+            } else if (ordinal() >= 18 /* 1.20.5-1.21.1 */) {       // if (SharedConstants.WORLD_VERSION >= 3839 /* 1.20.5+ */) {
                 PATH_FIELD_emptyItem = "l";
             } else if (ordinal() == 17 /* 1.20.3-1.20.4 */) {       // } else if (SharedConstants.WORLD_VERSION >= 3698 /* 1.20.3-1.20.4 */) {
                 PATH_FIELD_emptyItem = "f";
