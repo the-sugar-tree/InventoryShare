@@ -34,6 +34,7 @@ public class GithubAPITest {
 
     @Test
     public void APITest() {
+        System.out.println(this);
         try {
             String url = "https://api.github.com/repos/the-sugar-tree/InventoryShare/releases/latest";
             HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();

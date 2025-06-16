@@ -36,11 +36,12 @@ public class NMSTest {
 
     @BeforeAll
     public static void registerVersion() {
-        currentVersion = VersionUtil.SupportedVersions.v1_21_R1;
+        currentVersion = VersionUtil.SupportedVersions.v1_21_R2;
     }
 
     @Test
     public void NMSAllTest() {
+        System.out.println(this);
         final Class<?> CraftPlayer = assertDoesNotThrow(() -> Class.forName(currentVersion.getPATH_CLASS_CraftPlayer()));
         assertDoesNotThrow(() -> CraftPlayer.getMethod("getHandle"));
 

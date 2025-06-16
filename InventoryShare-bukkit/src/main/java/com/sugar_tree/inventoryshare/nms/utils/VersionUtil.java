@@ -83,7 +83,10 @@ public class VersionUtil {
         v1_20_R4(ImmutableSet.of("1.20.6-R0.1-SNAPSHOT", "1.20.5-R0.1-SNAPSHOT"),
                 "gc", "h", "i", "j", "n"),
         v1_21_R1(ImmutableSet.of("1.21.1-R0.1-SNAPSHOT", "1.21-R0.1-SNAPSHOT"),
-                "fY", "h", "i", "j", "n");
+                "fY", "h", "i", "j", "n"),
+        v1_21_R2(ImmutableSet.of("1.21.3-R0.1-SNAPSHOT", "1.21.2-R0.1-SNAPSHOT"),
+                "gi", "g", "h", "i", "l"),
+        ;
 
         private final ImmutableSet<String> versions;
         private final String PATH_CLASS_PlayerInventory;
@@ -128,14 +131,16 @@ public class VersionUtil {
                 PATH_CLASS_EntityHuman = "net.minecraft.world.entity.player.EntityHuman";
             } else {
                 PATH_CLASS_PlayerInventory = "net.minecraft.server." + name + ".PlayerInventory";
-                PATH_CLASS_ItemStack = "net.minecraft.server."+ name + ".ItemStack";
+                PATH_CLASS_ItemStack = "net.minecraft.server." + name + ".ItemStack";
                 PATH_CLASS_NonNullList = "net.minecraft.server." + name + ".NonNullList";
                 PATH_METHOD_getNameSpacedKey = "minecraft";
                 PATH_CLASS_EntityPlayer = "org.bukkit.craftbukkit." + name + ".entity.CraftPlayer";
                 INVENTORY_USE_FIELD = true;
                 PATH_CLASS_EntityHuman = "net.minecraft.server." + name + ".EntityHuman";
             }
-            if (ordinal() >= 18 /* 1.20.5+ */) {                    // if (SharedConstants.WORLD_VERSION >= 3839 /* 1.20.5+ */) {
+            if (ordinal() >= 19 /* 1.21.2+ */) {
+                PATH_FIELD_emptyItem = "j";
+            } else if (ordinal() == 18 /* 1.20.5-1.21.1 */) {       // if (SharedConstants.WORLD_VERSION >= 3839 /* 1.20.5+ */) {
                 PATH_FIELD_emptyItem = "l";
             } else if (ordinal() == 17 /* 1.20.3-1.20.4 */) {       // } else if (SharedConstants.WORLD_VERSION >= 3698 /* 1.20.3-1.20.4 */) {
                 PATH_FIELD_emptyItem = "f";
