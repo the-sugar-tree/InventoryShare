@@ -1,6 +1,12 @@
 dependencies {
     compileOnly 'org.spigotmc:spigot:1.21-R0.1-SNAPSHOT'
     implementation project(':InventoryShare-single:InventoryShare-all')
+
+    // Junit
+    testImplementation 'org.spigotmc:spigot:1.21-R0.1-SNAPSHOT'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation project(':InventoryShare-bukkit')
 }
 
 jar {
@@ -8,4 +14,8 @@ jar {
     manifest {
         archiveFileName.set("InventoryShare-${project.version}-[${subVersion}].jar")
     }
+}
+
+test {
+    useJUnitPlatform()
 }
