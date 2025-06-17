@@ -187,4 +187,8 @@ public final class NMSLoader {
         }
     }
 
+    public static Class<?> getPlayerInventoryClass() {
+        return PlayerInventory;
+    }
+
 }

@@ -150,10 +150,10 @@ public final class InventoryManager implements IInventoryManager {
     private void fillInventoryFields(Object playerInventory, Object items, Object armor, Object extraSlots, Object contents)
             throws NoSuchFieldException, IllegalAccessException {
         final VersionUtil.SupportedVersions VERSION_INFO = VersionUtil.getVersion();
-        setField(playerInventory, VERSION_INFO.getPATH_PlayerInventory_items(), items);
-        setField(playerInventory, VERSION_INFO.getPATH_PlayerInventory_armor(), armor);
-        setField(playerInventory, VERSION_INFO.getPATH_PlayerInventory_extraSlots(), extraSlots);
-        setField(playerInventory, VERSION_INFO.getPATH_PlayerInventory_contents(), contents);
+        setField(NMSLoader.getPlayerInventoryClass(), playerInventory, VERSION_INFO.getPATH_PlayerInventory_items(), items);
+        setField(NMSLoader.getPlayerInventoryClass(), playerInventory, VERSION_INFO.getPATH_PlayerInventory_armor(), armor);
+        setField(NMSLoader.getPlayerInventoryClass(), playerInventory, VERSION_INFO.getPATH_PlayerInventory_extraSlots(), extraSlots);
+        setField(NMSLoader.getPlayerInventoryClass(), playerInventory, VERSION_INFO.getPATH_PlayerInventory_contents(), contents);
     }
 
     private enum InventoryState {
