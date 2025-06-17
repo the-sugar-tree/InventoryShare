@@ -70,11 +70,9 @@ public class InventoryManager implements IInventoryManager {
     }
 
     private void setEquipment(PlayerInventory inventory, EnumMap<EnumItemSlot, ItemStack> from) throws NoSuchFieldException, IllegalAccessException {
-        Field field = PlayerInventory.class.getDeclaredField("k");
+        Field field = EntityEquipment.class.getDeclaredField("b");
         field.setAccessible(true);
-        EntityEquipment to = (EntityEquipment) field.get(inventory);
-
-        setField(to, "b", from);
+        field.set(getEquipment(inventory), from);
     }
 
     @SuppressWarnings("SuspiciousMethodCalls")
