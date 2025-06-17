@@ -46,19 +46,19 @@ public final class FileManager implements IFileManager {
     @Override
     public void save() {
         List<Map<?, ?>> serializedItemsList = new ArrayList<>();
-        for (Object itemStack : sharedItems) {
+        for (Object itemStack : sharedInventory.getItems()) {
             serializedItemsList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
         }
         invconfig.set("items", serializedItemsList);
 
         List<Map<?, ?>> serializedArmorList = new ArrayList<>();
-        for (Object itemStack : sharedArmor) {
+        for (Object itemStack : sharedInventory.getArmor()) {
             serializedArmorList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
         }
         invconfig.set("armor", serializedArmorList);
 
         List<Map<?, ?>> serializedExtraSlotsList = new ArrayList<>();
-        for (Object itemStack : sharedExtraSlots) {
+        for (Object itemStack : sharedInventory.getExtraSlots()) {
             serializedExtraSlotsList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
         }
         invconfig.set("extraSlots", serializedExtraSlotsList);
@@ -110,13 +110,13 @@ public final class FileManager implements IFileManager {
     @Override
     public void load() {
         List<Map<?, ?>> itemslist = invconfig.getMapList("items");
-        deserializeItems(itemslist, sharedItems, "ALL:items");
+        deserializeItems(itemslist, sharedInventory.getItems(), "ALL:items");
 
         List<Map<?, ?>> armorlist = invconfig.getMapList("armor");
-        deserializeItems(armorlist, sharedArmor, "ALL:armor");
+        deserializeItems(armorlist, sharedInventory.getArmor(), "ALL:armor");
 
         List<Map<?, ?>> extraSlotslist = invconfig.getMapList("extraSlots");
-        deserializeItems(extraSlotslist, sharedExtraSlots, "ALL:extraSlots");
+        deserializeItems(extraSlotslist, sharedInventory.getExtraSlots(), "ALL:extraSlots");
 
         List<String> advancementlist = advconfig.getStringList("advancement");
         for (String advancement : advancementlist) {

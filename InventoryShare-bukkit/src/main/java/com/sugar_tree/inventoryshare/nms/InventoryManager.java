@@ -70,7 +70,7 @@ public final class InventoryManager implements IInventoryManager {
         if (InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL)) savePlayerInventory(p);
         Object playerInventory = NMSLoader.getPlayerInventory(p);
         try {
-            fillInventoryFields(playerInventory, sharedItems, sharedArmor, sharedExtraSlots, sharedContents);
+            fillInventoryFields(playerInventory, sharedInventory.getItems(), sharedInventory.getArmor(), sharedInventory.getExtraSlots());
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }

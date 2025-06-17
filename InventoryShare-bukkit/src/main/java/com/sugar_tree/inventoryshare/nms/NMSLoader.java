@@ -20,7 +20,6 @@
 
 package com.sugar_tree.inventoryshare.nms;
 
-import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.nms.utils.VersionUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -31,7 +30,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.AbstractList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,11 +41,7 @@ public final class NMSLoader {
     private NMSLoader() {}
 
     //
-    static final AbstractList<Object> sharedItems;
-    static final AbstractList<Object> sharedArmor;
-    static final AbstractList<Object> sharedExtraSlots;
-    static final List<AbstractList<Object>> sharedContents;
-
+    static final PlayerInventory sharedInventory;
     static final Map<String, PlayerInventory> TeamInventoryMap;
     //
 
@@ -106,10 +100,10 @@ public final class NMSLoader {
             throw new RuntimeException(e);
         }
 
-        sharedItems = createEmptyItemList(36);
-        sharedArmor = createEmptyItemList(4);
-        sharedExtraSlots = createEmptyItemList(1);
-        sharedContents = ImmutableList.of(sharedItems, sharedArmor, sharedExtraSlots);
+        AbstractList<Object> sharedItems = createEmptyItemList(36);
+        AbstractList<Object> sharedArmor = createEmptyItemList(4);
+        AbstractList<Object> sharedExtraSlots = createEmptyItemList(1);
+        sharedInventory = new PlayerInventory(sharedItems, sharedArmor, sharedExtraSlots);
         TeamInventoryMap = new HashMap<>();
     }
 
