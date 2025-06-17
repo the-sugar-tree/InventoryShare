@@ -46,7 +46,7 @@ public final class InventoryShare extends JavaPlugin {
 
     private Listeners listener;
 
-    final String supportedVersion = "v1_21_R4";
+    final String supportedVersion = "1.21.5-R0.1-SNAPSHOT";
 
     @Override
     public void onEnable() {
@@ -63,7 +63,9 @@ public final class InventoryShare extends JavaPlugin {
 
         UpdateUtil.checkUpdate();
 
-        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        String version = Bukkit.getBukkitVersion();
+
+//        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         if (!isSupported()) {
             logger.severe(I18NUtil.get("not_supported_version", version));
             this.setEnabled(false);
@@ -101,7 +103,7 @@ public final class InventoryShare extends JavaPlugin {
     }
 
     public boolean isSupported() {
-        return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].equals(supportedVersion);
+        return Bukkit.getBukkitVersion().equals(supportedVersion);
     }
 
     @Override

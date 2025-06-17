@@ -9,9 +9,6 @@ dependencies {
     testImplementation project(':InventoryShare-bukkit')
 }
 
-compileJava.enabled(false)
-jar.enabled(false)
-
 jar {
     String subVersion = '1.21.5'
     manifest {

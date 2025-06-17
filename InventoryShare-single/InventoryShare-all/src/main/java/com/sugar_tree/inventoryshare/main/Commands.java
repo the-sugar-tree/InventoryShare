@@ -192,7 +192,7 @@ public class Commands implements TabExecutor {
                     sender.sendMessage(I18NUtil.get(true, "config_reloaded"));
                     break;
                 case "check":
-                    sender.sendMessage(check);
+                    sender.sendMessage(getCheck());
                     break;
                 default:
                     sender.sendMessage(usageMessage);
@@ -258,11 +258,13 @@ public class Commands implements TabExecutor {
             ChatColor.AQUA + "/inventoryshare" + ChatColor.GREEN + " reload" + ChatColor.YELLOW + " - " + I18NUtil.get("cmd_reload_config_info") + "\n" +
             ChatColor.DARK_AQUA + "-----------------------------------------------------"
             ;
-    String check = ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
-            PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory + "\n" +
-            PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement + "\n" +
-            PREFIX + ChatColor.GOLD + "announcedeath: " + ChatColor.GREEN + announcedeath + "\n" +
-            PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + teaminventory + "\n" +
-            ChatColor.DARK_AQUA + "-----------------------------------------------------"
-            ;
+
+    String getCheck() {
+        return ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
+                PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory + "\n" +
+                PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement + "\n" +
+                PREFIX + ChatColor.GOLD + "announcedeath: " + ChatColor.GREEN + announcedeath + "\n" +
+                PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + teaminventory + "\n" +
+                ChatColor.DARK_AQUA + "-----------------------------------------------------";
+    }
 }
