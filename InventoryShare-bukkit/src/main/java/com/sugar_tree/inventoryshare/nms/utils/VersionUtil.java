@@ -88,7 +88,7 @@ public class VersionUtil {
                 "gi", "g", "h", "i", "l"),
         v1_21_R3(ImmutableSet.of("1.21.4-R0.1-SNAPSHOT"),
                 "gi", "g", "h", "i", "l"),
-        v1_21_R4(ImmutableSet.of("1.21.5-R0.1-SNAPSHOT"),
+        v1_21_R4(ImmutableSet.of(/* "1.21.5-R0.1-SNAPSHOT" */),
                 "gj", "g", "h", "i", "l"),
         ;
 

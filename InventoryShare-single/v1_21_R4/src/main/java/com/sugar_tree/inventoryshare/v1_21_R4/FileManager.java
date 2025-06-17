@@ -20,10 +20,9 @@
 
 package com.sugar_tree.inventoryshare.v1_21_R4;
 
-import com.google.common.collect.ImmutableList;
+import com.sugar_tree.inventoryshare.PlayerInventory;
 import com.sugar_tree.inventoryshare.api.IFileManager;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -38,33 +37,22 @@ import java.util.*;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
 public class FileManager implements IFileManager {
-    protected static Map<UUID, PlayerInventory> invList = new HashMap<>();
+    protected static Map<UUID, PlayerInventory> origianlPlayerInventoryMap = new HashMap<>();
 
-    protected static NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.l);
-    protected static NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.l);
-    protected static NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.l);
-    protected static List<NonNullList<ItemStack>> contents = ImmutableList.of(items, armor, extraSlots);
-    protected static Map<String, Map<String, NonNullList<ItemStack>>> InventoryList = new HashMap<>();
+    protected static PlayerInventory sharedInventory = new PlayerInventory(NonNullList.a(36, ItemStack.l));
+
+    protected static Map<String, PlayerInventory> teamInventories = new HashMap<>();
 
     @SuppressWarnings("ConstantConditions")
     public void save() {
         List<Map<?, ?>> itemslist = new ArrayList<>();
-        for (ItemStack itemStack : items) {
+        for (ItemStack itemStack : sharedInventory.getItems()) {
             itemslist.add(CraftItemStack.asCraftMirror(itemStack).serialize());
         }
         invconfig.set("items", itemslist);
 
-        List<Map<?, ?>> armorlist = new ArrayList<>();
-        for (ItemStack itemStack : armor) {
-            armorlist.add(CraftItemStack.asCraftMirror(itemStack).serialize());
-        }
-        invconfig.set("armor", armorlist);
+        // TODO: equipment
 
-        List<Map<?, ?>> extraSlotsList = new ArrayList<>();
-        for (ItemStack itemStack : extraSlots) {
-            extraSlotsList.add(CraftItemStack.asCraftMirror(itemStack).serialize());
-        }
-        invconfig.set("extraSlots", extraSlotsList);
 
         List<String> alist = new ArrayList<>();
         for (NamespacedKey namespacedKey : advlist) {
@@ -81,25 +69,14 @@ public class FileManager implements IFileManager {
             File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             List<Map<?, ?>> itemslistT = new ArrayList<>();
-            Map<String, NonNullList<ItemStack>> invT = InventoryList.get(team.getName());
+            PlayerInventory invT = teamInventories.get(team.getName());
             if (invT == null) continue;
-            for (ItemStack itemStack : invT.get("items")) {
+            for (ItemStack itemStack : invT.getItems()) {
                 itemslistT.add(CraftItemStack.asCraftMirror(itemStack).serialize());
             }
             fileConfiguration.set("items", itemslistT);
 
-            List<Map<?, ?>> armorlistT = new ArrayList<>();
-            for (ItemStack itemStack : invT.get("armor")) {
-                armorlistT.add(CraftItemStack.asCraftMirror(itemStack).serialize());
-            }
-            fileConfiguration.set("armor", armorlistT);
-
-            List<Map<?, ?>> extraSlotsListT = new ArrayList<>();
-            for (ItemStack itemStack : invT.get("extraSlots")) {
-                extraSlotsListT.add(CraftItemStack.asCraftMirror(itemStack).serialize());
-            }
-            fileConfiguration.set("extraSlots", extraSlotsListT);
-            teamInvFileList.put(fileConfiguration, file);
+            // TODO: equipment
         }
         saveConfigs();
     }
@@ -116,26 +93,11 @@ public class FileManager implements IFileManager {
                 logger.severe("Newer version! Server downgrades are not supported!");
                 return;
             }
-            items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
+            sharedInventory.getItems().set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
         }
 
-        List<Map<?, ?>> armorlist = invconfig.getMapList("armor");
-        for (int i = 0; i <= armorlist.size(); i++) {
-            try { armorlist.get(i); } catch (IndexOutOfBoundsException e) { break; }
-            if (armorlist.get(i).isEmpty()) {
-                continue;
-            }
-            armor.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) armorlist.get(i))));
-        }
+        // TODO: equipment
 
-        List<Map<?, ?>> extraSlotslist = invconfig.getMapList("extraSlots");
-        for (int i = 0; i <= extraSlotslist.size(); i++) {
-            try { extraSlotslist.get(i); } catch (IndexOutOfBoundsException e) { break; }
-            if (extraSlotslist.get(i).isEmpty()) {
-                continue;
-            }
-            extraSlots.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) extraSlotslist.get(i))));
-        }
 
         List<String> alist = advconfig.getStringList("advancement");
         for (int i = 0; i <= alist.size(); i++) {
@@ -158,8 +120,6 @@ public class FileManager implements IFileManager {
 
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
             NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.l);
-            NonNullList<ItemStack> armor = NonNullList.a(4, ItemStack.l);
-            NonNullList<ItemStack> extraSlots = NonNullList.a(1, ItemStack.l);
             File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
             if (file.exists()) {
                 FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
@@ -172,29 +132,10 @@ public class FileManager implements IFileManager {
                     items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslistT.get(i))));
                 }
 
-                List<Map<?, ?>> armorlistT = fileConfiguration.getMapList("armor");
-                for (int i = 0; i <= armorlistT.size(); i++) {
-                    try { armorlistT.get(i); } catch (IndexOutOfBoundsException e) { break; }
-                    if (armorlistT.get(i).isEmpty()) {
-                        continue;
-                    }
-                    armor.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) armorlistT.get(i))));
-                }
-
-                List<Map<?, ?>> extraSlotslistT = fileConfiguration.getMapList("extraSlots");
-                for (int i = 0; i <= extraSlotslistT.size(); i++) {
-                    try { extraSlotslistT.get(i); } catch (IndexOutOfBoundsException e) { break; }
-                    if (extraSlotslistT.get(i).isEmpty()) {
-                        continue;
-                    }
-                    extraSlots.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) extraSlotslistT.get(i))));
-                }
+                // TODO: equipment
             }
-            Map<String, NonNullList<ItemStack>> m = new HashMap<>();
-            m.put("items", items);
-            m.put("armor", armor);
-            m.put("extraSlots", extraSlots);
-            InventoryList.put(team.getName(), m);
+            teamInventories.put(team.getName(), new PlayerInventory(items));
+            // TODO: equipment
         }
     }
 

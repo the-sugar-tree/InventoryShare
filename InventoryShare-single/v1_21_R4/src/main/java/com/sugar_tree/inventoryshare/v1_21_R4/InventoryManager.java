@@ -20,17 +20,21 @@
 
 package com.sugar_tree.inventoryshare.v1_21_R4;
 
-import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.api.IInventoryManager;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.world.entity.EntityEquipment;
+import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.EnumMap;
+import java.util.Set;
+import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.plugin;
 import static com.sugar_tree.inventoryshare.api.SharedConstants.teaminventory;
@@ -42,48 +46,55 @@ public class InventoryManager implements IInventoryManager {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.gj();
         try {
-            setField(playerInventory, "g", items);
-            setField(playerInventory, "h", armor);
-            setField(playerInventory, "i", extraSlots);
-            setField(playerInventory, "l", contents);
+            setField(playerInventory, "items", sharedInventory.getItems());
+            setEquipment(playerInventory, sharedInventory.getEquipment());
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private EnumMap<EnumItemSlot, ItemStack> getEquipmentInside(PlayerInventory inventory) {
+        try {
+            Field field = EntityEquipment.class.getDeclaredField("b");
+            field.setAccessible(true);
+            return ((EnumMap<EnumItemSlot, ItemStack>) field.get(getEquipment(inventory)));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private EntityEquipment getEquipment(PlayerInventory inventory) throws NoSuchFieldException, IllegalAccessException {
+        Field field = PlayerInventory.class.getDeclaredField("k");
+        field.setAccessible(true);
+        return ((EntityEquipment) field.get(inventory));
+    }
+
+    private void setEquipment(PlayerInventory inventory, EnumMap<EnumItemSlot, ItemStack> from) throws NoSuchFieldException, IllegalAccessException {
+        Field field = PlayerInventory.class.getDeclaredField("k");
+        field.setAccessible(true);
+        EntityEquipment to = (EntityEquipment) field.get(inventory);
+
+        setField(to, "b", from);
     }
 
     @SuppressWarnings("SuspiciousMethodCalls")
     public void disApplyInventory(@NotNull Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.gj();
-        if (invList.containsKey(p.getUniqueId())) {
+        if (origianlPlayerInventoryMap.containsKey(p.getUniqueId())) {
             try {
-                NonNullList<ItemStack> items1 = invList.get(p.getUniqueId()).g;
-                NonNullList<ItemStack> armor1 = invList.get(p.getUniqueId()).h;
-                NonNullList<ItemStack> extraSlots1 = invList.get(p.getUniqueId()).i;
-                List<NonNullList<ItemStack>> contents1 = ImmutableList.of(items1, armor1, extraSlots1);
-                setField(playerInventory, "g", items1);
-                setField(playerInventory, "h", armor1);
-                setField(playerInventory, "i", extraSlots1);
-                setField(playerInventory, "l", contents1);
+                NonNullList<ItemStack> items = origianlPlayerInventoryMap.get(p.getUniqueId()).getItems();
+                EnumMap<EnumItemSlot, ItemStack> equipment = origianlPlayerInventoryMap.get(p.getUniqueId()).getEquipment();
+                setField(playerInventory, "i", items);
+                setEquipment(playerInventory, equipment);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             // 사용될 일이 없지만, 혹시 모른 버그 방지
-            try {
-                NonNullList<ItemStack> items1 = NonNullList.a(36, ItemStack.l);
-                NonNullList<ItemStack> armor1 = NonNullList.a(4, ItemStack.l);
-                NonNullList<ItemStack> extraSlots1 = NonNullList.a(1, ItemStack.l);
-                List<NonNullList<ItemStack>> contents1 = ImmutableList.of(items1, armor1, extraSlots1);
-                setField(playerInventory, "g", items1);
-                setField(playerInventory, "h", armor1);
-                setField(playerInventory, "i", extraSlots1);
-                setField(playerInventory, "l", contents1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            throw new RuntimeException("이게 무슨 에러인지 저도 모르겠습니다.");
         }
-        invList.remove(entityPlayer);
+        origianlPlayerInventoryMap.remove(entityPlayer);
     }
 
     @SuppressWarnings({"ConstantConditions", "deprecation"})
@@ -98,51 +109,34 @@ public class InventoryManager implements IInventoryManager {
         }
         String teamName = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(p).getName();
         NonNullList<ItemStack> itemsT;
-        NonNullList<ItemStack> armorT;
-        NonNullList<ItemStack> extraSlotsT;
-        if (!InventoryList.containsKey(teamName)) {
-            Map<String, NonNullList<ItemStack>> map = new HashMap<>();
+        EnumMap<EnumItemSlot, ItemStack> equipmentT;
+        if (!teamInventories.containsKey(teamName)) {
             itemsT = NonNullList.a(36, ItemStack.l);
-            armorT = NonNullList.a(4, ItemStack.l);
-            extraSlotsT = NonNullList.a(1, ItemStack.l);
-            map.put("items", itemsT);
-            map.put("armor", armorT);
-            map.put("extraSlots", extraSlotsT);
-            InventoryList.put(teamName, map);
+            equipmentT = new EnumMap<>(EnumItemSlot.class);
+            teamInventories.put(teamName, new com.sugar_tree.inventoryshare.PlayerInventory(itemsT, equipmentT));
         } else {
-            Map<String, NonNullList<ItemStack>> map = InventoryList.get(teamName);
-            itemsT = map.get("items");
-            armorT = map.get("armor");
-            extraSlotsT = map.get("extraSlots");
+            com.sugar_tree.inventoryshare.PlayerInventory teamInventory = teamInventories.get(teamName);
+            itemsT = teamInventory.getItems();
+            equipmentT = teamInventory.getEquipment();
         }
-        List<NonNullList<ItemStack>> contentsT = ImmutableList.of(itemsT, armorT, extraSlotsT);
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.gj();
         try {
-            setField(playerInventory, "g", itemsT);
-            setField(playerInventory, "h", armorT);
-            setField(playerInventory, "i", extraSlotsT);
-            setField(playerInventory, "l", contentsT);
+            setField(playerInventory, "i", itemsT);
+            setEquipment(playerInventory, equipmentT);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void savePlayerInventory(@NotNull Player p) {
-        PlayerInventory pinv = new PlayerInventory(null);
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-        try {
-            setField(pinv, "g", entityPlayer.gj().g);
-            setField(pinv, "h", entityPlayer.gj().h);
-            setField(pinv, "i", entityPlayer.gj().i);
-            setField(pinv, "l", ImmutableList.of(entityPlayer.gj().g, entityPlayer.gj().h, entityPlayer.gj().i));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        invList.put(p.getUniqueId(), pinv);
+        com.sugar_tree.inventoryshare.PlayerInventory pinv;
+        pinv = new com.sugar_tree.inventoryshare.PlayerInventory(entityPlayer.gj().i(), getEquipmentInside(entityPlayer.gj()));
+        origianlPlayerInventoryMap.put(p.getUniqueId(), pinv);
     }
 
     public Set<UUID> getRegisteredPlayers() {
-        return invList.keySet();
+        return origianlPlayerInventoryMap.keySet();
     }
 }
