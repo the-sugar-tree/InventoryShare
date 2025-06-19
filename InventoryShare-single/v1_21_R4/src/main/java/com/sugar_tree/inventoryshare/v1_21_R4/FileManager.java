@@ -23,6 +23,7 @@ package com.sugar_tree.inventoryshare.v1_21_R4;
 import com.sugar_tree.inventoryshare.PlayerInventory;
 import com.sugar_tree.inventoryshare.api.IFileManager;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -51,7 +52,12 @@ public class FileManager implements IFileManager {
         }
         invconfig.set("items", itemslist);
 
-        // TODO: equipment
+
+        for (EnumItemSlot enumItemSlot : sharedInventory.getEquipment().keySet()) {
+            List<Map<?, ?>> equipmentElement = new ArrayList<>();
+            equipmentElement.add(CraftItemStack.asCraftMirror(sharedInventory.getEquipment().get(enumItemSlot)).serialize());
+            invconfig.set(enumItemSlot.e(), equipmentElement);
+        }
 
 
         List<String> alist = new ArrayList<>();
@@ -93,10 +99,16 @@ public class FileManager implements IFileManager {
                 logger.severe("Newer version! Server downgrades are not supported!");
                 return;
             }
-            sharedInventory.getItems().set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslist.get(i))));
         }
 
-        // TODO: equipment
+        for (EnumItemSlot value : EnumItemSlot.values()) {
+            List<Map<?, ?>> maps = invconfig.getMapList(value.e());
+            if (maps == null || maps.isEmpty()) continue;
+            for (Map<?, ?> map : maps) {
+                if (map.isEmpty()) continue;
+                sharedInventory.getEquipment().put(value, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) map)));
+            }
+        }
 
 
         List<String> alist = advconfig.getStringList("advancement");
