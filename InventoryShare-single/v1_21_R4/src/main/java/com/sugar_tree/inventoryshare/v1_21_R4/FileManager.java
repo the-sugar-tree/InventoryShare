@@ -81,8 +81,11 @@ public class FileManager implements IFileManager {
                 itemslistT.add(CraftItemStack.asCraftMirror(itemStack).serialize());
             }
             fileConfiguration.set("items", itemslistT);
-
-            // TODO: equipment
+            for (EnumItemSlot enumItemSlot : invT.getEquipment().keySet()) {
+                List<Map<?, ?>> equipmentElement = new ArrayList<>();
+                equipmentElement.add(CraftItemStack.asCraftMirror(invT.getEquipment().get(enumItemSlot)).serialize());
+                fileConfiguration.set(enumItemSlot.e(), equipmentElement);
+            }
         }
         saveConfigs();
     }
@@ -133,9 +136,11 @@ public class FileManager implements IFileManager {
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
             NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.l);
             File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
+            PlayerInventory invT = new PlayerInventory(items);
             if (file.exists()) {
                 FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
                 List<Map<?, ?>> itemslistT = fileConfiguration.getMapList("items");
+
                 for (int i = 0; i <= itemslistT.size(); i++) {
                     try { itemslistT.get(i); } catch (IndexOutOfBoundsException e) { break; }
                     if (itemslistT.get(i).isEmpty()) {
@@ -144,10 +149,16 @@ public class FileManager implements IFileManager {
                     items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslistT.get(i))));
                 }
 
-                // TODO: equipment
+                for (EnumItemSlot value : EnumItemSlot.values()) {
+                    List<Map<?, ?>> maps = fileConfiguration.getMapList(value.e());
+                    if (maps == null || maps.isEmpty()) continue;
+                    for (Map<?, ?> map : maps) {
+                        if (map.isEmpty()) continue;
+                        invT.getEquipment().put(value, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) map)));
+                    }
+                }
             }
-            teamInventories.put(team.getName(), new PlayerInventory(items));
-            // TODO: equipment
+            teamInventories.put(team.getName(), invT);
         }
     }
 
