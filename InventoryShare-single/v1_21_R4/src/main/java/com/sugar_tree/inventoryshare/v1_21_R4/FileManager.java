@@ -72,7 +72,7 @@ public class FileManager implements IFileManager {
         plugin.getConfig().set("teaminventory", teaminventory);
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
             if (team == null) continue;
-            File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
+            File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             List<Map<?, ?>> itemslistT = new ArrayList<>();
             PlayerInventory invT = teamInventories.get(team.getName());
@@ -135,7 +135,7 @@ public class FileManager implements IFileManager {
 
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
             NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.l);
-            File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
+            File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             PlayerInventory invT = new PlayerInventory(items);
             if (file.exists()) {
                 FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
@@ -164,8 +164,8 @@ public class FileManager implements IFileManager {
 
     @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
     public void deleteWasteFiles() {
-        if (new File(plugin.getDataFolder(), "\\teams").listFiles() != null) {
-            for (File file : (new File(plugin.getDataFolder(), "\\teams").listFiles())) {
+        if (new File(plugin.getDataFolder(), "teams").listFiles() != null) {
+            for (File file : (new File(plugin.getDataFolder(), "teams").listFiles())) {
                 List<String> list = new ArrayList<>();
                 for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                     list.add(team.getName());

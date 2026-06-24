@@ -192,7 +192,7 @@ public final class InventoryShare extends JavaPlugin {
             saveResource("advancements.yml", false);
         }
         // Create a directory for teams if it does not exist
-        File teamDir = new File(getDataFolder(), "\teams");
+        File teamDir = new File(getDataFolder(), "teams");
         if (!teamDir.exists() && !teamDir.mkdir()) logger.severe("Failed to create folder: " + teamDir.getAbsolutePath());
     }
 }

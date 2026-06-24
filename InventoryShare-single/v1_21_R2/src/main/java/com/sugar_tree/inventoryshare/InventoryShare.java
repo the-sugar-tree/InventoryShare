@@ -132,8 +132,8 @@ public final class InventoryShare extends JavaPlugin {
         if (!(advfile.exists())) {
             saveResource("advancements.yml", false);
         }
-        if (!(new File(getDataFolder(), "\\teams")).exists()) {
-            (new File(getDataFolder(), "\\teams")).mkdir();
+        if (!(new File(getDataFolder(), "teams")).exists()) {
+            (new File(getDataFolder(), "teams")).mkdir();
         }
     }
 }

@@ -78,7 +78,7 @@ public final class FileManager implements IFileManager {
         sb.append(I18N_TEAM_SAVED);
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
             if (team == null) continue;
-            File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
+            File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             List<Map<?, ?>> serializedTeamItemsList = new ArrayList<>();
             PlayerInventory teamInventory = TeamInventoryMap.get(team.getName());
@@ -146,7 +146,7 @@ public final class FileManager implements IFileManager {
             AbstractList<Object> items = NMSLoader.createEmptyItemList(36);
             AbstractList<Object> armor = NMSLoader.createEmptyItemList(4);
             AbstractList<Object> extraSlots = NMSLoader.createEmptyItemList(1);
-            File file = new File(new File(plugin.getDataFolder(), "\\teams"), team.getName() + ".yml");
+            File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             if (file.exists()) {
                 FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
                 List<Map<?, ?>> itemslistT = fileConfiguration.getMapList("items");
@@ -192,7 +192,7 @@ public final class FileManager implements IFileManager {
 
     @Override
     public void deleteWasteFiles() {
-        File[] files = new File(plugin.getDataFolder(), "\\teams").listFiles();
+        File[] files = new File(plugin.getDataFolder(), "teams").listFiles();
         if (files != null) {
             for (File file : files) {
                 List<String> list = new ArrayList<>();
