@@ -18,18 +18,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.v1_21_R4;
+package com.sugar_tree.inventoryshare.v26_2;
 
 import com.sugar_tree.inventoryshare.PlayerInventory;
 import com.sugar_tree.inventoryshare.api.IFileManager;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.entity.EnumItemSlot;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
@@ -42,7 +42,7 @@ import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 public class FileManager implements IFileManager {
     protected static Map<UUID, PlayerInventory> origianlPlayerInventoryMap = new HashMap<>();
 
-    protected static PlayerInventory sharedInventory = new PlayerInventory(NonNullList.a(36, ItemStack.l));
+    protected static PlayerInventory sharedInventory = new PlayerInventory(NonNullList.withSize(36, ItemStack.EMPTY));
 
     protected static Map<String, PlayerInventory> teamInventories = new HashMap<>();
 
@@ -55,10 +55,10 @@ public class FileManager implements IFileManager {
         invconfig.set("items", itemslist);
 
 
-        for (EnumItemSlot enumItemSlot : sharedInventory.getEquipment().keySet()) {
+        for (EquipmentSlot enumItemSlot : EquipmentSlot.values()) {
             List<Map<?, ?>> equipmentElement = new ArrayList<>();
             equipmentElement.add(CraftItemStack.asCraftMirror(sharedInventory.getEquipment().get(enumItemSlot)).serialize());
-            invconfig.set(enumItemSlot.e(), equipmentElement);
+            invconfig.set(enumItemSlot.getName(), equipmentElement);
         }
 
 
@@ -83,10 +83,10 @@ public class FileManager implements IFileManager {
                 itemslistT.add(CraftItemStack.asCraftMirror(itemStack).serialize());
             }
             fileConfiguration.set("items", itemslistT);
-            for (EnumItemSlot enumItemSlot : invT.getEquipment().keySet()) {
+            for (EquipmentSlot enumItemSlot : EquipmentSlot.values()) {
                 List<Map<?, ?>> equipmentElement = new ArrayList<>();
                 equipmentElement.add(CraftItemStack.asCraftMirror(invT.getEquipment().get(enumItemSlot)).serialize());
-                fileConfiguration.set(enumItemSlot.e(), equipmentElement);
+                fileConfiguration.set(enumItemSlot.getName(), equipmentElement);
             }
         }
         saveConfigs();
@@ -106,8 +106,8 @@ public class FileManager implements IFileManager {
             }
         }
 
-        for (EnumItemSlot value : EnumItemSlot.values()) {
-            List<Map<?, ?>> maps = invconfig.getMapList(value.e());
+        for (EquipmentSlot value : EquipmentSlot.values()) {
+            List<Map<?, ?>> maps = invconfig.getMapList(value.getName());
             if (maps == null || maps.isEmpty()) continue;
             for (Map<?, ?> map : maps) {
                 if (map.isEmpty()) continue;
@@ -136,7 +136,7 @@ public class FileManager implements IFileManager {
         }
 
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
-            NonNullList<ItemStack> items = NonNullList.a(36, ItemStack.l);
+            NonNullList<ItemStack> items = NonNullList.withSize(36, ItemStack.EMPTY);
             File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             PlayerInventory invT = new PlayerInventory(items);
             if (file.exists()) {
@@ -151,8 +151,8 @@ public class FileManager implements IFileManager {
                     items.set(i, CraftItemStack.asNMSCopy(CraftItemStack.deserialize((Map<String, Object>) itemslistT.get(i))));
                 }
 
-                for (EnumItemSlot value : EnumItemSlot.values()) {
-                    List<Map<?, ?>> maps = fileConfiguration.getMapList(value.e());
+                for (EquipmentSlot value : EquipmentSlot.values()) {
+                    List<Map<?, ?>> maps = fileConfiguration.getMapList(value.getName());
                     if (maps == null || maps.isEmpty()) continue;
                     for (Map<?, ?> map : maps) {
                         if (map.isEmpty()) continue;
