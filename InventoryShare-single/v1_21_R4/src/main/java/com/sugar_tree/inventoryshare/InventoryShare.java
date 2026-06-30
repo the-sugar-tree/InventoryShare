@@ -49,10 +49,14 @@ public final class InventoryShare extends JavaPlugin {
     final String supportedVersion = "1.21.5-R0.1-SNAPSHOT";
 
     @Override
-    public void onEnable() {
-        Metrics metrics = new Metrics(this, 18372);
+    public void onLoad() {
         plugin = this;
         logger = getLogger();
+    }
+
+    @Override
+    public void onEnable() {
+        Metrics metrics = new Metrics(this, 18372);
 
         I18NUtil.I18NFileManager.saveDefaultLanguageFiles();
         I18NUtil.init();

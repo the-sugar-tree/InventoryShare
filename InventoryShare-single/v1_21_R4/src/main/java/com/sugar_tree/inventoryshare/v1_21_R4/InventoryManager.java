@@ -24,7 +24,9 @@ import com.sugar_tree.inventoryshare.api.IInventoryManager;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.EntityEquipment;
+import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EnumItemSlot;
+import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer;
@@ -46,7 +48,7 @@ public class InventoryManager implements IInventoryManager {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         PlayerInventory playerInventory = entityPlayer.gj();
         try {
-            setField(playerInventory, "items", sharedInventory.getItems());
+            setField(playerInventory, "i", sharedInventory.getItems());
             setEquipment(playerInventory, sharedInventory.getEquipment());
         } catch (Exception e) {
             e.printStackTrace();
