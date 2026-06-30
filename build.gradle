@@ -1,17 +1,20 @@
 plugins {
-    id("org.cadixdev.licenser") version "0.6.1" apply false
+    id("net.minecraftforge.licenser") version "1.2.0" apply false
 }
 
 allprojects {
     apply plugin: 'java'
-    apply plugin: 'org.cadixdev.licenser'
+    apply plugin: 'net.minecraftforge.licenser'
 
     group = 'com.sugar_tree.inventoryshare'
-    version = '3.1.1'
+    version = '3.2-beta'
     description = 'Minecraft Plugin'
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    plugins.withType(JavaPlugin).configureEach {
+        tasks.withType(JavaCompile).configureEach {
+            options.release = 8
+        }
+    }
 
     compileJava.options.encoding = 'UTF-8'
 
@@ -40,8 +43,8 @@ allprojects {
     }
 
     dependencies {
-        compileOnly 'org.projectlombok:lombok:1.18.34'
-        annotationProcessor 'org.projectlombok:lombok:1.18.34'
+        compileOnly 'org.projectlombok:lombok:1.18.46'
+        annotationProcessor 'org.projectlombok:lombok:1.18.46'
         compileOnly 'org.jetbrains:annotations:24.0.1'
     }
 
@@ -72,15 +75,21 @@ allprojects {
     jar.dependsOn('licenseFormat')
 }
 
-//test.enabled(false)
-jar.enabled(false)
-compileJava.enabled(false)
+//tasks.withType(Test).configureEach {
+//    enabled = false
+//}
+tasks.withType(Jar).configureEach {
+    enabled = false
+}
+tasks.withType(JavaCompile).configureEach {
+    enabled = false
+}
 
 dependencies {
-    testCompileOnly 'org.projectlombok:lombok:1.18.30'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
-    testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+    testCompileOnly 'org.projectlombok:lombok:1.18.46'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.46'
+    testImplementation 'org.slf4j:slf4j-api:1.7.25'
+    testImplementation 'org.slf4j:slf4j-simple:1.7.25'
 
     testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
 //    testCompileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'

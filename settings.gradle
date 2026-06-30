@@ -8,6 +8,8 @@ include 'InventoryShare-single:v1_21_R3'
 findProject(':InventoryShare-single:v1_21_R3')?.name = 'v1_21_R3'
 include 'InventoryShare-single:v1_21_R4'
 findProject(':InventoryShare-single:v1_21_R4')?.name = 'v1_21_R4'
+include 'InventoryShare-single:v26_2'
+findProject(':InventoryShare-single:v26_2')?.name = 'v26_2'
 include 'InventoryShare-single:InventoryShare-all'
 
 //include 'InventoryShare-sponge'

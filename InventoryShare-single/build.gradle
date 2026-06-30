@@ -17,5 +17,10 @@ allprojects {
     }
 }
 
-jar.enabled(false)
-compileJava.enabled(false)
+tasks.withType(Jar).configureEach {
+    enabled = false
+}
+
+tasks.withType(JavaCompile).configureEach {
+    enabled = false
+}
