@@ -1,6 +1,10 @@
 allprojects {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    plugins.withType(JavaPlugin).configureEach {
+        java {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
+    }
 }
 
 dependencies {
@@ -9,7 +13,11 @@ dependencies {
 }
 
 jar {
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    String subVersion = '1.12.2-1.21.4'
+    manifest {
+        archiveFileName.set("InventoryShare-bukkit-${project.version}-[${subVersion}].jar")
+    }
+//    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
 processResources {
@@ -22,4 +30,14 @@ processResources {
     filesMatching('languages/*.yml') {
         expand props
     }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 8
 }

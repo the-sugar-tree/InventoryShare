@@ -1,17 +1,21 @@
 plugins {
-    id("org.cadixdev.licenser") version "0.6.1" apply false
+    id("net.minecraftforge.licenser") version "1.2.0" apply false
 }
 
 allprojects {
     apply plugin: 'java'
-    apply plugin: 'org.cadixdev.licenser'
+    apply plugin: 'net.minecraftforge.licenser'
 
     group = 'com.sugar_tree.inventoryshare'
-    version = '3.1.1'
+    version = '3.2-beta'
     description = 'Minecraft Plugin'
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    plugins.withType(JavaPlugin).configureEach {
+        java {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
+    }
 
     compileJava.options.encoding = 'UTF-8'
 
