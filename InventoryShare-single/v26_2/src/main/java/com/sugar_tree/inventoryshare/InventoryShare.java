@@ -71,9 +71,9 @@ public final class InventoryShare extends JavaPlugin {
 
 //        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         if (!isSupported()) {
-            logger.severe(I18NUtil.get("not_supported_version", version));
-            this.setEnabled(false);
-            return;
+//            logger.severe(I18NUtil.get("not_supported_version", version));
+//            this.setEnabled(false);
+//            return;
         }
         if (isProtocolLib) {
             ProtocolLibUtil.ProtocolLib();

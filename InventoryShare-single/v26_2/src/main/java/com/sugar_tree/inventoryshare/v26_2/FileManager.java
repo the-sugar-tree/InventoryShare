@@ -37,7 +37,7 @@ import java.util.*;
 
 import static com.sugar_tree.inventoryshare.api.SharedConstants.*;
 
-// TODO: 1.21.5+에서 armor, extraSlots -> offhand, feet, legs, chest, head 수정
+// TODO: 1.21.5+에서 armor, extraSlots -> offhand, feet, legs, chest, head 수정 (Migraction 만들어야함)
 
 public class FileManager implements IFileManager {
     protected static Map<UUID, PlayerInventory> origianlPlayerInventoryMap = new HashMap<>();
@@ -50,14 +50,14 @@ public class FileManager implements IFileManager {
     public void save() {
         List<Map<?, ?>> itemslist = new ArrayList<>();
         for (ItemStack itemStack : sharedInventory.getItems()) {
-            itemslist.add(CraftItemStack.asCraftMirror(itemStack).serialize());
+            itemslist.add(CraftItemStack.asBukkitCopy(itemStack).serialize());
         }
         invconfig.set("items", itemslist);
 
 
         for (EquipmentSlot enumItemSlot : EquipmentSlot.values()) {
             List<Map<?, ?>> equipmentElement = new ArrayList<>();
-            equipmentElement.add(CraftItemStack.asCraftMirror(sharedInventory.getEquipment().get(enumItemSlot)).serialize());
+            equipmentElement.add(CraftItemStack.asBukkitCopy(sharedInventory.getEquipment().get(enumItemSlot)).serialize());
             invconfig.set(enumItemSlot.getName(), equipmentElement);
         }
 
@@ -85,7 +85,7 @@ public class FileManager implements IFileManager {
             fileConfiguration.set("items", itemslistT);
             for (EquipmentSlot enumItemSlot : EquipmentSlot.values()) {
                 List<Map<?, ?>> equipmentElement = new ArrayList<>();
-                equipmentElement.add(CraftItemStack.asCraftMirror(invT.getEquipment().get(enumItemSlot)).serialize());
+                equipmentElement.add(CraftItemStack.asBukkitCopy(invT.getEquipment().get(enumItemSlot)).serialize());
                 fileConfiguration.set(enumItemSlot.getName(), equipmentElement);
             }
         }
