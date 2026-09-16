@@ -1,11 +1,13 @@
 rootProject.name = 'InventoryShare'
 include 'InventoryShare-bukkit'
 
+include 'InventoryShare-bukkit-test'
+include 'InventoryShare-bukkit-test:v1_21_R2'
+findProject(':InventoryShare-bukkit-test:v1_21_R2')?.name = 'v1_21_R2'
+include 'InventoryShare-bukkit-test:v1_21_R3'
+findProject(':InventoryShare-bukkit-test:v1_21_R3')?.name = 'v1_21_R3'
+
 include 'InventoryShare-single'
-include 'InventoryShare-single:v1_21_R2'
-findProject(':InventoryShare-single:v1_21_R2')?.name = 'v1_21_R2'
-include 'InventoryShare-single:v1_21_R3'
-findProject(':InventoryShare-single:v1_21_R3')?.name = 'v1_21_R3'
 include 'InventoryShare-single:v1_21_R4'
 findProject(':InventoryShare-single:v1_21_R4')?.name = 'v1_21_R4'
 include 'InventoryShare-single:v26_2'
@@ -17,4 +19,3 @@ include 'InventoryShare-single:InventoryShare-all'
 
 //include 'InventoryShare-bukkit:InventoryShare-api'
 //findProject(':InventoryShare-bukkit:InventoryShare-api')?.name = 'InventoryShare-api'
-

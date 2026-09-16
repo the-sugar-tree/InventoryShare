@@ -1,3 +1,5 @@
+// Per-version runnable plugins (EntityEquipment model: v1_21_R4, v26_2).
+// NMS mapping probes live in InventoryShare-bukkit-test.
 allprojects {
     processResources {
         def props = [version: version]
