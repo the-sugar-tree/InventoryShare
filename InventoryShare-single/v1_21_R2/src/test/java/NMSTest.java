@@ -19,6 +19,7 @@
  */
 
 import com.sugar_tree.inventoryshare.nms.utils.VersionUtil;
+import com.sugar_tree.inventoryshare.v1_21_R2.NmsScratch;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,6 +38,16 @@ public class NMSTest {
     @BeforeAll
     public static void registerVersion() {
         currentVersion = VersionUtil.SupportedVersions.v1_21_R2;
+    }
+
+    @Test
+    public void mappingMatchesScratch() {
+        assertEquals(NmsScratch.INVENTORY, currentVersion.getPATH_EntityPlayer_Inventory());
+        assertEquals(NmsScratch.ITEMS, currentVersion.getPATH_PlayerInventory_items());
+        assertEquals(NmsScratch.ARMOR, currentVersion.getPATH_PlayerInventory_armor());
+        assertEquals(NmsScratch.EXTRA_SLOTS, currentVersion.getPATH_PlayerInventory_extraSlots());
+        assertEquals(NmsScratch.CONTENTS, currentVersion.getPATH_PlayerInventory_contents());
+        assertEquals(NmsScratch.EMPTY_ITEM, currentVersion.getPATH_FIELD_emptyItem());
     }
 
     @Test
