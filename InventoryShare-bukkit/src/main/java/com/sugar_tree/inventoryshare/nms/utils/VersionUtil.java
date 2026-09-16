@@ -23,7 +23,11 @@ package com.sugar_tree.inventoryshare.nms.utils;
 import com.google.common.collect.ImmutableSet;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 @SuppressWarnings("LombokGetterMayBeUsed")
 public class VersionUtil {
@@ -31,13 +35,56 @@ public class VersionUtil {
     private VersionUtil() {}
 
     private static final SupportedVersions version;
+    private static String parsedServerVersion;
     static {
-        version = SupportedVersions.getFromBukkitVersion(Bukkit.getBukkitVersion());
+        version = SupportedVersions.getFromBukkitVersion(parseServerVersion());
     }
 
     /**
-     * Return detected version
-     * @return {@link SupportedVersions} or null if not supported
+     * Returns a Spigot-style Bukkit API version string used to resolve {@link SupportedVersions}.
+     *
+     * <p>On Spigot (and Paper builds without {@code getMinecraftVersion}), this returns
+     * {@link Bukkit#getBukkitVersion()} unchanged, e.g. {@code "1.21.5-R0.1-SNAPSHOT"}.
+     *
+     * <p>On Paper 1.15.2+, {@link Server#getMinecraftVersion()} is called via reflection and
+     * suffixed with {@code "-R0.1-SNAPSHOT"} so the result matches the strings stored in
+     * {@link SupportedVersions}. That avoids Paper's alternate {@link Bukkit#getBukkitVersion()}
+     * format on Minecraft 26.x (e.g. {@code "26.1.2.build.63-stable"}).
+     *
+     * <p>{@code getMinecraftVersion()} is a Paper extension, not Spigot API; reflection keeps this
+     * module compilable against {@code spigot-api} only.
+     *
+     * @return a version string for {@link SupportedVersions} lookup, e.g.
+     *         {@code "1.21.5-R0.1-SNAPSHOT"} or {@code "26.1.2-R0.1-SNAPSHOT"}
+     * @throws RuntimeException if the reflected {@code getMinecraftVersion()} fails unexpectedly
+     * @throws Error if rethrown from the reflected method
+     * @see <a href="https://github.com/PaperMC/Paper/issues/13885">PaperMC/Paper#13885</a>
+     */
+    @SuppressWarnings("JavaReflectionMemberAccess")
+    public static String parseServerVersion() {
+        if (parsedServerVersion != null) return parsedServerVersion;
+        String mc;
+        try {
+            Method m = Server.class.getMethod("getMinecraftVersion");
+            mc = (String) m.invoke(Bukkit.getServer());
+            mc += "-R0.1-SNAPSHOT";
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            mc = Bukkit.getBukkitVersion();
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) throw (RuntimeException) cause;
+            if (cause instanceof Error) throw (Error) cause;
+            throw new RuntimeException(cause);
+        }
+        parsedServerVersion = mc;
+        return mc;
+    }
+
+    /**
+     * Returns the NMS mapping set detected at plugin load from the running server.
+     *
+     * @return the matching {@link SupportedVersions}, or {@code null} if
+     *         {@link #parseServerVersion()} does not match any supported release
      */
     public static SupportedVersions getVersion() {
         return version;
@@ -162,8 +209,9 @@ public class VersionUtil {
         }
 
         /**
-         * @param bukkitVersion {@link Bukkit#getBukkitVersion()}
-         * @return {@link SupportedVersions} value or null if not supported
+         * @param bukkitVersion normalized API version from {@link #parseServerVersion()},
+         *                      e.g. {@code "1.21.5-R0.1-SNAPSHOT"}
+         * @return matching enum constant, or {@code null} if unsupported
          */
         private static @Nullable VersionUtil.SupportedVersions getFromBukkitVersion(String bukkitVersion) {
             for (SupportedVersions value : SupportedVersions.values()) {

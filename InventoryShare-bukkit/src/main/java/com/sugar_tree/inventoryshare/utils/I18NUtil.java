@@ -189,11 +189,11 @@ public final class I18NUtil {
                     }
                     fileConfiguration.set("FILE_VERSION", defaultConfig.get("FILE_VERSION"));
                 }
-            }
-            try {
-                fileConfiguration.save(file);
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    fileConfiguration.save(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

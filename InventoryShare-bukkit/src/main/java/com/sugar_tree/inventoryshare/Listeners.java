@@ -21,6 +21,7 @@
 package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.utils.I18NUtil;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -44,11 +45,8 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public final class Listeners implements Listener {
 
+    @Getter
     private final int taskId;
-
-    public int getTaskId() {
-        return taskId;
-    }
 
     public Listeners() {
         taskId = Bukkit.getScheduler().runTaskTimer(plugin, this::onTick, 0L, 0L).getTaskId();
