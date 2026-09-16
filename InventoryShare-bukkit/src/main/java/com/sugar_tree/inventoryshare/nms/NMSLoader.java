@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare.nms;
 
+import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.nms.utils.VersionUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -29,48 +30,41 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.AbstractList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * [Warning] This class is using Reflection for NMS service
+ * Reflection access to NMS player inventory lists (items / armor / extraSlots).
  */
 @SuppressWarnings("unchecked")
 public final class NMSLoader {
 
     private NMSLoader() {}
 
-    //
-    static final PlayerInventory sharedInventory;
-    static final Map<String, PlayerInventory> TeamInventoryMap;
-    //
-
     private static final Class<?> CraftPlayer;
     private static final Method toEntityPlayer;
     private static final Method inventory_method;
     private static final Field inventory_field;
     private static final boolean DOES_INVENTORY_USE_FIELD;
-    private static final Class<?> PlayerInventory;
     private static final Field inventory_items;
     private static final Field inventory_armor;
     private static final Field inventory_extraSlots;
+    private static final Field inventory_contents;
 
     private static final Method asBukkitCopy;
     private static final Method asNMSCopy;
     private static final Method getNamespacedKey;
 
     private static final Method createItemList;
+    private static final Object nullItem;
 
     static {
         try {
             final VersionUtil.SupportedVersions VERSION_INFO = VersionUtil.getVersion();
             DOES_INVENTORY_USE_FIELD = VERSION_INFO.isINVENTORY_USE_FIELD();
 
-            // Load Reflections
             CraftPlayer = Class.forName(VERSION_INFO.getPATH_CLASS_CraftPlayer());
             Class<?> EntityPlayer = Class.forName(VERSION_INFO.getPATH_CLASS_EntityPlayer());
             Class<?> EntityHuman = Class.forName(VERSION_INFO.getPATH_CLASS_EntityHuman());
-            PlayerInventory = Class.forName(VERSION_INFO.getPATH_CLASS_PlayerInventory());
+            Class<?> PlayerInventory = Class.forName(VERSION_INFO.getPATH_CLASS_PlayerInventory());
             Class<?> CraftItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_CraftItemStack());
             Class<?> NMSItemStack = Class.forName(VERSION_INFO.getPATH_CLASS_ItemStack());
             Class<?> NonNullList = Class.forName(VERSION_INFO.getPATH_CLASS_NonNullList());
@@ -90,21 +84,18 @@ public final class NMSLoader {
                         .getMethod(VERSION_INFO.getPATH_EntityPlayer_Inventory());
                 inventory_field = null;
             }
-            inventory_items = PlayerInventory
-                    .getField(VERSION_INFO.getPATH_PlayerInventory_items());
-            inventory_armor = PlayerInventory
-                    .getField(VERSION_INFO.getPATH_PlayerInventory_armor());
-            inventory_extraSlots = PlayerInventory
-                    .getField(VERSION_INFO.getPATH_PlayerInventory_extraSlots());
+            inventory_items = accessible(PlayerInventory.getField(VERSION_INFO.getPATH_PlayerInventory_items()));
+            inventory_armor = accessible(PlayerInventory.getField(VERSION_INFO.getPATH_PlayerInventory_armor()));
+            inventory_extraSlots = accessible(PlayerInventory.getField(VERSION_INFO.getPATH_PlayerInventory_extraSlots()));
+            inventory_contents = accessible(PlayerInventory.getDeclaredField(VERSION_INFO.getPATH_PlayerInventory_contents()));
         } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        AbstractList<Object> sharedItems = createEmptyItemList(36);
-        AbstractList<Object> sharedArmor = createEmptyItemList(4);
-        AbstractList<Object> sharedExtraSlots = createEmptyItemList(1);
-        sharedInventory = new PlayerInventory(sharedItems, sharedArmor, sharedExtraSlots);
-        TeamInventoryMap = new HashMap<>();
+    private static Field accessible(Field field) {
+        field.setAccessible(true);
+        return field;
     }
 
     /**
@@ -141,7 +132,6 @@ public final class NMSLoader {
         }
     }
 
-    private static final Object nullItem;
     public static AbstractList<Object> createEmptyItemList(int count) {
         try {
             return (AbstractList<Object>) createItemList.invoke(null, count, nullItem);
@@ -187,8 +177,19 @@ public final class NMSLoader {
         }
     }
 
-    public static Class<?> getPlayerInventoryClass() {
-        return PlayerInventory;
+    /**
+     * Replace a player's NMS inventory lists with the shared/personal/team lists.
+     */
+    public static void applyLists(Object playerInventory, AbstractList<Object> items,
+                                  AbstractList<Object> armor, AbstractList<Object> extraSlots) {
+        try {
+            inventory_items.set(playerInventory, items);
+            inventory_armor.set(playerInventory, armor);
+            inventory_extraSlots.set(playerInventory, extraSlots);
+            inventory_contents.set(playerInventory, ImmutableList.of(items, armor, extraSlots));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

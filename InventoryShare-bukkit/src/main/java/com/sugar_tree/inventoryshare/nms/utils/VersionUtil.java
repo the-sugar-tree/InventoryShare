@@ -29,16 +29,13 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-@SuppressWarnings("LombokGetterMayBeUsed")
 public class VersionUtil {
 
     private VersionUtil() {}
 
-    private static final SupportedVersions version;
+    private static SupportedVersions version;
+    private static boolean versionResolved;
     private static String parsedServerVersion;
-    static {
-        version = SupportedVersions.getFromBukkitVersion(parseServerVersion());
-    }
 
     /**
      * Returns a Spigot-style Bukkit API version string used to resolve {@link SupportedVersions}.
@@ -87,57 +84,105 @@ public class VersionUtil {
      *         {@link #parseServerVersion()} does not match any supported release
      */
     public static SupportedVersions getVersion() {
+        if (!versionResolved) {
+            version = SupportedVersions.getFromBukkitVersion(parseServerVersion());
+            versionResolved = true;
+        }
         return version;
+    }
+
+    /**
+     * NMS member names for the items/armor/extraSlots inventory model (~1.12–1.21.4).
+     */
+    private static final class NmsLayout {
+        private final boolean flattened;
+        private final String inventory;
+        private final String items;
+        private final String armor;
+        private final String extraSlots;
+        private final String contents;
+        private final String emptyItem;
+
+        private NmsLayout(boolean flattened, String inventory, String items, String armor,
+                          String extraSlots, String contents, String emptyItem) {
+            this.flattened = flattened;
+            this.inventory = inventory;
+            this.items = items;
+            this.armor = armor;
+            this.extraSlots = extraSlots;
+            this.contents = contents;
+            this.emptyItem = emptyItem;
+        }
+    }
+
+    private static ImmutableSet<String> bukkit(String... versions) {
+        return ImmutableSet.copyOf(versions);
+    }
+
+    /** Pre-1.17: {@code net.minecraft.server.vX_Y_RZ} packages, inventory is a field. */
+    private static NmsLayout legacy(String inventory, String items, String armor,
+                                    String extraSlots, String contents, String emptyItem) {
+        return new NmsLayout(false, inventory, items, armor, extraSlots, contents, emptyItem);
+    }
+
+    /** 1.17+: flattened NMS packages, inventory is a method. */
+    private static NmsLayout flattened(String inventory, String items, String armor,
+                                       String extraSlots, String contents, String emptyItem) {
+        return new NmsLayout(true, inventory, items, armor, extraSlots, contents, emptyItem);
     }
 
     @Getter
     public enum SupportedVersions {
-        v1_12_R1(ImmutableSet.of("1.12.2-R0.1-SNAPSHOT", "1.12.1-R0.1-SNAPSHOT", "1.12-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_13_R1(ImmutableSet.of("1.13.1-R0.1-SNAPSHOT", "1.13-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_13_R2(ImmutableSet.of("1.13.2-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_14_R1(ImmutableSet.of("1.14.4-R0.1-SNAPSHOT", "1.14.3-R0.1-SNAPSHOT", "1.14.2-R0.1-SNAPSHOT", "1.14.1-R0.1-SNAPSHOT", "1.14-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_15_R1(ImmutableSet.of("1.15.2-R0.1-SNAPSHOT", "1.15.1-R0.1-SNAPSHOT", "1.15-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_16_R1(ImmutableSet.of("1.16.1-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_16_R2(ImmutableSet.of("1.16.3-R0.1-SNAPSHOT", "1.16.2-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_16_R3(ImmutableSet.of("1.16.5-R0.1-SNAPSHOT", "1.16.4-R0.1-SNAPSHOT"),
-                "inventory", "items", "armor", "extraSlots", "f"),
-        v1_17_R1(ImmutableSet.of("1.17-R0.1-SNAPSHOT", "1.17.1-R0.1-SNAPSHOT"),
-                "getInventory", "h", "i", "j", "n"),
-        v1_18_R1(ImmutableSet.of("1.18-R0.1-SNAPSHOT"),
-                "fq", "h", "i", "j", "n"),
-        v1_18_R2(ImmutableSet.of("1.18.2-R0.1-SNAPSHOT", "1.18.1-R0.1-SNAPSHOT"),
-                "fr", "h", "i", "j", "n"),
-        v1_19_R1(ImmutableSet.of("1.19-R0.1-SNAPSHOT"),
-                "fB", "h", "i", "j", "n"),
-        v1_19_1_R1(ImmutableSet.of("1.19.2-R0.1-SNAPSHOT", "1.19.1-R0.1-SNAPSHOT"),
-                "fA", "h", "i", "j", "n"),
-        v1_19_R2(ImmutableSet.of("1.19.3-R0.1-SNAPSHOT"),
-                "fE", "h", "i", "j", "n"),
-        v1_19_R3(ImmutableSet.of("1.19.4-R0.1-SNAPSHOT"),
-                "fJ", "i", "j", "k", "o"),
-        v1_20_R1(ImmutableSet.of("1.20-R0.1-SNAPSHOT", "1.20.1-R0.1-SNAPSHOT"),
-                "fN", "i", "j", "k", "o"),
-        v1_20_R2(ImmutableSet.of("1.20.2-R0.1-SNAPSHOT"),
-                "fR", "i", "j", "k", "o"),
-        v1_20_R3(ImmutableSet.of("1.20.4-R0.1-SNAPSHOT", "1.20.3-R0.1-SNAPSHOT"),
-                "fS", "i", "j", "k", "o"),
-        v1_20_R4(ImmutableSet.of("1.20.6-R0.1-SNAPSHOT", "1.20.5-R0.1-SNAPSHOT"),
-                "gc", "h", "i", "j", "n"),
-        v1_21_R1(ImmutableSet.of("1.21.1-R0.1-SNAPSHOT", "1.21-R0.1-SNAPSHOT"),
-                "fY", "h", "i", "j", "n"),
-        v1_21_R2(ImmutableSet.of("1.21.3-R0.1-SNAPSHOT", "1.21.2-R0.1-SNAPSHOT"),
-                "gi", "g", "h", "i", "l"),
-        v1_21_R3(ImmutableSet.of("1.21.4-R0.1-SNAPSHOT"),
-                "gi", "g", "h", "i", "l"),
-        v1_21_R4(ImmutableSet.of("1.21.5-R0.1-SNAPSHOT"),
-                "gj", "g", "h", "i", "l"),
+        v1_12_R1(bukkit("1.12.2-R0.1-SNAPSHOT", "1.12.1-R0.1-SNAPSHOT", "1.12-R0.1-SNAPSHOT"),
+                legacy("inventory", "items", "armor", "extraSlots", "f", "a")),
+        v1_13_R1(bukkit("1.13.1-R0.1-SNAPSHOT", "1.13-R0.1-SNAPSHOT"),
+                legacy("inventory", "items", "armor", "extraSlots", "f", "a")),
+        v1_13_R2(bukkit("1.13.2-R0.1-SNAPSHOT"),
+                legacy("inventory", "items", "armor", "extraSlots", "f", "a")),
+        v1_14_R1(bukkit("1.14.4-R0.1-SNAPSHOT", "1.14.3-R0.1-SNAPSHOT", "1.14.2-R0.1-SNAPSHOT", "1.14.1-R0.1-SNAPSHOT", "1.14-R0.1-SNAPSHOT"),
+                legacy("inventory", "items", "armor", "extraSlots", "f", "a")),
+        v1_15_R1(bukkit("1.15.2-R0.1-SNAPSHOT", "1.15.1-R0.1-SNAPSHOT", "1.15-R0.1-SNAPSHOT"),
+                legacy("inventory", "items", "armor", "extraSlots", "f", "a")),
+        v1_16_R1(bukkit("1.16.1-R0.1-SNAPSHOT"),
+                legacy("inventory", "items", "armor", "extraSlots", "f", "b")),
+        v1_16_R2(bukkit("1.16.3-R0.1-SNAPSHOT", "1.16.2-R0.1-SNAPSHOT"),
+                legacy("inventory", "items", "armor", "extraSlots", "f", "b")),
+        v1_16_R3(bukkit("1.16.5-R0.1-SNAPSHOT", "1.16.4-R0.1-SNAPSHOT"),
+                legacy("inventory", "items", "armor", "extraSlots", "f", "b")),
+        v1_17_R1(bukkit("1.17-R0.1-SNAPSHOT", "1.17.1-R0.1-SNAPSHOT"),
+                flattened("getInventory", "h", "i", "j", "n", "b")),
+        v1_18_R1(bukkit("1.18-R0.1-SNAPSHOT"),
+                flattened("fq", "h", "i", "j", "n", "b")),
+        v1_18_R2(bukkit("1.18.2-R0.1-SNAPSHOT", "1.18.1-R0.1-SNAPSHOT"),
+                flattened("fr", "h", "i", "j", "n", "b")),
+        v1_19_R1(bukkit("1.19-R0.1-SNAPSHOT"),
+                flattened("fB", "h", "i", "j", "n", "b")),
+        v1_19_1_R1(bukkit("1.19.2-R0.1-SNAPSHOT", "1.19.1-R0.1-SNAPSHOT"),
+                flattened("fA", "h", "i", "j", "n", "b")),
+        v1_19_R2(bukkit("1.19.3-R0.1-SNAPSHOT"),
+                flattened("fE", "h", "i", "j", "n", "b")),
+        v1_19_R3(bukkit("1.19.4-R0.1-SNAPSHOT"),
+                flattened("fJ", "i", "j", "k", "o", "b")),
+        v1_20_R1(bukkit("1.20-R0.1-SNAPSHOT", "1.20.1-R0.1-SNAPSHOT"),
+                flattened("fN", "i", "j", "k", "o", "b")),
+        v1_20_R2(bukkit("1.20.2-R0.1-SNAPSHOT"),
+                flattened("fR", "i", "j", "k", "o", "b")),
+        v1_20_R3(bukkit("1.20.4-R0.1-SNAPSHOT", "1.20.3-R0.1-SNAPSHOT"),
+                flattened("fS", "i", "j", "k", "o", "f")),
+        v1_20_R4(bukkit("1.20.6-R0.1-SNAPSHOT", "1.20.5-R0.1-SNAPSHOT"),
+                flattened("gc", "h", "i", "j", "n", "l")),
+        v1_21_R1(bukkit("1.21.1-R0.1-SNAPSHOT", "1.21-R0.1-SNAPSHOT"),
+                flattened("fY", "h", "i", "j", "n", "l")),
+        v1_21_R2(bukkit("1.21.3-R0.1-SNAPSHOT", "1.21.2-R0.1-SNAPSHOT"),
+                flattened("gi", "g", "h", "i", "l", "j")),
+        v1_21_R3(bukkit("1.21.4-R0.1-SNAPSHOT"),
+                flattened("gi", "g", "h", "i", "l", "j")),
+        /**
+         * 1.21.5 lookup only. The live inventory model uses {@code EntityEquipment},
+         * not items/armor/extraSlots. Do not extend this table for 1.21.5+/26.2.
+         */
+        v1_21_R4(bukkit("1.21.5-R0.1-SNAPSHOT"),
+                flattened("gj", "g", "h", "i", "l", "l")),
         ;
 
         private final ImmutableSet<String> versions;
@@ -147,7 +192,6 @@ public class VersionUtil {
         private final String PATH_METHOD_createItemlist;
         private final String PATH_FIELD_emptyItem;
         private final String PATH_METHOD_getNameSpacedKey;
-        //*****************************************************************************************************************//
         private final String PATH_CLASS_EntityPlayer;
         private final String PATH_CLASS_CraftPlayer;
         private final String PATH_CLASS_CraftItemStack;
@@ -159,53 +203,37 @@ public class VersionUtil {
         private final String PATH_PlayerInventory_contents;
         private final String PATH_CLASS_EntityHuman;
 
-        SupportedVersions(ImmutableSet<String> versions, String... args) {
+        SupportedVersions(ImmutableSet<String> versions, NmsLayout nms) {
             this.versions = versions;
-            if (args.length != 5) {
-                throw new IllegalArgumentException("The number of arguments is not satisfied");
+            String craftbukkitPackage = name();
+            if ("v1_19_1_R1".equals(craftbukkitPackage)) {
+                craftbukkitPackage = "v1_19_R1";
             }
-            String name = name();
-            if (name.equals("v1_19_1_R1")) {
-                name = "v1_19_R1";
-            }
-            PATH_EntityPlayer_Inventory = args[0];
-            PATH_PlayerInventory_items = args[1];
-            PATH_PlayerInventory_armor = args[2];
-            PATH_PlayerInventory_extraSlots = args[3];
-            PATH_PlayerInventory_contents = args[4];
-            if (ordinal() >= 8 /* 1.17+ */) {                       // if (SharedConstants.WORLD_VERSION >= 2724 /* 1.17+ */) {
+            PATH_EntityPlayer_Inventory = nms.inventory;
+            PATH_PlayerInventory_items = nms.items;
+            PATH_PlayerInventory_armor = nms.armor;
+            PATH_PlayerInventory_extraSlots = nms.extraSlots;
+            PATH_PlayerInventory_contents = nms.contents;
+            PATH_FIELD_emptyItem = nms.emptyItem;
+            PATH_METHOD_createItemlist = "a";
+            INVENTORY_USE_FIELD = !nms.flattened;
+            PATH_CLASS_CraftPlayer = "org.bukkit.craftbukkit." + craftbukkitPackage + ".entity.CraftPlayer";
+            PATH_CLASS_CraftItemStack = "org.bukkit.craftbukkit." + craftbukkitPackage + ".inventory.CraftItemStack";
+            if (nms.flattened) {
                 PATH_CLASS_PlayerInventory = "net.minecraft.world.entity.player.PlayerInventory";
                 PATH_CLASS_ItemStack = "net.minecraft.world.item.ItemStack";
                 PATH_CLASS_NonNullList = "net.minecraft.core.NonNullList";
                 PATH_METHOD_getNameSpacedKey = "fromString";
                 PATH_CLASS_EntityPlayer = "net.minecraft.server.level.EntityPlayer";
-                INVENTORY_USE_FIELD = false;
                 PATH_CLASS_EntityHuman = "net.minecraft.world.entity.player.EntityHuman";
             } else {
-                PATH_CLASS_PlayerInventory = "net.minecraft.server." + name + ".PlayerInventory";
-                PATH_CLASS_ItemStack = "net.minecraft.server." + name + ".ItemStack";
-                PATH_CLASS_NonNullList = "net.minecraft.server." + name + ".NonNullList";
+                PATH_CLASS_PlayerInventory = "net.minecraft.server." + craftbukkitPackage + ".PlayerInventory";
+                PATH_CLASS_ItemStack = "net.minecraft.server." + craftbukkitPackage + ".ItemStack";
+                PATH_CLASS_NonNullList = "net.minecraft.server." + craftbukkitPackage + ".NonNullList";
                 PATH_METHOD_getNameSpacedKey = "minecraft";
-                PATH_CLASS_EntityPlayer = "org.bukkit.craftbukkit." + name + ".entity.CraftPlayer";
-                INVENTORY_USE_FIELD = true;
-                PATH_CLASS_EntityHuman = "net.minecraft.server." + name + ".EntityHuman";
+                PATH_CLASS_EntityPlayer = "org.bukkit.craftbukkit." + craftbukkitPackage + ".entity.CraftPlayer";
+                PATH_CLASS_EntityHuman = "net.minecraft.server." + craftbukkitPackage + ".EntityHuman";
             }
-            if (ordinal() >= 22) {
-                PATH_FIELD_emptyItem = "l";
-            } else if (ordinal() >= 20 /* 1.21.2+ */) {
-                PATH_FIELD_emptyItem = "j";
-            } else if (ordinal() >= 18 /* 1.20.5-1.21.1 */) {       // if (SharedConstants.WORLD_VERSION >= 3839 /* 1.20.5+ */) {
-                PATH_FIELD_emptyItem = "l";
-            } else if (ordinal() == 17 /* 1.20.3-1.20.4 */) {       // } else if (SharedConstants.WORLD_VERSION >= 3698 /* 1.20.3-1.20.4 */) {
-                PATH_FIELD_emptyItem = "f";
-            } else if (ordinal() >= 5 /* 1.16-1.20.2 */) {          // } else if (SharedConstants.WORLD_VERSION >= 2566 /* 1.16-1.20.2 */) {
-                PATH_FIELD_emptyItem = "b";
-            } else {
-                PATH_FIELD_emptyItem = "a";
-            }
-            PATH_METHOD_createItemlist = "a";
-            PATH_CLASS_CraftPlayer = "org.bukkit.craftbukkit." + name + ".entity.CraftPlayer";
-            PATH_CLASS_CraftItemStack = "org.bukkit.craftbukkit." + name + ".inventory.CraftItemStack";
         }
 
         /**

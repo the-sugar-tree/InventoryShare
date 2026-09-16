@@ -155,8 +155,9 @@ public final class InventoryShare extends JavaPlugin {
     private boolean loadNMS() {
         logger.info("Loading Classes...");
         try {
-            FileManager = new FileManager(); // Initialize FileManager
-            InventoryManager = new InventoryManager(); // Initialize InventoryManager
+            InventoryManager inventoryManager = new InventoryManager();
+            InventoryManager = inventoryManager;
+            FileManager = new FileManager(inventoryManager);
         } catch (ExceptionInInitializerError e) {
             logger.severe("An error occurred while loading the classes!");
             logger.severe("This is NOT EXPECTED ERROR! Report this issue!");

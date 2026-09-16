@@ -37,14 +37,18 @@ import java.util.List;
 import java.util.Map;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
-import static com.sugar_tree.inventoryshare.nms.NMSLoader.*;
 
 public final class FileManager implements IFileManager {
 
-    public FileManager() {}
+    private final InventoryManager inventories;
+
+    public FileManager(InventoryManager inventories) {
+        this.inventories = inventories;
+    }
 
     @Override
     public void save() {
+        PlayerInventory sharedInventory = inventories.getSharedInventory();
         List<Map<?, ?>> serializedItemsList = new ArrayList<>();
         for (Object itemStack : sharedInventory.getItems()) {
             serializedItemsList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
@@ -81,7 +85,7 @@ public final class FileManager implements IFileManager {
             File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             List<Map<?, ?>> serializedTeamItemsList = new ArrayList<>();
-            PlayerInventory teamInventory = TeamInventoryMap.get(team.getName());
+            PlayerInventory teamInventory = inventories.getTeamInventoryMap().get(team.getName());
             if (teamInventory == null) continue;
             for (Object itemStack : teamInventory.getItems()) {
                 serializedTeamItemsList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
@@ -109,6 +113,7 @@ public final class FileManager implements IFileManager {
 
     @Override
     public void load() {
+        PlayerInventory sharedInventory = inventories.getSharedInventory();
         List<Map<?, ?>> itemslist = invconfig.getMapList("items");
         deserializeItems(itemslist, sharedInventory.getItems(), "ALL:items");
 
@@ -158,7 +163,7 @@ public final class FileManager implements IFileManager {
                 List<Map<?, ?>> extraSlotslistT = fileConfiguration.getMapList("extraSlots");
                 deserializeItems(extraSlotslistT, extraSlots, "Team:" + team.getName() + ":extraSlots");
             }
-            TeamInventoryMap.put(team.getName(), new PlayerInventory(items, armor, extraSlots));
+            inventories.getTeamInventoryMap().put(team.getName(), new PlayerInventory(items, armor, extraSlots));
             sb.append("[").append(team.getName()).append("] ");
             temp = true;
         }
