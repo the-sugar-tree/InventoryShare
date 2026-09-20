@@ -135,9 +135,9 @@ public class VersionUtil {
     public enum SupportedVersions {
         v1_12_R1(bukkit("1.12.2-R0.1-SNAPSHOT", "1.12.1-R0.1-SNAPSHOT", "1.12-R0.1-SNAPSHOT"),
                 legacy("inventory", "items", "armor", "extraSlots", "f", "a")),
-        v1_13_R1(bukkit("1.13.1-R0.1-SNAPSHOT", "1.13-R0.1-SNAPSHOT"),
+        v1_13_R1(bukkit("1.13-R0.1-SNAPSHOT"),
                 legacy("inventory", "items", "armor", "extraSlots", "f", "a")),
-        v1_13_R2(bukkit("1.13.2-R0.1-SNAPSHOT"),
+        v1_13_R2(bukkit("1.13.2-R0.1-SNAPSHOT", "1.13.1-R0.1-SNAPSHOT"),
                 legacy("inventory", "items", "armor", "extraSlots", "f", "a")),
         v1_14_R1(bukkit("1.14.4-R0.1-SNAPSHOT", "1.14.3-R0.1-SNAPSHOT", "1.14.2-R0.1-SNAPSHOT", "1.14.1-R0.1-SNAPSHOT", "1.14-R0.1-SNAPSHOT"),
                 legacy("inventory", "items", "armor", "extraSlots", "f", "a")),

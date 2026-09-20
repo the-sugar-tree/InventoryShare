@@ -2,10 +2,12 @@ rootProject.name = 'InventoryShare'
 include 'InventoryShare-bukkit'
 
 include 'InventoryShare-bukkit-test'
-include 'InventoryShare-bukkit-test:v1_21_R2'
-findProject(':InventoryShare-bukkit-test:v1_21_R2')?.name = 'v1_21_R2'
-include 'InventoryShare-bukkit-test:v1_21_R3'
-findProject(':InventoryShare-bukkit-test:v1_21_R3')?.name = 'v1_21_R3'
+file("${rootDir}/InventoryShare-bukkit-test").eachDir { dir ->
+    if (file("${dir}/build.gradle").exists()) {
+        include "InventoryShare-bukkit-test:${dir.name}"
+        findProject(":InventoryShare-bukkit-test:${dir.name}")?.name = dir.name
+    }
+}
 
 include 'InventoryShare-single'
 include 'InventoryShare-single:v1_21_R4'
