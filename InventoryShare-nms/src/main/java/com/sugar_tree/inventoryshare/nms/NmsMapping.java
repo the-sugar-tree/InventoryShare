@@ -20,7 +20,6 @@
 
 package com.sugar_tree.inventoryshare.nms;
 
-import com.sugar_tree.inventoryshare.nms.legacy.LegacyNames;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

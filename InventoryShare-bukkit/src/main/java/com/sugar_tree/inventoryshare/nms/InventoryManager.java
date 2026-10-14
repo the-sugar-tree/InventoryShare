@@ -21,8 +21,6 @@
 package com.sugar_tree.inventoryshare.nms;
 
 import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
-import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.NmsInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
