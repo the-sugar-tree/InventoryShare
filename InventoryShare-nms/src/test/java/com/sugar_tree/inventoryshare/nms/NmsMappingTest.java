@@ -21,6 +21,8 @@
 package com.sugar_tree.inventoryshare.nms;
 
 import com.sugar_tree.inventoryshare.nms.legacy.LegacyNames;
+import com.sugar_tree.inventoryshare.nms.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.modern.Namespace;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -44,13 +46,20 @@ class NmsMappingTest {
             "1.21, v1_21_R1",
             "1.21.0, v1_21_R1",
             "1.21.4-R0.1-SNAPSHOT, v1_21_R3",
+            "1.21.5, v1_21_R4",
+            "1.21.7, v1_21_R5",
+            "1.21.9, v1_21_R6",
+            "1.21.11-R0.2-SNAPSHOT, v1_21_R7",
+            "26.1, v26",
+            "26.1.2.build.63-stable, v26",
+            "27.0, v26",
     })
     void findsRow(String version, NmsMapping expected) {
         assertEquals(expected, NmsMapping.find(ServerVersion.parse(version)));
     }
 
     @ParameterizedTest
-    @CsvSource({"1.11.2", "1.16", "1.21.5", "26.2"})
+    @CsvSource({"1.11.2", "1.16", "1.21.12", "25.9"})
     void unsupportedVersionHasNoRow(String version) {
         assertNull(NmsMapping.find(ServerVersion.parse(version)));
     }
@@ -67,10 +76,19 @@ class NmsMappingTest {
 
     @ParameterizedTest
     @EnumSource(NmsMapping.class)
-    void legacyCraftBukkitPackageMatchesRowName(NmsMapping mapping) {
-        LegacyNames names = (LegacyNames) mapping.getLayout();
-        String expected = mapping == NmsMapping.v1_19_1_R1 ? "v1_19_R1" : mapping.name();
-        assertEquals(expected, names.getCraftbukkitPackage());
-        assertEquals(mapping.compareTo(NmsMapping.v1_17_R1) >= 0, names.isFlattened());
+    void craftBukkitPackageMatchesRowName(NmsMapping mapping) {
+        if (mapping.getLayout() instanceof LegacyNames) {
+            LegacyNames names = (LegacyNames) mapping.getLayout();
+            String expected = mapping == NmsMapping.v1_19_1_R1 ? "v1_19_R1" : mapping.name();
+            assertEquals(expected, names.getCraftbukkitPackage());
+            assertEquals(mapping.compareTo(NmsMapping.v1_17_R1) >= 0, names.isFlattened());
+        } else {
+            ModernNames names = (ModernNames) mapping.getLayout();
+            if (names.getNamespace() == Namespace.SPIGOT) {
+                assertEquals(mapping.name(), names.getCraftbukkitPackage());
+            } else {
+                assertNull(names.getCraftbukkitPackage());
+            }
+        }
     }
 }

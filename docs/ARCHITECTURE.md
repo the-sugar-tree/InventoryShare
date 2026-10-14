@@ -6,10 +6,10 @@
 
 | 목표 | 현재 코드 |
 |---|---|
-| `InventoryShare-nms` (`InventoryAccess`, `NmsMapping`, Legacy/Modern) | 없음. `InventoryShare-bukkit`의 `VersionUtil`(매핑표) + `NMSLoader`(리플렉션)가 Legacy 모델만 처리 |
-| `InventoryShare-nms-test` (파라미터화 테스트) | 없음. `InventoryShare-bukkit-test/<리비전>/NMSTest` (1.12 – 1.21.4, 리비전별 서브프로젝트) |
+| `InventoryShare-nms` (`InventoryAccess`, `NmsMapping`, Legacy/Modern) | 완료. Legacy(1.12 – 1.21.4), Modern(1.21.5 – 26.x) 구현과 매핑표 |
+| `InventoryShare-nms-test` (파라미터화 테스트) | 완료. `LegacyMappingTest`, `ModernMappingTest` |
 | `InventoryShare-dev/<ver>` | 없음. `InventoryShare-single/v1_21_R4`(1.21.5), `v26_2`(26.2)가 직접 NMS로 작성된 별도 배포 jar |
-| 1.12.2 – 26.x 단일 jar | `InventoryShare-bukkit` jar는 1.12.2 – 1.21.4 |
+| 1.12.2 – 26.x 단일 jar | `InventoryShare-bukkit` jar가 1.12.2 – 26.x 매핑을 포함. **1.21.5 이상은 실서버 미검증** |
 
 ---
 
@@ -153,6 +153,7 @@ public interface InventoryAccess {
 | 26.1 이상 | (없음) | MOJANG | getInventory | items | equipment | items | EQUIPMENT_SLOT_MAPPING | EMPTY | withSize |
 
 - AI가 `javap`를 사용해 추출해 낸 매핑입니다. 확실하지 않습니다.
+- `ModernMappingTest`가 1.21.5, 1.21.6, 1.21.8, 1.21.10, 1.21.11, 26.1.2, 26.2 jar로 멤버 존재·타입과 슬롯 36 – 40 매핑을 검증했습니다. 1.21.7, 1.21.9는 jar가 없어 검증되지 않은 추정입니다.
 
 | Namespace | 인벤토리 | 플레이어(인벤토리 접근자 보유) | 장비 슬롯 enum |
 |---|---|---|---|
@@ -188,11 +189,10 @@ extraSlots: [ ...1개 ]    # 슬롯 40 (offhand)
 - jar가 mavenLocal에 없으면 그 버전만 **skip**합니다. `-PnmsStrict`를 주면 누락 시 실패합니다.
 - 26.x 클래스 파일을 읽어야 하므로 테스트 JVM은 Java 25입니다.
 
-### 5.3 현재 테스트
-- `InventoryShare-bukkit-test/<리비전>/` 서브프로젝트마다 해당 Spigot jar(`org.spigotmc:spigot:<ver>-R0.1-SNAPSHOT`)에 대해 컴파일되는 `NmsScratch`와 `NMSTest`가 있습니다.
-- `NMSTest`는 `VersionUtil.SupportedVersions`의 해당 행을 `NmsScratch` 상수 및 실제 NMS 클래스(필드의 public 여부, 제네릭 타입, `getHandle` 반환 타입, `CraftItemStack` 변환 메서드 등)와 비교합니다.
-- 실행 예: `./gradlew :InventoryShare-bukkit-test:v1_21_R1:test`. jar가 mavenLocal에 없으면 skip이 아니라 **컴파일 실패**합니다.
-- `InventoryShare-single/v1_21_R4`에도 `NMSTest`가 있습니다.
+### 5.3 실행 방법
+- 전체: `./gradlew :InventoryShare-nms:test :InventoryShare-nms-test:test`
+- 검사할 버전 목록은 `InventoryShare-nms-test/build.gradle`의 `spigotJars`입니다. 각 Legacy/Modern 행이 최소 한 버전으로 검사되는지도 테스트합니다(`everyLegacyRowIsCovered`, `everyModernRowIsCovered`).
+- Spigot classpath는 `build/spigot-classpaths.properties`로 테스트에 전달됩니다(Windows 명령줄 길이 제한 회피).
 
 ---
 

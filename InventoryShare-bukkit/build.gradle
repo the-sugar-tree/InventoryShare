@@ -17,7 +17,7 @@ dependencies {
 }
 
 jar {
-    String subVersion = '1.12.2-1.21.4'
+    String subVersion = '1.12.2-26.2'
     manifest {
         archiveFileName.set("InventoryShare-bukkit-${project.version}-[${subVersion}].jar")
     }

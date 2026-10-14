@@ -31,6 +31,8 @@ import java.util.List;
 
 import static com.sugar_tree.inventoryshare.nms.legacy.LegacyNames.flattened;
 import static com.sugar_tree.inventoryshare.nms.legacy.LegacyNames.legacy;
+import static com.sugar_tree.inventoryshare.nms.modern.ModernNames.mojang;
+import static com.sugar_tree.inventoryshare.nms.modern.ModernNames.spigot;
 
 /**
  * Supported Minecraft versions and the NMS member names for each. Rows are keyed by Minecraft version,
@@ -84,13 +86,38 @@ public enum NmsMapping {
             flattened("v1_21_R2", "gi", "g", "h", "i", "l", "j")),
     v1_21_R3(versions("1.21.4"),
             flattened("v1_21_R3", "gi", "g", "h", "i", "l", "j")),
+
+    // ── Modern: items + EntityEquipment ──
+    // spigot(craftbukkitPackage, getInventory, items, equipment, equipment.items, slotMapping, EMPTY, createList)
+    v1_21_R4(versions("1.21.5"),
+            spigot("v1_21_R4", "gj", "i", "k", "b", "g", "l", "a")),
+    v1_21_R5(versions("1.21.6", "1.21.7", "1.21.8"),
+            spigot("v1_21_R5", "gs", "k", "m", "b", "i", "l", "a")),
+    v1_21_R6(versions("1.21.9", "1.21.10"),
+            spigot("v1_21_R6", "gB", "l", "n", "b", "i", "l", "a")),
+    v1_21_R7(versions("1.21.11"),
+            spigot("v1_21_R7", "gK", "l", "n", "b", "i", "l", "a")),
+    /**
+     * 26.1 and every later version: Minecraft is no longer obfuscated, so future releases are tried with the
+     * same names. If a member was renamed, resolution fails and the plugin disables itself.
+     */
+    v26(atLeast("26.1"), mojang()),
     ;
 
     private final List<ServerVersion> versions;
+    /** Matches this version and every later one, or {@code null} for an exact version list */
+    private final @Nullable ServerVersion since;
     private final NmsLayout layout;
 
     NmsMapping(List<ServerVersion> versions, NmsLayout layout) {
         this.versions = versions;
+        this.since = null;
+        this.layout = layout;
+    }
+
+    NmsMapping(ServerVersion since, NmsLayout layout) {
+        this.versions = Collections.emptyList();
+        this.since = since;
         this.layout = layout;
     }
 
@@ -103,7 +130,16 @@ public enum NmsMapping {
                 return mapping;
             }
         }
+        for (NmsMapping mapping : values()) {
+            if (mapping.since != null && version.compareTo(mapping.since) >= 0) {
+                return mapping;
+            }
+        }
         return null;
+    }
+
+    private static ServerVersion atLeast(String version) {
+        return ServerVersion.parse(version);
     }
 
     private static List<ServerVersion> versions(String... versions) {
