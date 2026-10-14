@@ -1,15 +1,16 @@
 # InventoryShare Architecture
 
-구조 개편 중입니다.
+구조 개편 중입니다. 빌드·테스트 방법은 [CONTRIBUTING.md](../CONTRIBUTING.md)를 참고하세요.
 
 **현재 구현 상태 (요약)**
 
-| 목표 | 현재 코드 |
-|---|---|
-| `InventoryShare-nms` (`InventoryAccess`, `NmsMapping`, Legacy/Modern) | 완료. Legacy(1.12 – 1.21.4), Modern(1.21.5 – 26.x) 구현과 매핑표 |
-| `InventoryShare-nms-test` (파라미터화 테스트) | 완료. `LegacyMappingTest`, `ModernMappingTest` |
-| `InventoryShare-dev/<ver>` | 완료. `v1_21_R4`(1.21.5), `v26_2`(26.2) 샌드박스. `InventoryShare-single` 삭제 |
-| 1.12.2 – 26.x 단일 jar | `InventoryShare-bukkit` jar가 1.12.2 – 26.x 매핑을 포함. **1.21.5 이상은 실서버 미검증** |
+| 목표                                                                  | 현재 코드                                                                                |
+|-----------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| `InventoryShare-nms` (`InventoryAccess`, `NmsMapping`, Legacy/Modern) | 완료. Legacy(1.12 – 1.21.4), Modern(1.21.5 – 26.x) 구현과 매핑표                         |
+| `InventoryShare-nms-test` (파라미터화 테스트)                         | 완료. `LegacyMappingTest`, `ModernMappingTest`                                           |
+| `InventoryShare-dev/<ver>`                                            | 완료. `v1_21_R4`(1.21.5), `v26_2`(26.2) 샌드박스. `InventoryShare-single` 삭제           |
+| 1.12.2 – 26.x 단일 jar                                                | `InventoryShare-bukkit` jar가 1.12.2 – 26.x 매핑을 포함. **1.21.5 이상은 실서버 미검증** |
+| 개발자 문서                                                           | 완료. `CONTRIBUTING.md` (빌드, BuildTools/JDK, 샌드박스, 실서버 체크리스트)              |
 
 ---
 
@@ -18,12 +19,12 @@
 InventoryShare는 플레이어 인벤토리의 내부 필드를 교체해 여러 플레이어가 **같은 NMS 리스트 객체를 참조**하게 만듭니다.
 Bukkit API로는 참조 공유가 불가능해 NMS 접근이 필수이고, 버전마다 내부 구조와 이름이 다릅니다.
 
-| 구간 | 인벤토리 모델 | 이름 |
-|---|---|---|
-| 1.12 – 1.16.5 | `items`, `armor`, `extraSlots`, `contents` | `net.minecraft.server.vX_Y_RZ` 패키지, 필드명 일부 원문 |
-| 1.17 – 1.21.4 | 같은 모델 | 패키지 평탄화, Spigot 난독화 이름 |
-| 1.21.5 – 1.21.11 | `items` + `EntityEquipment` | Spigot 난독화 이름 |
-| 26.1 이상 | `items` + `EntityEquipment` | **난독화 없음 (Mojang 원문 이름)** |
+| 구간             | 인벤토리 모델                              | 이름                                                    |
+|------------------|--------------------------------------------|---------------------------------------------------------|
+| 1.12 – 1.16.5    | `items`, `armor`, `extraSlots`, `contents` | `net.minecraft.server.vX_Y_RZ` 패키지, 필드명 일부 원문 |
+| 1.17 – 1.21.4    | 같은 모델                                  | 패키지 평탄화, Spigot 난독화 이름                       |
+| 1.21.5 – 1.21.11 | `items` + `EntityEquipment`                | Spigot 난독화 이름                                      |
+| 26.1 이상        | `items` + `EntityEquipment`                | **난독화 없음 (Mojang 원문 이름)**                      |
 
 ---
 
@@ -96,16 +97,13 @@ public interface InventoryAccess {
 
 ### 3.3 슬롯 모델
 
-슬롯 번호는 Bukkit `PlayerInventory.getContents()` 순서와 같습니다. 저장 코드는 이 번호만 사용하므로 버전을 알 필요가 없습니다.
+슬롯 번호는 Bukkit `PlayerInventory.getContents()` 순서와 같습니다.
 
-| 슬롯 | 의미 | Legacy | Modern |
-|---|---|---|---|
-| 0 – 35 | 보관함/핫바 | `items[i]` | `items[i]` |
+| 슬롯    | 의미                   | Legacy          | Modern                               |
+|---------|------------------------|-----------------|--------------------------------------|
+| 0 – 35  | 보관함/핫바            | `items[i]`      | `items[i]`                           |
 | 36 – 39 | 신발, 바지, 갑옷, 투구 | `armor[i - 36]` | `slotMapping.get(i)` → EquipmentSlot |
-| 40 | 왼손 | `extraSlots[0]` | `slotMapping.get(40)` → OFFHAND |
-
-* Spigot 1.21.x의 `EnumItemSlot` 상수명은 난독화(`a`..`h`)되어 `Enum.valueOf`를 쓸 수 없습니다. 
-* Modern은 인벤토리 클래스의 정적 `slotMapping`(`Int2ObjectMap<EquipmentSlot>`, 즉 `Map<Integer, ?>`)으로 슬롯을 해석합니다.
+| 40      | 왼손                   | `extraSlots[0]` | `slotMapping.get(40)` → OFFHAND      |
 
 ### 3.4 멤버 해석과 ClassLoader
 
@@ -125,48 +123,48 @@ public interface InventoryAccess {
 
 ### 3.6 Legacy 매핑 (1.12 – 1.21.4)
 
-| 리비전 | MC | inventory | items | armor | extraSlots | contents | emptyItem |
-|---|---|---|---|---|---|---|---|
-| v1_12_R1 | 1.12, 1.12.1, 1.12.2 | inventory (field) | items | armor | extraSlots | f | a |
-| v1_13_R1 | 1.13 | inventory | items | armor | extraSlots | f | a |
-| v1_13_R2 | 1.13.1, 1.13.2 | inventory | items | armor | extraSlots | f | a |
-| v1_14_R1 | 1.14 – 1.14.4 | inventory | items | armor | extraSlots | f | a |
-| v1_15_R1 | 1.15 – 1.15.2 | inventory | items | armor | extraSlots | f | a |
-| v1_16_R1 | 1.16.1 | inventory | items | armor | extraSlots | f | b |
-| v1_16_R2 | 1.16.2, 1.16.3 | inventory | items | armor | extraSlots | f | b |
-| v1_16_R3 | 1.16.4, 1.16.5 | inventory | items | armor | extraSlots | f | b |
-| v1_17_R1 | 1.17, 1.17.1 | getInventory() | h | i | j | n | b |
-| v1_18_R1 | 1.18 | fq() | h | i | j | n | b |
-| v1_18_R2 | 1.18.1, 1.18.2 | fr() | h | i | j | n | b |
-| v1_19_R1 | 1.19 | fB() | h | i | j | n | b |
-| v1_19_1_R1 (CB 패키지 v1_19_R1) | 1.19.1, 1.19.2 | fA() | h | i | j | n | b |
-| v1_19_R2 | 1.19.3 | fE() | h | i | j | n | b |
-| v1_19_R3 | 1.19.4 | fJ() | i | j | k | o | b |
-| v1_20_R1 | 1.20, 1.20.1 | fN() | i | j | k | o | b |
-| v1_20_R2 | 1.20.2 | fR() | i | j | k | o | b |
-| v1_20_R3 | 1.20.3, 1.20.4 | fS() | i | j | k | o | f |
-| v1_20_R4 | 1.20.5, 1.20.6 | gc() | h | i | j | n | l |
-| v1_21_R1 | 1.21, 1.21.1 | fY() | h | i | j | n | l |
-| v1_21_R2 | 1.21.2, 1.21.3 | gi() | g | h | i | l | j |
-| v1_21_R3 | 1.21.4 | gi() | g | h | i | l | j |
+| 리비전                          | MC                   | inventory         | items | armor | extraSlots | contents | emptyItem |
+|---------------------------------|----------------------|-------------------|-------|-------|------------|----------|-----------|
+| v1_12_R1                        | 1.12, 1.12.1, 1.12.2 | inventory (field) | items | armor | extraSlots | f        | a         |
+| v1_13_R1                        | 1.13                 | inventory         | items | armor | extraSlots | f        | a         |
+| v1_13_R2                        | 1.13.1, 1.13.2       | inventory         | items | armor | extraSlots | f        | a         |
+| v1_14_R1                        | 1.14 – 1.14.4        | inventory         | items | armor | extraSlots | f        | a         |
+| v1_15_R1                        | 1.15 – 1.15.2        | inventory         | items | armor | extraSlots | f        | a         |
+| v1_16_R1                        | 1.16.1               | inventory         | items | armor | extraSlots | f        | b         |
+| v1_16_R2                        | 1.16.2, 1.16.3       | inventory         | items | armor | extraSlots | f        | b         |
+| v1_16_R3                        | 1.16.4, 1.16.5       | inventory         | items | armor | extraSlots | f        | b         |
+| v1_17_R1                        | 1.17, 1.17.1         | getInventory()    | h     | i     | j          | n        | b         |
+| v1_18_R1                        | 1.18                 | fq()              | h     | i     | j          | n        | b         |
+| v1_18_R2                        | 1.18.1, 1.18.2       | fr()              | h     | i     | j          | n        | b         |
+| v1_19_R1                        | 1.19                 | fB()              | h     | i     | j          | n        | b         |
+| v1_19_1_R1 (CB 패키지 v1_19_R1) | 1.19.1, 1.19.2       | fA()              | h     | i     | j          | n        | b         |
+| v1_19_R2                        | 1.19.3               | fE()              | h     | i     | j          | n        | b         |
+| v1_19_R3                        | 1.19.4               | fJ()              | i     | j     | k          | o        | b         |
+| v1_20_R1                        | 1.20, 1.20.1         | fN()              | i     | j     | k          | o        | b         |
+| v1_20_R2                        | 1.20.2               | fR()              | i     | j     | k          | o        | b         |
+| v1_20_R3                        | 1.20.3, 1.20.4       | fS()              | i     | j     | k          | o        | f         |
+| v1_20_R4                        | 1.20.5, 1.20.6       | gc()              | h     | i     | j          | n        | l         |
+| v1_21_R1                        | 1.21, 1.21.1         | fY()              | h     | i     | j          | n        | l         |
+| v1_21_R2                        | 1.21.2, 1.21.3       | gi()              | g     | h     | i          | l        | j         |
+| v1_21_R3                        | 1.21.4               | gi()              | g     | h     | i          | l        | j         |
 
 ### 3.7 Modern 매핑 (1.21.5 이상)
 
-| MC | CraftBukkit 패키지 | Namespace | getInventory | items | equipment | EntityEquipment.items | slotMapping | EMPTY | createList |
-|---|---|---|---|---|---|---|---|---|---|
-| 1.21.5 | v1_21_R4 | SPIGOT | gj | i | k | b | g | l | a |
-| 1.21.6 – 1.21.8 | v1_21_R5 | SPIGOT | gs | k | m | b | i | l | a |
-| 1.21.9 – 1.21.10 | v1_21_R6 | SPIGOT | gB | l | n | b | i | l | a |
-| 1.21.11 | v1_21_R7 | SPIGOT | gK | l | n | b | i | l | a |
-| 26.1 이상 | (없음) | MOJANG | getInventory | items | equipment | items | EQUIPMENT_SLOT_MAPPING | EMPTY | withSize |
+| MC               | CraftBukkit 패키지 | Namespace | getInventory | items | equipment | EntityEquipment.items | slotMapping            | EMPTY | createList |
+|------------------|--------------------|-----------|--------------|-------|-----------|-----------------------|------------------------|-------|------------|
+| 1.21.5           | v1_21_R4           | SPIGOT    | gj           | i     | k         | b                     | g                      | l     | a          |
+| 1.21.6 – 1.21.8  | v1_21_R5           | SPIGOT    | gs           | k     | m         | b                     | i                      | l     | a          |
+| 1.21.9 – 1.21.10 | v1_21_R6           | SPIGOT    | gB           | l     | n         | b                     | i                      | l     | a          |
+| 1.21.11          | v1_21_R7           | SPIGOT    | gK           | l     | n         | b                     | i                      | l     | a          |
+| 26.1 이상        | (없음)             | MOJANG    | getInventory | items | equipment | items                 | EQUIPMENT_SLOT_MAPPING | EMPTY | withSize   |
 
 - AI가 `javap`를 사용해 추출해 낸 매핑입니다. 확실하지 않습니다.
 - `ModernMappingTest`가 1.21.5, 1.21.6, 1.21.8, 1.21.10, 1.21.11, 26.1.2, 26.2 jar로 멤버 존재·타입과 슬롯 36 – 40 매핑을 검증했습니다. 1.21.7, 1.21.9는 jar가 없어 검증되지 않은 추정입니다.
 
-| Namespace | 인벤토리 | 플레이어(인벤토리 접근자 보유) | 장비 슬롯 enum |
-|---|---|---|---|
-| SPIGOT | `net.minecraft.world.entity.player.PlayerInventory` | `net.minecraft.world.entity.player.EntityHuman` | `net.minecraft.world.entity.EnumItemSlot` |
-| MOJANG | `net.minecraft.world.entity.player.Inventory` | `net.minecraft.world.entity.player.Player` | `net.minecraft.world.entity.EquipmentSlot` |
+| Namespace | 인벤토리                                            | 플레이어(인벤토리 접근자 보유)                  | 장비 슬롯 enum                             |
+|-----------|-----------------------------------------------------|-------------------------------------------------|--------------------------------------------|
+| SPIGOT    | `net.minecraft.world.entity.player.PlayerInventory` | `net.minecraft.world.entity.player.EntityHuman` | `net.minecraft.world.entity.EnumItemSlot`  |
+| MOJANG    | `net.minecraft.world.entity.player.Inventory`       | `net.minecraft.world.entity.player.Player`      | `net.minecraft.world.entity.EquipmentSlot` |
 
 공통: `net.minecraft.world.entity.EntityEquipment`, `net.minecraft.world.item.ItemStack`, `net.minecraft.core.NonNullList`, `org.bukkit.craftbukkit[.<pkg>].inventory.CraftItemStack`.
 
@@ -206,11 +204,7 @@ extraSlots: [ ...1개 ]    # 슬롯 40 (offhand)
 
 ## 6. 새 마인크래프트 버전 추가 절차
 
-1. BuildTools로 해당 버전 Spigot jar를 mavenLocal에 설치합니다.
-2. `InventoryShare-dev/<ver>`에서 `DirectInventoryAccess`(직접 NMS)로 동작을 확인합니다.
-3. `InventoryShare-nms-test`의 Spigot jar 목록에 버전을 추가하고 `-PnmsStrict`로 테스트를 실행합니다. 테스트 리포트에서 해당 버전 케이스가 skip이 아니라 **실행되어 통과했는지** 확인합니다.
-4. 실패하면 `NmsMapping`에 행을 추가합니다. 모델 자체가 바뀌었다면(1.21.5의 `EntityEquipment` 전환처럼) 새 `InventoryAccess` 구현을 추가합니다. 26.x는 `atLeast("26.1")` 행이 그대로 통과할 가능성이 높지만, 실제로 통과하기 전까지는 가정입니다.
-5. 매핑 테스트는 멤버 존재와 타입만 확인합니다. 실서버에서 플러그인이 활성화되는지, 두 플레이어 사이에 슬롯 0 – 40(방어구, 왼손 포함)이 공유되는지, 재시작 후 `inventory.yml`/`teams/<team>.yml`이 다시 로드되는지 확인합니다.
+[CONTRIBUTING.md §5–6](../CONTRIBUTING.md#5-새-마인크래프트-버전-추가)
 
 ---
 
@@ -223,4 +217,3 @@ extraSlots: [ ...1개 ]    # 슬롯 40 (offhand)
 ## 8. 수정 중 발견된 오류
 
 - `FileManager`에서 과거 버전을 로드했을 때, 인벤토리가 초기화됩니다.
-
