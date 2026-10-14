@@ -1,0 +1,86 @@
+// Verifies NmsMapping against real Spigot runtime jars installed into mavenLocal by BuildTools.
+// A version whose jar is not installed is skipped; run with -PnmsStrict to fail instead.
+
+// Minecraft version -> Spigot artifact version (default classifier = the jar a server runs)
+def spigotJars = [
+        // Legacy (items / armor / extraSlots / contents)
+        '1.12.2' : '1.12.2-R0.1-SNAPSHOT',
+        '1.13'   : '1.13-R0.1-SNAPSHOT',
+        '1.13.1' : '1.13.1-R0.1-SNAPSHOT',
+        '1.13.2' : '1.13.2-R0.1-SNAPSHOT',
+        '1.14.4' : '1.14.4-R0.1-SNAPSHOT',
+        '1.15.2' : '1.15.2-R0.1-SNAPSHOT',
+        '1.16.1' : '1.16.1-R0.1-SNAPSHOT',
+        '1.16.3' : '1.16.3-R0.1-SNAPSHOT',
+        '1.16.5' : '1.16.5-R0.1-SNAPSHOT',
+        '1.17.1' : '1.17.1-R0.1-SNAPSHOT',
+        '1.18'   : '1.18-R0.1-SNAPSHOT',
+        '1.18.2' : '1.18.2-R0.1-SNAPSHOT',
+        '1.19'   : '1.19-R0.1-SNAPSHOT',
+        '1.19.2' : '1.19.2-R0.1-SNAPSHOT',
+        '1.19.3' : '1.19.3-R0.1-SNAPSHOT',
+        '1.19.4' : '1.19.4-R0.1-SNAPSHOT',
+        '1.20.1' : '1.20.1-R0.1-SNAPSHOT',
+        '1.20.2' : '1.20.2-R0.1-SNAPSHOT',
+        '1.20.4' : '1.20.4-R0.1-SNAPSHOT',
+        '1.20.6' : '1.20.6-R0.1-SNAPSHOT',
+        '1.21.1' : '1.21.1-R0.1-SNAPSHOT',
+        '1.21.3' : '1.21.3-R0.1-SNAPSHOT',
+        '1.21.4' : '1.21.4-R0.1-SNAPSHOT',
+]
+
+// Reading 26.x class files needs a recent JVM; the tests themselves never run NMS code.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
+}
+
+def configurationName = { String mc -> "spigot_" + mc.replace('.', '_') }
+
+spigotJars.each { mc, artifact ->
+    configurations.create(configurationName(mc)) {
+        canBeConsumed = false
+    }
+    dependencies.add(configurationName(mc), "org.spigotmc:spigot:${artifact}")
+}
+
+dependencies {
+    testImplementation project(':InventoryShare-nms')
+    testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+jar {
+    enabled = false
+}
+
+test {
+    useJUnitPlatform()
+    boolean strict = project.hasProperty('nmsStrict')
+    // Classpaths are written to a file: passing them as system properties exceeds the Windows command line limit
+    def classpathFile = layout.buildDirectory.file('spigot-classpaths.properties').get().asFile
+    inputs.property('spigotJars', spigotJars)
+    inputs.property('nmsStrict', strict)
+    systemProperty 'spigot.versions', spigotJars.keySet().join(',')
+    systemProperty 'spigot.classpaths', classpathFile.absolutePath
+    doFirst {
+        def classpaths = new Properties()
+        spigotJars.each { mc, artifact ->
+            def configuration = configurations.getByName(configurationName(mc))
+            def files = strict
+                    ? configuration.files
+                    : configuration.incoming.artifactView { lenient = true }.files.files
+            // Without the server jar itself the remaining (API/library) jars are useless: treat as not installed
+            boolean installed = files.any { it.name == "spigot-${artifact}.jar" }
+            classpaths.setProperty(mc, installed ? files.collect { it.absolutePath }.join(File.pathSeparator) : '')
+        }
+        classpathFile.parentFile.mkdirs()
+        classpathFile.withOutputStream { classpaths.store(it, 'Spigot runtime classpaths by Minecraft version') }
+    }
+}
