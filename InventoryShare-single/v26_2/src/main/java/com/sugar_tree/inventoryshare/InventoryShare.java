@@ -83,10 +83,10 @@ public final class InventoryShare extends JavaPlugin {
             logger.info(I18NUtil.get("protocolLib_need2"));
             logger.info("https://www.spigotmc.org/resources/protocollib.1997");
         }
-        if (isSupported()) {
+//        if (isSupported()) {
             InventoryManager = new InventoryManager();
             FileManager = new FileManager();
-        }
+//        }
 
         invfile = new File(getDataFolder(), "inventory.yml");
         advfile = new File(getDataFolder(), "advancements.yml");

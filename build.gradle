@@ -86,11 +86,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 dependencies {
-    testCompileOnly 'org.projectlombok:lombok:1.18.46'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.46'
-    testImplementation 'org.slf4j:slf4j-api:1.7.25'
-    testImplementation 'org.slf4j:slf4j-simple:1.7.25'
-
     testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
 //    testCompileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
 
