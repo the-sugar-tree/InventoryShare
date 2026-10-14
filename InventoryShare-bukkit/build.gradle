@@ -13,6 +13,7 @@ allprojects {
 dependencies {
     compileOnly group: "net.dmulloy2", name: "ProtocolLib", version: "5.3.0"
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+    implementation project(':InventoryShare-nms')
 }
 
 jar {
@@ -20,7 +21,9 @@ jar {
     manifest {
         archiveFileName.set("InventoryShare-bukkit-${project.version}-[${subVersion}].jar")
     }
-//    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    // Bundle InventoryShare-nms (the only runtime dependency) into the plugin jar
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 processResources {

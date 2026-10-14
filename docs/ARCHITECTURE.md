@@ -211,3 +211,8 @@ extraSlots: [ ...1개 ]    # 슬롯 40 (offhand)
 - **Paper 1.20.5 – 1.21.11**: Paper는 이 구간에서 런타임에 Mojang 이름을 사용합니다. Spigot 이름 리플렉션이 동작하지 않으면 `Namespace.MOJANG` 행을 재사용합니다(런타임에 `net.minecraft.world.entity.player.Inventory` 존재 여부로 선택).
 - **JEP 500 (JDK 26, "Prepare to Make Final Mean Final")**: 리플렉션으로 final 필드를 바꾸는 것에 경고가 나오고 이후 기본 차단될 예정입니다. 이 플러그인의 핵심 동작이므로, 필요해지면 `InventoryAccess` 뒤에서 "내용 복사 동기화" 구현으로 교체합니다.
 - **Modern 장비 맵 공유**: `EntityEquipment`의 EnumMap을 통째로 공유하면 플레이어가 쓰지 않는 슬롯(BODY, SADDLE)도 함께 공유됩니다. 무해할 것으로 보지만 실서버에서 확인합니다.
+
+## 8. 수정 중 발견된 오류
+
+- `FileManager`에서 과거 버전을 로드했을 때, 인벤토리가 초기화됩니다.
+

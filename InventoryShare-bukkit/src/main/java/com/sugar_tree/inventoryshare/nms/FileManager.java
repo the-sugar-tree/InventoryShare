@@ -31,41 +31,31 @@ import org.bukkit.scoreboard.Team;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
+import static com.sugar_tree.inventoryshare.nms.InventoryAccess.*;
 
 public final class FileManager implements IFileManager {
 
-    private final InventoryManager inventories;
+    /**
+     * Version of the inventory file layout ({@code items} / {@code armor} / {@code extraSlots}).
+     */
+    private static final int FORMAT_VERSION = 1;
 
-    public FileManager(InventoryManager inventories) {
+    private final InventoryManager inventories;
+    private final InventoryAccess access;
+
+    public FileManager(InventoryManager inventories, InventoryAccess access) {
         this.inventories = inventories;
+        this.access = access;
     }
 
     @Override
     public void save() {
-        PlayerInventory sharedInventory = inventories.getSharedInventory();
-        List<Map<?, ?>> serializedItemsList = new ArrayList<>();
-        for (Object itemStack : sharedInventory.getItems()) {
-            serializedItemsList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
-        }
-        invconfig.set("items", serializedItemsList);
-
-        List<Map<?, ?>> serializedArmorList = new ArrayList<>();
-        for (Object itemStack : sharedInventory.getArmor()) {
-            serializedArmorList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
-        }
-        invconfig.set("armor", serializedArmorList);
-
-        List<Map<?, ?>> serializedExtraSlotsList = new ArrayList<>();
-        for (Object itemStack : sharedInventory.getExtraSlots()) {
-            serializedExtraSlotsList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
-        }
-        invconfig.set("extraSlots", serializedExtraSlotsList);
+        writeInventory(invconfig, inventories.getSharedInventory());
 
         List<String> serializedAdvancementList = new ArrayList<>();
         for (NamespacedKey namespacedKey : advlist) {
@@ -84,25 +74,9 @@ public final class FileManager implements IFileManager {
             if (team == null) continue;
             File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
-            List<Map<?, ?>> serializedTeamItemsList = new ArrayList<>();
-            PlayerInventory teamInventory = inventories.getTeamInventoryMap().get(team.getName());
+            NmsInventory teamInventory = inventories.getTeamInventoryMap().get(team.getName());
             if (teamInventory == null) continue;
-            for (Object itemStack : teamInventory.getItems()) {
-                serializedTeamItemsList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
-            }
-            fileConfiguration.set("items", serializedTeamItemsList);
-
-            List<Map<?, ?>> serializedTeamArmorList = new ArrayList<>();
-            for (Object itemStack : teamInventory.getArmor()) {
-                serializedTeamArmorList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
-            }
-            fileConfiguration.set("armor", serializedTeamArmorList);
-
-            List<Map<?, ?>> serializedTeamExtraSlotsList = new ArrayList<>();
-            for (Object itemStack : teamInventory.getExtraSlots()) {
-                serializedTeamExtraSlotsList.add(NMSLoader.asBukkitCopy(itemStack).serialize());
-            }
-            fileConfiguration.set("extraSlots", serializedTeamExtraSlotsList);
+            writeInventory(fileConfiguration, teamInventory);
             teamInvFileList.put(fileConfiguration, file);
             sb.append("[").append(team.getName()).append("] ");
             savedLeastOneTeam = true;
@@ -113,20 +87,12 @@ public final class FileManager implements IFileManager {
 
     @Override
     public void load() {
-        PlayerInventory sharedInventory = inventories.getSharedInventory();
-        List<Map<?, ?>> itemslist = invconfig.getMapList("items");
-        deserializeItems(itemslist, sharedInventory.getItems(), "ALL:items");
-
-        List<Map<?, ?>> armorlist = invconfig.getMapList("armor");
-        deserializeItems(armorlist, sharedInventory.getArmor(), "ALL:armor");
-
-        List<Map<?, ?>> extraSlotslist = invconfig.getMapList("extraSlots");
-        deserializeItems(extraSlotslist, sharedInventory.getExtraSlots(), "ALL:extraSlots");
+        readInventory(invconfig, inventories.getSharedInventory(), "ALL");
 
         List<String> advancementlist = advconfig.getStringList("advancement");
         for (String advancement : advancementlist) {
             try {
-                advlist.add(plugin.getServer().getAdvancement(NMSLoader.getNamespacedKey(advancement)).getKey());
+                advlist.add(plugin.getServer().getAdvancement(NamespacedKey.minecraft(advancement)).getKey());
             } catch (NullPointerException ignored) {
             }
         }
@@ -148,31 +114,42 @@ public final class FileManager implements IFileManager {
         boolean temp = false;
         sb.append(I18N_TEAM_LOADED);
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
-            AbstractList<Object> items = NMSLoader.createEmptyItemList(36);
-            AbstractList<Object> armor = NMSLoader.createEmptyItemList(4);
-            AbstractList<Object> extraSlots = NMSLoader.createEmptyItemList(1);
+            NmsInventory teamInventory = access.createEmpty();
             File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             if (file.exists()) {
-                FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
-                List<Map<?, ?>> itemslistT = fileConfiguration.getMapList("items");
-                deserializeItems(itemslistT, items, "Team:" + team.getName() + ":items");
-
-                List<Map<?, ?>> armorlistT = fileConfiguration.getMapList("armor");
-                deserializeItems(armorlistT, armor, "Team:" + team.getName() + ":armor");
-
-                List<Map<?, ?>> extraSlotslistT = fileConfiguration.getMapList("extraSlots");
-                deserializeItems(extraSlotslistT, extraSlots, "Team:" + team.getName() + ":extraSlots");
+                readInventory(YamlConfiguration.loadConfiguration(file), teamInventory, "Team:" + team.getName());
             }
-            inventories.getTeamInventoryMap().put(team.getName(), new PlayerInventory(items, armor, extraSlots));
+            inventories.getTeamInventoryMap().put(team.getName(), teamInventory);
             sb.append("[").append(team.getName()).append("] ");
             temp = true;
         }
         if (temp) logger.info(sb.toString());
     }
 
+    private void writeInventory(FileConfiguration config, NmsInventory inventory) {
+        config.set("format-version", FORMAT_VERSION);
+        config.set("items", serializeItems(inventory, STORAGE_START, STORAGE_SIZE));
+        config.set("armor", serializeItems(inventory, ARMOR_START, ARMOR_SIZE));
+        config.set("extraSlots", serializeItems(inventory, OFFHAND_SLOT, 1));
+    }
+
+    private void readInventory(FileConfiguration config, NmsInventory inventory, String category) {
+        deserializeItems(config.getMapList("items"), inventory, STORAGE_START, STORAGE_SIZE, category + ":items");
+        deserializeItems(config.getMapList("armor"), inventory, ARMOR_START, ARMOR_SIZE, category + ":armor");
+        deserializeItems(config.getMapList("extraSlots"), inventory, OFFHAND_SLOT, 1, category + ":extraSlots");
+    }
+
+    private List<Map<?, ?>> serializeItems(NmsInventory inventory, int firstSlot, int count) {
+        List<Map<?, ?>> serialized = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            serialized.add(access.getItem(inventory, firstSlot + i).serialize());
+        }
+        return serialized;
+    }
+
     @SuppressWarnings("unchecked")
-    private void deserializeItems(List<Map<?, ?>> from, AbstractList<Object> to, String itemCategory) {
-        for (int i = 0; i < from.size(); i++) {
+    private void deserializeItems(List<Map<?, ?>> from, NmsInventory to, int firstSlot, int count, String itemCategory) {
+        for (int i = 0; i < Math.min(from.size(), count); i++) {
             Map<?, ?> items = from.get(i);
             if (items.isEmpty()) {
                 continue;
@@ -187,7 +164,7 @@ public final class FileManager implements IFileManager {
                 continue;
             }
             try {
-                to.set(i, NMSLoader.asNMSCopy(ItemStack.deserialize((Map<String, Object>) items)));
+                access.setItem(to, firstSlot + i, ItemStack.deserialize((Map<String, Object>) items));
             } catch (Exception e) {
                 logger.warning("An error occurred while loading " + itemCategory + ": Failed to deserialize item at index " + i);
                 e.printStackTrace();

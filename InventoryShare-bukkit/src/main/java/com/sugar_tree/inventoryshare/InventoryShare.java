@@ -22,8 +22,12 @@ package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.metrics.Metrics;
 import com.sugar_tree.inventoryshare.nms.FileManager;
+import com.sugar_tree.inventoryshare.nms.InventoryAccess;
+import com.sugar_tree.inventoryshare.nms.InventoryAccessFactory;
 import com.sugar_tree.inventoryshare.nms.InventoryManager;
-import com.sugar_tree.inventoryshare.nms.utils.VersionUtil;
+import com.sugar_tree.inventoryshare.nms.NmsMapping;
+import com.sugar_tree.inventoryshare.nms.ServerVersion;
+import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibManager;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibStatus;
 import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
@@ -71,8 +75,9 @@ public final class InventoryShare extends JavaPlugin {
         UpdateUtil.showUpdateInformation();
 
         // Check if the server version is supported
-        if (VersionUtil.getVersion() == null) {
-            logger.severe(I18NUtil.get(false, false, "not_supported_version", VersionUtil.parseServerVersion()));
+        ServerVersion serverVersion = ServerVersion.current();
+        if (NmsMapping.find(serverVersion) == null) {
+            logger.severe(I18NUtil.get(false, false, "not_supported_version", serverVersion.toString()));
             this.setEnabled(false); // Disable the plugin if not supported
             return;
         }
@@ -81,7 +86,7 @@ public final class InventoryShare extends JavaPlugin {
         switch (protocolLibStatus) {
             case ENABLED:
                 // Skip version 1.12 due to differences in packet system
-                if (VersionUtil.getVersion().name().equals("v1_12_R1")) break;
+                if (serverVersion.isOlderThan("1.13")) break;
                 new ProtocolLibManager(this).enable(); // Enable ProtocolLib manager
                 logger.info(I18NUtil.get(false, false, "protocolLib_found"));
                 break;
@@ -102,7 +107,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Load NMS (Net Minecraft Server) contents
         // FileManager and InventoryManager are initialized here
-        if (!loadNMS()) {
+        if (!loadNMS(serverVersion)) {
             // Disable the plugin if the version is not supported or an error occurs
             this.setEnabled(false);
             return;
@@ -152,13 +157,14 @@ public final class InventoryShare extends JavaPlugin {
         FileManager.save(); // Save file manager data
     }
 
-    private boolean loadNMS() {
+    private boolean loadNMS(ServerVersion serverVersion) {
         logger.info("Loading Classes...");
         try {
-            InventoryManager inventoryManager = new InventoryManager();
+            InventoryAccess access = InventoryAccessFactory.create(serverVersion, getClassLoader());
+            InventoryManager inventoryManager = new InventoryManager(access);
             InventoryManager = inventoryManager;
-            FileManager = new FileManager(inventoryManager);
-        } catch (ExceptionInInitializerError e) {
+            FileManager = new FileManager(inventoryManager, access);
+        } catch (UnsupportedVersionException | RuntimeException e) {
             logger.severe("An error occurred while loading the classes!");
             logger.severe("This is NOT EXPECTED ERROR! Report this issue!");
             e.printStackTrace();

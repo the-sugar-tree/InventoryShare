@@ -20,15 +20,17 @@
 
 package com.sugar_tree.inventoryshare.nms;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.AbstractList;
+/**
+ * NMS member names of one {@link NmsMapping} row, for one inventory model.
+ */
+public interface NmsLayout {
 
-@Getter
-@RequiredArgsConstructor
-class PlayerInventory {
-    private final AbstractList<Object> items;
-    private final AbstractList<Object> armor;
-    private final AbstractList<Object> extraSlots;
+    /**
+     * Resolves every member up front and builds the access.
+     *
+     * @param loader class loader that can see the server's NMS and CraftBukkit classes
+     */
+    @NotNull InventoryAccess createAccess(@NotNull ClassLoader loader) throws ReflectiveOperationException;
 }
