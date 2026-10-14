@@ -22,18 +22,28 @@ package com.sugar_tree.inventoryshare.nms;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ServiceLoader;
+
 public final class InventoryAccessFactory {
 
     private InventoryAccessFactory() {}
 
     /**
-     * Picks the {@link NmsMapping} row for the version and resolves all of its members.
+     * Uses the first {@link InventoryAccessProvider} that supports the version; otherwise picks the
+     * {@link NmsMapping} row for the version and resolves all of its members.
      *
-     * @param loader class loader that can see the server's NMS and CraftBukkit classes
+     * @param loader class loader that can see the server's NMS and CraftBukkit classes, and the plugin's providers
      * @throws UnsupportedVersionException if no row matches, or a member of the row cannot be resolved
      */
     public static @NotNull InventoryAccess create(@NotNull ServerVersion version, @NotNull ClassLoader loader)
             throws UnsupportedVersionException {
+        for (InventoryAccessProvider provider : ServiceLoader.load(InventoryAccessProvider.class, loader)) {
+            InventoryAccess access = provider.create(version);
+            if (access != null) {
+                return access;
+            }
+        }
+
         NmsMapping mapping = NmsMapping.find(version);
         if (mapping == null) {
             throw new UnsupportedVersionException("No NMS mapping for Minecraft " + version);

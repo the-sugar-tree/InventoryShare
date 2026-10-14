@@ -8,7 +8,7 @@
 |---|---|
 | `InventoryShare-nms` (`InventoryAccess`, `NmsMapping`, Legacy/Modern) | 완료. Legacy(1.12 – 1.21.4), Modern(1.21.5 – 26.x) 구현과 매핑표 |
 | `InventoryShare-nms-test` (파라미터화 테스트) | 완료. `LegacyMappingTest`, `ModernMappingTest` |
-| `InventoryShare-dev/<ver>` | 없음. `InventoryShare-single/v1_21_R4`(1.21.5), `v26_2`(26.2)가 직접 NMS로 작성된 별도 배포 jar |
+| `InventoryShare-dev/<ver>` | 완료. `v1_21_R4`(1.21.5), `v26_2`(26.2) 샌드박스. `InventoryShare-single` 삭제 |
 | 1.12.2 – 26.x 단일 jar | `InventoryShare-bukkit` jar가 1.12.2 – 26.x 매핑을 포함. **1.21.5 이상은 실서버 미검증** |
 
 ---
@@ -50,6 +50,13 @@ InventoryShare-dev/<ver>  (core를 그대로 쓰고 InventoryAccess만 교체)
 - core가 NMS 타입을 알지 못하는 상태에서 `InventoryAccess`만 사용합니다.
 - 배포 모듈은 리플렉션만 쓰므로 **기본 빌드에 BuildTools가 필요 없습니다.** BuildTools로 mavenLocal에 설치한 Spigot jar는 `InventoryShare-nms-test`와 `InventoryShare-dev`에서만 씁니다.
 
+### `InventoryShare-dev` 샌드박스
+- `-Pdev`(또는 `gradle.properties`의 `dev=true`)일 때만 settings에 포함됩니다. 하위 폴더 중 `build.gradle`이 있는 것이 자동으로 포함됩니다.
+- 각 샌드박스는 `InventoryShare-bukkit`에 의존하고, 직접 NMS로 작성한 `DirectInventoryAccess`와 `DevInventoryAccessProvider`만 가집니다. 명령어·리스너·저장 등 나머지는 배포 플러그인과 같은 코드입니다.
+- Provider는 `META-INF/services/com.sugar_tree.inventoryshare.nms.InventoryAccessProvider`로 등록되며, 대상 버전이 아닌 서버에서는 `null`을 반환해 `NmsMapping`으로 넘어갑니다.
+- 결과물: `InventoryShare-dev/<ver>/build/libs/InventoryShare-dev-<version>-[<ver>].jar` (실행 가능한 플러그인). 활성화 로그에 사용 중인 `InventoryAccess` 구현 이름이 출력됩니다.
+- 새 버전 샌드박스 추가: 기존 폴더를 복사해 `build.gradle`의 Spigot 버전·toolchain, 패키지명, `DevInventoryAccessProvider.TARGET`, services 파일을 바꿉니다.
+
 ---
 
 ## 3. `InventoryShare-nms`
@@ -62,7 +69,8 @@ com.sugar_tree.inventoryshare.nms
 ├─ NmsInventory              불투명 핸들 (Legacy: items/armor/extraSlots, Modern: items/equipment map)
 ├─ ServerVersion             MC 버전 파싱/비교 ("1.21.11")
 ├─ NmsMapping                MC 버전 → 매핑 행 (enum)
-├─ InventoryAccessFactory    버전 감지 → 구현 선택 → 멤버 해석
+├─ InventoryAccessFactory    InventoryAccessProvider → 없으면 NmsMapping 행 선택 → 멤버 해석
+├─ InventoryAccessProvider   ServiceLoader 확장점 (dev 샌드박스 전용)
 ├─ legacy/
 │   ├─ LegacyNames
 │   ├─ LegacyMembers         resolve(LegacyNames, ClassLoader)

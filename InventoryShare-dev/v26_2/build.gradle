@@ -1,0 +1,15 @@
+// Minecraft 26.2 (unobfuscated, CraftBukkit without a version package)
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot:26.2-R0.1-SNAPSHOT'
+}

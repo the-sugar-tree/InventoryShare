@@ -161,6 +161,7 @@ public final class InventoryShare extends JavaPlugin {
         logger.info("Loading Classes...");
         try {
             InventoryAccess access = InventoryAccessFactory.create(serverVersion, getClassLoader());
+            logger.info("Minecraft " + serverVersion + ", using " + access.getClass().getSimpleName());
             InventoryManager inventoryManager = new InventoryManager(access);
             InventoryManager = inventoryManager;
             FileManager = new FileManager(inventoryManager, access);

@@ -1,0 +1,24 @@
+// Development sandboxes: the released plugin (InventoryShare-bukkit) with its InventoryAccess replaced by
+// direct NMS code for one Minecraft version. Included only with -Pdev; never released.
+// Each subproject compiles against the Spigot server jar installed into mavenLocal by BuildTools.
+
+subprojects {
+    dependencies {
+        implementation project(':InventoryShare-bukkit')
+    }
+
+    // A runnable plugin jar: core (with InventoryShare-nms) + this sandbox's InventoryAccessProvider
+    jar {
+        archiveFileName.set("InventoryShare-dev-${project.version}-[${project.name}].jar")
+        from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+}
+
+tasks.withType(Jar).configureEach {
+    enabled = false
+}
+
+tasks.withType(JavaCompile).configureEach {
+    enabled = false
+}
