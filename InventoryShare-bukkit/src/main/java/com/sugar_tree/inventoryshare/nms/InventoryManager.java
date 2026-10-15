@@ -44,6 +44,11 @@ public final class InventoryManager implements IInventoryManager {
      */
     private final Map<UUID, PlayerInventory> originalPlayerInventoryMap = new HashMap<>();
 
+    /**
+     * Team whose inventory each player in {@code TEAM} state is using
+     */
+    private final Map<UUID, String> appliedTeams = new HashMap<>();
+
     @SuppressWarnings("deprecation")
     @Override
     public void updateInventroy(@NotNull final Player p) {
@@ -75,12 +80,15 @@ public final class InventoryManager implements IInventoryManager {
             e.printStackTrace();
         }
         InventoryState.setInventoryState(p, InventoryState.ALL);
+        appliedTeams.remove(p.getUniqueId());
         p.updateInventory();
     }
 
     @Override
     public void applyTeamInventory(@NotNull final Player p, @NotNull final String teamName) {
-        if (InventoryState.getInventoryState(p).equals(InventoryState.TEAM)) return;
+        // Moving to another team must apply that team's inventory, so only the same team is skipped
+        if (InventoryState.getInventoryState(p).equals(InventoryState.TEAM)
+                && teamName.equals(appliedTeams.get(p.getUniqueId()))) return;
         if (InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL)) savePlayerInventory(p);
         AbstractList<Object> items;
         AbstractList<Object> armor;
@@ -104,6 +112,7 @@ public final class InventoryManager implements IInventoryManager {
             e.printStackTrace();
         }
         InventoryState.setInventoryState(p, InventoryState.TEAM);
+        appliedTeams.put(p.getUniqueId(), teamName);
         p.updateInventory();
     }
 
@@ -124,6 +133,7 @@ public final class InventoryManager implements IInventoryManager {
             originalPlayerInventoryMap.remove(p.getUniqueId());
         }
         InventoryState.setInventoryState(p, InventoryState.PERSONAL);
+        appliedTeams.remove(p.getUniqueId());
     }
 
     @Override
@@ -145,6 +155,7 @@ public final class InventoryManager implements IInventoryManager {
     @Override
     public void forgetPlayer(@NotNull final Player p) {
         InventoryState.forget(p);
+        appliedTeams.remove(p.getUniqueId());
     }
 
     private void fillInventoryFields(Object playerInventory, Object items, Object armor, Object extraSlots)
