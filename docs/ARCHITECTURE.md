@@ -180,7 +180,17 @@ extraSlots: [ ...1개 ]    # 슬롯 40 (offhand)
 ```
 
 - 공유 인벤토리는 `inventory.yml`, 팀 인벤토리는 `teams/<team>.yml`에 저장합니다.
-- 각 아이템은 `ItemStack#serialize()` 결과이며, 로드 시 아이템의 data version(`v`)이 서버보다 높으면(다운그레이드) 로드를 중단합니다.
+- 각 아이템은 `ItemStack#serialize()` 로 직렬화됩니다.
+
+### 로드할 수 없는 데이터 (다운그레이드 등)
+
+- 아이템 단위로 처리합니다. 문제가 있는 아이템만 건너뛰고 나머지는 로드합니다.
+- 다음 경우 해당 슬롯을 **빈칸으로 둡니다**:
+  - 아이템의 data version(`v`)이 서버보다 높음
+  - `v`가 숫자가 아님, 또는 `ItemStack.deserialize` 실패
+- 파일의 `format-version`이 플러그인이 아는 값보다 높으면 경고합니다.
+- 위 중 하나라도 있으면 **원본 파일을 `backups/<inventory|team-이름>-<yyyyMMdd-HHmmss>[-dv<가장 높은 data version>].yml`로 복사**하고, 건너뛴 슬롯(이유별로 한 줄, 예: `38 item(s) saved by a newer Minecraft version (...): slots 0-35, 38, 40`)과 백업 경로를 `SEVERE` 로그로 남깁니다.
+- 복구: 그 데이터를 읽을 수 있는 서버(예: 원래의 상위 버전)에서 백업 파일을 `inventory.yml` / `teams/<team>.yml` 자리에 되돌립니다.
 
 ---
 
@@ -217,3 +227,4 @@ extraSlots: [ ...1개 ]    # 슬롯 40 (offhand)
 ## 8. 수정 중 발견된 오류
 
 - `FileManager`에서 과거 버전을 로드했을 때, 인벤토리가 초기화됩니다.
+  - 다운그레이드로 상위 버전 아이템을 읽지 못하면 섹션 전체를 건너뛰고, 다음 저장 때 원본을 덮어써 삭제되던 문제 → 아이템 단위 처리 + 원본 백업으로 수정 (§4 참고).
