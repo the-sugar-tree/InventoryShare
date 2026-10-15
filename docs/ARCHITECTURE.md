@@ -199,6 +199,9 @@ extraSlots: [ ...1개 ]    # 슬롯 40 (offhand)
 ### 5.1 `InventoryShare-nms` 단위 테스트 (항상 실행)
 - Spigot jar 없이 `ServerVersion` 파싱/비교, `NmsMapping` 조회를 통해 테스트합니다.
 
+### 5.1.1 `InventoryShare-bukkit` 단위 테스트 (항상 실행)
+- `storage` 패키지: 아이템 로드 가능 여부 판정(`InventoryCodec.checkVersion`), 이유별 로그 문구(`LoadResult`), 백업 파일 생성(`InventoryBackup`).
+
 ### 5.2 `InventoryShare-nms-test` 매핑 테스트
 - `LegacyMappingTest` (1.12.2 – 1.21.4), `ModernMappingTest` (1.21.5 – 26.x): `@ParameterizedTest`
 - 각 버전의 Spigot 런타임 jar(classifier 없는 기본 jar)를 격리된 ClassLoader로 불러, 실제 `resolve()`를 실행하고 필드 타입까지 검증합니다.
