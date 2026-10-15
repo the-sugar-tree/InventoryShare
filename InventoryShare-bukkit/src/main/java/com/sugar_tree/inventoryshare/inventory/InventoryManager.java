@@ -18,9 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms;
+package com.sugar_tree.inventoryshare.inventory;
 
 import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
+import com.sugar_tree.inventoryshare.nms.InventoryAccess;
+import com.sugar_tree.inventoryshare.nms.NmsInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
@@ -51,12 +53,19 @@ public final class InventoryManager implements IInventoryManager {
         this.sharedInventory = access.createEmpty();
     }
 
-    NmsInventory getSharedInventory() {
+    public @NotNull NmsInventory getSharedInventory() {
         return sharedInventory;
     }
 
-    Map<String, NmsInventory> getTeamInventoryMap() {
-        return teamInventoryMap;
+    /**
+     * @return the team's inventory, or {@code null} if the team has none yet
+     */
+    public @Nullable NmsInventory getTeamInventory(@NotNull String teamName) {
+        return teamInventoryMap.get(teamName);
+    }
+
+    public void putTeamInventory(@NotNull String teamName, @NotNull NmsInventory inventory) {
+        teamInventoryMap.put(teamName, inventory);
     }
 
     @SuppressWarnings("deprecation")

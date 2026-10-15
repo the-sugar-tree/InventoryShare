@@ -18,9 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms;
+package com.sugar_tree.inventoryshare.storage;
 
 import com.sugar_tree.inventoryshare.interfaces.IFileManager;
+import com.sugar_tree.inventoryshare.inventory.InventoryManager;
+import com.sugar_tree.inventoryshare.nms.InventoryAccess;
+import com.sugar_tree.inventoryshare.nms.NmsInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -77,7 +80,7 @@ public final class FileManager implements IFileManager {
             if (team == null) continue;
             File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
-            NmsInventory teamInventory = inventories.getTeamInventoryMap().get(team.getName());
+            NmsInventory teamInventory = inventories.getTeamInventory(team.getName());
             if (teamInventory == null) continue;
             writeInventory(fileConfiguration, teamInventory);
             teamInvFileList.put(fileConfiguration, file);
@@ -123,7 +126,7 @@ public final class FileManager implements IFileManager {
                 readInventory(YamlConfiguration.loadConfiguration(file), file, "team-" + team.getName(),
                         teamInventory, "Team:" + team.getName());
             }
-            inventories.getTeamInventoryMap().put(team.getName(), teamInventory);
+            inventories.putTeamInventory(team.getName(), teamInventory);
             sb.append("[").append(team.getName()).append("] ");
             temp = true;
         }

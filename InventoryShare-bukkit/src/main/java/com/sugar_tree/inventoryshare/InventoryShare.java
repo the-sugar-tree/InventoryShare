@@ -20,16 +20,16 @@
 
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.inventory.InventoryManager;
 import com.sugar_tree.inventoryshare.metrics.Metrics;
-import com.sugar_tree.inventoryshare.nms.FileManager;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryAccessFactory;
-import com.sugar_tree.inventoryshare.nms.InventoryManager;
 import com.sugar_tree.inventoryshare.nms.NmsMapping;
 import com.sugar_tree.inventoryshare.nms.ServerVersion;
 import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibManager;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibStatus;
+import com.sugar_tree.inventoryshare.storage.FileManager;
 import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
 import com.sugar_tree.inventoryshare.utils.I18NUtil;
 import com.sugar_tree.inventoryshare.utils.UpdateUtil;
