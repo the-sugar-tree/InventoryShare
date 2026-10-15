@@ -110,7 +110,7 @@ public final class Commands implements TabExecutor {
                     break;
                 case "announcedeath":
                     if (args.length != 2) {
-                        sender.sendMessage(I18NUtil.get(true, "andeath_get", String.valueOf(teaminventory)));
+                        sender.sendMessage(I18NUtil.get(true, "andeath_get", String.valueOf(announcedeath)));
                         break;
                     }
                     switch (args[1].toLowerCase()) {
@@ -119,7 +119,7 @@ public final class Commands implements TabExecutor {
                                 announcedeath = true;
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "andeath_set", String.valueOf(announcedeath)));
                             } else {
-                                I18NUtil.get(true, "andeath_already_y");
+                                sender.sendMessage(I18NUtil.get(true, "andeath_already_y"));
                             }
                             break;
                         case "false":
@@ -127,7 +127,7 @@ public final class Commands implements TabExecutor {
                                 announcedeath = false;
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "andeath_set", String.valueOf(announcedeath)));
                             } else {
-                                I18NUtil.get(true, "andeath_already_n");
+                                sender.sendMessage(I18NUtil.get(true, "andeath_already_n"));
                             }
                             break;
                         default:
@@ -172,10 +172,14 @@ public final class Commands implements TabExecutor {
                         break;
                     }
                     plugin.reloadConfig();
-                    if (plugin.getConfig().contains("inventory")) advancement = plugin.getConfig().getBoolean("inventory");
+                    if (plugin.getConfig().contains("inventory")) inventory = plugin.getConfig().getBoolean("inventory");
                     if (plugin.getConfig().contains("advancement")) advancement = plugin.getConfig().getBoolean("advancement");
                     if (plugin.getConfig().contains("announcedeath")) announcedeath = plugin.getConfig().getBoolean("announcedeath");
                     if (plugin.getConfig().contains("teaminventory")) teaminventory = plugin.getConfig().getBoolean("teaminventory");
+                    // inventory / teaminventory may have changed, as with their commands
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        InventoryManager.updateInventroy(p);
+                    }
                     I18NUtil.reload();
                     updateUsageMessage();
                     Command.broadcastCommandMessage(sender, I18NUtil.get(true, "config_reloaded"));
