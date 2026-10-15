@@ -67,6 +67,12 @@ public interface IInventoryManager {
     Set<UUID> getRegisteredPlayers();
 
     /**
+     * Drops what is kept for the player; call after {@link #applyPersonalInventory(Player)} when the player leaves
+     * @param p Player who left
+     */
+    void forgetPlayer(@NotNull Player p);
+
+    /**
      * @param obj Object which you want to change field
      * @param name Field name
      * @param value Value to change field

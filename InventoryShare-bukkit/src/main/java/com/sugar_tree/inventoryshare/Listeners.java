@@ -38,6 +38,7 @@ import org.bukkit.scoreboard.Team;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.sugar_tree.inventoryshare.utils.AdvancementUtil.AdvancementPatch;
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
@@ -64,7 +65,10 @@ public final class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        InventoryManager.applyPersonalInventory(event.getPlayer());
+        Player player = event.getPlayer();
+        InventoryManager.applyPersonalInventory(player);
+        InventoryManager.forgetPlayer(player);
+        teamMap.remove(player.getUniqueId());
         FileManager.save();
     }
 
@@ -102,21 +106,22 @@ public final class Listeners implements Listener {
         }
     }
 
-    private final Map<Player, Team> teamMap = new HashMap<>();
+    /** Last seen team of each online player, keyed by UUID; removed when the player quits */
+    private final Map<UUID, Team> teamMap = new HashMap<>();
     @SuppressWarnings("deprecation")
     public void onTick() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            if (teamMap.containsKey(p)) {
+            if (teamMap.containsKey(p.getUniqueId())) {
                 if (inventory) {
                     if (teaminventory) {
-                        if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p))) {
-                            teamMap.put(p, Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
+                        if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p.getUniqueId()))) {
+                            teamMap.put(p.getUniqueId(), Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
                             InventoryManager.updateInventroy(p);
                         }
                     }
                 }
             }
-            teamMap.put(p, Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
+            teamMap.put(p.getUniqueId(), Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
         }
     }
 }
