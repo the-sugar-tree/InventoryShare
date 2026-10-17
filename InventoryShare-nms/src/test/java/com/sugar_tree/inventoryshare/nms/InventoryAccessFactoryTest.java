@@ -22,6 +22,7 @@ package com.sugar_tree.inventoryshare.nms;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -56,33 +57,33 @@ class InventoryAccessFactoryTest {
         static final String VERSION = "99.0";
         static final InventoryAccess ACCESS = new InventoryAccess() {
             @Override
-            public NmsInventory createEmpty() {
+            public @NotNull NmsInventory createEmpty() {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public NmsInventory capture(Player player) {
+            public @NotNull NmsInventory capture(@NotNull Player player) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public void apply(Player player, NmsInventory inventory) {
+            public void apply(@NotNull Player player, @NotNull NmsInventory inventory) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public ItemStack getItem(NmsInventory inventory, int slot) {
+            public @NotNull ItemStack getItem(@NotNull NmsInventory inventory, int slot) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public void setItem(NmsInventory inventory, int slot, ItemStack item) {
+            public void setItem(@NotNull NmsInventory inventory, int slot, @NotNull ItemStack item) {
                 throw new UnsupportedOperationException();
             }
         };
 
         @Override
-        public InventoryAccess create(ServerVersion version) {
+        public InventoryAccess create(@NotNull ServerVersion version) {
             return ServerVersion.parse(VERSION).equals(version) ? ACCESS : null;
         }
     }
