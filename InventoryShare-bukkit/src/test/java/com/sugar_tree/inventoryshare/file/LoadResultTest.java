@@ -38,7 +38,7 @@ class LoadResultTest {
 
     @Test
     void nothingSkippedIsComplete() {
-        LoadResult result = new LoadResult(InventoryCodec.FORMAT_VERSION, SERVER, Collections.emptyList());
+        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, Collections.emptyList());
         assertTrue(result.isComplete());
         assertEquals(Collections.emptyList(), result.describe());
         assertEquals(-1, result.newestDataVersion());
@@ -46,7 +46,7 @@ class LoadResultTest {
 
     @Test
     void newerFormatVersionIsIncomplete() {
-        LoadResult result = new LoadResult(InventoryCodec.FORMAT_VERSION + 1, SERVER, Collections.emptyList());
+        LoadResult result = new LoadResult(Codec.FORMAT_VERSION + 1, SERVER, Collections.emptyList());
         assertFalse(result.isComplete());
         assertEquals(1, result.describe().size());
     }
@@ -57,7 +57,7 @@ class LoadResultTest {
         for (int slot = 0; slot < 36; slot++) skipped.add(SkippedItem.newerVersion(slot, 4100));
         skipped.add(SkippedItem.newerVersion(38, 4189));
         skipped.add(SkippedItem.newerVersion(40, 4100));
-        LoadResult result = new LoadResult(InventoryCodec.FORMAT_VERSION, SERVER, skipped);
+        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, skipped);
 
         assertFalse(result.isComplete());
         assertEquals(4189, result.newestDataVersion());
@@ -68,7 +68,7 @@ class LoadResultTest {
 
     @Test
     void eachReasonGetsOneLine() {
-        LoadResult result = new LoadResult(InventoryCodec.FORMAT_VERSION, SERVER, Arrays.asList(
+        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, Arrays.asList(
                 SkippedItem.invalidVersion(3, "abc"),
                 SkippedItem.newerVersion(5, 4189),
                 SkippedItem.deserializeFailed(12, new IllegalArgumentException("Unknown material"))));

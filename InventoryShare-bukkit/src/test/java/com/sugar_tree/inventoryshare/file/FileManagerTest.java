@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class InventoryBackupTest {
+class FileManagerTest {
 
     @TempDir
     Path temp;
@@ -41,7 +41,7 @@ class InventoryBackupTest {
     @Test
     void copiesSourceWithDataVersionInName() throws IOException {
         File source = write("inventory.yml", "items: []\n");
-        File backup = InventoryBackup.create(temp.resolve("backups").toFile(), source, "inventory", 4189);
+        File backup = FileManager.backUp(temp.resolve("backups").toFile(), source, "inventory", 4189);
 
         assertTrue(backup.getName().matches("inventory-\\d{8}-\\d{6}-dv4189\\.yml"), backup.getName());
         assertEquals("items: []\n", new String(Files.readAllBytes(backup.toPath()), StandardCharsets.UTF_8));
@@ -51,7 +51,7 @@ class InventoryBackupTest {
     @Test
     void leavesDataVersionOutWhenUnknown() throws IOException {
         File source = write("red.yml", "items: []\n");
-        File backup = InventoryBackup.create(temp.resolve("backups").toFile(), source, "team-red", -1);
+        File backup = FileManager.backUp(temp.resolve("backups").toFile(), source, "team-red", -1);
 
         assertTrue(backup.getName().matches("team-red-\\d{8}-\\d{6}\\.yml"), backup.getName());
     }
@@ -60,7 +60,7 @@ class InventoryBackupTest {
     void missingSourceFails() {
         File missing = temp.resolve("missing.yml").toFile();
         assertThrows(IOException.class,
-                () -> InventoryBackup.create(temp.resolve("backups").toFile(), missing, "inventory", -1));
+                () -> FileManager.backUp(temp.resolve("backups").toFile(), missing, "inventory", -1));
     }
 
     private File write(String name, String content) throws IOException {

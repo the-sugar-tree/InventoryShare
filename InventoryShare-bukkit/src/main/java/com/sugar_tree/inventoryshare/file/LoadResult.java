@@ -43,7 +43,7 @@ final class LoadResult {
     }
 
     boolean isComplete() {
-        return formatVersion <= InventoryCodec.FORMAT_VERSION && skipped.isEmpty();
+        return formatVersion <= Codec.FORMAT_VERSION && skipped.isEmpty();
     }
 
     List<SkippedItem> getSkipped() {
@@ -67,9 +67,9 @@ final class LoadResult {
      */
     List<String> describe() {
         List<String> lines = new ArrayList<>();
-        if (formatVersion > InventoryCodec.FORMAT_VERSION) {
+        if (formatVersion > Codec.FORMAT_VERSION) {
             lines.add("format-version " + formatVersion + " is newer than this plugin supports ("
-                    + InventoryCodec.FORMAT_VERSION + ")");
+                    + Codec.FORMAT_VERSION + ")");
         }
         Map<SkippedItem.Reason, List<SkippedItem>> byReason = new EnumMap<>(SkippedItem.Reason.class);
         for (SkippedItem item : skipped) {

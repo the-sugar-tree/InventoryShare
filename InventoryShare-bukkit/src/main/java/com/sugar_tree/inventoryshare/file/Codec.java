@@ -35,7 +35,7 @@ import static com.sugar_tree.inventoryshare.nms.InventoryAccess.*;
 /**
  * Converts an {@link NmsInventory} to and from the {@code items / armor / extraSlots} lists of a config.
  */
-final class InventoryCodec {
+final class Codec {
 
     /** Version of the inventory file layout */
     static final int FORMAT_VERSION = 1;
@@ -46,7 +46,7 @@ final class InventoryCodec {
     /**
      * @param serverDataVersion data version of the running server; items saved by a higher one are skipped
      */
-    InventoryCodec(InventoryAccess access, int serverDataVersion) {
+    Codec(InventoryAccess access, int serverDataVersion) {
         this.access = access;
         this.serverDataVersion = serverDataVersion;
     }

@@ -30,25 +30,25 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class InventoryCodecTest {
+class CodecTest {
 
     private static final int SERVER = 3955;
 
     @Test
     void itemWithoutDataVersionIsLoaded() {
-        assertNull(InventoryCodec.checkVersion(item(null), 0, SERVER));
+        assertNull(Codec.checkVersion(item(null), 0, SERVER));
     }
 
     @Test
     void itemFromSameOrOlderVersionIsLoaded() {
-        assertNull(InventoryCodec.checkVersion(item(SERVER), 0, SERVER));
-        assertNull(InventoryCodec.checkVersion(item(1343), 0, SERVER));
-        assertNull(InventoryCodec.checkVersion(item("3955"), 0, SERVER));
+        assertNull(Codec.checkVersion(item(SERVER), 0, SERVER));
+        assertNull(Codec.checkVersion(item(1343), 0, SERVER));
+        assertNull(Codec.checkVersion(item("3955"), 0, SERVER));
     }
 
     @Test
     void itemFromNewerVersionIsSkipped() {
-        SkippedItem skipped = InventoryCodec.checkVersion(item(4189), 38, SERVER);
+        SkippedItem skipped = Codec.checkVersion(item(4189), 38, SERVER);
         assertEquals(SkippedItem.Reason.NEWER_VERSION, skipped.reason);
         assertEquals(38, skipped.slot);
         assertEquals(4189, skipped.dataVersion);
@@ -56,7 +56,7 @@ class InventoryCodecTest {
 
     @Test
     void itemWithInvalidVersionIsSkipped() {
-        SkippedItem skipped = InventoryCodec.checkVersion(item("abc"), 3, SERVER);
+        SkippedItem skipped = Codec.checkVersion(item("abc"), 3, SERVER);
         assertEquals(SkippedItem.Reason.INVALID_VERSION, skipped.reason);
         assertEquals("\"abc\"", skipped.detail);
     }
@@ -64,7 +64,7 @@ class InventoryCodecTest {
     @Test
     void unknownServerVersionSkipsVersionedItems() {
         // WORLD_VERSION is -1 when the server cannot report its data version
-        assertEquals(SkippedItem.Reason.NEWER_VERSION, InventoryCodec.checkVersion(item(1343), 0, -1).reason);
+        assertEquals(SkippedItem.Reason.NEWER_VERSION, Codec.checkVersion(item(1343), 0, -1).reason);
     }
 
     private static Map<?, ?> item(Object version) {

@@ -33,7 +33,9 @@ import org.bukkit.scoreboard.Team;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
@@ -42,12 +44,12 @@ public final class FileManager implements IFileManager {
 
     private final InventoryAccess access;
     private final InventoryRegistry registry;
-    private final InventoryCodec codec;
+    private final Codec codec;
 
     public FileManager(InventoryAccess access, InventoryRegistry registry) {
         this.access = access;
         this.registry = registry;
-        this.codec = new InventoryCodec(access, WORLD_VERSION);
+        this.codec = new Codec(access, WORLD_VERSION);
     }
 
     @Override
@@ -146,7 +148,7 @@ public final class FileManager implements IFileManager {
         }
         File backupDirectory = new File(plugin.getDataFolder(), "backups");
         try {
-            File backup = InventoryBackup.create(backupDirectory, source, backupName, result.newestDataVersion());
+            File backup = backUp(backupDirectory, source, backupName, result.newestDataVersion());
             logger.severe("The original file was backed up to " + backup.getPath()
                     + ". " + source.getName() + " will be overwritten on the next save. To recover the skipped items, "
                     + "restore the backup on a server that can read them (e.g. the newer version it came from).");
@@ -155,6 +157,22 @@ public final class FileManager implements IFileManager {
                     + ". Copy it manually before the next save!");
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Copies {@code source} to {@code <directory>/<name>-<yyyyMMdd-HHmmss>[-dv<dataVersion>].yml}.
+     * Backups are never deleted automatically.
+     *
+     * @param name        e.g. {@code inventory} or {@code team-red}
+     * @param dataVersion data version of the newest skipped item, or {@code -1} to leave it out of the name
+     * @return the backup file
+     */
+    static File backUp(File directory, File source, String name, int dataVersion) throws IOException {
+        String timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
+        File target = new File(directory, name + "-" + timestamp + (dataVersion >= 0 ? "-dv" + dataVersion : "") + ".yml");
+        Files.createDirectories(directory.toPath());
+        Files.copy(source.toPath(), target.toPath());
+        return target;
     }
 
     @Override
