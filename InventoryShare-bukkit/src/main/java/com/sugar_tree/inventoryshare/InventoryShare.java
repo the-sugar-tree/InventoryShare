@@ -20,15 +20,10 @@
 
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.inventory.InventoryManager;
+import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.metrics.Metrics;
-import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.InventoryAccessFactory;
-import com.sugar_tree.inventoryshare.nms.NmsMapping;
-import com.sugar_tree.inventoryshare.nms.ServerRuntime;
-import com.sugar_tree.inventoryshare.nms.ServerVersion;
-import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
+import com.sugar_tree.inventoryshare.nms.*;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibManager;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibStatus;
 import com.sugar_tree.inventoryshare.storage.FileManager;
@@ -44,6 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
@@ -171,9 +167,10 @@ public final class InventoryShare extends JavaPlugin {
             InventoryManager = new InventoryManager(access, registry);
             FileManager = new FileManager(access, registry);
         } catch (UnsupportedVersionException | RuntimeException e) {
-            logger.severe("An error occurred while loading the classes!");
-            logger.severe("This is NOT EXPECTED ERROR! Report this issue!");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Could not hook into Minecraft " + serverVersion
+                    + " (" + Bukkit.getVersion() + "). InventoryShare will be disabled; no inventories were changed.", e);
+            logger.severe("This is a bug, not a configuration problem. Please report it with the error above:");
+            logger.severe("https://github.com/the-sugar-tree/InventoryShare/issues");
             return false; // Return false if an error occurs
         }
         logger.info("Done!"); // Log completion of loading classes
