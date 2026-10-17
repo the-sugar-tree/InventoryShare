@@ -18,11 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.storage;
+package com.sugar_tree.inventoryshare.file;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.NmsInventory;
-import com.sugar_tree.inventoryshare.storage.LoadResult.SkippedItem;
+import com.sugar_tree.inventoryshare.file.LoadResult.SkippedItem;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 

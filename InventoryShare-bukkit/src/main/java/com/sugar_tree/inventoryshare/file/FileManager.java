@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.storage;
+package com.sugar_tree.inventoryshare.file;
 
 import com.sugar_tree.inventoryshare.interfaces.IFileManager;
 import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;

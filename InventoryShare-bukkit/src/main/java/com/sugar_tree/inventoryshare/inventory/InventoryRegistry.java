@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare.inventory;
 
+import com.sugar_tree.inventoryshare.file.FileManager;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.NmsInventory;
 import org.bukkit.entity.Player;
@@ -36,7 +37,7 @@ import java.util.*;
  *     <li>the personal inventories set aside while a shared one is applied</li>
  * </ul>
  * {@link InventoryManager} uses it to switch players between inventories, and
- * {@link com.sugar_tree.inventoryshare.storage.FileManager} uses the same instance to save and load them.
+ * {@link FileManager} uses the same instance to save and load them.
  */
 public final class InventoryRegistry {
 
