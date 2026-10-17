@@ -21,7 +21,7 @@
 package com.sugar_tree.inventoryshare.storage;
 
 import com.sugar_tree.inventoryshare.interfaces.IFileManager;
-import com.sugar_tree.inventoryshare.inventory.InventoryManager;
+import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.NmsInventory;
 import org.bukkit.Bukkit;
@@ -40,19 +40,19 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public final class FileManager implements IFileManager {
 
-    private final InventoryManager inventories;
     private final InventoryAccess access;
+    private final InventoryRegistry registry;
     private final InventoryCodec codec;
 
-    public FileManager(InventoryManager inventories, InventoryAccess access) {
-        this.inventories = inventories;
+    public FileManager(InventoryAccess access, InventoryRegistry registry) {
         this.access = access;
+        this.registry = registry;
         this.codec = new InventoryCodec(access, WORLD_VERSION);
     }
 
     @Override
     public void save() {
-        writeInventory(invconfig, inventories.getSharedInventory());
+        writeInventory(invconfig, registry.getSharedInventory());
 
         List<String> serializedAdvancementList = new ArrayList<>();
         for (NamespacedKey namespacedKey : advlist) {
@@ -71,7 +71,7 @@ public final class FileManager implements IFileManager {
             if (team == null) continue;
             File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
-            NmsInventory teamInventory = inventories.getTeamInventory(team.getName());
+            NmsInventory teamInventory = registry.getTeamInventory(team.getName());
             if (teamInventory == null) continue;
             writeInventory(fileConfiguration, teamInventory);
             teamInvFileList.put(fileConfiguration, file);
@@ -84,7 +84,7 @@ public final class FileManager implements IFileManager {
 
     @Override
     public void load() {
-        readInventory(invconfig, invfile, "inventory", inventories.getSharedInventory(), "ALL");
+        readInventory(invconfig, invfile, "inventory", registry.getSharedInventory(), "ALL");
 
         List<String> advancementlist = advconfig.getStringList("advancement");
         for (String advancement : advancementlist) {
@@ -117,7 +117,7 @@ public final class FileManager implements IFileManager {
                 readInventory(YamlConfiguration.loadConfiguration(file), file, "team-" + team.getName(),
                         teamInventory, "Team:" + team.getName());
             }
-            inventories.putTeamInventory(team.getName(), teamInventory);
+            registry.putTeamInventory(team.getName(), teamInventory);
             sb.append("[").append(team.getName()).append("] ");
             temp = true;
         }

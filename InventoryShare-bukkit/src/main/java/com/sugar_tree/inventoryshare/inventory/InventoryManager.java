@@ -39,33 +39,11 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 public final class InventoryManager implements IInventoryManager {
 
     private final InventoryAccess access;
-    private final NmsInventory sharedInventory;
-    private final Map<String, NmsInventory> teamInventoryMap = new HashMap<>();
+    private final InventoryRegistry registry;
 
-    /**
-     * UUID - Player's UUID <br>
-     * NmsInventory - the player's own inventory, saved while a shared one is applied
-     */
-    private final Map<UUID, NmsInventory> originalPlayerInventoryMap = new HashMap<>();
-
-    public InventoryManager(InventoryAccess access) {
+    public InventoryManager(InventoryAccess access, InventoryRegistry registry) {
         this.access = access;
-        this.sharedInventory = access.createEmpty();
-    }
-
-    public @NotNull NmsInventory getSharedInventory() {
-        return sharedInventory;
-    }
-
-    /**
-     * @return the team's inventory, or {@code null} if the team has none yet
-     */
-    public @Nullable NmsInventory getTeamInventory(@NotNull String teamName) {
-        return teamInventoryMap.get(teamName);
-    }
-
-    public void putTeamInventory(@NotNull String teamName, @NotNull NmsInventory inventory) {
-        teamInventoryMap.put(teamName, inventory);
+        this.registry = registry;
     }
 
     @SuppressWarnings("deprecation")
@@ -93,7 +71,7 @@ public final class InventoryManager implements IInventoryManager {
         if (InventoryState.getInventoryState(p).equals(InventoryState.ALL)) return;
         if (InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL)) savePlayerInventory(p);
         try {
-            access.apply(p, sharedInventory);
+            access.apply(p, registry.getSharedInventory());
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
@@ -105,10 +83,10 @@ public final class InventoryManager implements IInventoryManager {
     public void applyTeamInventory(@NotNull final Player p, @NotNull final String teamName) {
         if (InventoryState.getInventoryState(p).equals(InventoryState.TEAM)) return;
         if (InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL)) savePlayerInventory(p);
-        NmsInventory teamInventory = teamInventoryMap.get(teamName);
+        NmsInventory teamInventory = registry.getTeamInventory(teamName);
         if (teamInventory == null) {
             teamInventory = access.createEmpty();
-            teamInventoryMap.put(teamName, teamInventory);
+            registry.putTeamInventory(teamName, teamInventory);
         }
         try {
             access.apply(p, teamInventory);
@@ -122,13 +100,14 @@ public final class InventoryManager implements IInventoryManager {
     @Override
     public void applyPersonalInventory(@NotNull final Player p) {
         if (InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL)) return;
-        if (originalPlayerInventoryMap.containsKey(p.getUniqueId())) {
+        NmsInventory personalInventory = registry.getPlayerInventory(p);
+        if (personalInventory != null) {
             try {
-                access.apply(p, originalPlayerInventoryMap.get(p.getUniqueId()));
+                access.apply(p, personalInventory);
             } catch (RuntimeException e) {
                 e.printStackTrace();
             }
-            originalPlayerInventoryMap.remove(p.getUniqueId());
+            registry.removePlayerInventory(p);
         }
         InventoryState.setInventoryState(p, InventoryState.PERSONAL);
     }
@@ -137,12 +116,12 @@ public final class InventoryManager implements IInventoryManager {
     public void savePlayerInventory(@NotNull final Player p) {
         if (!InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL))
             throw new IllegalStateException("Currently, the player <" + p.getName() + "> is not in a personal inventory state!");
-        originalPlayerInventoryMap.put(p.getUniqueId(), access.capture(p));
+        registry.putPlayerInventory(p, access.capture(p));
         InventoryState.setInventoryState(p, InventoryState.SAVED);
     }
 
     public @NotNull Set<UUID> getRegisteredPlayers() {
-        return originalPlayerInventoryMap.keySet();
+        return registry.getSavedPlayers();
     }
 
     private enum InventoryState {

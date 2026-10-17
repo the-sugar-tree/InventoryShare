@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.inventory.InventoryManager;
 import com.sugar_tree.inventoryshare.metrics.Metrics;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
@@ -146,7 +147,7 @@ public final class InventoryShare extends JavaPlugin {
             // If not supported version or unexpected exception occurs
             return;
         }
-        // Apply personal inventory for registered players
+        // Apply personal inventory for registered players, so the server saves their own inventory.
         for (UUID puuid : InventoryManager.getRegisteredPlayers()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
@@ -163,10 +164,12 @@ public final class InventoryShare extends JavaPlugin {
         try {
             ServerRuntime runtime = ServerRuntime.current();
             InventoryAccess access = InventoryAccessFactory.create(serverVersion, runtime);
+
+            InventoryRegistry registry = new InventoryRegistry(access);
             logger.info("Minecraft " + serverVersion + " (" + runtime + "), using " + access.getClass().getSimpleName());
-            InventoryManager inventoryManager = new InventoryManager(access);
-            InventoryManager = inventoryManager;
-            FileManager = new FileManager(inventoryManager, access);
+
+            InventoryManager = new InventoryManager(access, registry);
+            FileManager = new FileManager(access, registry);
         } catch (UnsupportedVersionException | RuntimeException e) {
             logger.severe("An error occurred while loading the classes!");
             logger.severe("This is NOT EXPECTED ERROR! Report this issue!");
