@@ -74,7 +74,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Check if the server version is supported
         ServerVersion serverVersion = ServerVersion.current();
-        if (NmsMapping.find(serverVersion) == null) {
+        if (InventoryModel.of(serverVersion) == null) {
             logger.severe(I18NUtil.get(false, false, "not_supported_version", serverVersion.toString()));
             this.setEnabled(false); // Disable the plugin if not supported
             return;

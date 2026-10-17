@@ -46,7 +46,7 @@ public final class ModernInventoryAccess implements InventoryAccess {
     /** EquipmentSlot for slots 36 - 40, indexed by {@code slot - ARMOR_START} */
     private final Object[] equipmentSlots = new Object[SIZE - ARMOR_START];
 
-    ModernInventoryAccess(ModernMembers members) {
+    public ModernInventoryAccess(@NotNull ModernMembers members) {
         this.members = members;
         this.emptyItem = get(members.getEmptyItem(), null);
         Map<Integer, ?> slotMapping = (Map<Integer, ?>) get(members.getSlotMapping(), null);

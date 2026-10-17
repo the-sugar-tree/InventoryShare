@@ -55,9 +55,9 @@ public final class LegacyMembers {
         craftPlayer = load(names.getCraftPlayerClass(), loader);
         getHandle = craftPlayer.getMethod("getHandle");
         Class<?> inventoryOwner = load(names.getInventoryOwnerClass(), loader);
-        inventory = names.isFlattened()
-                ? inventoryOwner.getMethod(names.getInventory())
-                : inventoryOwner.getField(names.getInventory());
+        inventory = names.isInventoryField()
+                ? inventoryOwner.getField(names.getInventory())
+                : inventoryOwner.getMethod(names.getInventory());
 
         playerInventory = load(names.getPlayerInventoryClass(), loader);
         items = accessible(playerInventory.getField(names.getItems()));
@@ -72,7 +72,7 @@ public final class LegacyMembers {
 
         Class<?> craftItemStack = load(names.getCraftItemStackClass(), loader);
         asBukkitCopy = craftItemStack.getMethod("asBukkitCopy", itemStack);
-        asNMSCopy = craftItemStack.getMethod("asNMSCopy", load("org.bukkit.inventory.ItemStack", loader));
+        asNMSCopy = craftItemStack.getMethod("asNMSCopy", load(names.getBukkitItemStackClass(), loader));
     }
 
     public static @NotNull LegacyMembers resolve(@NotNull LegacyNames names, @NotNull ClassLoader loader)

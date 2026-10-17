@@ -36,14 +36,12 @@ class ServerRuntimeTest {
         ServerRuntime runtime = ServerRuntime.detect("org.bukkit.craftbukkit.v1_21_R3.CraftServer", LOADER);
         assertEquals("v1_21_R3", runtime.getCraftbukkitPackage());
         assertEquals(Namespace.SPIGOT, runtime.getNamespace());
-        assertEquals("org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer", runtime.craftbukkitClass("entity.CraftPlayer"));
     }
 
     @Test
     void unrelocatedCraftBukkit() {
         ServerRuntime runtime = ServerRuntime.detect("org.bukkit.craftbukkit.CraftServer", LOADER);
         assertNull(runtime.getCraftbukkitPackage());
-        assertEquals("org.bukkit.craftbukkit.entity.CraftPlayer", runtime.craftbukkitClass("entity.CraftPlayer"));
     }
 
     @Test

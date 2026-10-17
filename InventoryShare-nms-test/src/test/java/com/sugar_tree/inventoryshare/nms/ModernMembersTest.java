@@ -43,8 +43,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Modern NMS mapping (1.21.5+) against Spigot runtime and remapped-mojang jars")
-class ModernMappingTest {
+@DisplayName("Modern NMS names (1.21.5+) resolved against Spigot runtime and remapped-mojang jars")
+class ModernMembersTest {
 
     private static final String FIRST_MODERN = "1.21.5";
 
@@ -62,16 +62,15 @@ class ModernMappingTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("modernJars")
-    void mappingResolves(SpigotJars.Jar jar) throws Exception {
-        ModernNames row = modernNames(jar.mc);
+    void membersResolve(SpigotJars.Jar jar) throws Exception {
+        assertEquals(InventoryModel.MODERN, InventoryModel.of(jar.version()));
 
         try (URLClassLoader loader = SpigotJars.open(jar)) {
-            // The runtime is detected from the jar exactly as on a server
+            // The runtime is detected from the jar and the names are built exactly as on a server
             ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
             assertEquals(jar.expectedNamespace(), runtime.getNamespace(), "namespace");
-            assertEquals(row.getCraftbukkitPackage(), runtime.getCraftbukkitPackage(), "CraftBukkit package of the row");
 
-            ModernNames names = row.forRuntime(runtime);
+            ModernNames names = NmsNameFactory.modern(jar.version(), runtime);
             ModernMembers members = ModernMembers.resolve(names, loader);
             Class<?> itemStack = members.getItemStack();
 
@@ -107,24 +106,22 @@ class ModernMappingTest {
             assertTrue(Modifier.isStatic(createItemList.getModifiers()), "item list factory must be static");
             assertEquals(members.getNonNullList(), createItemList.getReturnType());
 
-            Class<?> bukkitItemStack = Class.forName("org.bukkit.inventory.ItemStack", false, loader);
+            Class<?> bukkitItemStack = Class.forName(names.getBukkitItemStackClass(), false, loader);
             assertEquals(bukkitItemStack, members.getAsBukkitCopy().getReturnType());
             assertEquals(itemStack, members.getAsNMSCopy().getReturnType());
 
-            assertSlotMapping(names, members);
+            assertSlotMapping(runtime.getNamespace(), members);
         }
     }
 
     @Test
     @DisplayName("every modern row is checked by at least one listed version")
     void everyModernRowIsCovered() {
-        Set<NmsMapping> covered = modernVersions()
-                .map(mc -> NmsMapping.find(ServerVersion.parse(mc)))
+        Set<ModernNameTable> covered = modernVersions()
+                .map(mc -> ModernNameTable.find(ServerVersion.parse(mc)))
                 .collect(Collectors.toSet());
-        for (NmsMapping mapping : NmsMapping.values()) {
-            if (mapping.getLayout() instanceof ModernNames) {
-                assertTrue(covered.contains(mapping), mapping + " has no Spigot version in InventoryShare-nms-test/build.gradle");
-            }
+        for (ModernNameTable row : ModernNameTable.values()) {
+            assertTrue(covered.contains(row), row + " has no Spigot version in InventoryShare-nms-test/build.gradle");
         }
     }
 
@@ -132,24 +129,17 @@ class ModernMappingTest {
      * Slots 36 - 40 must map to feet, legs, chest, head, offhand. Spigot obfuscates the enum constants
      * ({@code a}..{@code h}), so they are compared by ordinal, and by name where names are available.
      */
-    private static void assertSlotMapping(ModernNames names, ModernMembers members) throws IllegalAccessException {
+    private static void assertSlotMapping(Namespace namespace, ModernMembers members) throws IllegalAccessException {
         Map<?, ?> slotMapping = (Map<?, ?>) members.getSlotMapping().get(null);
         for (int i = 0; i < SLOT_NAMES.length; i++) {
             int slot = InventoryAccess.ARMOR_START + i;
             Enum<?> equipmentSlot = (Enum<?>) slotMapping.get(slot);
             assertNotNull(equipmentSlot, "no equipment slot for inventory slot " + slot);
             assertEquals(SLOT_ORDINALS[i], equipmentSlot.ordinal(), "inventory slot " + slot);
-            if (names.getNamespace() == Namespace.MOJANG) {
+            if (namespace == Namespace.MOJANG) {
                 assertEquals(SLOT_NAMES[i], equipmentSlot.name(), "inventory slot " + slot);
             }
         }
-    }
-
-    private static ModernNames modernNames(String mc) {
-        NmsMapping mapping = NmsMapping.find(ServerVersion.parse(mc));
-        assertNotNull(mapping, "no NmsMapping row for " + mc);
-        assertTrue(mapping.getLayout() instanceof ModernNames, mapping + " is not a modern row");
-        return (ModernNames) mapping.getLayout();
     }
 
     private static Type typeArgument(Type type, int index) {

@@ -20,101 +20,49 @@
 
 package com.sugar_tree.inventoryshare.nms.modern;
 
-import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.Namespace;
-import com.sugar_tree.inventoryshare.nms.NmsLayout;
-import com.sugar_tree.inventoryshare.nms.ServerRuntime;
+import lombok.Builder;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import lombok.NonNull;
 
 /**
- * NMS member names for the {@code items + EntityEquipment} inventory model (1.21.5+).
+ * Every class and member name the modern inventory model ({@code items + EntityEquipment}, 1.21.5+) needs on one
+ * server. Class names are fully qualified.
+ *
+ * @see com.sugar_tree.inventoryshare.nms.NmsNameFactory
  */
 @Getter
-public final class ModernNames implements NmsLayout {
+@Builder
+public final class ModernNames {
 
-    private final Namespace namespace;
-    /**
-     * {@code vX_Y_RZ} package of CraftBukkit, or {@code null} if not relocated. In the mapping table it is the package
-     * of Spigot's release; on a server it is replaced by the server's own one.
-     */
-    private final @Nullable String craftbukkitPackage;
-    /** {@code Player#getInventory()} */
-    private final String getInventory;
-    /** {@code Inventory#items} */
-    private final String items;
-    /** {@code Inventory#equipment} */
-    private final String equipment;
-    /** {@code EntityEquipment#items} */
-    private final String equipmentItems;
-    /** {@code Inventory#EQUIPMENT_SLOT_MAPPING}: slot index (36 - 40) to EquipmentSlot */
-    private final String slotMapping;
-    /** {@code ItemStack#EMPTY} */
-    private final String emptyItem;
-    /** {@code NonNullList#withSize(int, Object)} */
-    private final String createItemList;
+    // CraftBukkit and Bukkit
+    private final @NonNull String craftPlayerClass;
+    private final @NonNull String craftItemStackClass;
+    private final @NonNull String bukkitItemStackClass;
 
-    private ModernNames(Namespace namespace, @Nullable String craftbukkitPackage, String getInventory, String items,
-                        String equipment, String equipmentItems, String slotMapping, String emptyItem,
-                        String createItemList) {
-        this.namespace = namespace;
-        this.craftbukkitPackage = craftbukkitPackage;
-        this.getInventory = getInventory;
-        this.items = items;
-        this.equipment = equipment;
-        this.equipmentItems = equipmentItems;
-        this.slotMapping = slotMapping;
-        this.emptyItem = emptyItem;
-        this.createItemList = createItemList;
-    }
+    // Player -> inventory
+    /** Class declaring {@link #getInventory}; {@code CraftPlayer#getHandle()} returns a subtype of it */
+    private final @NonNull String playerClass;
+    private final @NonNull String getInventory;
 
-    /** 1.21.5 - 1.21.11: Spigot-obfuscated member names. */
-    public static ModernNames spigot(String craftbukkitPackage, String getInventory, String items, String equipment,
-                                     String equipmentItems, String slotMapping, String emptyItem,
-                                     String createItemList) {
-        return new ModernNames(Namespace.SPIGOT, craftbukkitPackage, getInventory, items, equipment,
-                equipmentItems, slotMapping, emptyItem, createItemList);
-    }
+    // Inventory
+    private final @NonNull String inventoryClass;
+    private final @NonNull String items;
+    /** EntityEquipment of the inventory's player */
+    private final @NonNull String equipment;
+    /** static {@code Int2ObjectMap}: inventory slot (36 - 40) to EquipmentSlot */
+    private final @NonNull String slotMapping;
 
-    /**
-     * Mojang's names: 26.1+ (Minecraft is no longer obfuscated), and 1.21.5 - 1.21.11 on Paper.
-     * The names did not change from 1.21.5.
-     */
-    public static ModernNames mojang() {
-        return mojang(null);
-    }
+    // EntityEquipment
+    private final @NonNull String entityEquipmentClass;
+    /** {@code EnumMap<EquipmentSlot, ItemStack>} */
+    private final @NonNull String equipmentItems;
+    private final @NonNull String equipmentSlotClass;
 
-    private static ModernNames mojang(@Nullable String craftbukkitPackage) {
-        return new ModernNames(Namespace.MOJANG, craftbukkitPackage, "getInventory", "items", "equipment",
-                "items", "EQUIPMENT_SLOT_MAPPING", "EMPTY", "withSize");
-    }
-
-    @Override
-    public @NotNull ModernNames forRuntime(@NotNull ServerRuntime runtime) {
-        if (runtime.getNamespace() == Namespace.MOJANG) {
-            return mojang(runtime.getCraftbukkitPackage());
-        }
-        return new ModernNames(namespace, runtime.getCraftbukkitPackage(), getInventory, items, equipment,
-                equipmentItems, slotMapping, emptyItem, createItemList);
-    }
-
-    public String getCraftPlayerClass() {
-        return craftbukkit("entity.CraftPlayer");
-    }
-
-    public String getCraftItemStackClass() {
-        return craftbukkit("inventory.CraftItemStack");
-    }
-
-    private String craftbukkit(String name) {
-        return craftbukkitPackage == null
-                ? "org.bukkit.craftbukkit." + name
-                : "org.bukkit.craftbukkit." + craftbukkitPackage + "." + name;
-    }
-
-    @Override
-    public @NotNull InventoryAccess createAccess(@NotNull ServerRuntime runtime) throws ReflectiveOperationException {
-        return new ModernInventoryAccess(ModernMembers.resolve(forRuntime(runtime), runtime.getClassLoader()));
-    }
+    // Items
+    private final @NonNull String itemStackClass;
+    /** static empty item field of ItemStack */
+    private final @NonNull String emptyItem;
+    private final @NonNull String nonNullListClass;
+    /** static {@code NonNullList(int size, Object fill)} factory */
+    private final @NonNull String createItemList;
 }

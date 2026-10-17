@@ -45,7 +45,7 @@ public final class LegacyInventoryAccess implements InventoryAccess {
     private final LegacyMembers members;
     private final Object emptyItem;
 
-    LegacyInventoryAccess(LegacyMembers members) {
+    public LegacyInventoryAccess(@NotNull LegacyMembers members) {
         this.members = members;
         this.emptyItem = get(members.getEmptyItem(), null);
     }

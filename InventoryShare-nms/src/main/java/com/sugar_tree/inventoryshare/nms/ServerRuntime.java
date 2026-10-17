@@ -83,15 +83,6 @@ public final class ServerRuntime {
         return new ServerRuntime(craftbukkitPackage, namespace, classLoader);
     }
 
-    /**
-     * @param name class name relative to the CraftBukkit package, e.g. {@code entity.CraftPlayer}
-     */
-    public @NotNull String craftbukkitClass(@NotNull String name) {
-        return craftbukkitPackage == null
-                ? CRAFTBUKKIT + "." + name
-                : CRAFTBUKKIT + "." + craftbukkitPackage + "." + name;
-    }
-
     private static boolean classExists(String name, ClassLoader loader) {
         try {
             Class.forName(name, false, loader);

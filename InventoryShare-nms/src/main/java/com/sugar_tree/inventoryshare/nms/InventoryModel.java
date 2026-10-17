@@ -21,23 +21,25 @@
 package com.sugar_tree.inventoryshare.nms;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * NMS member names of one {@link NmsMapping} row, for one inventory model.
+ * Where a Minecraft version stores the player's armor and offhand. Decided by the version alone; which names the
+ * server uses for the classes and members is a separate question, see {@link NmsNameFactory}.
  */
-public interface NmsLayout {
+public enum InventoryModel {
+    /** 1.12 - 1.21.4: {@code armor} and {@code extraSlots} lists in the player inventory */
+    LEGACY,
+    /** 1.21.5+: the {@code EntityEquipment} of the player, referenced by the player inventory */
+    MODERN,
+    ;
 
     /**
-     * The names to use on a server: Mojang's names of the same inventory model if the server runs with
-     * {@link Namespace#MOJANG} names, and always the server's own CraftBukkit package.
-     *
-     * @throws IllegalStateException if the model has no names for the runtime (e.g. Mojang names before 1.17)
+     * @return the model of the version, or {@code null} if the version is not supported
      */
-    @NotNull NmsLayout forRuntime(@NotNull ServerRuntime runtime);
-
-    /**
-     * Resolves every member of {@link #forRuntime(ServerRuntime)} up front, with the runtime's class loader,
-     * and builds the access.
-     */
-    @NotNull InventoryAccess createAccess(@NotNull ServerRuntime runtime) throws ReflectiveOperationException;
+    public static @Nullable InventoryModel of(@NotNull ServerVersion version) {
+        if (LegacyNameTable.find(version) != null) return LEGACY;
+        if (ModernNameTable.find(version) != null) return MODERN;
+        return null;
+    }
 }

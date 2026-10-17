@@ -1,4 +1,4 @@
-// Verifies NmsMapping against real Spigot runtime jars installed into mavenLocal by BuildTools,
+// Verifies the NMS names built by NmsNameFactory against real Spigot runtime jars installed into mavenLocal by BuildTools,
 // and (1.17+) against the Mojang-named `remapped-mojang` jars, as Paper 1.20.5+ runs with Mojang's names.
 // A jar that is not installed is skipped; run with -PnmsStrict to fail instead.
 

@@ -40,11 +40,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Legacy NMS mapping (1.12 - 1.21.4) against Spigot runtime and remapped-mojang jars")
-class LegacyMappingTest {
+@DisplayName("Legacy NMS names (1.12 - 1.21.4) resolved against Spigot runtime and remapped-mojang jars")
+class LegacyMembersTest {
 
     private static final String FIRST_MODERN = "1.21.5";
 
@@ -58,16 +57,15 @@ class LegacyMappingTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("legacyJars")
-    void mappingResolves(SpigotJars.Jar jar) throws Exception {
-        LegacyNames row = legacyNames(jar.mc);
+    void membersResolve(SpigotJars.Jar jar) throws Exception {
+        assertEquals(InventoryModel.LEGACY, InventoryModel.of(jar.version()));
 
         try (URLClassLoader loader = SpigotJars.open(jar)) {
-            // The runtime is detected from the jar exactly as on a server
+            // The runtime is detected from the jar and the names are built exactly as on a server
             ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
             assertEquals(jar.expectedNamespace(), runtime.getNamespace(), "namespace");
-            assertEquals(row.getCraftbukkitPackage(), runtime.getCraftbukkitPackage(), "CraftBukkit package of the row");
 
-            LegacyNames names = row.forRuntime(runtime);
+            LegacyNames names = NmsNameFactory.legacy(jar.version(), runtime);
             LegacyMembers members = LegacyMembers.resolve(names, loader);
             Class<?> nonNullList = Class.forName(names.getNonNullListClass(), false, loader);
             Class<?> itemStack = members.getItemStack();
@@ -99,7 +97,7 @@ class LegacyMappingTest {
             assertTrue(Modifier.isStatic(createItemList.getModifiers()), "item list factory must be static");
             assertEquals(nonNullList, createItemList.getReturnType());
 
-            Class<?> bukkitItemStack = Class.forName("org.bukkit.inventory.ItemStack", false, loader);
+            Class<?> bukkitItemStack = Class.forName(names.getBukkitItemStackClass(), false, loader);
             assertEquals(bukkitItemStack, members.getAsBukkitCopy().getReturnType());
             assertEquals(itemStack, members.getAsNMSCopy().getReturnType());
         }
@@ -108,21 +106,12 @@ class LegacyMappingTest {
     @Test
     @DisplayName("every legacy row is checked by at least one listed version")
     void everyLegacyRowIsCovered() {
-        Set<NmsMapping> covered = legacyVersions()
-                .map(mc -> NmsMapping.find(ServerVersion.parse(mc)))
+        Set<LegacyNameTable> covered = legacyVersions()
+                .map(mc -> LegacyNameTable.find(ServerVersion.parse(mc)))
                 .collect(Collectors.toSet());
-        for (NmsMapping mapping : NmsMapping.values()) {
-            if (mapping.getLayout() instanceof LegacyNames) {
-                assertTrue(covered.contains(mapping), mapping + " has no Spigot version in InventoryShare-nms-test/build.gradle");
-            }
+        for (LegacyNameTable row : LegacyNameTable.values()) {
+            assertTrue(covered.contains(row), row + " has no Spigot version in InventoryShare-nms-test/build.gradle");
         }
-    }
-
-    private static LegacyNames legacyNames(String mc) {
-        NmsMapping mapping = NmsMapping.find(ServerVersion.parse(mc));
-        assertNotNull(mapping, "no NmsMapping row for " + mc);
-        assertTrue(mapping.getLayout() instanceof LegacyNames, mapping + " is not a legacy row");
-        return (LegacyNames) mapping.getLayout();
     }
 
     private static void assertItemList(Field field, Class<?> nonNullList, Class<?> itemStack) {

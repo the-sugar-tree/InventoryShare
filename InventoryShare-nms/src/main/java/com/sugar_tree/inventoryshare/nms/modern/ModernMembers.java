@@ -20,7 +20,6 @@
 
 package com.sugar_tree.inventoryshare.nms.modern;
 
-import com.sugar_tree.inventoryshare.nms.Namespace;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,29 +53,27 @@ public final class ModernMembers {
     private final Method asNMSCopy;
 
     private ModernMembers(ModernNames names, ClassLoader loader) throws ReflectiveOperationException {
-        Namespace namespace = names.getNamespace();
-
         craftPlayer = load(names.getCraftPlayerClass(), loader);
         getHandle = craftPlayer.getMethod("getHandle");
-        getInventory = load(namespace.getPlayerClass(), loader).getMethod(names.getGetInventory());
+        getInventory = load(names.getPlayerClass(), loader).getMethod(names.getGetInventory());
 
-        inventory = load(namespace.getInventoryClass(), loader);
+        inventory = load(names.getInventoryClass(), loader);
         items = accessible(inventory.getDeclaredField(names.getItems()));
         equipment = accessible(inventory.getDeclaredField(names.getEquipment()));
         slotMapping = accessible(inventory.getDeclaredField(names.getSlotMapping()));
 
-        entityEquipment = load(Namespace.ENTITY_EQUIPMENT, loader);
+        entityEquipment = load(names.getEntityEquipmentClass(), loader);
         equipmentItems = accessible(entityEquipment.getDeclaredField(names.getEquipmentItems()));
-        equipmentSlot = load(namespace.getEquipmentSlotClass(), loader);
+        equipmentSlot = load(names.getEquipmentSlotClass(), loader);
 
-        itemStack = load(Namespace.ITEM_STACK, loader);
+        itemStack = load(names.getItemStackClass(), loader);
         emptyItem = itemStack.getField(names.getEmptyItem());
-        nonNullList = load(Namespace.NON_NULL_LIST, loader);
+        nonNullList = load(names.getNonNullListClass(), loader);
         createItemList = nonNullList.getDeclaredMethod(names.getCreateItemList(), int.class, Object.class);
 
         Class<?> craftItemStack = load(names.getCraftItemStackClass(), loader);
         asBukkitCopy = craftItemStack.getMethod("asBukkitCopy", itemStack);
-        asNMSCopy = craftItemStack.getMethod("asNMSCopy", load("org.bukkit.inventory.ItemStack", loader));
+        asNMSCopy = craftItemStack.getMethod("asNMSCopy", load(names.getBukkitItemStackClass(), loader));
     }
 
     public static @NotNull ModernMembers resolve(@NotNull ModernNames names, @NotNull ClassLoader loader)
