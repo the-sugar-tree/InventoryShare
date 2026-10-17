@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Legacy NMS mapping (1.12 - 1.21.4) against Spigot runtime jars")
+@DisplayName("Legacy NMS mapping (1.12 - 1.21.4) against Spigot runtime and remapped-mojang jars")
 class LegacyMappingTest {
 
     private static final String FIRST_MODERN = "1.21.5";
@@ -52,12 +52,22 @@ class LegacyMappingTest {
         return SpigotJars.versionsBelow(FIRST_MODERN);
     }
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("legacyVersions")
-    void mappingResolves(String mc) throws Exception {
-        LegacyNames names = legacyNames(mc);
+    static Stream<SpigotJars.Jar> legacyJars() {
+        return SpigotJars.jarsBelow(FIRST_MODERN);
+    }
 
-        try (URLClassLoader loader = SpigotJars.open(mc)) {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("legacyJars")
+    void mappingResolves(SpigotJars.Jar jar) throws Exception {
+        LegacyNames row = legacyNames(jar.mc);
+
+        try (URLClassLoader loader = SpigotJars.open(jar)) {
+            // The runtime is detected from the jar exactly as on a server
+            ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
+            assertEquals(jar.expectedNamespace(), runtime.getNamespace(), "namespace");
+            assertEquals(row.getCraftbukkitPackage(), runtime.getCraftbukkitPackage(), "CraftBukkit package of the row");
+
+            LegacyNames names = row.forRuntime(runtime);
             LegacyMembers members = LegacyMembers.resolve(names, loader);
             Class<?> nonNullList = Class.forName(names.getNonNullListClass(), false, loader);
             Class<?> itemStack = members.getItemStack();

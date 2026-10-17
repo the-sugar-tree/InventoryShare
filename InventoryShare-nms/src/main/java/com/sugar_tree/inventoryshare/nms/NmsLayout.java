@@ -28,9 +28,16 @@ import org.jetbrains.annotations.NotNull;
 public interface NmsLayout {
 
     /**
-     * Resolves every member up front and builds the access.
+     * The names to use on a server: Mojang's names of the same inventory model if the server runs with
+     * {@link Namespace#MOJANG} names, and always the server's own CraftBukkit package.
      *
-     * @param loader class loader that can see the server's NMS and CraftBukkit classes
+     * @throws IllegalStateException if the model has no names for the runtime (e.g. Mojang names before 1.17)
      */
-    @NotNull InventoryAccess createAccess(@NotNull ClassLoader loader) throws ReflectiveOperationException;
+    @NotNull NmsLayout forRuntime(@NotNull ServerRuntime runtime);
+
+    /**
+     * Resolves every member of {@link #forRuntime(ServerRuntime)} up front, with the runtime's class loader,
+     * and builds the access.
+     */
+    @NotNull InventoryAccess createAccess(@NotNull ServerRuntime runtime) throws ReflectiveOperationException;
 }

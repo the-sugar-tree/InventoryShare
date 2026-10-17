@@ -1,5 +1,6 @@
-// Verifies NmsMapping against real Spigot runtime jars installed into mavenLocal by BuildTools.
-// A version whose jar is not installed is skipped; run with -PnmsStrict to fail instead.
+// Verifies NmsMapping against real Spigot runtime jars installed into mavenLocal by BuildTools,
+// and (1.17+) against the Mojang-named `remapped-mojang` jars, as Paper 1.20.5+ runs with Mojang's names.
+// A jar that is not installed is skipped; run with -PnmsStrict to fail instead.
 
 // Minecraft version -> Spigot artifact version (default classifier = the jar a server runs)
 def spigotJars = [
@@ -39,6 +40,13 @@ def spigotJars = [
         '26.2'   : '26.2-R0.1-SNAPSHOT',
 ]
 
+// Versions that are also checked with Mojang's names (Paper 1.20.5+, Paper's Mojang-mapped 1.20.4):
+// BuildTools' `--remapped` output, classifier `remapped-mojang`. 26.1+ jars already use Mojang's names.
+def mojangJars = spigotJars.findAll { mc, artifact ->
+    def parts = mc.tokenize('.')*.toInteger()
+    parts[0] == 1 && parts[1] >= 17
+}
+
 // Reading 26.x class files needs a recent JVM; the tests themselves never run NMS code.
 java {
     toolchain {
@@ -50,13 +58,22 @@ tasks.withType(JavaCompile).configureEach {
     options.release = 17
 }
 
-def configurationName = { String mc -> "spigot_" + mc.replace('.', '_') }
-
+// Each checked jar: key in spigot-classpaths.properties -> [configuration, dependency notation, server jar name]
+def checkedJars = [:]
 spigotJars.each { mc, artifact ->
-    configurations.create(configurationName(mc)) {
+    checkedJars[mc] = ["spigot_" + mc.replace('.', '_'), "org.spigotmc:spigot:${artifact}", "spigot-${artifact}.jar"]
+}
+mojangJars.each { mc, artifact ->
+    checkedJars["${mc}@mojang".toString()] = ["spigot_" + mc.replace('.', '_') + "_mojang",
+                                              "org.spigotmc:spigot:${artifact}:remapped-mojang",
+                                              "spigot-${artifact}-remapped-mojang.jar"]
+}
+
+checkedJars.each { key, spec ->
+    configurations.create(spec[0]) {
         canBeConsumed = false
     }
-    dependencies.add(configurationName(mc), "org.spigotmc:spigot:${artifact}")
+    dependencies.add(spec[0], spec[1])
 }
 
 dependencies {
@@ -76,19 +93,22 @@ test {
     // Classpaths are written to a file: passing them as system properties exceeds the Windows command line limit
     def classpathFile = layout.buildDirectory.file('spigot-classpaths.properties').get().asFile
     inputs.property('spigotJars', spigotJars)
+    inputs.property('mojangJars', mojangJars.keySet())
     inputs.property('nmsStrict', strict)
     systemProperty 'spigot.versions', spigotJars.keySet().join(',')
+    systemProperty 'spigot.mojangVersions', mojangJars.keySet().join(',')
     systemProperty 'spigot.classpaths', classpathFile.absolutePath
     doFirst {
         def classpaths = new Properties()
-        spigotJars.each { mc, artifact ->
-            def configuration = configurations.getByName(configurationName(mc))
+        checkedJars.each { key, spec ->
+            def configuration = configurations.getByName(spec[0])
             def files = strict
                     ? configuration.files
                     : configuration.incoming.artifactView { lenient = true }.files.files
             // Without the server jar itself the remaining (API/library) jars are useless: treat as not installed
-            boolean installed = files.any { it.name == "spigot-${artifact}.jar" }
-            classpaths.setProperty(mc, installed ? files.collect { it.absolutePath }.join(File.pathSeparator) : '')
+            def server = files.find { it.name == spec[2] }
+            classpaths.setProperty(key, server ? files.collect { it.absolutePath }.join(File.pathSeparator) : '')
+            classpaths.setProperty(key + '.server', server ? server.absolutePath : '')
         }
         classpathFile.parentFile.mkdirs()
         classpathFile.withOutputStream { classpaths.store(it, 'Spigot runtime classpaths by Minecraft version') }

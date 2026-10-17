@@ -25,6 +25,7 @@ import com.sugar_tree.inventoryshare.metrics.Metrics;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryAccessFactory;
 import com.sugar_tree.inventoryshare.nms.NmsMapping;
+import com.sugar_tree.inventoryshare.nms.ServerRuntime;
 import com.sugar_tree.inventoryshare.nms.ServerVersion;
 import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibManager;
@@ -160,8 +161,9 @@ public final class InventoryShare extends JavaPlugin {
     private boolean loadNMS(ServerVersion serverVersion) {
         logger.info("Loading Classes...");
         try {
-            InventoryAccess access = InventoryAccessFactory.create(serverVersion, getClassLoader());
-            logger.info("Minecraft " + serverVersion + ", using " + access.getClass().getSimpleName());
+            ServerRuntime runtime = ServerRuntime.current();
+            InventoryAccess access = InventoryAccessFactory.create(serverVersion, runtime);
+            logger.info("Minecraft " + serverVersion + " (" + runtime + "), using " + access.getClass().getSimpleName());
             InventoryManager inventoryManager = new InventoryManager(access);
             InventoryManager = inventoryManager;
             FileManager = new FileManager(inventoryManager, access);

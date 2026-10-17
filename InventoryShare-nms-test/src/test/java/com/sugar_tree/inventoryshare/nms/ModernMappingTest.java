@@ -22,7 +22,6 @@ package com.sugar_tree.inventoryshare.nms;
 
 import com.sugar_tree.inventoryshare.nms.modern.ModernMembers;
 import com.sugar_tree.inventoryshare.nms.modern.ModernNames;
-import com.sugar_tree.inventoryshare.nms.modern.Namespace;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Modern NMS mapping (1.21.5+) against Spigot runtime jars")
+@DisplayName("Modern NMS mapping (1.21.5+) against Spigot runtime and remapped-mojang jars")
 class ModernMappingTest {
 
     private static final String FIRST_MODERN = "1.21.5";
@@ -57,12 +56,22 @@ class ModernMappingTest {
         return SpigotJars.versionsFrom(FIRST_MODERN);
     }
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("modernVersions")
-    void mappingResolves(String mc) throws Exception {
-        ModernNames names = modernNames(mc);
+    static Stream<SpigotJars.Jar> modernJars() {
+        return SpigotJars.jarsFrom(FIRST_MODERN);
+    }
 
-        try (URLClassLoader loader = SpigotJars.open(mc)) {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("modernJars")
+    void mappingResolves(SpigotJars.Jar jar) throws Exception {
+        ModernNames row = modernNames(jar.mc);
+
+        try (URLClassLoader loader = SpigotJars.open(jar)) {
+            // The runtime is detected from the jar exactly as on a server
+            ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
+            assertEquals(jar.expectedNamespace(), runtime.getNamespace(), "namespace");
+            assertEquals(row.getCraftbukkitPackage(), runtime.getCraftbukkitPackage(), "CraftBukkit package of the row");
+
+            ModernNames names = row.forRuntime(runtime);
             ModernMembers members = ModernMembers.resolve(names, loader);
             Class<?> itemStack = members.getItemStack();
 

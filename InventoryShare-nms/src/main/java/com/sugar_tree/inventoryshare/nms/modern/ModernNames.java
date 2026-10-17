@@ -21,7 +21,9 @@
 package com.sugar_tree.inventoryshare.nms.modern;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
+import com.sugar_tree.inventoryshare.nms.Namespace;
 import com.sugar_tree.inventoryshare.nms.NmsLayout;
+import com.sugar_tree.inventoryshare.nms.ServerRuntime;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +35,10 @@ import org.jetbrains.annotations.Nullable;
 public final class ModernNames implements NmsLayout {
 
     private final Namespace namespace;
-    /** {@code vX_Y_RZ} package of CraftBukkit, or {@code null} once CraftBukkit stopped relocating (26.1+) */
+    /**
+     * {@code vX_Y_RZ} package of CraftBukkit, or {@code null} if not relocated. In the mapping table it is the package
+     * of Spigot's release; on a server it is replaced by the server's own one.
+     */
     private final @Nullable String craftbukkitPackage;
     /** {@code Player#getInventory()} */
     private final String getInventory;
@@ -72,10 +77,26 @@ public final class ModernNames implements NmsLayout {
                 equipmentItems, slotMapping, emptyItem, createItemList);
     }
 
-    /** 26.1+: Minecraft is no longer obfuscated, members keep Mojang's names. */
+    /**
+     * Mojang's names: 26.1+ (Minecraft is no longer obfuscated), and 1.21.5 - 1.21.11 on Paper.
+     * The names did not change from 1.21.5.
+     */
     public static ModernNames mojang() {
-        return new ModernNames(Namespace.MOJANG, null, "getInventory", "items", "equipment",
+        return mojang(null);
+    }
+
+    private static ModernNames mojang(@Nullable String craftbukkitPackage) {
+        return new ModernNames(Namespace.MOJANG, craftbukkitPackage, "getInventory", "items", "equipment",
                 "items", "EQUIPMENT_SLOT_MAPPING", "EMPTY", "withSize");
+    }
+
+    @Override
+    public @NotNull ModernNames forRuntime(@NotNull ServerRuntime runtime) {
+        if (runtime.getNamespace() == Namespace.MOJANG) {
+            return mojang(runtime.getCraftbukkitPackage());
+        }
+        return new ModernNames(namespace, runtime.getCraftbukkitPackage(), getInventory, items, equipment,
+                equipmentItems, slotMapping, emptyItem, createItemList);
     }
 
     public String getCraftPlayerClass() {
@@ -93,7 +114,7 @@ public final class ModernNames implements NmsLayout {
     }
 
     @Override
-    public @NotNull InventoryAccess createAccess(@NotNull ClassLoader loader) throws ReflectiveOperationException {
-        return new ModernInventoryAccess(ModernMembers.resolve(this, loader));
+    public @NotNull InventoryAccess createAccess(@NotNull ServerRuntime runtime) throws ReflectiveOperationException {
+        return new ModernInventoryAccess(ModernMembers.resolve(forRuntime(runtime), runtime.getClassLoader()));
     }
 }

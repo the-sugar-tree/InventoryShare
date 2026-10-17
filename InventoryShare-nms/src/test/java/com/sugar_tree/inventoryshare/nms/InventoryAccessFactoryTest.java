@@ -30,23 +30,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class InventoryAccessFactoryTest {
 
     private static final ClassLoader LOADER = InventoryAccessFactoryTest.class.getClassLoader();
+    private static final ServerRuntime SPIGOT_1_21_4 = new ServerRuntime("v1_21_R3", Namespace.SPIGOT, LOADER);
 
     @Test
     void providerOverridesMapping() throws UnsupportedVersionException {
-        assertSame(TestProvider.ACCESS, InventoryAccessFactory.create(ServerVersion.parse(TestProvider.VERSION), LOADER));
+        assertSame(TestProvider.ACCESS,
+                InventoryAccessFactory.create(ServerVersion.parse(TestProvider.VERSION), SPIGOT_1_21_4));
     }
 
     @Test
     void unsupportedWithoutProviderOrMapping() {
         assertThrows(UnsupportedVersionException.class,
-                () -> InventoryAccessFactory.create(ServerVersion.parse("1.11.2"), LOADER));
+                () -> InventoryAccessFactory.create(ServerVersion.parse("1.11.2"), SPIGOT_1_21_4));
     }
 
     @Test
     void mappingFailsWithoutServerClasses() {
         // The 1.21.4 row exists, but this test classpath has no CraftBukkit/NMS classes
         assertThrows(UnsupportedVersionException.class,
-                () -> InventoryAccessFactory.create(ServerVersion.parse("1.21.4"), LOADER));
+                () -> InventoryAccessFactory.create(ServerVersion.parse("1.21.4"), SPIGOT_1_21_4));
     }
 
     /** Registered in {@code src/test/resources/META-INF/services}. */

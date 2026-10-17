@@ -2,6 +2,9 @@
 
 구조 개편 중입니다. 빌드·테스트 방법은 [CONTRIBUTING.md](../CONTRIBUTING.md)를 참고하세요.
 
+> [!important]
+> 문서 정리 작업 중입니다. 현재 AI가 편집한 문서로, 읽기 불편할 수 있습니다. 양해바랍니다.
+
 **현재 구현 상태 (요약)**
 
 | 목표                                                                  | 현재 코드                                                                                |
@@ -69,16 +72,17 @@ com.sugar_tree.inventoryshare.nms
 ├─ InventoryAccess           core가 아는 유일한 NMS 경계
 ├─ NmsInventory              불투명 핸들 (Legacy: items/armor/extraSlots, Modern: items/equipment map)
 ├─ ServerVersion             MC 버전 파싱/비교 ("1.21.11")
+├─ ServerRuntime             서버의 CraftBukkit 패키지 + 이름 체계(Namespace)를 런타임에 감지
+├─ Namespace                 SPIGOT | MOJANG (+ Modern 모델의 클래스 이름 세트)
 ├─ NmsMapping                MC 버전 → 매핑 행 (enum)
-├─ InventoryAccessFactory    InventoryAccessProvider → 없으면 NmsMapping 행 선택 → 멤버 해석
+├─ InventoryAccessFactory    InventoryAccessProvider → 없으면 NmsMapping 행 → forRuntime(runtime) → 멤버 해석
 ├─ InventoryAccessProvider   ServiceLoader 확장점 (dev 샌드박스 전용)
 ├─ legacy/
-│   ├─ LegacyNames
+│   ├─ LegacyNames           Spigot 이름 행 + mojang()
 │   ├─ LegacyMembers         resolve(LegacyNames, ClassLoader)
 │   └─ LegacyInventoryAccess
 └─ modern/
-    ├─ Namespace             SPIGOT | MOJANG (클래스 이름 세트)
-    ├─ ModernNames
+    ├─ ModernNames           Spigot 이름 행 + mojang()
     ├─ ModernMembers         resolve(ModernNames, ClassLoader)
     └─ ModernInventoryAccess
 ```
@@ -109,10 +113,17 @@ public interface InventoryAccess {
 
 `LegacyMembers.resolve(names, loader)` / `ModernMembers.resolve(names, loader)`는 **모든 클래스를 인자로 받은 ClassLoader에서** 찾습니다(Bukkit `ItemStack` 포함).
 
-- 런타임: 서버의 ClassLoader
-- 테스트: 버전별로 격리된 `URLClassLoader`
+- 런타임: 서버 자신의 ClassLoader (`ServerRuntime.current()`가 `CraftServer` 클래스의 ClassLoader를 담아 둠). 플러그인 ClassLoader는 다른 플러그인 jar까지 검색하므로 쓰지 않습니다.
+- 테스트: 버전별로 격리된 `URLClassLoader` (`ServerRuntime.detect(craftServerClass, loader)`)
 
 이렇게 하면 테스트가 플러그인과 **같은 해석 코드**를 실행합니다. 모든 멤버는 플러그인 활성화 시점에 미리 해석되며, 실패하면 플러그인이 "지원하지 않는 버전"으로 비활성화됩니다.
+
+```java
+ServerRuntime runtime = ServerRuntime.current();                        // 패키지, 이름 체계, ClassLoader
+InventoryAccess access = InventoryAccessFactory.create(version, runtime);
+```
+
+`InventoryAccessProvider`(dev 샌드박스)는 플러그인 jar의 `META-INF/services`에 있으므로, 서버 ClassLoader가 아니라 `InventoryAccessProvider` 클래스 자신의 ClassLoader(= 플러그인 jar)로 찾습니다.
 
 ### 3.5 버전 감지
 
@@ -120,6 +131,30 @@ public interface InventoryAccess {
 - Paper: `Server#getMinecraftVersion()`(리플렉션)을 사용합니다. Paper 26.x의 `getBukkitVersion()`은 `26.1.2.build.63-stable` 형식입니다 ([PaperMC/Paper#13885](https://github.com/PaperMC/Paper/issues/13885)).
 - Spigot: `Bukkit.getBukkitVersion()`에서 `-` 앞부분을 사용합니다.
 - 26.1 이상은 `atLeast("26.1")` 행으로 처리합니다. 난독화가 없어 이름이 안정적이므로 미래 버전도 일단 시도하고, 해석에 실패하면 비활성화합니다.
+
+### 3.5.1 런타임 감지 (`ServerRuntime`)
+
+Paper, Spigot에 따라 사용되는 NMS이름이 다른 이슈를 수정했습니다.
+
+| 서버                             | CraftBukkit 패키지               | NMS 이름              |
+|----------------------------------|----------------------------------|-----------------------|
+| Spigot ≤ 1.21.11, Paper ≤ 1.20.4 | `org.bukkit.craftbukkit.vX_Y_RZ` | Spigot (1.17+ 난독화) |
+| Paper 1.20.4 mojang 빌드         | `v1_20_R3`                       | **Mojang**            |
+| Paper 1.20.5 – 1.21.11           | **버전 없음**                    | **Mojang**            |
+| Spigot / Paper 26.1+             | 버전 없음                        | Mojang                |
+
+- **CraftBukkit 패키지**: `Bukkit.getServer().getClass()`(= `CraftServer`)의 패키지에서 읽습니다. 매핑표의 패키지 값은 Spigot 릴리스 기준이며, 테스트에서 실제 jar와 일치하는지만 확인합니다.
+- **이름 체계**: `net.minecraft.world.entity.player.Inventory` 클래스가 있으면 `MOJANG`입니다(Spigot 1.17 – 1.21.11에서는 `PlayerInventory`).
+- `NmsLayout.forRuntime(runtime)`이 행의 Spigot 이름을, 런타임이 `MOJANG`이면 **같은 모델의 Mojang 이름**(`LegacyNames.mojang()`, `ModernNames.mojang()`)으로 바꾸고, CraftBukkit 패키지를 런타임 값으로 채웁니다. Mojang 이름은 각 모델 안에서 바뀌지 않았습니다(1.17.1 – 1.21.4, 1.21.5 – 26.2 javap 확인).
+
+| Legacy Mojang 이름 (1.17 – 1.21.4) |                                                                                             |
+|------------------------------------|---------------------------------------------------------------------------------------------|
+| 플레이어 / 인벤토리 접근           | `net.minecraft.server.level.ServerPlayer`, `getInventory()`                                 |
+| 인벤토리 / 필드                    | `net.minecraft.world.entity.player.Inventory` — `items`, `armor`, `offhand`, `compartments` |
+| 빈 아이템 / 리스트 생성            | `ItemStack.EMPTY`, `NonNullList.withSize`                                                   |
+
+- 플러그인 활성화 로그: `Minecraft 1.21.4 (CraftBukkit (not relocated), MOJANG names), using LegacyInventoryAccess`
+- Paper의 Spigot→Mojang 리플렉션 자동 변환에는 기대지 않습니다. 이 플러그인의 3인자 `Class.forName`은 변환되지 않았습니다.
 
 ### 3.6 Legacy 매핑 (1.12 – 1.21.4)
 
@@ -223,7 +258,7 @@ extraSlots: [ ...1개 ]    # 슬롯 40 (offhand)
 
 ## 7. 알려진 위험 요소
 
-- **Paper 1.20.5 – 1.21.11**: Paper는 이 구간에서 런타임에 Mojang 이름을 사용합니다. Spigot 이름 리플렉션이 동작하지 않으면 `Namespace.MOJANG` 행을 재사용합니다(런타임에 `net.minecraft.world.entity.player.Inventory` 존재 여부로 선택).
+- ~~**Paper 1.20.5 – 1.21.11**: Spigot 이름 리플렉션이 동작하지 않을 수 있음~~ → 실제로 실패함을 확인하고 런타임 감지(§3.5.1)로 대응했습니다.
 - **JEP 500 (JDK 26, "Prepare to Make Final Mean Final")**: 리플렉션으로 final 필드를 바꾸는 것에 경고가 나오고 이후 기본 차단될 예정입니다. 이 플러그인의 핵심 동작이므로, 필요해지면 `InventoryAccess` 뒤에서 "내용 복사 동기화" 구현으로 교체합니다.
 - **Modern 장비 맵 공유**: `EntityEquipment`의 EnumMap을 통째로 공유하면 플레이어가 쓰지 않는 슬롯(BODY, SADDLE)도 함께 공유됩니다. 무해할 것으로 보지만 실서버에서 확인합니다.
 

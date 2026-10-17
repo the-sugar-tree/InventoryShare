@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare.nms.modern;
 
+import com.sugar_tree.inventoryshare.nms.Namespace;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 

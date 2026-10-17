@@ -18,13 +18,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.modern;
+package com.sugar_tree.inventoryshare.nms;
 
 import lombok.Getter;
 
 /**
- * NMS class names of the modern inventory model, which differ between Spigot's mappings (1.21.5 - 1.21.11)
- * and Mojang's unobfuscated names (26.1+).
+ * Which names the running server uses for NMS classes and members.
+ *
+ * <ul>
+ *   <li>{@link #SPIGOT}: Spigot's mappings (obfuscated member names from 1.17) — every Spigot server up to 1.21.11,
+ *       and Paper up to 1.20.4</li>
+ *   <li>{@link #MOJANG}: Mojang's names — Paper 1.20.5+, Paper's Mojang-mapped 1.20.4 build, and every 26.1+ server</li>
+ * </ul>
+ *
+ * The constants also carry the class names of the modern inventory model (1.21.5+) in each namespace.
+ *
+ * @see ServerRuntime
  */
 @Getter
 public enum Namespace {

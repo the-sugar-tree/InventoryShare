@@ -30,14 +30,18 @@ public final class InventoryAccessFactory {
 
     /**
      * Uses the first {@link InventoryAccessProvider} that supports the version; otherwise picks the
-     * {@link NmsMapping} row for the version and resolves all of its members.
+     * {@link NmsMapping} row for the version and resolves all of its members with the names the runtime uses.
      *
-     * @param loader class loader that can see the server's NMS and CraftBukkit classes, and the plugin's providers
+     * <p>Providers are looked up with the class loader of the jar that contains this class (the plugin jar),
+     * since the server's class loader cannot see the plugin's {@code META-INF/services}.
+     *
+     * @param runtime the server's internals, see {@link ServerRuntime#current()}
      * @throws UnsupportedVersionException if no row matches, or a member of the row cannot be resolved
      */
-    public static @NotNull InventoryAccess create(@NotNull ServerVersion version, @NotNull ClassLoader loader)
+    public static @NotNull InventoryAccess create(@NotNull ServerVersion version, @NotNull ServerRuntime runtime)
             throws UnsupportedVersionException {
-        for (InventoryAccessProvider provider : ServiceLoader.load(InventoryAccessProvider.class, loader)) {
+        ClassLoader pluginLoader = InventoryAccessProvider.class.getClassLoader();
+        for (InventoryAccessProvider provider : ServiceLoader.load(InventoryAccessProvider.class, pluginLoader)) {
             InventoryAccess access = provider.create(version);
             if (access != null) {
                 return access;
@@ -49,10 +53,10 @@ public final class InventoryAccessFactory {
             throw new UnsupportedVersionException("No NMS mapping for Minecraft " + version);
         }
         try {
-            return mapping.getLayout().createAccess(loader);
+            return mapping.getLayout().createAccess(runtime);
         } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
-            throw new UnsupportedVersionException(
-                    "Failed to resolve NMS members of " + mapping.name() + " for Minecraft " + version, e);
+            throw new UnsupportedVersionException("Failed to resolve NMS members of " + mapping.name()
+                    + " for Minecraft " + version + " (" + runtime + ")", e);
         }
     }
 }
