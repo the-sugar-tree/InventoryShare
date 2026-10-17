@@ -26,11 +26,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.AbstractList;
 import java.util.EnumMap;
 import java.util.Map;
+
+import static com.sugar_tree.inventoryshare.nms.Reflections.get;
+import static com.sugar_tree.inventoryshare.nms.Reflections.invoke;
+import static com.sugar_tree.inventoryshare.nms.Reflections.set;
 
 /**
  * {@link InventoryAccess} for 1.21.5+. Swaps the player's {@code Inventory#items} list and the
@@ -44,10 +46,10 @@ public final class ModernInventoryAccess implements InventoryAccess {
     /** EquipmentSlot for slots 36 - 40, indexed by {@code slot - ARMOR_START} */
     private final Object[] equipmentSlots = new Object[SIZE - ARMOR_START];
 
-    ModernInventoryAccess(ModernMembers members) throws IllegalAccessException {
+    ModernInventoryAccess(ModernMembers members) {
         this.members = members;
-        this.emptyItem = members.getEmptyItem().get(null);
-        Map<Integer, ?> slotMapping = (Map<Integer, ?>) members.getSlotMapping().get(null);
+        this.emptyItem = get(members.getEmptyItem(), null);
+        Map<Integer, ?> slotMapping = (Map<Integer, ?>) get(members.getSlotMapping(), null);
         for (int slot = ARMOR_START; slot < SIZE; slot++) {
             Object equipmentSlot = slotMapping.get(slot);
             if (equipmentSlot == null) {
@@ -67,27 +69,19 @@ public final class ModernInventoryAccess implements InventoryAccess {
     @Override
     public @NotNull NmsInventory capture(@NotNull Player player) {
         Object inventory = playerInventory(player);
-        try {
-            Object entityEquipment = members.getEquipment().get(inventory);
-            return new ModernInventory(
-                    (AbstractList<Object>) members.getItems().get(inventory),
-                    (Map<Object, Object>) members.getEquipmentItems().get(entityEquipment));
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
+        Object entityEquipment = get(members.getEquipment(), inventory);
+        return new ModernInventory(
+                (AbstractList<Object>) get(members.getItems(), inventory),
+                (Map<Object, Object>) get(members.getEquipmentItems(), entityEquipment));
     }
 
     @Override
     public void apply(@NotNull Player player, @NotNull NmsInventory inventory) {
         ModernInventory storage = (ModernInventory) inventory;
         Object target = playerInventory(player);
-        try {
-            members.getItems().set(target, storage.items);
-            // The inventory's EntityEquipment is the player's own equipment, so this also changes what others see
-            members.getEquipmentItems().set(members.getEquipment().get(target), storage.equipment);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
+        set(members.getItems(), target, storage.items);
+        // The inventory's EntityEquipment is the player's own equipment, so this also changes what others see
+        set(members.getEquipmentItems(), get(members.getEquipment(), target), storage.equipment);
     }
 
     @Override
@@ -127,19 +121,6 @@ public final class ModernInventoryAccess implements InventoryAccess {
     private Object playerInventory(Player player) {
         Object handle = invoke(members.getGetHandle(), members.getCraftPlayer().cast(player));
         return invoke(members.getGetInventory(), handle);
-    }
-
-    private static Object invoke(Method method, Object target, Object... args) {
-        try {
-            return method.invoke(target, args);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        } catch (InvocationTargetException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof RuntimeException) throw (RuntimeException) cause;
-            if (cause instanceof Error) throw (Error) cause;
-            throw new IllegalStateException(cause);
-        }
     }
 
     private static final class ModernInventory implements NmsInventory {

@@ -27,11 +27,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
+import static com.sugar_tree.inventoryshare.nms.Reflections.accessible;
+import static com.sugar_tree.inventoryshare.nms.Reflections.load;
+
 /**
  * Reflective members for {@link LegacyNames}.
- *
- * <p>Every class is looked up in the given loader without initializing it, so the same resolution runs
- * on a live server and in tests against an isolated Spigot jar.
  */
 @Getter
 public final class LegacyMembers {
@@ -78,14 +78,5 @@ public final class LegacyMembers {
     public static @NotNull LegacyMembers resolve(@NotNull LegacyNames names, @NotNull ClassLoader loader)
             throws ReflectiveOperationException {
         return new LegacyMembers(names, loader);
-    }
-
-    private static Class<?> load(String name, ClassLoader loader) throws ClassNotFoundException {
-        return Class.forName(name, false, loader);
-    }
-
-    private static Field accessible(Field field) {
-        field.setAccessible(true);
-        return field;
     }
 }

@@ -28,9 +28,12 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.AbstractList;
+
+import static com.sugar_tree.inventoryshare.nms.Reflections.get;
+import static com.sugar_tree.inventoryshare.nms.Reflections.invoke;
+import static com.sugar_tree.inventoryshare.nms.Reflections.set;
 
 /**
  * {@link InventoryAccess} for 1.12 - 1.21.4. Swaps the {@code items}, {@code armor}, {@code extraSlots}
@@ -42,9 +45,9 @@ public final class LegacyInventoryAccess implements InventoryAccess {
     private final LegacyMembers members;
     private final Object emptyItem;
 
-    LegacyInventoryAccess(LegacyMembers members) throws IllegalAccessException {
+    LegacyInventoryAccess(LegacyMembers members) {
         this.members = members;
-        this.emptyItem = members.getEmptyItem().get(null);
+        this.emptyItem = get(members.getEmptyItem(), null);
     }
 
     @Override
@@ -55,28 +58,20 @@ public final class LegacyInventoryAccess implements InventoryAccess {
     @Override
     public @NotNull NmsInventory capture(@NotNull Player player) {
         Object inventory = playerInventory(player);
-        try {
-            return new LegacyInventory(
-                    (AbstractList<Object>) members.getItems().get(inventory),
-                    (AbstractList<Object>) members.getArmor().get(inventory),
-                    (AbstractList<Object>) members.getExtraSlots().get(inventory));
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
+        return new LegacyInventory(
+                (AbstractList<Object>) get(members.getItems(), inventory),
+                (AbstractList<Object>) get(members.getArmor(), inventory),
+                (AbstractList<Object>) get(members.getExtraSlots(), inventory));
     }
 
     @Override
     public void apply(@NotNull Player player, @NotNull NmsInventory inventory) {
         LegacyInventory lists = (LegacyInventory) inventory;
         Object target = playerInventory(player);
-        try {
-            members.getItems().set(target, lists.items);
-            members.getArmor().set(target, lists.armor);
-            members.getExtraSlots().set(target, lists.extraSlots);
-            members.getContents().set(target, ImmutableList.of(lists.items, lists.armor, lists.extraSlots));
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
+        set(members.getItems(), target, lists.items);
+        set(members.getArmor(), target, lists.armor);
+        set(members.getExtraSlots(), target, lists.extraSlots);
+        set(members.getContents(), target, ImmutableList.of(lists.items, lists.armor, lists.extraSlots));
     }
 
     @Override
@@ -106,34 +101,13 @@ public final class LegacyInventoryAccess implements InventoryAccess {
     private Object playerInventory(Player player) {
         Object handle = invoke(members.getGetHandle(), members.getCraftPlayer().cast(player));
         if (members.getInventory() instanceof Field) {
-            try {
-                return ((Field) members.getInventory()).get(handle);
-            } catch (IllegalAccessException e) {
-                throw new IllegalStateException(e);
-            }
+            return get((Field) members.getInventory(), handle);
         }
         return invoke((Method) members.getInventory(), handle);
     }
 
     private AbstractList<Object> createItemList(int size) {
         return (AbstractList<Object>) invoke(members.getCreateItemList(), null, size, emptyItem);
-    }
-
-    private static Object invoke(Method method, Object target, Object... args) {
-        try {
-            return method.invoke(target, args);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        } catch (InvocationTargetException e) {
-            throw rethrow(e);
-        }
-    }
-
-    private static RuntimeException rethrow(InvocationTargetException e) {
-        Throwable cause = e.getCause();
-        if (cause instanceof RuntimeException) return (RuntimeException) cause;
-        if (cause instanceof Error) throw (Error) cause;
-        return new IllegalStateException(cause);
     }
 
     private static final class LegacyInventory implements NmsInventory {
