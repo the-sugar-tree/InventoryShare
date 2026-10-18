@@ -35,5 +35,5 @@ public interface InventoryAccessProvider {
     /**
      * @return an access for this server, or {@code null} to fall back to the next provider or {@link NmsMapping}
      */
-    @Nullable InventoryAccess create(@NotNull ServerVersion version);
+    @Nullable InventoryAccess create(@NotNull MinecraftVersion version);
 }

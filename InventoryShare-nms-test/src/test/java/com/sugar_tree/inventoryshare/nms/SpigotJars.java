@@ -70,8 +70,8 @@ final class SpigotJars {
             return mojangRemapped ? mc + "@mojang" : mc;
         }
 
-        ServerVersion version() {
-            return ServerVersion.parse(mc);
+        MinecraftVersion version() {
+            return MinecraftVersion.parse(mc);
         }
 
         /** Remapped jars, and every 26.1+ jar, use Mojang's names */
@@ -111,11 +111,11 @@ final class SpigotJars {
     }
 
     static Stream<String> versionsBelow(String version) {
-        return versions().filter(mc -> ServerVersion.parse(mc).isOlderThan(version));
+        return versions().filter(mc -> MinecraftVersion.parse(mc).isOlderThan(version));
     }
 
     static Stream<String> versionsFrom(String version) {
-        return versions().filter(mc -> ServerVersion.parse(mc).isAtLeast(version));
+        return versions().filter(mc -> MinecraftVersion.parse(mc).isAtLeast(version));
     }
 
     /**

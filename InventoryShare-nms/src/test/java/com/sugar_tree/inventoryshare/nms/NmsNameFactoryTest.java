@@ -60,7 +60,7 @@ class NmsNameFactoryTest {
             "27.0, MODERN, v26",
     })
     void findsModelAndRow(String text, InventoryModel model, String row) {
-        ServerVersion version = ServerVersion.parse(text);
+        MinecraftVersion version = MinecraftVersion.parse(text);
         assertEquals(model, InventoryModel.of(version));
         Enum<?> found = model == InventoryModel.LEGACY ? LegacyNameTable.find(version) : ModernNameTable.find(version);
         assertEquals(row, found == null ? null : found.name());
@@ -69,7 +69,7 @@ class NmsNameFactoryTest {
     @ParameterizedTest
     @CsvSource({"1.11.2", "1.16", "1.21.12", "25.9"})
     void unsupportedVersionHasNoModel(String version) {
-        assertNull(InventoryModel.of(ServerVersion.parse(version)));
+        assertNull(InventoryModel.of(MinecraftVersion.parse(version)));
     }
 
     @Test
@@ -78,9 +78,9 @@ class NmsNameFactoryTest {
         for (LegacyNameTable row : LegacyNameTable.values()) ranges.add(row.versions);
         for (ModernNameTable row : ModernNameTable.values()) ranges.add(row.versions);
 
-        Set<ServerVersion> seen = new HashSet<>();
+        Set<MinecraftVersion> seen = new HashSet<>();
         for (VersionRange range : ranges) {
-            for (ServerVersion version : range.getVersions()) {
+            for (MinecraftVersion version : range.getVersions()) {
                 assertTrue(seen.add(version), version + " is listed twice");
             }
         }
@@ -198,8 +198,8 @@ class NmsNameFactoryTest {
                 () -> NmsNameFactory.modern(v("1.21.4"), runtime(null, MappingType.MOJANG)));
     }
 
-    private static ServerVersion v(String version) {
-        return ServerVersion.parse(version);
+    private static MinecraftVersion v(String version) {
+        return MinecraftVersion.parse(version);
     }
 
     private static ServerRuntime runtime(String craftbukkitPackage, MappingType mappingType) {

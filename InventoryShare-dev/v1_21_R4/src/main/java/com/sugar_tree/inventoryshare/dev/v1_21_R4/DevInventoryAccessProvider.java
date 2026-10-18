@@ -22,16 +22,16 @@ package com.sugar_tree.inventoryshare.dev.v1_21_R4;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryAccessProvider;
-import com.sugar_tree.inventoryshare.nms.ServerVersion;
+import com.sugar_tree.inventoryshare.nms.MinecraftVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class DevInventoryAccessProvider implements InventoryAccessProvider {
 
-    private static final ServerVersion TARGET = ServerVersion.parse("1.21.5");
+    private static final MinecraftVersion TARGET = MinecraftVersion.parse("1.21.5");
 
     @Override
-    public @Nullable InventoryAccess create(@NotNull ServerVersion version) {
+    public @Nullable InventoryAccess create(@NotNull MinecraftVersion version) {
         return TARGET.equals(version) ? new DirectInventoryAccess() : null;
     }
 }

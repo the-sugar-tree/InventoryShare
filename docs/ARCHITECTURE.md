@@ -70,14 +70,14 @@ InventoryShare-dev/<ver>  (core를 그대로 쓰고 InventoryAccess만 교체)
 이름(문자열) → 리플렉션 객체 → 실제 조작의 세 단계로 나뉘고, 각 단계는 앞 단계의 결과만 주입받습니다.
 
 ```
-ServerVersion ─┐
-               ├─▶ NmsNameFactory ─▶ *Names ─▶ *Members.resolve(names, loader) ─▶ *InventoryAccess
-ServerRuntime ─┘   (문자열 조립)      (문자열)   (Class / Field / Method)          (리플렉션 수행)
+MinecraftVersion ─┐
+                  ├─▶ NmsNameFactory ─▶ *Names ─▶ *Members.resolve(names, loader) ─▶ *InventoryAccess
+ServerRuntime ────┘   (문자열 조립)      (문자열)   (Class / Field / Method)          (리플렉션 수행)
 ```
 
 | 단계      | 클래스                                              | 하는 일                                                                       | 모르는 것                |
 |-----------|-----------------------------------------------------|-------------------------------------------------------------------------------|--------------------------|
-| 서버 정보 | `ServerVersion`                                     | MC 버전 파싱·비교                                                             | 서버 종류                |
+| 서버 정보 | `MinecraftVersion`                                  | MC 버전 파싱·비교                                                             | 서버 종류                |
 |           | `ServerRuntime`                                     | 서버에서 CraftBukkit 패키지, `MappingType`, ClassLoader를 감지 (§3.5)         | 클래스·멤버 이름         |
 | 이름 조립 | `NmsNameFactory`                                    | 버전과 서버 정보로 **완성된 이름**을 만듦. 이름 규칙은 모두 여기에만 있음     | 리플렉션                 |
 |           | `LegacyNameTable`, `ModernNameTable`                | 버전별 Spigot 멤버 이름표 (데이터만, package-private)                         |                          |
@@ -110,7 +110,7 @@ com.sugar_tree.inventoryshare.nms
 ├─ InventoryAccessFactory    조립 순서
 ├─ InventoryAccessProvider   ServiceLoader 확장점 (dev 샌드박스 전용)
 ├─ UnsupportedVersionException
-├─ ServerVersion             MC 버전 파싱/비교 ("1.21.11")
+├─ MinecraftVersion          MC 버전 파싱/비교 ("1.21.11")
 ├─ ServerRuntime             CraftBukkit 패키지 + MappingType + ClassLoader 감지
 ├─ MappingType               SPIGOT | MOJANG
 ├─ InventoryModel            LEGACY | MODERN, of(version)
@@ -287,7 +287,7 @@ extraSlots: [ ...1개 ]    # 슬롯 40 (offhand)
 ## 5. 테스트
 
 ### 5.1 `InventoryShare-nms` 단위 테스트 (항상 실행)
-- Spigot jar 없이 `ServerVersion` 파싱/비교, `ServerRuntime` 패키지 감지, `NmsNameFactory`의 이름 조립(`ServerRuntime`을 직접 만들어 SPIGOT/MOJANG, 패키지 재배치 여부별로)을 테스트합니다.
+- Spigot jar 없이 `MinecraftVersion` 파싱/비교, `ServerRuntime` 패키지 감지, `NmsNameFactory`의 이름 조립(`ServerRuntime`을 직접 만들어 SPIGOT/MOJANG, 패키지 재배치 여부별로)을 테스트합니다.
 
 ### 5.1.1 `InventoryShare-bukkit` 단위 테스트 (항상 실행)
 - `storage` 패키지: 아이템 로드 가능 여부 판정(`InventoryCodec.checkVersion`), 이유별 로그 문구(`LoadResult`), 백업 파일 생성(`InventoryBackup`).

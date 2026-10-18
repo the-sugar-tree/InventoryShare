@@ -45,7 +45,7 @@ public final class InventoryAccessFactory {
      * @param runtime the server's internals, see {@link ServerRuntime#current()}
      * @throws UnsupportedVersionException if the version is not supported, or a member cannot be resolved
      */
-    public static @NotNull InventoryAccess create(@NotNull ServerVersion version, @NotNull ServerRuntime runtime)
+    public static @NotNull InventoryAccess create(@NotNull MinecraftVersion version, @NotNull ServerRuntime runtime)
             throws UnsupportedVersionException {
         ClassLoader pluginLoader = InventoryAccessProvider.class.getClassLoader();
         for (InventoryAccessProvider provider : ServiceLoader.load(InventoryAccessProvider.class, pluginLoader)) {
@@ -82,7 +82,7 @@ public final class InventoryAccessFactory {
         }
     }
 
-    private static UnsupportedVersionException resolveFailed(InventoryModel model, ServerVersion version,
+    private static UnsupportedVersionException resolveFailed(InventoryModel model, MinecraftVersion version,
                                                              ServerRuntime runtime, Throwable cause) {
         return new UnsupportedVersionException("Failed to resolve NMS members of the " + model
                 + " inventory model for Minecraft " + version + " (" + runtime + ")", cause);

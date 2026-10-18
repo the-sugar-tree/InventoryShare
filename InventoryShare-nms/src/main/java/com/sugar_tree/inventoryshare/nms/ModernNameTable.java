@@ -74,7 +74,7 @@ enum ModernNameTable {
         return getInventory != null;
     }
 
-    static @Nullable ModernNameTable find(@NotNull ServerVersion version) {
+    static @Nullable ModernNameTable find(@NotNull MinecraftVersion version) {
         for (ModernNameTable row : values()) {
             if (row.versions.contains(version)) {
                 return row;

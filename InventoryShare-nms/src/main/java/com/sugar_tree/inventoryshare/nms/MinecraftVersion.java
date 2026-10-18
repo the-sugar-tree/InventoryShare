@@ -36,14 +36,14 @@ import java.util.regex.Pattern;
  * {@code "26.1.2.build.63-stable"} parse to {@code 1.21.11} and {@code 26.1.2}.
  * Missing trailing components count as zero ({@code 1.21} equals {@code 1.21.0}).
  */
-public final class ServerVersion implements Comparable<ServerVersion> {
+public final class MinecraftVersion implements Comparable<MinecraftVersion> {
 
     private static final Pattern NUMERIC_PREFIX = Pattern.compile("^(\\d+(?:\\.\\d+)*)");
 
     private final int[] parts;
     private final String text;
 
-    private ServerVersion(int[] parts, String text) {
+    private MinecraftVersion(int[] parts, String text) {
         this.parts = parts;
         this.text = text;
     }
@@ -52,7 +52,7 @@ public final class ServerVersion implements Comparable<ServerVersion> {
      * @param version e.g. {@code "1.21.11"}, {@code "1.21.11-R0.2-SNAPSHOT"}, {@code "26.1.2.build.63-stable"}
      * @throws IllegalArgumentException if the string does not start with a version number
      */
-    public static @NotNull ServerVersion parse(@NotNull String version) {
+    public static @NotNull MinecraftVersion parse(@NotNull String version) {
         Matcher matcher = NUMERIC_PREFIX.matcher(version.trim());
         if (!matcher.find()) {
             throw new IllegalArgumentException("Not a Minecraft version: " + version);
@@ -63,7 +63,7 @@ public final class ServerVersion implements Comparable<ServerVersion> {
         for (int i = 0; i < split.length; i++) {
             parts[i] = Integer.parseInt(split[i]);
         }
-        return new ServerVersion(parts, text);
+        return new MinecraftVersion(parts, text);
     }
 
     /**
@@ -75,7 +75,7 @@ public final class ServerVersion implements Comparable<ServerVersion> {
      * <a href="https://github.com/PaperMC/Paper/issues/13885">PaperMC/Paper#13885</a>.
      */
     @SuppressWarnings("JavaReflectionMemberAccess")
-    public static @NotNull ServerVersion current() {
+    public static @NotNull MinecraftVersion current() {
         String version;
         try {
             Method getMinecraftVersion = Server.class.getMethod("getMinecraftVersion");
@@ -100,7 +100,7 @@ public final class ServerVersion implements Comparable<ServerVersion> {
     }
 
     @Override
-    public int compareTo(@NotNull ServerVersion other) {
+    public int compareTo(@NotNull MinecraftVersion other) {
         int length = Math.max(parts.length, other.parts.length);
         for (int i = 0; i < length; i++) {
             int a = i < parts.length ? parts[i] : 0;
@@ -112,7 +112,7 @@ public final class ServerVersion implements Comparable<ServerVersion> {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof ServerVersion && compareTo((ServerVersion) o) == 0;
+        return o instanceof MinecraftVersion && compareTo((MinecraftVersion) o) == 0;
     }
 
     @Override

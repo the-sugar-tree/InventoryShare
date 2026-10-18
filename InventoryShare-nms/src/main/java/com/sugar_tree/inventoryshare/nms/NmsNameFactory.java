@@ -52,7 +52,7 @@ public final class NmsNameFactory {
      * @throws UnsupportedVersionException if the version does not use the legacy model, or the server's names are
      *                                     unknown for it (Mojang's names before 1.17)
      */
-    public static @NotNull LegacyNames legacy(@NotNull ServerVersion version, @NotNull ServerRuntime runtime)
+    public static @NotNull LegacyNames legacy(@NotNull MinecraftVersion version, @NotNull ServerRuntime runtime)
             throws UnsupportedVersionException {
         LegacyNameTable row = LegacyNameTable.find(version);
         if (row == null) {
@@ -109,7 +109,7 @@ public final class NmsNameFactory {
      * @throws UnsupportedVersionException if the version does not use the modern model, or the server's names are
      *                                     unknown for it (Spigot's names from 26.1)
      */
-    public static @NotNull ModernNames modern(@NotNull ServerVersion version, @NotNull ServerRuntime runtime)
+    public static @NotNull ModernNames modern(@NotNull MinecraftVersion version, @NotNull ServerRuntime runtime)
             throws UnsupportedVersionException {
         ModernNameTable row = ModernNameTable.find(version);
         if (row == null) {

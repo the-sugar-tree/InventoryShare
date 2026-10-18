@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ServerVersionTest {
+class MinecraftVersionTest {
 
     @ParameterizedTest
     @CsvSource({
@@ -41,27 +41,27 @@ class ServerVersionTest {
             "26.2, 26.2",
     })
     void parsesNumericPrefix(String input, String expected) {
-        assertEquals(expected, ServerVersion.parse(input).toString());
+        assertEquals(expected, MinecraftVersion.parse(input).toString());
     }
 
     @Test
     void rejectsNonVersion() {
-        assertThrows(IllegalArgumentException.class, () -> ServerVersion.parse("git-Paper-1"));
+        assertThrows(IllegalArgumentException.class, () -> MinecraftVersion.parse("git-Paper-1"));
     }
 
     @Test
     void missingComponentsAreZero() {
-        assertEquals(ServerVersion.parse("1.21"), ServerVersion.parse("1.21.0"));
-        assertEquals(ServerVersion.parse("1.21").hashCode(), ServerVersion.parse("1.21.0").hashCode());
-        assertNotEquals(ServerVersion.parse("1.21"), ServerVersion.parse("1.21.1"));
+        assertEquals(MinecraftVersion.parse("1.21"), MinecraftVersion.parse("1.21.0"));
+        assertEquals(MinecraftVersion.parse("1.21").hashCode(), MinecraftVersion.parse("1.21.0").hashCode());
+        assertNotEquals(MinecraftVersion.parse("1.21"), MinecraftVersion.parse("1.21.1"));
     }
 
     @Test
     void comparesNumerically() {
-        assertTrue(ServerVersion.parse("1.21.10").compareTo(ServerVersion.parse("1.21.9")) > 0);
-        assertTrue(ServerVersion.parse("26.1").compareTo(ServerVersion.parse("1.21.11")) > 0);
-        assertTrue(ServerVersion.parse("1.12.2").isOlderThan("1.13"));
-        assertFalse(ServerVersion.parse("1.13").isOlderThan("1.13"));
-        assertTrue(ServerVersion.parse("26.2").isAtLeast("26.1"));
+        assertTrue(MinecraftVersion.parse("1.21.10").compareTo(MinecraftVersion.parse("1.21.9")) > 0);
+        assertTrue(MinecraftVersion.parse("26.1").compareTo(MinecraftVersion.parse("1.21.11")) > 0);
+        assertTrue(MinecraftVersion.parse("1.12.2").isOlderThan("1.13"));
+        assertFalse(MinecraftVersion.parse("1.13").isOlderThan("1.13"));
+        assertTrue(MinecraftVersion.parse("26.2").isAtLeast("26.1"));
     }
 }

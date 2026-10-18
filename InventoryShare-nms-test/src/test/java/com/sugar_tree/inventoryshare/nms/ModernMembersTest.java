@@ -118,7 +118,7 @@ class ModernMembersTest {
     @DisplayName("every modern row is checked by at least one listed version")
     void everyModernRowIsCovered() {
         Set<ModernNameTable> covered = modernVersions()
-                .map(mc -> ModernNameTable.find(ServerVersion.parse(mc)))
+                .map(mc -> ModernNameTable.find(MinecraftVersion.parse(mc)))
                 .collect(Collectors.toSet());
         for (ModernNameTable row : ModernNameTable.values()) {
             assertTrue(covered.contains(row), row + " has no Spigot version in InventoryShare-nms-test/build.gradle");

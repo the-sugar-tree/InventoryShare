@@ -107,7 +107,7 @@ class LegacyMembersTest {
     @DisplayName("every legacy row is checked by at least one listed version")
     void everyLegacyRowIsCovered() {
         Set<LegacyNameTable> covered = legacyVersions()
-                .map(mc -> LegacyNameTable.find(ServerVersion.parse(mc)))
+                .map(mc -> LegacyNameTable.find(MinecraftVersion.parse(mc)))
                 .collect(Collectors.toSet());
         for (LegacyNameTable row : LegacyNameTable.values()) {
             assertTrue(covered.contains(row), row + " has no Spigot version in InventoryShare-nms-test/build.gradle");

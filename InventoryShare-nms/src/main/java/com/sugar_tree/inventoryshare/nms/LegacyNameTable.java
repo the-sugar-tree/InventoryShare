@@ -88,7 +88,7 @@ enum LegacyNameTable {
         return compareTo(v1_17_R1) >= 0;
     }
 
-    static @Nullable LegacyNameTable find(@NotNull ServerVersion version) {
+    static @Nullable LegacyNameTable find(@NotNull MinecraftVersion version) {
         for (LegacyNameTable row : values()) {
             if (row.versions.contains(version)) {
                 return row;

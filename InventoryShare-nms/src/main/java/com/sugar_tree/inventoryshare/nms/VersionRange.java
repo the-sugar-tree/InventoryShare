@@ -32,32 +32,32 @@ import java.util.List;
  */
 final class VersionRange {
 
-    private final List<ServerVersion> versions;
-    private final @Nullable ServerVersion since;
+    private final List<MinecraftVersion> versions;
+    private final @Nullable MinecraftVersion since;
 
-    private VersionRange(List<ServerVersion> versions, @Nullable ServerVersion since) {
+    private VersionRange(List<MinecraftVersion> versions, @Nullable MinecraftVersion since) {
         this.versions = versions;
         this.since = since;
     }
 
     static @NotNull VersionRange of(String... versions) {
-        List<ServerVersion> list = new ArrayList<>(versions.length);
+        List<MinecraftVersion> list = new ArrayList<>(versions.length);
         for (String version : versions) {
-            list.add(ServerVersion.parse(version));
+            list.add(MinecraftVersion.parse(version));
         }
         return new VersionRange(Collections.unmodifiableList(list), null);
     }
 
     static @NotNull VersionRange atLeast(String version) {
-        return new VersionRange(Collections.emptyList(), ServerVersion.parse(version));
+        return new VersionRange(Collections.emptyList(), MinecraftVersion.parse(version));
     }
 
-    boolean contains(@NotNull ServerVersion version) {
+    boolean contains(@NotNull MinecraftVersion version) {
         return versions.contains(version) || since != null && version.compareTo(since) >= 0;
     }
 
     /** The exact versions; empty for an open range */
-    @NotNull List<ServerVersion> getVersions() {
+    @NotNull List<MinecraftVersion> getVersions() {
         return versions;
     }
 }

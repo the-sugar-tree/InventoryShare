@@ -37,7 +37,7 @@ public enum InventoryModel {
     /**
      * @return the model of the version, or {@code null} if the version is not supported
      */
-    public static @Nullable InventoryModel of(@NotNull ServerVersion version) {
+    public static @Nullable InventoryModel of(@NotNull MinecraftVersion version) {
         if (LegacyNameTable.find(version) != null) return LEGACY;
         if (ModernNameTable.find(version) != null) return MODERN;
         return null;
