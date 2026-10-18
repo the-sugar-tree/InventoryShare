@@ -21,7 +21,7 @@
 package com.sugar_tree.inventoryshare.dev.v1_21_R4;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.NmsInventory;
+import com.sugar_tree.inventoryshare.nms.InventoryStorage;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.EntityEquipment;
 import net.minecraft.world.entity.EnumItemSlot;
@@ -50,12 +50,12 @@ public final class DirectInventoryAccess implements InventoryAccess {
     private static final Field EQUIPMENT_ITEMS = accessible(EntityEquipment.class, "b");
 
     @Override
-    public @NotNull NmsInventory createEmpty() {
+    public @NotNull InventoryStorage createEmpty() {
         return new Storage(NonNullList.a(STORAGE_SIZE, ItemStack.l), new EnumMap<>(EnumItemSlot.class));
     }
 
     @Override
-    public @NotNull NmsInventory capture(@NotNull Player player) {
+    public @NotNull InventoryStorage capture(@NotNull Player player) {
         PlayerInventory inventory = inventory(player);
         try {
             return new Storage((NonNullList<ItemStack>) ITEMS.get(inventory),
@@ -66,7 +66,7 @@ public final class DirectInventoryAccess implements InventoryAccess {
     }
 
     @Override
-    public void apply(@NotNull Player player, @NotNull NmsInventory nmsInventory) {
+    public void apply(@NotNull Player player, @NotNull InventoryStorage nmsInventory) {
         Storage storage = (Storage) nmsInventory;
         PlayerInventory inventory = inventory(player);
         try {
@@ -78,7 +78,7 @@ public final class DirectInventoryAccess implements InventoryAccess {
     }
 
     @Override
-    public @NotNull org.bukkit.inventory.ItemStack getItem(@NotNull NmsInventory nmsInventory, int slot) {
+    public @NotNull org.bukkit.inventory.ItemStack getItem(@NotNull InventoryStorage nmsInventory, int slot) {
         Storage storage = (Storage) nmsInventory;
         ItemStack item = slot < ARMOR_START
                 ? storage.items.get(slot)
@@ -87,7 +87,7 @@ public final class DirectInventoryAccess implements InventoryAccess {
     }
 
     @Override
-    public void setItem(@NotNull NmsInventory nmsInventory, int slot, @NotNull org.bukkit.inventory.ItemStack item) {
+    public void setItem(@NotNull InventoryStorage nmsInventory, int slot, @NotNull org.bukkit.inventory.ItemStack item) {
         Storage storage = (Storage) nmsInventory;
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         if (slot < ARMOR_START) {
@@ -117,7 +117,7 @@ public final class DirectInventoryAccess implements InventoryAccess {
         }
     }
 
-    private static final class Storage implements NmsInventory {
+    private static final class Storage implements InventoryStorage {
         private final NonNullList<ItemStack> items;
         private final EnumMap<EnumItemSlot, ItemStack> equipment;
 

@@ -21,7 +21,7 @@
 package com.sugar_tree.inventoryshare.file;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.NmsInventory;
+import com.sugar_tree.inventoryshare.nms.InventoryStorage;
 import com.sugar_tree.inventoryshare.file.LoadResult.SkippedItem;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +33,7 @@ import java.util.Map;
 import static com.sugar_tree.inventoryshare.nms.InventoryAccess.*;
 
 /**
- * Converts an {@link NmsInventory} to and from the {@code items / armor / extraSlots} lists of a config.
+ * Converts an {@link InventoryStorage} to and from the {@code items / armor / extraSlots} lists of a config.
  */
 final class Codec {
 
@@ -51,7 +51,7 @@ final class Codec {
         this.serverDataVersion = serverDataVersion;
     }
 
-    void write(ConfigurationSection config, NmsInventory inventory) {
+    void write(ConfigurationSection config, InventoryStorage inventory) {
         config.set("format-version", FORMAT_VERSION);
         config.set("items", serialize(inventory, STORAGE_START, STORAGE_SIZE));
         config.set("armor", serialize(inventory, ARMOR_START, ARMOR_SIZE));
@@ -61,7 +61,7 @@ final class Codec {
     /**
      * Loads every item that can be loaded into {@code inventory}; the slots of skipped items stay empty.
      */
-    LoadResult read(ConfigurationSection config, NmsInventory inventory) {
+    LoadResult read(ConfigurationSection config, InventoryStorage inventory) {
         List<SkippedItem> skipped = new ArrayList<>();
         deserialize(config.getMapList("items"), inventory, STORAGE_START, STORAGE_SIZE, skipped);
         deserialize(config.getMapList("armor"), inventory, ARMOR_START, ARMOR_SIZE, skipped);
@@ -69,7 +69,7 @@ final class Codec {
         return new LoadResult(config.getInt("format-version", FORMAT_VERSION), serverDataVersion, skipped);
     }
 
-    private List<Map<?, ?>> serialize(NmsInventory inventory, int firstSlot, int count) {
+    private List<Map<?, ?>> serialize(InventoryStorage inventory, int firstSlot, int count) {
         List<Map<?, ?>> serialized = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             serialized.add(access.getItem(inventory, firstSlot + i).serialize());
@@ -78,7 +78,7 @@ final class Codec {
     }
 
     @SuppressWarnings("unchecked")
-    private void deserialize(List<Map<?, ?>> from, NmsInventory to, int firstSlot, int count, List<SkippedItem> skipped) {
+    private void deserialize(List<Map<?, ?>> from, InventoryStorage to, int firstSlot, int count, List<SkippedItem> skipped) {
         for (int i = 0; i < Math.min(from.size(), count); i++) {
             Map<?, ?> item = from.get(i);
             if (item.isEmpty()) {

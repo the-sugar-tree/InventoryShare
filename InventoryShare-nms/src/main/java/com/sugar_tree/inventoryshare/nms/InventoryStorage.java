@@ -23,5 +23,5 @@ package com.sugar_tree.inventoryshare.nms;
 /**
  * Opaque handle to NMS inventory storage. Only the {@link InventoryAccess} that created it can read it.
  */
-public interface NmsInventory {
+public interface InventoryStorage {
 }

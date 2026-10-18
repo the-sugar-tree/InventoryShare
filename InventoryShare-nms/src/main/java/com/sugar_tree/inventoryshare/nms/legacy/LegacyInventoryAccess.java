@@ -22,7 +22,7 @@ package com.sugar_tree.inventoryshare.nms.legacy;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.NmsInventory;
+import com.sugar_tree.inventoryshare.nms.InventoryStorage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -51,22 +51,22 @@ public final class LegacyInventoryAccess implements InventoryAccess {
     }
 
     @Override
-    public @NotNull NmsInventory createEmpty() {
-        return new LegacyInventory(createItemList(STORAGE_SIZE), createItemList(ARMOR_SIZE), createItemList(1));
+    public @NotNull InventoryStorage createEmpty() {
+        return new LegacyStorage(createItemList(STORAGE_SIZE), createItemList(ARMOR_SIZE), createItemList(1));
     }
 
     @Override
-    public @NotNull NmsInventory capture(@NotNull Player player) {
+    public @NotNull InventoryStorage capture(@NotNull Player player) {
         Object inventory = playerInventory(player);
-        return new LegacyInventory(
+        return new LegacyStorage(
                 (AbstractList<Object>) get(members.getItems(), inventory),
                 (AbstractList<Object>) get(members.getArmor(), inventory),
                 (AbstractList<Object>) get(members.getExtraSlots(), inventory));
     }
 
     @Override
-    public void apply(@NotNull Player player, @NotNull NmsInventory inventory) {
-        LegacyInventory lists = (LegacyInventory) inventory;
+    public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
+        LegacyStorage lists = (LegacyStorage) inventory;
         Object target = playerInventory(player);
         set(members.getItems(), target, lists.items);
         set(members.getArmor(), target, lists.armor);
@@ -75,17 +75,17 @@ public final class LegacyInventoryAccess implements InventoryAccess {
     }
 
     @Override
-    public @NotNull ItemStack getItem(@NotNull NmsInventory inventory, int slot) {
-        Object item = list((LegacyInventory) inventory, slot).get(index(slot));
+    public @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot) {
+        Object item = list((LegacyStorage) inventory, slot).get(index(slot));
         return (ItemStack) invoke(members.getAsBukkitCopy(), null, item);
     }
 
     @Override
-    public void setItem(@NotNull NmsInventory inventory, int slot, @NotNull ItemStack item) {
-        list((LegacyInventory) inventory, slot).set(index(slot), invoke(members.getAsNMSCopy(), null, item));
+    public void setItem(@NotNull InventoryStorage inventory, int slot, @NotNull ItemStack item) {
+        list((LegacyStorage) inventory, slot).set(index(slot), invoke(members.getAsNMSCopy(), null, item));
     }
 
-    private static AbstractList<Object> list(LegacyInventory inventory, int slot) {
+    private static AbstractList<Object> list(LegacyStorage inventory, int slot) {
         if (slot < 0 || slot >= SIZE) throw new IndexOutOfBoundsException("slot " + slot);
         if (slot < ARMOR_START) return inventory.items;
         if (slot < OFFHAND_SLOT) return inventory.armor;
@@ -110,12 +110,12 @@ public final class LegacyInventoryAccess implements InventoryAccess {
         return (AbstractList<Object>) invoke(members.getCreateItemList(), null, size, emptyItem);
     }
 
-    private static final class LegacyInventory implements NmsInventory {
+    private static final class LegacyStorage implements InventoryStorage {
         private final AbstractList<Object> items;
         private final AbstractList<Object> armor;
         private final AbstractList<Object> extraSlots;
 
-        private LegacyInventory(AbstractList<Object> items, AbstractList<Object> armor, AbstractList<Object> extraSlots) {
+        private LegacyStorage(AbstractList<Object> items, AbstractList<Object> armor, AbstractList<Object> extraSlots) {
             this.items = items;
             this.armor = armor;
             this.extraSlots = extraSlots;

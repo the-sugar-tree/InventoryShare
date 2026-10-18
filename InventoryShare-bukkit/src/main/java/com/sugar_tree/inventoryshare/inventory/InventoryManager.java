@@ -22,7 +22,7 @@ package com.sugar_tree.inventoryshare.inventory;
 
 import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.NmsInventory;
+import com.sugar_tree.inventoryshare.nms.InventoryStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
@@ -83,7 +83,7 @@ public final class InventoryManager implements IInventoryManager {
     public void applyTeamInventory(@NotNull final Player p, @NotNull final String teamName) {
         if (InventoryState.getInventoryState(p).equals(InventoryState.TEAM)) return;
         if (InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL)) savePlayerInventory(p);
-        NmsInventory teamInventory = registry.getTeamInventory(teamName);
+        InventoryStorage teamInventory = registry.getTeamInventory(teamName);
         if (teamInventory == null) {
             teamInventory = access.createEmpty();
             registry.putTeamInventory(teamName, teamInventory);
@@ -100,7 +100,7 @@ public final class InventoryManager implements IInventoryManager {
     @Override
     public void applyPersonalInventory(@NotNull final Player p) {
         if (InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL)) return;
-        NmsInventory personalInventory = registry.getPlayerInventory(p);
+        InventoryStorage personalInventory = registry.getPlayerInventory(p);
         if (personalInventory != null) {
             try {
                 access.apply(p, personalInventory);

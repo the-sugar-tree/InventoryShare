@@ -22,7 +22,7 @@ package com.sugar_tree.inventoryshare.inventory;
 
 import com.sugar_tree.inventoryshare.file.FileManager;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.NmsInventory;
+import com.sugar_tree.inventoryshare.nms.InventoryStorage;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,16 +42,16 @@ import java.util.*;
 public final class InventoryRegistry {
 
     /** The inventory shared by every player when team inventories are off or the player has no team. */
-    private final NmsInventory sharedInventory;
+    private final InventoryStorage sharedInventory;
 
     /** Team name - the inventory shared by the members of that team */
-    private final Map<String, NmsInventory> teamInventoryMap = new HashMap<>();
+    private final Map<String, InventoryStorage> teamInventoryMap = new HashMap<>();
 
     /**
      * UUID - Player's UUID <br>
-     * NmsInventory - the player's own inventory, saved while a shared one is applied
+     * InventoryStorage - the player's own inventory, saved while a shared one is applied
      */
-    private final Map<UUID, NmsInventory> originalPlayerInventoryMap = new HashMap<>();
+    private final Map<UUID, InventoryStorage> originalPlayerInventoryMap = new HashMap<>();
 
     /**
      * @param access used to create the empty shared inventory
@@ -64,28 +64,28 @@ public final class InventoryRegistry {
      * @return the inventory shared by every player. It is created once and never replaced,
      *         so loading fills this instance instead of swapping it.
      */
-    public @NotNull NmsInventory getSharedInventory() {
+    public @NotNull InventoryStorage getSharedInventory() {
         return sharedInventory;
     }
 
     /**
      * @return the team's inventory, or {@code null} if the team has none yet
      */
-    public @Nullable NmsInventory getTeamInventory(@NotNull String teamName) {
+    public @Nullable InventoryStorage getTeamInventory(@NotNull String teamName) {
         return teamInventoryMap.get(teamName);
     }
 
     /**
      * Sets the team's inventory, replacing any inventory the team already had.
      */
-    public void putTeamInventory(@NotNull String teamName, @NotNull NmsInventory inventory) {
+    public void putTeamInventory(@NotNull String teamName, @NotNull InventoryStorage inventory) {
         teamInventoryMap.put(teamName, inventory);
     }
 
     /**
      * @see #getPlayerInventory(UUID)
      */
-    public @Nullable NmsInventory getPlayerInventory(@NotNull Player p) {
+    public @Nullable InventoryStorage getPlayerInventory(@NotNull Player p) {
         return getPlayerInventory(p.getUniqueId());
     }
 
@@ -93,21 +93,21 @@ public final class InventoryRegistry {
      * @return the player's saved personal inventory, or {@code null} if none is saved,
      *         i.e. the player is currently using their own inventory
      */
-    public @Nullable NmsInventory getPlayerInventory(@NotNull UUID uuid) {
+    public @Nullable InventoryStorage getPlayerInventory(@NotNull UUID uuid) {
         return originalPlayerInventoryMap.get(uuid);
     }
 
     /**
-     * @see #putPlayerInventory(UUID, NmsInventory)
+     * @see #putPlayerInventory(UUID, InventoryStorage)
      */
-    public void putPlayerInventory(@NotNull Player p, @NotNull NmsInventory inventory) {
+    public void putPlayerInventory(@NotNull Player p, @NotNull InventoryStorage inventory) {
         putPlayerInventory(p.getUniqueId(), inventory);
     }
 
     /**
      * Saves the player's personal inventory so it can be restored later.
      */
-    public void putPlayerInventory(@NotNull UUID uuid, @NotNull NmsInventory inventory) {
+    public void putPlayerInventory(@NotNull UUID uuid, @NotNull InventoryStorage inventory) {
         originalPlayerInventoryMap.put(uuid, inventory);
     }
 

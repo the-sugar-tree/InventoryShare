@@ -42,22 +42,22 @@ public interface InventoryAccess {
     /**
      * @return a new inventory with every slot empty, used for the shared and team inventories
      */
-    @NotNull NmsInventory createEmpty();
+    @NotNull InventoryStorage createEmpty();
 
     /**
      * @return the storage the player is currently using (references, not copies)
      */
-    @NotNull NmsInventory capture(@NotNull Player player);
+    @NotNull InventoryStorage capture(@NotNull Player player);
 
     /**
-     * Makes the player use the given storage. Players applied with the same {@link NmsInventory} share it.
+     * Makes the player use the given storage. Players applied with the same {@link InventoryStorage} share it.
      */
-    void apply(@NotNull Player player, @NotNull NmsInventory inventory);
+    void apply(@NotNull Player player, @NotNull InventoryStorage inventory);
 
     /**
      * @return a Bukkit copy of the item in the slot
      */
-    @NotNull ItemStack getItem(@NotNull NmsInventory inventory, int slot);
+    @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot);
 
-    void setItem(@NotNull NmsInventory inventory, int slot, @NotNull ItemStack item);
+    void setItem(@NotNull InventoryStorage inventory, int slot, @NotNull ItemStack item);
 }

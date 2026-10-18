@@ -21,7 +21,7 @@
 package com.sugar_tree.inventoryshare.nms.modern;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.NmsInventory;
+import com.sugar_tree.inventoryshare.nms.InventoryStorage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -60,24 +60,24 @@ public final class ModernInventoryAccess implements InventoryAccess {
     }
 
     @Override
-    public @NotNull NmsInventory createEmpty() {
+    public @NotNull InventoryStorage createEmpty() {
         AbstractList<Object> items = (AbstractList<Object>) invoke(members.getCreateItemList(), null, STORAGE_SIZE, emptyItem);
         Map<Object, Object> equipment = new EnumMap(members.getEquipmentSlot());
-        return new ModernInventory(items, equipment);
+        return new ModernStorage(items, equipment);
     }
 
     @Override
-    public @NotNull NmsInventory capture(@NotNull Player player) {
+    public @NotNull InventoryStorage capture(@NotNull Player player) {
         Object inventory = playerInventory(player);
         Object entityEquipment = get(members.getEquipment(), inventory);
-        return new ModernInventory(
+        return new ModernStorage(
                 (AbstractList<Object>) get(members.getItems(), inventory),
                 (Map<Object, Object>) get(members.getEquipmentItems(), entityEquipment));
     }
 
     @Override
-    public void apply(@NotNull Player player, @NotNull NmsInventory inventory) {
-        ModernInventory storage = (ModernInventory) inventory;
+    public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
+        ModernStorage storage = (ModernStorage) inventory;
         Object target = playerInventory(player);
         set(members.getItems(), target, storage.items);
         // The inventory's EntityEquipment is the player's own equipment, so this also changes what others see
@@ -85,8 +85,8 @@ public final class ModernInventoryAccess implements InventoryAccess {
     }
 
     @Override
-    public @NotNull ItemStack getItem(@NotNull NmsInventory inventory, int slot) {
-        ModernInventory storage = (ModernInventory) inventory;
+    public @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot) {
+        ModernStorage storage = (ModernStorage) inventory;
         Object item;
         if (slot < ARMOR_START) {
             item = storage.items.get(storageIndex(slot));
@@ -98,8 +98,8 @@ public final class ModernInventoryAccess implements InventoryAccess {
     }
 
     @Override
-    public void setItem(@NotNull NmsInventory inventory, int slot, @NotNull ItemStack item) {
-        ModernInventory storage = (ModernInventory) inventory;
+    public void setItem(@NotNull InventoryStorage inventory, int slot, @NotNull ItemStack item) {
+        ModernStorage storage = (ModernStorage) inventory;
         Object nmsItem = invoke(members.getAsNMSCopy(), null, item);
         if (slot < ARMOR_START) {
             storage.items.set(storageIndex(slot), nmsItem);
@@ -123,11 +123,11 @@ public final class ModernInventoryAccess implements InventoryAccess {
         return invoke(members.getGetInventory(), handle);
     }
 
-    private static final class ModernInventory implements NmsInventory {
+    private static final class ModernStorage implements InventoryStorage {
         private final AbstractList<Object> items;
         private final Map<Object, Object> equipment;
 
-        private ModernInventory(AbstractList<Object> items, Map<Object, Object> equipment) {
+        private ModernStorage(AbstractList<Object> items, Map<Object, Object> equipment) {
             this.items = items;
             this.equipment = equipment;
         }

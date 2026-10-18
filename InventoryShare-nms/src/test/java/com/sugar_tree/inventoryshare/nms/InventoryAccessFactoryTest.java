@@ -57,27 +57,27 @@ class InventoryAccessFactoryTest {
         static final String VERSION = "99.0";
         static final InventoryAccess ACCESS = new InventoryAccess() {
             @Override
-            public @NotNull NmsInventory createEmpty() {
+            public @NotNull InventoryStorage createEmpty() {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public @NotNull NmsInventory capture(@NotNull Player player) {
+            public @NotNull InventoryStorage capture(@NotNull Player player) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public void apply(@NotNull Player player, @NotNull NmsInventory inventory) {
+            public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public @NotNull ItemStack getItem(@NotNull NmsInventory inventory, int slot) {
+            public @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public void setItem(@NotNull NmsInventory inventory, int slot, @NotNull ItemStack item) {
+            public void setItem(@NotNull InventoryStorage inventory, int slot, @NotNull ItemStack item) {
                 throw new UnsupportedOperationException();
             }
         };

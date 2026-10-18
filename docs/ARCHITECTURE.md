@@ -106,7 +106,7 @@ ServerRuntime ─┘   (문자열 조립)      (문자열)   (Class / Field / Me
 ```
 com.sugar_tree.inventoryshare.nms
 ├─ InventoryAccess           core가 아는 유일한 NMS 경계
-├─ NmsInventory              불투명 핸들 (Legacy: items/armor/extraSlots, Modern: items/equipment map)
+├─ InventoryStorage          불투명 핸들 (Legacy: items/armor/extraSlots, Modern: items/equipment map)
 ├─ InventoryAccessFactory    조립 순서
 ├─ InventoryAccessProvider   ServiceLoader 확장점 (dev 샌드박스 전용)
 ├─ UnsupportedVersionException
@@ -133,11 +133,11 @@ com.sugar_tree.inventoryshare.nms
 
 ```java
 public interface InventoryAccess {
-    NmsInventory createEmpty();                       // 공유/팀용 빈 인벤토리
-    NmsInventory capture(Player player);              // 플레이어의 현재 리스트/맵 참조
-    void apply(Player player, NmsInventory inv);      // 참조 교체 (공유의 핵심)
-    ItemStack getItem(NmsInventory inv, int slot);    // Bukkit 사본
-    void setItem(NmsInventory inv, int slot, ItemStack item);
+    InventoryStorage createEmpty();                    // 공유/팀용 빈 인벤토리
+    InventoryStorage capture(Player player);           // 플레이어의 현재 리스트/맵 참조
+    void apply(Player player, InventoryStorage inv);   // 참조 교체 (공유의 핵심)
+    ItemStack getItem(InventoryStorage inv, int slot); // Bukkit 사본
+    void setItem(InventoryStorage inv, int slot, ItemStack item);
 }
 ```
 

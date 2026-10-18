@@ -23,7 +23,7 @@ package com.sugar_tree.inventoryshare.file;
 import com.sugar_tree.inventoryshare.interfaces.IFileManager;
 import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.NmsInventory;
+import com.sugar_tree.inventoryshare.nms.InventoryStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -73,7 +73,7 @@ public final class FileManager implements IFileManager {
             if (team == null) continue;
             File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
-            NmsInventory teamInventory = registry.getTeamInventory(team.getName());
+            InventoryStorage teamInventory = registry.getTeamInventory(team.getName());
             if (teamInventory == null) continue;
             writeInventory(fileConfiguration, teamInventory);
             teamInvFileList.put(fileConfiguration, file);
@@ -113,7 +113,7 @@ public final class FileManager implements IFileManager {
         boolean temp = false;
         sb.append(I18N_TEAM_LOADED);
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
-            NmsInventory teamInventory = access.createEmpty();
+            InventoryStorage teamInventory = access.createEmpty();
             File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
             if (file.exists()) {
                 readInventory(YamlConfiguration.loadConfiguration(file), file, "team-" + team.getName(),
@@ -126,7 +126,7 @@ public final class FileManager implements IFileManager {
         if (temp) logger.info(sb.toString());
     }
 
-    private void writeInventory(FileConfiguration config, NmsInventory inventory) {
+    private void writeInventory(FileConfiguration config, InventoryStorage inventory) {
         codec.write(config, inventory);
     }
 
@@ -137,7 +137,7 @@ public final class FileManager implements IFileManager {
      * @param backupName prefix of the backup file name, e.g. {@code inventory} or {@code team-red}
      */
     private void readInventory(FileConfiguration config, File source, String backupName,
-                               NmsInventory inventory, String category) {
+                               InventoryStorage inventory, String category) {
         LoadResult result = codec.read(config, inventory);
         if (result.isComplete()) {
             return;
