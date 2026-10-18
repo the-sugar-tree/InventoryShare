@@ -20,11 +20,13 @@
 
 package com.sugar_tree.inventoryshare.nms;
 
+import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Overrides the built-in {@link NmsMapping} with another {@link InventoryAccess}, found through
+ * Overrides the built-in reflection access ({@link com.sugar_tree.inventoryshare.nms.reflection}) with another
+ * {@link InventoryAccess}, found through
  * {@link java.util.ServiceLoader} ({@code META-INF/services/com.sugar_tree.inventoryshare.nms.InventoryAccessProvider}).
  *
  * <p>Used by the {@code InventoryShare-dev} sandboxes to run the plugin with direct NMS code while a new
@@ -33,7 +35,8 @@ import org.jetbrains.annotations.Nullable;
 public interface InventoryAccessProvider {
 
     /**
-     * @return an access for this server, or {@code null} to fall back to the next provider or {@link NmsMapping}
+     * @return access for this server, or {@code null} to fall back to the next provider or the built-in
+     *         reflection access
      */
     @Nullable InventoryAccess create(@NotNull MinecraftVersion version);
 }

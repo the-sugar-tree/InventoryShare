@@ -18,66 +18,65 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.modern;
+package com.sugar_tree.inventoryshare.nms.reflection.legacy;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
-import static com.sugar_tree.inventoryshare.nms.Reflections.accessible;
-import static com.sugar_tree.inventoryshare.nms.Reflections.load;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.accessible;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.load;
 
 /**
- * Reflective members for {@link ModernNames}.
+ * Reflective members for {@link LegacyNames}.
  */
 @Getter
-public final class ModernMembers {
+public final class LegacyMembers {
 
     private final Class<?> craftPlayer;
     private final Method getHandle;
-    private final Method getInventory;
-    private final Class<?> inventory;
+    /** {@link Field} before 1.17, {@link Method} from 1.17 */
+    private final Member inventory;
+    private final Class<?> playerInventory;
     private final Field items;
-    private final Field equipment;
-    private final Class<?> entityEquipment;
-    private final Field equipmentItems;
-    private final Class<?> equipmentSlot;
-    private final Field slotMapping;
+    private final Field armor;
+    private final Field extraSlots;
+    private final Field contents;
     private final Class<?> itemStack;
     private final Field emptyItem;
-    private final Class<?> nonNullList;
     private final Method createItemList;
     private final Method asBukkitCopy;
     private final Method asNMSCopy;
 
-    private ModernMembers(ModernNames names, ClassLoader loader) throws ReflectiveOperationException {
+    private LegacyMembers(LegacyNames names, ClassLoader loader) throws ReflectiveOperationException {
         craftPlayer = load(names.getCraftPlayerClass(), loader);
         getHandle = craftPlayer.getMethod("getHandle");
-        getInventory = load(names.getPlayerClass(), loader).getMethod(names.getGetInventory());
+        Class<?> inventoryOwner = load(names.getInventoryOwnerClass(), loader);
+        inventory = names.isInventoryField()
+                ? inventoryOwner.getField(names.getInventory())
+                : inventoryOwner.getMethod(names.getInventory());
 
-        inventory = load(names.getInventoryClass(), loader);
-        items = accessible(inventory.getDeclaredField(names.getItems()));
-        equipment = accessible(inventory.getDeclaredField(names.getEquipment()));
-        slotMapping = accessible(inventory.getDeclaredField(names.getSlotMapping()));
-
-        entityEquipment = load(names.getEntityEquipmentClass(), loader);
-        equipmentItems = accessible(entityEquipment.getDeclaredField(names.getEquipmentItems()));
-        equipmentSlot = load(names.getEquipmentSlotClass(), loader);
+        playerInventory = load(names.getPlayerInventoryClass(), loader);
+        items = accessible(playerInventory.getField(names.getItems()));
+        armor = accessible(playerInventory.getField(names.getArmor()));
+        extraSlots = accessible(playerInventory.getField(names.getExtraSlots()));
+        contents = accessible(playerInventory.getDeclaredField(names.getContents()));
 
         itemStack = load(names.getItemStackClass(), loader);
         emptyItem = itemStack.getField(names.getEmptyItem());
-        nonNullList = load(names.getNonNullListClass(), loader);
-        createItemList = nonNullList.getDeclaredMethod(names.getCreateItemList(), int.class, Object.class);
+        createItemList = load(names.getNonNullListClass(), loader)
+                .getDeclaredMethod(names.getCreateItemList(), int.class, Object.class);
 
         Class<?> craftItemStack = load(names.getCraftItemStackClass(), loader);
         asBukkitCopy = craftItemStack.getMethod("asBukkitCopy", itemStack);
         asNMSCopy = craftItemStack.getMethod("asNMSCopy", load(names.getBukkitItemStackClass(), loader));
     }
 
-    public static @NotNull ModernMembers resolve(@NotNull ModernNames names, @NotNull ClassLoader loader)
+    public static @NotNull LegacyMembers resolve(@NotNull LegacyNames names, @NotNull ClassLoader loader)
             throws ReflectiveOperationException {
-        return new ModernMembers(names, loader);
+        return new LegacyMembers(names, loader);
     }
 }

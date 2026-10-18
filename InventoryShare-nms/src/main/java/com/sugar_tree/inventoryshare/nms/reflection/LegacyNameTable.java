@@ -18,12 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms;
+package com.sugar_tree.inventoryshare.nms.reflection;
 
+import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.sugar_tree.inventoryshare.nms.VersionRange.of;
+import static com.sugar_tree.inventoryshare.nms.reflection.VersionRange.of;
 
 /**
  * Spigot's member names of the legacy inventory model ({@code items / armor / extraSlots / contents}, 1.12 - 1.21.4),

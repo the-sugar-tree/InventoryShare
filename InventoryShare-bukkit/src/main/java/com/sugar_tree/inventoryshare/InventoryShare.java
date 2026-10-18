@@ -24,7 +24,11 @@ import com.sugar_tree.inventoryshare.file.FileManager;
 import com.sugar_tree.inventoryshare.inventory.InventoryManager;
 import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.metrics.Metrics;
-import com.sugar_tree.inventoryshare.nms.*;
+import com.sugar_tree.inventoryshare.nms.InventoryAccess;
+import com.sugar_tree.inventoryshare.nms.InventoryAccessFactory;
+import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
+import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
+import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibManager;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibStatus;
 import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
@@ -74,7 +78,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Check if the server version is supported
         MinecraftVersion minecraftVersion = MinecraftVersion.current();
-        if (InventoryModel.of(minecraftVersion) == null) {
+        if (!InventoryAccessFactory.supports(minecraftVersion)) {
             logger.severe(I18NUtil.get(false, false, "not_supported_version", minecraftVersion.toString()));
             this.setEnabled(false); // Disable the plugin if not supported
             return;

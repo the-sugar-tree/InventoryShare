@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.modern;
+package com.sugar_tree.inventoryshare.nms.reflection.modern;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryStorage;
@@ -30,9 +30,9 @@ import java.util.AbstractList;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static com.sugar_tree.inventoryshare.nms.Reflections.get;
-import static com.sugar_tree.inventoryshare.nms.Reflections.invoke;
-import static com.sugar_tree.inventoryshare.nms.Reflections.set;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.get;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.invoke;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.set;
 
 /**
  * {@link InventoryAccess} for 1.21.5+. Swaps the player's {@code Inventory#items} list and the

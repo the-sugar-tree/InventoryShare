@@ -20,12 +20,16 @@
 
 package com.sugar_tree.inventoryshare.nms;
 
-import com.sugar_tree.inventoryshare.nms.legacy.LegacyInventoryAccess;
-import com.sugar_tree.inventoryshare.nms.legacy.LegacyMembers;
-import com.sugar_tree.inventoryshare.nms.legacy.LegacyNames;
-import com.sugar_tree.inventoryshare.nms.modern.ModernInventoryAccess;
-import com.sugar_tree.inventoryshare.nms.modern.ModernMembers;
-import com.sugar_tree.inventoryshare.nms.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.reflection.InventoryModel;
+import com.sugar_tree.inventoryshare.nms.reflection.NmsNameFactory;
+import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyInventoryAccess;
+import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyMembers;
+import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyNames;
+import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernInventoryAccess;
+import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernMembers;
+import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
+import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ServiceLoader;
@@ -80,6 +84,13 @@ public final class InventoryAccessFactory {
             default:
                 throw new AssertionError(model);
         }
+    }
+
+    /**
+     * @return whether there are NMS names for the version; providers are not consulted
+     */
+    public static boolean supports(@NotNull MinecraftVersion version) {
+        return InventoryModel.of(version) != null;
     }
 
     private static UnsupportedVersionException resolveFailed(InventoryModel model, MinecraftVersion version,

@@ -22,7 +22,7 @@ package com.sugar_tree.inventoryshare.dev.v26_2;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryAccessProvider;
-import com.sugar_tree.inventoryshare.nms.MinecraftVersion;
+import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

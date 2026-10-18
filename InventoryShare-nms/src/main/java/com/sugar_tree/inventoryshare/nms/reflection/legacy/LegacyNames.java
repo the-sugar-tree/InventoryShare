@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.legacy;
+package com.sugar_tree.inventoryshare.nms.reflection.legacy;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +28,7 @@ import lombok.NonNull;
  * Every class and member name the legacy inventory model ({@code items / armor / extraSlots / contents},
  * 1.12 - 1.21.4) needs on one server. Class names are fully qualified.
  *
- * @see com.sugar_tree.inventoryshare.nms.NmsNameFactory
+ * @see com.sugar_tree.inventoryshare.nms.reflection.NmsNameFactory
  */
 @Getter
 @Builder

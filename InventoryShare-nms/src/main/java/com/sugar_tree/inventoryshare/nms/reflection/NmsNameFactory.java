@@ -18,10 +18,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms;
+package com.sugar_tree.inventoryshare.nms.reflection;
 
-import com.sugar_tree.inventoryshare.nms.legacy.LegacyNames;
-import com.sugar_tree.inventoryshare.nms.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
+import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyNames;
+import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.server.MappingType;
+import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
+import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -18,8 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms;
+package com.sugar_tree.inventoryshare.nms.reflection;
 
+import com.sugar_tree.inventoryshare.nms.server.MappingType;
+import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import org.junit.jupiter.api.Assumptions;
 
 import java.io.File;

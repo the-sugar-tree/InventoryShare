@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.legacy;
+package com.sugar_tree.inventoryshare.nms.reflection.legacy;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
@@ -31,9 +31,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.AbstractList;
 
-import static com.sugar_tree.inventoryshare.nms.Reflections.get;
-import static com.sugar_tree.inventoryshare.nms.Reflections.invoke;
-import static com.sugar_tree.inventoryshare.nms.Reflections.set;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.get;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.invoke;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.set;
 
 /**
  * {@link InventoryAccess} for 1.12 - 1.21.4. Swaps the {@code items}, {@code armor}, {@code extraSlots}

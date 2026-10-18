@@ -88,11 +88,13 @@ ServerRuntime ────┘   (문자열 조립)      (문자열)   (Class / F
 |           | `Reflections`                                       | `invoke`/`get`/`set`/`load`/`accessible`와 예외 변환 (기술 유틸)              | 마인크래프트             |
 | 조립 순서 | `InventoryAccessFactory`                            | Provider → `InventoryModel` → `NmsNameFactory` → `Members.resolve` → Access   | 이름의 세부              |
 
+패키지: 서버 정보는 `nms.server`, 이름 조립부터 수행까지는 `nms.reflection`, `InventoryAccessFactory`는 `nms` (§3.2).
+
 **두 개의 축**
 
 | 축                      | 기준                                                                                      | 달라지는 것                     | 결정 방법          | 처리하는 곳                    |
 |-------------------------|-------------------------------------------------------------------------------------------|---------------------------------|--------------------|--------------------------------|
-| 모델 (Legacy / Modern)  | 갑옷·왼손 저장 위치: `Inventory`의 `armor`/`offhand` 리스트 ↔ `EntityEquipment` (1.21.5+) | 코드 구조 (Names, Members, Access) | MC 버전 (이름표)   | `legacy/`, `modern/` 패키지    |
+| 모델 (Legacy / Modern)  | 갑옷·왼손 저장 위치: `Inventory`의 `armor`/`offhand` 리스트 ↔ `EntityEquipment` (1.21.5+) | 코드 구조 (Names, Members, Access) | MC 버전 (이름표)   | `reflection.legacy`, `.modern` |
 | 문자열                  | 매핑 종류(Spigot/Mojang), NMS 패키지 형태(1.17 전/후), CraftBukkit 패키지 재배치 여부       | 문자열만                           | 서버 감지 + 버전   | `NmsNameFactory`만             |
 
 - 매핑 종류는 버전만으로 알 수 없습니다. 같은 1.20.4라도 Spigot은 Spigot 이름, Paper mojang 빌드는 Mojang 이름을 씁니다.
@@ -104,30 +106,53 @@ ServerRuntime ────┘   (문자열 조립)      (문자열)   (Class / F
 ### 3.2 패키지
 
 ```
-com.sugar_tree.inventoryshare.nms
+com.sugar_tree.inventoryshare.nms            API: core와 dev 샌드박스가 쓰는 것
 ├─ InventoryAccess           core가 아는 유일한 NMS 경계
 ├─ InventoryStorage          불투명 핸들 (Legacy: items/armor/extraSlots, Modern: items/equipment map)
-├─ InventoryAccessFactory    조립 순서
+├─ InventoryAccessFactory    조립 순서, supports(version)
 ├─ InventoryAccessProvider   ServiceLoader 확장점 (dev 샌드박스 전용)
 ├─ UnsupportedVersionException
-├─ MinecraftVersion          MC 버전 파싱/비교 ("1.21.11")
-├─ ServerRuntime             CraftBukkit 패키지 + MappingType + ClassLoader 감지
-├─ MappingType               SPIGOT | MOJANG
-├─ InventoryModel            LEGACY | MODERN, of(version)
-├─ NmsNameFactory            legacy(version, runtime) / modern(version, runtime) → Names
-├─ LegacyNameTable           버전별 Spigot 멤버 이름 (package-private)
-├─ ModernNameTable           〃
-├─ VersionRange              이름표 행의 버전 목록 / atLeast (package-private)
-├─ Reflections               리플렉션 유틸
-├─ legacy/
-│   ├─ LegacyNames
-│   ├─ LegacyMembers         resolve(LegacyNames, ClassLoader)
-│   └─ LegacyInventoryAccess
-└─ modern/
-    ├─ ModernNames
-    ├─ ModernMembers         resolve(ModernNames, ClassLoader)
-    └─ ModernInventoryAccess
+│
+├─ server/                   ① 서버 조사
+│   ├─ MinecraftVersion      MC 버전 파싱/비교 ("1.21.11")
+│   ├─ ServerRuntime         CraftBukkit 패키지 + MappingType + ClassLoader 감지
+│   └─ MappingType           SPIGOT | MOJANG
+│
+└─ reflection/               ② 리플렉션 수행
+    ├─ Reflections           리플렉션 유틸
+    ├─ InventoryModel        LEGACY | MODERN, of(version)
+    ├─ NmsNameFactory        legacy(version, runtime) / modern(version, runtime) → Names
+    ├─ LegacyNameTable       버전별 Spigot 멤버 이름 (package-private)
+    ├─ ModernNameTable       〃
+    ├─ VersionRange          이름표 행의 버전 목록 / atLeast (package-private)
+    ├─ legacy/
+    │   ├─ LegacyNames
+    │   ├─ LegacyMembers     resolve(LegacyNames, ClassLoader)
+    │   └─ LegacyInventoryAccess
+    └─ modern/
+        ├─ ModernNames
+        ├─ ModernMembers     resolve(ModernNames, ClassLoader)
+        └─ ModernInventoryAccess
 ```
+
+의존 방향:
+
+```
+server            → Bukkit만 (nms, reflection을 모름)
+reflection        → server, nms (InventoryAccess 인터페이스 구현)
+nms (Factory)     → server, reflection
+core              → nms, server  (지원 여부도 InventoryAccessFactory.supports()로 확인)
+```
+
+- 이름 조립(`NmsNameFactory`, 이름표)은 리플렉션에서만 쓰이므로 `reflection`에 둡니다. 이름표와 `VersionRange`는 같은 패키지의 `NmsNameFactory`, `InventoryModel`만 쓰므로 package-private입니다.
+- 테스트는 대상 클래스와 같은 패키지에 둡니다. package-private 멤버를 테스트용으로 공개할 필요가 없습니다.
+
+| 테스트                                                          | 패키지           |
+|-----------------------------------------------------------------|------------------|
+| `MinecraftVersionTest`, `ServerRuntimeTest`                     | `nms.server`     |
+| `NmsNameFactoryTest`                                            | `nms.reflection` |
+| `InventoryAccessFactoryTest`                                    | `nms`            |
+| nms-test `LegacyMembersTest`, `ModernMembersTest`, `SpigotJars` | `nms.reflection` |
 
 ### 3.3 InventoryAccess
 
