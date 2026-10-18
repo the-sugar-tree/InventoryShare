@@ -65,4 +65,10 @@ public interface IInventoryManager {
      */
     Set<UUID> getRegisteredPlayers();
 
+    /**
+     * Drops what is kept for the player; call after {@link #applyPersonalInventory(Player)} when the player leaves
+     * @param p Player who left
+     */
+    void forgetPlayer(@NotNull Player p);
+
 }

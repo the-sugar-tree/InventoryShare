@@ -36,11 +36,16 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public final class FileManager implements IFileManager {
+
+    /** Team inventories are saved as {@code teams/<team name>.yml} */
+    static final String TEAM_FILE_EXTENSION = ".yml";
 
     private final InventoryAccess access;
     private final InventoryRegistry registry;
@@ -71,7 +76,7 @@ public final class FileManager implements IFileManager {
         sb.append(I18N_TEAM_SAVED);
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
             if (team == null) continue;
-            File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
+            File file = teamFile(team.getName());
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
             InventoryStorage teamInventory = registry.getTeamInventory(team.getName());
             if (teamInventory == null) continue;
@@ -114,7 +119,7 @@ public final class FileManager implements IFileManager {
         sb.append(I18N_TEAM_LOADED);
         for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
             InventoryStorage teamInventory = access.createEmpty();
-            File file = new File(new File(plugin.getDataFolder(), "teams"), team.getName() + ".yml");
+            File file = teamFile(team.getName());
             if (file.exists()) {
                 readInventory(YamlConfiguration.loadConfiguration(file), file, "team-" + team.getName(),
                         teamInventory, "Team:" + team.getName());
@@ -177,22 +182,40 @@ public final class FileManager implements IFileManager {
 
     @Override
     public void deleteWasteFiles() {
-        File[] files = new File(plugin.getDataFolder(), "teams").listFiles();
-        if (files != null) {
-            for (File file : files) {
-                List<String> list = new ArrayList<>();
-                for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-                    list.add(team.getName());
-                }
-                if (!list.contains(file.getName())) {
-                    try {
-                        Files.delete(file.toPath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+        File[] files = teamDirectory().listFiles();
+        if (files == null) return;
+        Set<String> teamNames = new HashSet<>();
+        for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+            teamNames.add(team.getName());
+        }
+        for (File file : files) {
+            if (!isWasteTeamFile(file.getName(), teamNames)) continue;
+            try {
+                Files.delete(file.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    private File teamDirectory() {
+        return new File(plugin.getDataFolder(), "teams");
+    }
+
+    private File teamFile(String teamName) {
+        return new File(teamDirectory(), teamName + TEAM_FILE_EXTENSION);
+    }
+
+    /**
+     * @param fileName  name of a file in the {@code teams} folder, e.g. {@code red.yml}
+     * @param teamNames teams that exist on the main scoreboard
+     * @return {@code true} if it is the inventory file of a team that no longer exists.
+     *         Files that are not {@code .yml} are never treated as waste.
+     */
+    static boolean isWasteTeamFile(String fileName, Set<String> teamNames) {
+        if (!fileName.endsWith(TEAM_FILE_EXTENSION)) return false;
+        String teamName = fileName.substring(0, fileName.length() - TEAM_FILE_EXTENSION.length());
+        return !teamNames.contains(teamName);
     }
 
 }

@@ -125,7 +125,7 @@ public final class I18NUtil {
         final FileConfiguration config;
 
         static Bundle getBundle(String locale) throws NoSuchFileException {
-            File file = new File(plugin.getDataFolder(), "/languages/lang_" + locale + ".yml");
+            File file = I18NFileManager.languageFile(plugin.getDataFolder(), locale);
             if (!file.exists()) {
                 throw new NoSuchFileException("There's no language files with name: " + locale + ".yml");
             }
@@ -159,10 +159,17 @@ public final class I18NUtil {
     public static final class I18NFileManager {
         private I18NFileManager() {}
 
+        /**
+         * @return {@code <dataFolder>/languages/lang_<locale>.yml}, built with the platform's path separator
+         */
+        static File languageFile(File dataFolder, String locale) {
+            return new File(new File(dataFolder, "languages"), "lang_" + locale + ".yml");
+        }
+
         public static void saveDefaultLanguageFiles() {
             Set<String> fileNames = new HashSet<>(Arrays.asList("ko_kr", "en_us"));
             for (String locale : fileNames) {
-                File file = new File(plugin.getDataFolder(), "\\languages\\lang_" + locale + ".yml");
+                File file = languageFile(plugin.getDataFolder(), locale);
                 if (!file.exists()) {
                     plugin.saveResource("languages/lang_" + locale + ".yml", false);
                 } else {
@@ -171,10 +178,11 @@ public final class I18NUtil {
             }
         }
         private static void updateFile(String locale) {
-            File file = new File(plugin.getDataFolder(), "\\languages\\lang_" + locale + ".yml");
+            File file = languageFile(plugin.getDataFolder(), locale);
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
+            // A file without FILE_VERSION (edited by hand, or broken) is treated as outdated
             String version = fileConfiguration.getString("FILE_VERSION");
-            if (!version.equals(plugin.getDescription().getVersion())) {
+            if (!plugin.getDescription().getVersion().equals(version)) {
                 logger.warning("Updating Langauge File... [" + locale + "]");
                 InputStream is = InventoryShare.class.getResourceAsStream("/languages/lang_" + locale + ".yml");
                 if (is == null) {
@@ -187,8 +195,8 @@ public final class I18NUtil {
                     if (fileConfiguration.get(key) == null) {
                         fileConfiguration.set(key, defaultConfig.get(key));
                     }
-                    fileConfiguration.set("FILE_VERSION", defaultConfig.get("FILE_VERSION"));
                 }
+                fileConfiguration.set("FILE_VERSION", defaultConfig.get("FILE_VERSION"));
                 try {
                     fileConfiguration.save(file);
                 } catch (IOException e) {

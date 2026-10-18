@@ -41,6 +41,11 @@ public final class InventoryManager implements IInventoryManager {
     private final InventoryAccess access;
     private final InventoryRegistry registry;
 
+    /**
+     * Team whose inventory each player in {@code TEAM} state is using
+     */
+    private final Map<UUID, String> appliedTeams = new HashMap<>();
+
     public InventoryManager(InventoryAccess access, InventoryRegistry registry) {
         this.access = access;
         this.registry = registry;
@@ -76,12 +81,15 @@ public final class InventoryManager implements IInventoryManager {
             e.printStackTrace();
         }
         InventoryState.setInventoryState(p, InventoryState.ALL);
+        appliedTeams.remove(p.getUniqueId());
         p.updateInventory();
     }
 
     @Override
     public void applyTeamInventory(@NotNull final Player p, @NotNull final String teamName) {
-        if (InventoryState.getInventoryState(p).equals(InventoryState.TEAM)) return;
+        // Moving to another team must apply that team's inventory, so only the same team is skipped
+        if (InventoryState.getInventoryState(p).equals(InventoryState.TEAM)
+                && teamName.equals(appliedTeams.get(p.getUniqueId()))) return;
         if (InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL)) savePlayerInventory(p);
         InventoryStorage teamInventory = registry.getTeamInventory(teamName);
         if (teamInventory == null) {
@@ -94,6 +102,7 @@ public final class InventoryManager implements IInventoryManager {
             e.printStackTrace();
         }
         InventoryState.setInventoryState(p, InventoryState.TEAM);
+        appliedTeams.put(p.getUniqueId(), teamName);
         p.updateInventory();
     }
 
@@ -110,6 +119,7 @@ public final class InventoryManager implements IInventoryManager {
             registry.removePlayerInventory(p);
         }
         InventoryState.setInventoryState(p, InventoryState.PERSONAL);
+        appliedTeams.remove(p.getUniqueId());
     }
 
     @Override
@@ -124,6 +134,12 @@ public final class InventoryManager implements IInventoryManager {
         return registry.getSavedPlayers();
     }
 
+    @Override
+    public void forgetPlayer(@NotNull final Player p) {
+        InventoryState.forget(p);
+        appliedTeams.remove(p.getUniqueId());
+    }
+
     private enum InventoryState {
         /**
          * saved and {@link #PERSONAL} inventory state, this state means the player in this state should be applied another inventory now
@@ -132,14 +148,20 @@ public final class InventoryManager implements IInventoryManager {
         TEAM,
         ALL,
         PERSONAL;
-        private static final Map<Player, InventoryState> playerInventoryStateInfo = new HashMap<>();
+        /** Keyed by UUID: a rejoining player gets a new {@link Player} object */
+        private static final Map<UUID, InventoryState> playerInventoryStateInfo = new HashMap<>();
 
         public static void setInventoryState(Player p, InventoryState state) {
-            playerInventoryStateInfo.put(p, state);
+            playerInventoryStateInfo.put(p.getUniqueId(), state);
         }
 
         public static InventoryState getInventoryState(Player p) {
-            return playerInventoryStateInfo.get(p) == null ? PERSONAL : playerInventoryStateInfo.get(p);
+            InventoryState state = playerInventoryStateInfo.get(p.getUniqueId());
+            return state == null ? PERSONAL : state;
+        }
+
+        public static void forget(Player p) {
+            playerInventoryStateInfo.remove(p.getUniqueId());
         }
     }
 
