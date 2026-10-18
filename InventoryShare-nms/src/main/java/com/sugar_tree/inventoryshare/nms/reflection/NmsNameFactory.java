@@ -20,7 +20,7 @@
 
 package com.sugar_tree.inventoryshare.nms.reflection;
 
-import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
+import com.sugar_tree.inventoryshare.nms.IncompatibleServerException;
 import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyNames;
 import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernNames;
 import com.sugar_tree.inventoryshare.nms.server.MappingType;
@@ -53,14 +53,14 @@ public final class NmsNameFactory {
     private NmsNameFactory() {}
 
     /**
-     * @throws UnsupportedVersionException if the version does not use the legacy model, or the server's names are
-     *                                     unknown for it (Mojang's names before 1.17)
+     * @throws IllegalArgumentException    if the version does not use the legacy model
+     * @throws IncompatibleServerException if the server's names are unknown for it (Mojang's names before 1.17)
      */
     public static @NotNull LegacyNames legacy(@NotNull MinecraftVersion version, @NotNull ServerRuntime runtime)
-            throws UnsupportedVersionException {
+            throws IncompatibleServerException {
         LegacyNameTable row = LegacyNameTable.find(version);
         if (row == null) {
-            throw new UnsupportedVersionException("Minecraft " + version + " does not use the legacy inventory model");
+            throw new IllegalArgumentException("Minecraft " + version + " does not use the legacy inventory model");
         }
         String pkg = runtime.getCraftbukkitPackage();
         LegacyNames.LegacyNamesBuilder names = LegacyNames.builder()
@@ -71,10 +71,10 @@ public final class NmsNameFactory {
 
         if (!row.isFlattened()) {
             if (runtime.getMappingType() == MappingType.MOJANG) {
-                throw new UnsupportedVersionException("No Mojang names for Minecraft " + version + " (before 1.17)");
+                throw new IncompatibleServerException("No Mojang names for Minecraft " + version + " (before 1.17)");
             }
             if (pkg == null) {
-                throw new UnsupportedVersionException("Minecraft " + version + " needs a versioned CraftBukkit package");
+                throw new IncompatibleServerException("Minecraft " + version + " needs a versioned CraftBukkit package");
             }
             names.inventoryOwnerClass(versionedNms(pkg, "EntityHuman"))
                     .playerInventoryClass(versionedNms(pkg, "PlayerInventory"))
@@ -110,14 +110,14 @@ public final class NmsNameFactory {
     }
 
     /**
-     * @throws UnsupportedVersionException if the version does not use the modern model, or the server's names are
-     *                                     unknown for it (Spigot's names from 26.1)
+     * @throws IllegalArgumentException    if the version does not use the modern model
+     * @throws IncompatibleServerException if the server's names are unknown for it (Spigot's names from 26.1)
      */
     public static @NotNull ModernNames modern(@NotNull MinecraftVersion version, @NotNull ServerRuntime runtime)
-            throws UnsupportedVersionException {
+            throws IncompatibleServerException {
         ModernNameTable row = ModernNameTable.find(version);
         if (row == null) {
-            throw new UnsupportedVersionException("Minecraft " + version + " does not use the modern inventory model");
+            throw new IllegalArgumentException("Minecraft " + version + " does not use the modern inventory model");
         }
         String pkg = runtime.getCraftbukkitPackage();
         ModernNames.ModernNamesBuilder names = ModernNames.builder()
@@ -144,7 +144,7 @@ public final class NmsNameFactory {
                     .createItemList("withSize");
         } else {
             if (!row.hasSpigotNames()) {
-                throw new UnsupportedVersionException("No Spigot names for Minecraft " + version);
+                throw new IncompatibleServerException("No Spigot names for Minecraft " + version);
             }
             names.getInventory(row.getInventory)
                     .items(row.items)

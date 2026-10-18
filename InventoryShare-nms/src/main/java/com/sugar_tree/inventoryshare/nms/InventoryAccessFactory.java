@@ -20,82 +20,68 @@
 
 package com.sugar_tree.inventoryshare.nms;
 
-import com.sugar_tree.inventoryshare.nms.reflection.InventoryModel;
-import com.sugar_tree.inventoryshare.nms.reflection.NmsNameFactory;
-import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyInventoryAccess;
-import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyMembers;
-import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyNames;
-import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernInventoryAccess;
-import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernMembers;
-import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.reflection.ReflectionAccessProvider;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ServiceLoader;
 
+/**
+ * Picks the {@link InventoryAccessProvider} for a version: the providers registered through
+ * {@link ServiceLoader} first, then the built-in {@link ReflectionAccessProvider}. {@link #supports(MinecraftVersion)}
+ * and {@link #create(MinecraftVersion, ServerRuntime)} ask the same providers in the same order, so they always agree.
+ */
 public final class InventoryAccessFactory {
 
     private InventoryAccessFactory() {}
 
     /**
-     * Uses the first {@link InventoryAccessProvider} that supports the version. Otherwise, builds the names of the
-     * version's {@link InventoryModel} for the server, resolves every member up front with the server's class loader,
-     * and creates the access of that model.
-     *
-     * <p>Providers are looked up with the class loader of the jar that contains this class (the plugin jar),
-     * since the server's class loader cannot see the plugin's {@code META-INF/services}.
-     *
-     * @param runtime the server's internals, see {@link ServerRuntime#current()}
-     * @throws UnsupportedVersionException if the version is not supported, or a member cannot be resolved
+     * @return whether any provider supports the version
      */
-    public static @NotNull InventoryAccess create(@NotNull MinecraftVersion version, @NotNull ServerRuntime runtime)
-            throws UnsupportedVersionException {
-        ClassLoader pluginLoader = InventoryAccessProvider.class.getClassLoader();
-        for (InventoryAccessProvider provider : ServiceLoader.load(InventoryAccessProvider.class, pluginLoader)) {
-            InventoryAccess access = provider.create(version);
-            if (access != null) {
-                return access;
-            }
-        }
-
-        InventoryModel model = InventoryModel.of(version);
-        if (model == null) {
-            throw new UnsupportedVersionException("No NMS names for Minecraft " + version);
-        }
-        ClassLoader loader = runtime.getClassLoader();
-        switch (model) {
-            case LEGACY: {
-                LegacyNames names = NmsNameFactory.legacy(version, runtime);
-                try {
-                    return new LegacyInventoryAccess(LegacyMembers.resolve(names, loader));
-                } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
-                    throw resolveFailed(model, version, runtime, e);
-                }
-            }
-            case MODERN: {
-                ModernNames names = NmsNameFactory.modern(version, runtime);
-                try {
-                    return new ModernInventoryAccess(ModernMembers.resolve(names, loader));
-                } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
-                    throw resolveFailed(model, version, runtime, e);
-                }
-            }
-            default:
-                throw new AssertionError(model);
-        }
+    public static boolean supports(@NotNull MinecraftVersion version) {
+        return find(version) != null;
     }
 
     /**
-     * @return whether there are NMS names for the version; providers are not consulted
+     * Creates the access with the first provider that supports the version.
+     *
+     * @param runtime the server's internals, see {@link ServerRuntime#current()}
+     * @throws UnsupportedVersionException if no provider supports the version
+     * @throws IncompatibleServerException if the provider fails to create the access on this server
      */
-    public static boolean supports(@NotNull MinecraftVersion version) {
-        return InventoryModel.of(version) != null;
+    public static @NotNull InventoryAccess create(@NotNull MinecraftVersion version, @NotNull ServerRuntime runtime)
+            throws UnsupportedVersionException, IncompatibleServerException {
+        InventoryAccessProvider provider = find(version);
+        if (provider == null) {
+            throw new UnsupportedVersionException("Minecraft " + version + " is not supported");
+        }
+        return provider.create(version, runtime);
     }
 
-    private static UnsupportedVersionException resolveFailed(InventoryModel model, MinecraftVersion version,
-                                                             ServerRuntime runtime, Throwable cause) {
-        return new UnsupportedVersionException("Failed to resolve NMS members of the " + model
-                + " inventory model for Minecraft " + version + " (" + runtime + ")", cause);
+    private static @Nullable InventoryAccessProvider find(MinecraftVersion version) {
+        for (InventoryAccessProvider provider : providers()) {
+            if (provider.supports(version)) {
+                return provider;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Registered providers are looked up with the class loader of the jar that contains this class (the plugin jar),
+     * since the server's class loader cannot see the plugin's {@code META-INF/services}.
+     */
+    private static List<InventoryAccessProvider> providers() {
+        List<InventoryAccessProvider> providers = new ArrayList<>();
+        ClassLoader pluginLoader = InventoryAccessProvider.class.getClassLoader();
+        for (InventoryAccessProvider provider : ServiceLoader.load(InventoryAccessProvider.class, pluginLoader)) {
+            providers.add(provider);
+        }
+        providers.add(new ReflectionAccessProvider());
+        return providers;
     }
 }

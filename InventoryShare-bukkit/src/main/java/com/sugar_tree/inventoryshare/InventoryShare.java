@@ -24,6 +24,7 @@ import com.sugar_tree.inventoryshare.file.FileManager;
 import com.sugar_tree.inventoryshare.inventory.InventoryManager;
 import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.metrics.Metrics;
+import com.sugar_tree.inventoryshare.nms.IncompatibleServerException;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryAccessFactory;
 import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
@@ -170,7 +171,11 @@ public final class InventoryShare extends JavaPlugin {
 
             InventoryManager = new InventoryManager(access, registry);
             FileManager = new FileManager(access, registry);
-        } catch (UnsupportedVersionException | RuntimeException e) {
+        } catch (UnsupportedVersionException e) {
+            // Already checked in onEnable; kept so that the two outcomes stay distinct
+            logger.severe(I18NUtil.get(false, false, "not_supported_version", minecraftVersion.toString()));
+            return false;
+        } catch (IncompatibleServerException | RuntimeException e) {
             logger.log(Level.SEVERE, "Could not hook into Minecraft " + minecraftVersion
                     + " (" + Bukkit.getVersion() + "). InventoryShare will be disabled; no inventories were changed.", e);
             logger.severe("This is a bug, not a configuration problem. Please report it with the error above:");

@@ -57,7 +57,7 @@ InventoryShare-dev/<ver>  (core를 그대로 쓰고 InventoryAccess만 교체)
 ### `InventoryShare-dev` 샌드박스
 - `-Pdev`(또는 `gradle.properties`의 `dev=true`)일 때만 settings에 포함됩니다. 하위 폴더 중 `build.gradle`이 있는 것이 자동으로 포함됩니다.
 - 각 샌드박스는 `InventoryShare-bukkit`에 의존하고, 직접 NMS로 작성한 `DirectInventoryAccess`와 `DevInventoryAccessProvider`만 가집니다. 명령어·리스너·저장 등 나머지는 배포 플러그인과 같은 코드입니다.
-- Provider는 `META-INF/services/com.sugar_tree.inventoryshare.nms.InventoryAccessProvider`로 등록되며, 대상 버전이 아닌 서버에서는 `null`을 반환해 리플렉션 구현(§3.1의 흐름)으로 넘어갑니다.
+- Provider는 `META-INF/services/com.sugar_tree.inventoryshare.nms.InventoryAccessProvider`로 등록되며, `supports(version)`가 대상 버전에만 true를 돌려줍니다. 다른 버전은 리플렉션 구현이 맡습니다(§3.2). 이름표에 아직 없는 버전도 샌드박스로 실행할 수 있습니다.
 - 결과물: `InventoryShare-dev/<ver>/build/libs/InventoryShare-dev-<version>-[<ver>].jar` (실행 가능한 플러그인). 활성화 로그에 사용 중인 `InventoryAccess` 구현 이름이 출력됩니다.
 - 새 버전 샌드박스 추가: 기존 폴더를 복사해 `build.gradle`의 Spigot 버전·toolchain, 패키지명, `DevInventoryAccessProvider.TARGET`, services 파일을 바꿉니다.
 
@@ -78,7 +78,7 @@ ServerRuntime ────┘   (문자열 조립)      (문자열)   (Class / F
 | 단계      | 클래스                                              | 하는 일                                                                       | 모르는 것                |
 |-----------|-----------------------------------------------------|-------------------------------------------------------------------------------|--------------------------|
 | 서버 정보 | `MinecraftVersion`                                  | MC 버전 파싱·비교                                                             | 서버 종류                |
-|           | `ServerRuntime`                                     | 서버에서 CraftBukkit 패키지, `MappingType`, ClassLoader를 감지 (§3.5)         | 클래스·멤버 이름         |
+|           | `ServerRuntime`                                     | 서버에서 CraftBukkit 패키지, `MappingType`, ClassLoader를 감지 (§3.6)         | 클래스·멤버 이름         |
 | 이름 조립 | `NmsNameFactory`                                    | 버전과 서버 정보로 **완성된 이름**을 만듦. 이름 규칙은 모두 여기에만 있음     | 리플렉션                 |
 |           | `LegacyNameTable`, `ModernNameTable`                | 버전별 Spigot 멤버 이름표 (데이터만, package-private)                         |                          |
 |           | `InventoryModel`                                    | 버전 → `LEGACY` / `MODERN`                                                    |                          |
@@ -86,9 +86,10 @@ ServerRuntime ────┘   (문자열 조립)      (문자열)   (Class / F
 | 변환      | `LegacyMembers`, `ModernMembers`                    | Names + ClassLoader → `Class`/`Field`/`Method`. 선택 로직 없음                | 버전, 매핑 종류          |
 | 수행      | `LegacyInventoryAccess`, `ModernInventoryAccess`    | 저장소 모양별 capture/apply/슬롯 배치                                         | 이름                     |
 |           | `Reflections`                                       | `invoke`/`get`/`set`/`load`/`accessible`와 예외 변환 (기술 유틸)              | 마인크래프트             |
-| 조립 순서 | `InventoryAccessFactory`                            | Provider → `InventoryModel` → `NmsNameFactory` → `Members.resolve` → Access   | 이름의 세부              |
+| 조립      | `ReflectionAccessProvider`                          | `InventoryModel` → `NmsNameFactory` → `Members.resolve` → Access              | 다른 Provider, 순서      |
+| 선택      | `InventoryAccessFactory`                            | 지원하는 첫 Provider를 고름 (§3.2)                                            | 이름, 모델, 리플렉션     |
 
-패키지: 서버 정보는 `nms.server`, 이름 조립부터 수행까지는 `nms.reflection`, `InventoryAccessFactory`는 `nms` (§3.2).
+패키지: 서버 정보는 `nms.server`, 이름 조립부터 수행까지는 `nms.reflection`, `InventoryAccessFactory`는 `nms` (§3.3).
 
 **두 개의 축**
 
@@ -103,15 +104,44 @@ ServerRuntime ────┘   (문자열 조립)      (문자열)   (Class / F
 
 **Names 주입**: Members는 Names를 어디서 받았는지 모릅니다. 플러그인은 `NmsNameFactory`가 만든 Names를, nms-test는 jar에서 감지한 `ServerRuntime`으로 같은 `NmsNameFactory`를 호출해 얻은 Names를 씁니다. 다른 출처가 필요하면 `LegacyNames.builder()` / `ModernNames.builder()`로 직접 만들 수 있습니다.
 
-### 3.2 패키지
+### 3.2 Provider와 예외
+
+```
+Provider 목록 = [등록 파일(ServiceLoader)로 찾은 Provider들 (dev 샌드박스)..., ReflectionAccessProvider (항상 마지막)]
+
+InventoryAccessFactory.supports(version)        = 목록 중 하나라도 supports(version)
+InventoryAccessFactory.create(version, runtime) = supports(version)가 true인 첫 Provider의 create()
+                                                  아무도 없으면 UnsupportedVersionException
+```
+
+| 클래스                                    | 책임                                                                                           | 모르는 것                         |
+|-------------------------------------------|------------------------------------------------------------------------------------------------|-----------------------------------|
+| `InventoryAccessProvider` (인터페이스)    | `supports(version)`: 이 버전을 맡는지 스스로 판단. 버전만 보고, NMS를 불러오지 않고, 부작용 없음 | 다른 Provider, 순서, 로그         |
+|                                           | `create(version, runtime)`: `supports`가 true일 때만 호출. 완성된 Access 또는 `IncompatibleServerException`, `null` 없음 |   |
+| `ReflectionAccessProvider` (`reflection`) | 이름표에 있는 모든 버전. 모델 판별 → 이름 조립 → Members → Access. 등록 파일로 찾지 않음          | 자신이 마지막이라는 것, 다른 Provider |
+| `DevInventoryAccessProvider` (dev)        | `supports` = 대상 버전 하나, `create` = `DirectInventoryAccess`                                |                                   |
+| `InventoryAccessFactory` (`nms`)          | Provider 목록과 순서. `supports`와 `create`가 **같은 목록, 같은 판단**을 쓰므로 결론이 어긋나지 않음 | 이름표, 모델, 리플렉션            |
+
+- `ReflectionAccessProvider`를 등록 파일로 찾지 않는 이유: ServiceLoader는 순서를 보장하지 않으므로, "항상 마지막"을 Factory가 직접 보장합니다.
+- `supports`가 서버 정보를 받지 않는 이유: 지원 여부는 "이 버전을 지원하기로 했는가"라는 정책입니다. 서버 환경 때문에 생기는 실패는 아래의 `IncompatibleServerException`입니다.
+
+| 예외                          | 뜻                                                    | 던지는 곳                                                        | core의 처리                                   |
+|-------------------------------|-------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------|
+| `UnsupportedVersionException` | 이 플러그인이 지원하지 않는 버전. **신고 불필요**     | `InventoryAccessFactory.create` (지원하는 Provider가 없을 때만) | `not_supported_version`, 비활성화             |
+| `IncompatibleServerException` | 지원하는 버전인데 이 서버에서 Access를 만들지 못함. **버그, 신고 필요** | Provider의 `create` (이름 해석 실패, 있을 수 없는 서버 조합 등)  | "This is a bug... 신고해 주세요", 비활성화   |
+
+core는 `onEnable` 처음에 `InventoryAccessFactory.supports(version)`로 지원 여부를 확인하고, `loadNMS()`에서 `create()`를 호출합니다. 두 메서드가 같은 판단을 쓰므로 Provider만 있는 버전(이름표에 없는 dev 버전)도 통과합니다.
+
+### 3.3 패키지
 
 ```
 com.sugar_tree.inventoryshare.nms            API: core와 dev 샌드박스가 쓰는 것
 ├─ InventoryAccess           core가 아는 유일한 NMS 경계
 ├─ InventoryStorage          불투명 핸들 (Legacy: items/armor/extraSlots, Modern: items/equipment map)
-├─ InventoryAccessFactory    조립 순서, supports(version)
-├─ InventoryAccessProvider   ServiceLoader 확장점 (dev 샌드박스 전용)
-├─ UnsupportedVersionException
+├─ InventoryAccessFactory    Provider 선택, supports(version) / create(version, runtime)
+├─ InventoryAccessProvider   Access를 만드는 구현의 약속 (supports / create)
+├─ UnsupportedVersionException   지원하지 않는 버전
+├─ IncompatibleServerException   지원하는 버전인데 이 서버에서 생성 실패
 │
 ├─ server/                   ① 서버 조사
 │   ├─ MinecraftVersion      MC 버전 파싱/비교 ("1.21.11")
@@ -119,6 +149,7 @@ com.sugar_tree.inventoryshare.nms            API: core와 dev 샌드박스가 �
 │   └─ MappingType           SPIGOT | MOJANG
 │
 └─ reflection/               ② 리플렉션 수행
+    ├─ ReflectionAccessProvider   기본 Provider (항상 마지막)
     ├─ Reflections           리플렉션 유틸
     ├─ InventoryModel        LEGACY | MODERN, of(version)
     ├─ NmsNameFactory        legacy(version, runtime) / modern(version, runtime) → Names
@@ -139,9 +170,9 @@ com.sugar_tree.inventoryshare.nms            API: core와 dev 샌드박스가 �
 
 ```
 server            → Bukkit만 (nms, reflection을 모름)
-reflection        → server, nms (InventoryAccess 인터페이스 구현)
-nms (Factory)     → server, reflection
-core              → nms, server  (지원 여부도 InventoryAccessFactory.supports()로 확인)
+reflection        → server, nms (InventoryAccess, InventoryAccessProvider 구현)
+nms (Factory)     → server, reflection.ReflectionAccessProvider 하나만
+core              → nms, server
 ```
 
 - 이름 조립(`NmsNameFactory`, 이름표)은 리플렉션에서만 쓰이므로 `reflection`에 둡니다. 이름표와 `VersionRange`는 같은 패키지의 `NmsNameFactory`, `InventoryModel`만 쓰므로 package-private입니다.
@@ -150,11 +181,11 @@ core              → nms, server  (지원 여부도 InventoryAccessFactory.supp
 | 테스트                                                          | 패키지           |
 |-----------------------------------------------------------------|------------------|
 | `MinecraftVersionTest`, `ServerRuntimeTest`                     | `nms.server`     |
-| `NmsNameFactoryTest`                                            | `nms.reflection` |
+| `NmsNameFactoryTest`, `ReflectionAccessProviderTest`            | `nms.reflection` |
 | `InventoryAccessFactoryTest`                                    | `nms`            |
 | nms-test `LegacyMembersTest`, `ModernMembersTest`, `SpigotJars` | `nms.reflection` |
 
-### 3.3 InventoryAccess
+### 3.4 InventoryAccess
 
 ```java
 public interface InventoryAccess {
@@ -166,7 +197,7 @@ public interface InventoryAccess {
 }
 ```
 
-### 3.4 슬롯 모델
+### 3.5 슬롯 모델
 
 슬롯 번호는 Bukkit `PlayerInventory.getContents()` 순서와 같습니다.
 
@@ -176,7 +207,7 @@ public interface InventoryAccess {
 | 36 – 39 | 신발, 바지, 갑옷, 투구 | `armor[i - 36]` | `slotMapping.get(i)` → EquipmentSlot |
 | 40      | 왼손                   | `extraSlots[0]` | `slotMapping.get(40)` → OFFHAND      |
 
-### 3.5 서버 감지 (`ServerRuntime`)
+### 3.6 서버 감지 (`ServerRuntime`)
 
 같은 MC 버전이라도 서버에 따라 클래스 이름이 다릅니다.
 
@@ -192,7 +223,7 @@ public interface InventoryAccess {
 - **ClassLoader**: `CraftServer` 클래스의 ClassLoader입니다. 플러그인 ClassLoader는 다른 플러그인 jar까지 검색하므로 쓰지 않습니다.
 - 플러그인 활성화 로그: `Minecraft 1.21.4 (CraftBukkit (not relocated), MOJANG mappings), using LegacyInventoryAccess`
 
-### 3.6 이름 조립 (`NmsNameFactory`)
+### 3.7 이름 조립 (`NmsNameFactory`)
 
 `NmsNameFactory.legacy(version, runtime)` / `modern(version, runtime)`이 클래스 전체 이름과 멤버 이름을 모두 채운 Names를 돌려줍니다. 아무것도 로드하지 않습니다.
 
@@ -201,7 +232,7 @@ public interface InventoryAccess {
 | CraftBukkit 클래스 | `org.bukkit.craftbukkit[.<패키지>].entity.CraftPlayer`, `...inventory.CraftItemStack`           |
 | 1.17 이전 NMS      | `net.minecraft.server.<패키지>.EntityHuman` 등. 인벤토리는 필드(`inventoryField = true`)        |
 | 1.17 이후 NMS      | 평탄화된 패키지. 매핑에 따라 클래스 이름 선택 (아래 표)                                         |
-| SPIGOT 멤버 이름   | 버전별 이름표(§3.8, §3.9)                                                                       |
+| SPIGOT 멤버 이름   | 버전별 이름표(§3.9, §3.10)                                                                       |
 | MOJANG 멤버 이름   | 모델마다 고정 상수. 각 모델 안에서 바뀌지 않았습니다(1.17.1 – 1.21.4, 1.21.5 – 26.2 javap 확인) |
 
 | 클래스 (1.17+)          | SPIGOT                                              | MOJANG                                        |
@@ -219,9 +250,9 @@ public interface InventoryAccess {
 | 필드             | `items`, `armor`, `offhand`, `compartments`                                    | `items`, `equipment`, `EQUIPMENT_SLOT_MAPPING`, `EntityEquipment.items`                           |
 | 아이템           | `ItemStack.EMPTY`, `NonNullList.withSize`                                      | `ItemStack.EMPTY`, `NonNullList.withSize`                                                         |
 
-지원하지 않는 조합은 `UnsupportedVersionException`입니다: 1.17 이전 + MOJANG, 1.17 이전 + 재배치 안 된 패키지, 26.1 이상 + SPIGOT(이름표에 Spigot 이름 없음).
+실제로 존재하지 않는 서버 조합은 `IncompatibleServerException`입니다(서버 감지가 잘못된 것이므로 신고 대상): 1.17 이전 + MOJANG, 1.17 이전 + 재배치 안 된 패키지, 26.1 이상 + SPIGOT(이름표에 Spigot 이름 없음).
 
-### 3.7 멤버 해석, 버전 감지
+### 3.8 멤버 해석, 버전 감지
 
 `LegacyMembers.resolve(names, loader)` / `ModernMembers.resolve(names, loader)`는 **모든 클래스를 인자로 받은 ClassLoader에서** 찾습니다(Bukkit `ItemStack` 포함).
 
@@ -243,7 +274,7 @@ InventoryAccess access = InventoryAccessFactory.create(version, runtime);
 - Spigot: `Bukkit.getBukkitVersion()`에서 `-` 앞부분을 사용합니다.
 - 26.1 이상은 `ModernNameTable.v26`(`atLeast("26.1")`)으로 처리합니다. 난독화가 없어 이름이 안정적이므로 미래 버전도 일단 시도하고, 해석에 실패하면 비활성화합니다.
 
-### 3.8 Legacy 이름표 (`LegacyNameTable`, 1.12 – 1.21.4, SPIGOT)
+### 3.9 Legacy 이름표 (`LegacyNameTable`, 1.12 – 1.21.4, SPIGOT)
 
 | 행                              | MC                   | inventory         | items | armor | extraSlots | contents | emptyItem |
 |---------------------------------|----------------------|-------------------|-------|-------|------------|----------|-----------|
@@ -270,7 +301,7 @@ InventoryAccess access = InventoryAccessFactory.create(version, runtime);
 | v1_21_R2                        | 1.21.2, 1.21.3       | gi()              | g     | h     | i          | l        | j         |
 | v1_21_R3                        | 1.21.4               | gi()              | g     | h     | i          | l        | j         |
 
-### 3.9 Modern 이름표 (`ModernNameTable`, 1.21.5 이상, SPIGOT)
+### 3.10 Modern 이름표 (`ModernNameTable`, 1.21.5 이상, SPIGOT)
 
 | 행       | MC               | getInventory                                  | items | equipment | EntityEquipment.items | slotMapping | EMPTY | createList |
 |----------|------------------|-----------------------------------------------|-------|-----------|-----------------------|-------------|-------|------------|
@@ -278,7 +309,7 @@ InventoryAccess access = InventoryAccessFactory.create(version, runtime);
 | v1_21_R5 | 1.21.6 – 1.21.8  | gs                                            | k     | m         | b                     | i           | l     | a          |
 | v1_21_R6 | 1.21.9 – 1.21.10 | gB                                            | l     | n         | b                     | i           | l     | a          |
 | v1_21_R7 | 1.21.11          | gK                                            | l     | n         | b                     | i           | l     | a          |
-| v26      | 26.1 이상        | (Spigot 이름 없음 — 모든 서버가 MOJANG, §3.6) |
+| v26      | 26.1 이상        | (Spigot 이름 없음 — 모든 서버가 MOJANG, §3.7) |
 
 - AI가 `javap`를 사용해 추출해 낸 이름입니다. 확실하지 않습니다.
 - `ModernMembersTest`가 1.21.5, 1.21.6, 1.21.8, 1.21.10, 1.21.11, 26.1.2, 26.2 jar로 멤버 존재·타입과 슬롯 36 – 40 매핑을 검증했습니다. 1.21.7, 1.21.9는 jar가 없어 검증되지 않은 추정입니다.
@@ -338,7 +369,7 @@ extraSlots: [ ...1개 ]    # 슬롯 40 (offhand)
 
 ## 7. 알려진 위험 요소
 
-- ~~**Paper 1.20.5 – 1.21.11**: Spigot 이름 리플렉션이 동작하지 않을 수 있음~~ → 실제로 실패함을 확인하고 서버 감지(§3.5)와 이름 조립(§3.6)으로 대응했습니다.
+- ~~**Paper 1.20.5 – 1.21.11**: Spigot 이름 리플렉션이 동작하지 않을 수 있음~~ → 실제로 실패함을 확인하고 서버 감지(§3.6)와 이름 조립(§3.7)으로 대응했습니다.
 - **JEP 500 (JDK 26, "Prepare to Make Final Mean Final")**: 리플렉션으로 final 필드를 바꾸는 것에 경고가 나오고 이후 기본 차단될 예정입니다. 이 플러그인의 핵심 동작이므로, 필요해지면 `InventoryAccess` 뒤에서 "내용 복사 동기화" 구현으로 교체합니다.
 - **Modern 장비 맵 공유**: `EntityEquipment`의 EnumMap을 통째로 공유하면 플레이어가 쓰지 않는 슬롯(BODY, SADDLE)도 함께 공유됩니다. 무해할 것으로 보지만 실서버에서 확인합니다.
 

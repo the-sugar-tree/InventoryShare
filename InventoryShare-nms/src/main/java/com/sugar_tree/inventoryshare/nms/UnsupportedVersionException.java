@@ -21,15 +21,12 @@
 package com.sugar_tree.inventoryshare.nms;
 
 /**
- * Thrown when no mapping exists for the server version, or its NMS members cannot be resolved.
+ * Thrown when no {@link InventoryAccessProvider} supports the Minecraft version: the plugin does not support it.
+ * Not a bug; a supported version that fails is an {@link IncompatibleServerException}.
  */
 public class UnsupportedVersionException extends Exception {
 
     public UnsupportedVersionException(String message) {
         super(message);
-    }
-
-    public UnsupportedVersionException(String message, Throwable cause) {
-        super(message, cause);
     }
 }
