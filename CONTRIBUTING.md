@@ -29,18 +29,18 @@ Gradle은 설치된 JDK를 toolchain으로 자동 탐색합니다. `Cannot find 
 
 ## 2. 모듈
 
-| 모듈                       | 설명                                                                | Spigot jar 필요          |
-|----------------------------|---------------------------------------------------------------------|--------------------------|
-| `InventoryShare-bukkit`    | 배포 플러그인 (명령어, 리스너, 저장 등 core)                        | X                        |
-| `InventoryShare-nms`       | `InventoryAccess`와 Legacy/Modern 구현, 버전별 매핑표(`NmsMapping`) | X                        |
-| `InventoryShare-nms-test`  | 매핑표를 실제 Spigot jar로 검증하는 파라미터화 테스트               | 있으면 검증, 없으면 skip |
-| `InventoryShare-dev/<ver>` | 직접 NMS로 작성하는 개발 샌드박스 (`-Pdev`)                         | O                        |
+| 모듈                       | 설명                                                                                        | Spigot jar 필요          |
+|----------------------------|---------------------------------------------------------------------------------------------|--------------------------|
+| `InventoryShare-bukkit`    | 배포 플러그인 (명령어, 리스너, 저장 등 core)                                                | X                        |
+| `InventoryShare-nms`       | `InventoryAccess`와 Legacy/Modern 구현, 버전별 이름표(`LegacyNameTable`, `ModernNameTable`) | X                        |
+| `InventoryShare-nms-test`  | 이름표를 실제 Spigot jar로 검증하는 파라미터화 테스트                                       | 있으면 검증, 없으면 skip |
+| `InventoryShare-dev/<ver>` | 직접 NMS로 작성하는 개발 샌드박스 (`-Pdev`)                                                 | O                        |
 
 ---
 
 ## 3. NMS 매핑 테스트 (BuildTools 필요)
 
-`InventoryShare-nms-test`는 mavenLocal(`~/.m2`)에 설치된 Spigot **서버** jar로 매핑표를 검증합니다.   
+`InventoryShare-nms-test`는 mavenLocal(`~/.m2`)에 설치된 Spigot **서버** jar로 이름표를 검증합니다.   
 이때, BuildTools를 통한 spigot 서버 로컬 빌드가 필수적입니다.
 
 ### 3.1 Spigot 설치
@@ -97,11 +97,11 @@ BuildTools가 `org.spigotmc:spigot:<version>`을 mavenLocal에 설치합니다.
 2. `InventoryShare-dev`의 가장 가까운 샌드박스를 복사해 `DirectInventoryAccess`로 동작을 확인합니다.
    (`build.gradle`의 Spigot 버전과 toolchain, 패키지명, `DevInventoryAccessProvider.TARGET`, `META-INF/services` 파일을 바꿉니다.)
 3. `InventoryShare-nms-test/build.gradle`의 `spigotJars`에 버전을 추가하고 `-PnmsStrict`로 테스트합니다.
-4. 실패하면 `NmsMapping`에 행을 추가합니다. 샌드박스에서 쓴 필드·메서드 이름을 그대로 옮기면 됩니다.
-   인벤토리 모델 자체가 바뀌었다면 새 `InventoryAccess` 구현이 필요합니다.
+4. 실패하면 `LegacyNameTable` 또는 `ModernNameTable`에 행을 추가합니다. 샌드박스에서 쓴 필드·메서드 이름을 그대로 옮기면 됩니다.
+   클래스 이름이나 Mojang 이름이 바뀌었다면 `NmsNameFactory`를, 인벤토리 모델 자체가 바뀌었다면 새 `InventoryAccess` 구현을 만듭니다.
 5. 배포 jar로 실서버 검증을 합니다 (아래 체크리스트).
 
-26.1 이후 버전은 난독화가 없어 `NmsMapping.v26` 행이 그대로 동작할 가능성이 높지만, 3번의 테스트로 꼭 확인하세요.
+26.1 이후 버전은 난독화가 없어 `ModernNameTable.v26` 행(Mojang 이름)이 그대로 동작할 가능성이 높지만, 3번의 테스트로 꼭 확인하세요.
 
 ---
 
