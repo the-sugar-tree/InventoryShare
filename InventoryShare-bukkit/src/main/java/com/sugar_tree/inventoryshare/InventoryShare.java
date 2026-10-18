@@ -20,10 +20,16 @@
 
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.file.FileManager;
+import com.sugar_tree.inventoryshare.inventory.InventoryManager;
+import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.metrics.Metrics;
-import com.sugar_tree.inventoryshare.nms.FileManager;
-import com.sugar_tree.inventoryshare.nms.InventoryManager;
-import com.sugar_tree.inventoryshare.nms.utils.VersionUtil;
+import com.sugar_tree.inventoryshare.nms.IncompatibleServerException;
+import com.sugar_tree.inventoryshare.nms.InventoryAccess;
+import com.sugar_tree.inventoryshare.nms.InventoryAccessFactory;
+import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
+import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
+import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibManager;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibStatus;
 import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
@@ -38,6 +44,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
@@ -71,8 +78,9 @@ public final class InventoryShare extends JavaPlugin {
         UpdateUtil.showUpdateInformation();
 
         // Check if the server version is supported
-        if (VersionUtil.getVersion() == null) {
-            logger.severe(I18NUtil.get(false, false, "not_supported_version", Bukkit.getBukkitVersion()));
+        MinecraftVersion minecraftVersion = MinecraftVersion.current();
+        if (!InventoryAccessFactory.supports(minecraftVersion)) {
+            logger.severe(I18NUtil.get(false, false, "not_supported_version", minecraftVersion.toString()));
             this.setEnabled(false); // Disable the plugin if not supported
             return;
         }
@@ -81,7 +89,7 @@ public final class InventoryShare extends JavaPlugin {
         switch (protocolLibStatus) {
             case ENABLED:
                 // Skip version 1.12 due to differences in packet system
-                if (VersionUtil.getVersion().name().equals("v1_12_R1")) break;
+                if (minecraftVersion.isOlderThan("1.13")) break;
                 new ProtocolLibManager(this).enable(); // Enable ProtocolLib manager
                 logger.info(I18NUtil.get(false, false, "protocolLib_found"));
                 break;
@@ -102,7 +110,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Load NMS (Net Minecraft Server) contents
         // FileManager and InventoryManager are initialized here
-        if (!loadNMS()) {
+        if (!loadNMS(minecraftVersion)) {
             // Disable the plugin if the version is not supported or an error occurs
             this.setEnabled(false);
             return;
@@ -140,7 +148,7 @@ public final class InventoryShare extends JavaPlugin {
             // If not supported version or unexpected exception occurs
             return;
         }
-        // Apply personal inventory for registered players
+        // Apply personal inventory for registered players, so the server saves their own inventory.
         for (UUID puuid : InventoryManager.getRegisteredPlayers()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
@@ -152,15 +160,26 @@ public final class InventoryShare extends JavaPlugin {
         FileManager.save(); // Save file manager data
     }
 
-    private boolean loadNMS() {
+    private boolean loadNMS(MinecraftVersion minecraftVersion) {
         logger.info("Loading Classes...");
         try {
-            FileManager = new FileManager(); // Initialize FileManager
-            InventoryManager = new InventoryManager(); // Initialize InventoryManager
-        } catch (ExceptionInInitializerError e) {
-            logger.severe("An error occurred while loading the classes!");
-            logger.severe("This is NOT EXPECTED ERROR! Report this issue!");
-            e.printStackTrace();
+            ServerRuntime runtime = ServerRuntime.current();
+            InventoryAccess access = InventoryAccessFactory.create(minecraftVersion, runtime);
+
+            InventoryRegistry registry = new InventoryRegistry(access);
+            logger.info("Minecraft " + minecraftVersion + " (" + runtime + "), using " + access.getClass().getSimpleName());
+
+            InventoryManager = new InventoryManager(access, registry);
+            FileManager = new FileManager(access, registry);
+        } catch (UnsupportedVersionException e) {
+            // Already checked in onEnable; kept so that the two outcomes stay distinct
+            logger.severe(I18NUtil.get(false, false, "not_supported_version", minecraftVersion.toString()));
+            return false;
+        } catch (IncompatibleServerException | RuntimeException e) {
+            logger.log(Level.SEVERE, "Could not hook into Minecraft " + minecraftVersion
+                    + " (" + Bukkit.getVersion() + "). InventoryShare will be disabled; no inventories were changed.", e);
+            logger.severe("This is a bug, not a configuration problem. Please report it with the error above:");
+            logger.severe("https://github.com/the-sugar-tree/InventoryShare/issues");
             return false; // Return false if an error occurs
         }
         logger.info("Done!"); // Log completion of loading classes

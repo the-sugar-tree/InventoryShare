@@ -1,0 +1,116 @@
+// Verifies the NMS names built by NmsNameFactory against real Spigot runtime jars installed into mavenLocal by BuildTools,
+// and (1.17+) against the Mojang-named `remapped-mojang` jars, as Paper 1.20.5+ runs with Mojang's names.
+// A jar that is not installed is skipped; run with -PnmsStrict to fail instead.
+
+// Minecraft version -> Spigot artifact version (default classifier = the jar a server runs)
+def spigotJars = [
+        // Legacy (items / armor / extraSlots / contents)
+        '1.12.2' : '1.12.2-R0.1-SNAPSHOT',
+        '1.13'   : '1.13-R0.1-SNAPSHOT',
+        '1.13.1' : '1.13.1-R0.1-SNAPSHOT',
+        '1.13.2' : '1.13.2-R0.1-SNAPSHOT',
+        '1.14.4' : '1.14.4-R0.1-SNAPSHOT',
+        '1.15.2' : '1.15.2-R0.1-SNAPSHOT',
+        '1.16.1' : '1.16.1-R0.1-SNAPSHOT',
+        '1.16.3' : '1.16.3-R0.1-SNAPSHOT',
+        '1.16.5' : '1.16.5-R0.1-SNAPSHOT',
+        '1.17.1' : '1.17.1-R0.1-SNAPSHOT',
+        '1.18'   : '1.18-R0.1-SNAPSHOT',
+        '1.18.2' : '1.18.2-R0.1-SNAPSHOT',
+        '1.19'   : '1.19-R0.1-SNAPSHOT',
+        '1.19.2' : '1.19.2-R0.1-SNAPSHOT',
+        '1.19.3' : '1.19.3-R0.1-SNAPSHOT',
+        '1.19.4' : '1.19.4-R0.1-SNAPSHOT',
+        '1.20.1' : '1.20.1-R0.1-SNAPSHOT',
+        '1.20.2' : '1.20.2-R0.1-SNAPSHOT',
+        '1.20.4' : '1.20.4-R0.1-SNAPSHOT',
+        '1.20.6' : '1.20.6-R0.1-SNAPSHOT',
+        '1.21.1' : '1.21.1-R0.1-SNAPSHOT',
+        '1.21.3' : '1.21.3-R0.1-SNAPSHOT',
+        '1.21.4' : '1.21.4-R0.1-SNAPSHOT',
+        // Modern (items + EntityEquipment)
+        '1.21.5' : '1.21.5-R0.1-SNAPSHOT',
+        '1.21.6' : '1.21.6-R0.1-SNAPSHOT',
+        '1.21.7' : '1.21.7-R0.1-SNAPSHOT',
+        '1.21.8' : '1.21.8-R0.1-SNAPSHOT',
+        '1.21.9' : '1.21.9-R0.1-SNAPSHOT',
+        '1.21.10': '1.21.10-R0.1-SNAPSHOT',
+        '1.21.11': '1.21.11-R0.2-SNAPSHOT',
+        '26.1.2' : '26.1.2-R0.1-SNAPSHOT',
+        '26.2'   : '26.2-R0.1-SNAPSHOT',
+]
+
+// Versions that are also checked with Mojang's names (Paper 1.20.5+, Paper's Mojang-mapped 1.20.4):
+// BuildTools' `--remapped` output, classifier `remapped-mojang`. 26.1+ jars already use Mojang's names.
+def mojangJars = spigotJars.findAll { mc, artifact ->
+    def parts = mc.tokenize('.')*.toInteger()
+    parts[0] == 1 && parts[1] >= 17
+}
+
+// Reading 26.x class files needs a recent JVM; the tests themselves never run NMS code.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
+}
+
+// Each checked jar: key in spigot-classpaths.properties -> [configuration, dependency notation, server jar name]
+def checkedJars = [:]
+spigotJars.each { mc, artifact ->
+    checkedJars[mc] = ["spigot_" + mc.replace('.', '_'), "org.spigotmc:spigot:${artifact}", "spigot-${artifact}.jar"]
+}
+mojangJars.each { mc, artifact ->
+    checkedJars["${mc}@mojang".toString()] = ["spigot_" + mc.replace('.', '_') + "_mojang",
+                                              "org.spigotmc:spigot:${artifact}:remapped-mojang",
+                                              "spigot-${artifact}-remapped-mojang.jar"]
+}
+
+checkedJars.each { key, spec ->
+    configurations.create(spec[0]) {
+        canBeConsumed = false
+    }
+    dependencies.add(spec[0], spec[1])
+}
+
+dependencies {
+    testImplementation project(':InventoryShare-nms')
+    testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+jar {
+    enabled = false
+}
+
+test {
+    useJUnitPlatform()
+    boolean strict = project.hasProperty('nmsStrict')
+    // Classpaths are written to a file: passing them as system properties exceeds the Windows command line limit
+    def classpathFile = layout.buildDirectory.file('spigot-classpaths.properties').get().asFile
+    inputs.property('spigotJars', spigotJars)
+    inputs.property('mojangJars', mojangJars.keySet())
+    inputs.property('nmsStrict', strict)
+    systemProperty 'spigot.versions', spigotJars.keySet().join(',')
+    systemProperty 'spigot.mojangVersions', mojangJars.keySet().join(',')
+    systemProperty 'spigot.classpaths', classpathFile.absolutePath
+    doFirst {
+        def classpaths = new Properties()
+        checkedJars.each { key, spec ->
+            def configuration = configurations.getByName(spec[0])
+            def files = strict
+                    ? configuration.files
+                    : configuration.incoming.artifactView { lenient = true }.files.files
+            // Without the server jar itself the remaining (API/library) jars are useless: treat as not installed
+            def server = files.find { it.name == spec[2] }
+            classpaths.setProperty(key, server ? files.collect { it.absolutePath }.join(File.pathSeparator) : '')
+            classpaths.setProperty(key + '.server', server ? server.absolutePath : '')
+        }
+        classpathFile.parentFile.mkdirs()
+        classpathFile.withOutputStream { classpaths.store(it, 'Spigot runtime classpaths by Minecraft version') }
+    }
+}

@@ -23,7 +23,6 @@ package com.sugar_tree.inventoryshare.interfaces;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.UUID;
 
@@ -71,18 +70,5 @@ public interface IInventoryManager {
      * @param p Player who left
      */
     void forgetPlayer(@NotNull Player p);
-
-    /**
-     * @param obj Object which you want to change field
-     * @param name Field name
-     * @param value Value to change field
-     * @throws NoSuchFieldException if a field with the specified name is not found.
-     * @throws IllegalAccessException if this Field object is enforcing Java language access control and the underlying field is inaccessible or final; or if this Field object has no write access.
-     */
-    default void setField(Class<?> clazz, @NotNull Object obj, @NotNull String name, Object value) throws NoSuchFieldException, IllegalAccessException {
-        Field field = clazz.getDeclaredField(name);
-        field.setAccessible(true);
-        field.set(obj, value);
-    }
 
 }

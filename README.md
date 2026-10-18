@@ -32,7 +32,7 @@ Added 1.20.1-1.21.1 Support
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare/releases)   
 [![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12—1.21.1-green?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare)
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0.html)
-[![Gradle](https://img.shields.io/badge/gradle-8.9-02303A.svg?logo=gradle&style=for-the-badge)](https://gradle.org)
+[![Gradle](https://img.shields.io/badge/gradle-9.6.1-02303A.svg?logo=gradle&style=for-the-badge)](https://gradle.org)
 
 ---
 ### Contacts
@@ -81,6 +81,9 @@ https://blog.naver.com/sugar-tree/222556850608
 - advancement: true
 - announcedeath: false
 - teaminventory: false
+
+## 개발 참여
+빌드 방법과 버전 추가 절차는 [CONTRIBUTING.md](CONTRIBUTING.md), 구조 설명은 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)를 참고하세요.
 
 ## License / 라이센스
 

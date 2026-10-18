@@ -1,0 +1,30 @@
+// NMS access layer shared by every supported Minecraft version.
+// Compiles against spigot-api only; all NMS members are resolved by reflection at runtime.
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 8
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+
+    testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testCompileOnly 'org.jetbrains:annotations:24.0.1'
+}
+
+// Bundled into InventoryShare-bukkit; do not copy this jar into the root build/libs.
+jar.actions.removeIf {
+    (it.properties.get("displayName") == "Execute doLast {} action")
+}
+
+test {
+    useJUnitPlatform()
+}

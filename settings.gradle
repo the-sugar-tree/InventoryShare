@@ -1,20 +1,20 @@
 rootProject.name = 'InventoryShare'
 include 'InventoryShare-bukkit'
+include 'InventoryShare-nms'
+include 'InventoryShare-nms-test'
 
-include 'InventoryShare-single'
-include 'InventoryShare-single:v1_21_R2'
-findProject(':InventoryShare-single:v1_21_R2')?.name = 'v1_21_R2'
-include 'InventoryShare-single:v1_21_R3'
-findProject(':InventoryShare-single:v1_21_R3')?.name = 'v1_21_R3'
-include 'InventoryShare-single:v1_21_R4'
-findProject(':InventoryShare-single:v1_21_R4')?.name = 'v1_21_R4'
-include 'InventoryShare-single:v26_2'
-findProject(':InventoryShare-single:v26_2')?.name = 'v26_2'
-include 'InventoryShare-single:InventoryShare-all'
+// Direct-NMS development sandboxes (need BuildTools jars). Enable with -Pdev or dev=true in gradle.properties.
+if (providers.gradleProperty('dev').isPresent()) {
+    include 'InventoryShare-dev'
+    file("${rootDir}/InventoryShare-dev").eachDir { dir ->
+        if (file("${dir}/build.gradle").exists()) {
+            include "InventoryShare-dev:${dir.name}"
+        }
+    }
+}
 
 //include 'InventoryShare-sponge'
 
 
 //include 'InventoryShare-bukkit:InventoryShare-api'
 //findProject(':InventoryShare-bukkit:InventoryShare-api')?.name = 'InventoryShare-api'
-
