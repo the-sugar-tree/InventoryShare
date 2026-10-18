@@ -29,26 +29,26 @@ import org.jetbrains.annotations.Nullable;
  * The running server's internals: how it names them, and the class loader to find them with.
  * Detected at runtime rather than derived from the Minecraft version.
  *
- * <p>The two naming properties change independently: Paper's Mojang-mapped 1.20.4 build keeps the {@code v1_20_R3}
- * CraftBukkit package but uses Mojang names, while Paper 1.20.5+ drops the package version too.
+ * <p>The CraftBukkit package and the mapping type change independently: Paper's Mojang-mapped 1.20.4 build keeps the
+ * {@code v1_20_R3} package but uses Mojang's mappings, while Paper 1.20.5+ drops the package version too.
  */
 @Getter
 public final class ServerRuntime {
 
     private static final String CRAFTBUKKIT = "org.bukkit.craftbukkit";
-    /** Mojang's name of the player inventory class; Spigot calls it {@code PlayerInventory} (1.17 – 1.21.11) */
+    /** Exists only with Mojang's mappings; Spigot calls the player inventory class {@code PlayerInventory} (1.17 – 1.21.11) */
     static final String MOJANG_PROBE_CLASS = "net.minecraft.world.entity.player.Inventory";
 
     /** {@code vX_Y_RZ}, or {@code null} if CraftBukkit is not relocated (Paper 1.20.5+, 26.1+) */
     private final @Nullable String craftbukkitPackage;
-    private final @NotNull Namespace namespace;
+    private final @NotNull MappingType mappingType;
     /** Loads the server's NMS, CraftBukkit and Bukkit classes */
     private final @NotNull ClassLoader classLoader;
 
-    public ServerRuntime(@Nullable String craftbukkitPackage, @NotNull Namespace namespace,
+    public ServerRuntime(@Nullable String craftbukkitPackage, @NotNull MappingType mappingType,
                          @NotNull ClassLoader classLoader) {
         this.craftbukkitPackage = craftbukkitPackage;
-        this.namespace = namespace;
+        this.mappingType = mappingType;
         this.classLoader = classLoader;
     }
 
@@ -79,8 +79,8 @@ public final class ServerRuntime {
         } else {
             throw new IllegalArgumentException("Not a CraftBukkit server: " + craftServerClass);
         }
-        Namespace namespace = classExists(MOJANG_PROBE_CLASS, classLoader) ? Namespace.MOJANG : Namespace.SPIGOT;
-        return new ServerRuntime(craftbukkitPackage, namespace, classLoader);
+        MappingType mappingType = classExists(MOJANG_PROBE_CLASS, classLoader) ? MappingType.MOJANG : MappingType.SPIGOT;
+        return new ServerRuntime(craftbukkitPackage, mappingType, classLoader);
     }
 
     private static boolean classExists(String name, ClassLoader loader) {
@@ -95,6 +95,6 @@ public final class ServerRuntime {
     @Override
     public String toString() {
         return "CraftBukkit " + (craftbukkitPackage == null ? "(not relocated)" : craftbukkitPackage)
-                + ", " + namespace + " names";
+                + ", " + mappingType + " mappings";
     }
 }

@@ -21,17 +21,18 @@
 package com.sugar_tree.inventoryshare.nms;
 
 /**
- * Which names the running server uses for NMS classes and members.
+ * Which mappings (names of NMS classes and members) the running server uses.
  *
  * <ul>
  *   <li>{@link #SPIGOT}: Spigot's mappings (obfuscated member names from 1.17) — every Spigot server up to 1.21.11,
  *       and Paper up to 1.20.4</li>
- *   <li>{@link #MOJANG}: Mojang's names — Paper 1.20.5+, Paper's Mojang-mapped 1.20.4 build, and every 26.1+ server</li>
+ *   <li>{@link #MOJANG}: Mojang's mappings — Paper 1.20.5+, Paper's Mojang-mapped 1.20.4 build, and every 26.1+
+ *       server</li>
  * </ul>
  *
  * @see ServerRuntime
  */
-public enum Namespace {
+public enum MappingType {
     SPIGOT,
     MOJANG,
 }

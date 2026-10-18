@@ -75,8 +75,8 @@ final class SpigotJars {
         }
 
         /** Remapped jars, and every 26.1+ jar, use Mojang's names */
-        Namespace expectedNamespace() {
-            return mojangRemapped || version().isAtLeast("26.1") ? Namespace.MOJANG : Namespace.SPIGOT;
+        MappingType expectedMappingType() {
+            return mojangRemapped || version().isAtLeast("26.1") ? MappingType.MOJANG : MappingType.SPIGOT;
         }
 
         @Override

@@ -63,7 +63,7 @@ class LegacyMembersTest {
         try (URLClassLoader loader = SpigotJars.open(jar)) {
             // The runtime is detected from the jar and the names are built exactly as on a server
             ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
-            assertEquals(jar.expectedNamespace(), runtime.getNamespace(), "namespace");
+            assertEquals(jar.expectedMappingType(), runtime.getMappingType(), "mapping type");
 
             LegacyNames names = NmsNameFactory.legacy(jar.version(), runtime);
             LegacyMembers members = LegacyMembers.resolve(names, loader);

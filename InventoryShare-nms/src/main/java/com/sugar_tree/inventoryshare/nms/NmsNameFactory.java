@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Three things decide the strings, independently of the {@link InventoryModel}:
  * <ul>
- *   <li>the names the server uses ({@link Namespace}): Spigot's names come from {@link LegacyNameTable} and
+ *   <li>the mappings the server uses ({@link MappingType}): Spigot's names come from {@link LegacyNameTable} and
  *       {@link ModernNameTable}, Mojang's did not change within either model</li>
  *   <li>the NMS package layout: {@code net.minecraft.server.vX_Y_RZ} before 1.17, flattened from 1.17</li>
  *   <li>the CraftBukkit package: {@code org.bukkit.craftbukkit.vX_Y_RZ}, or not relocated</li>
@@ -66,7 +66,7 @@ public final class NmsNameFactory {
                 .inventoryField(!row.isFlattened());
 
         if (!row.isFlattened()) {
-            if (runtime.getNamespace() == Namespace.MOJANG) {
+            if (runtime.getMappingType() == MappingType.MOJANG) {
                 throw new UnsupportedVersionException("No Mojang names for Minecraft " + version + " (before 1.17)");
             }
             if (pkg == null) {
@@ -77,15 +77,15 @@ public final class NmsNameFactory {
                     .itemStackClass(versionedNms(pkg, "ItemStack"))
                     .nonNullListClass(versionedNms(pkg, "NonNullList"));
         } else {
-            names.inventoryOwnerClass(byNamespace(runtime,
+            names.inventoryOwnerClass(byMappingType(runtime,
                             "net.minecraft.server.level.EntityPlayer", "net.minecraft.server.level.ServerPlayer"))
-                    .playerInventoryClass(byNamespace(runtime,
+                    .playerInventoryClass(byMappingType(runtime,
                             "net.minecraft.world.entity.player.PlayerInventory", "net.minecraft.world.entity.player.Inventory"))
                     .itemStackClass(ITEM_STACK)
                     .nonNullListClass(NON_NULL_LIST);
         }
 
-        if (runtime.getNamespace() == Namespace.MOJANG) {
+        if (runtime.getMappingType() == MappingType.MOJANG) {
             names.inventory("getInventory")
                     .items("items")
                     .armor("armor")
@@ -120,17 +120,17 @@ public final class NmsNameFactory {
                 .craftPlayerClass(craftbukkit(pkg, "entity.CraftPlayer"))
                 .craftItemStackClass(craftbukkit(pkg, "inventory.CraftItemStack"))
                 .bukkitItemStackClass(BUKKIT_ITEM_STACK)
-                .playerClass(byNamespace(runtime,
+                .playerClass(byMappingType(runtime,
                         "net.minecraft.world.entity.player.EntityHuman", "net.minecraft.world.entity.player.Player"))
-                .inventoryClass(byNamespace(runtime,
+                .inventoryClass(byMappingType(runtime,
                         "net.minecraft.world.entity.player.PlayerInventory", "net.minecraft.world.entity.player.Inventory"))
                 .entityEquipmentClass(ENTITY_EQUIPMENT)
-                .equipmentSlotClass(byNamespace(runtime,
+                .equipmentSlotClass(byMappingType(runtime,
                         "net.minecraft.world.entity.EnumItemSlot", "net.minecraft.world.entity.EquipmentSlot"))
                 .itemStackClass(ITEM_STACK)
                 .nonNullListClass(NON_NULL_LIST);
 
-        if (runtime.getNamespace() == Namespace.MOJANG) {
+        if (runtime.getMappingType() == MappingType.MOJANG) {
             names.getInventory("getInventory")
                     .items("items")
                     .equipment("equipment")
@@ -162,7 +162,7 @@ public final class NmsNameFactory {
         return "net.minecraft.server." + pkg + "." + simpleName;
     }
 
-    private static String byNamespace(ServerRuntime runtime, String spigot, String mojang) {
-        return runtime.getNamespace() == Namespace.MOJANG ? mojang : spigot;
+    private static String byMappingType(ServerRuntime runtime, String spigot, String mojang) {
+        return runtime.getMappingType() == MappingType.MOJANG ? mojang : spigot;
     }
 }

@@ -68,7 +68,7 @@ class ModernMembersTest {
         try (URLClassLoader loader = SpigotJars.open(jar)) {
             // The runtime is detected from the jar and the names are built exactly as on a server
             ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
-            assertEquals(jar.expectedNamespace(), runtime.getNamespace(), "namespace");
+            assertEquals(jar.expectedMappingType(), runtime.getMappingType(), "mapping type");
 
             ModernNames names = NmsNameFactory.modern(jar.version(), runtime);
             ModernMembers members = ModernMembers.resolve(names, loader);
@@ -110,7 +110,7 @@ class ModernMembersTest {
             assertEquals(bukkitItemStack, members.getAsBukkitCopy().getReturnType());
             assertEquals(itemStack, members.getAsNMSCopy().getReturnType());
 
-            assertSlotMapping(runtime.getNamespace(), members);
+            assertSlotMapping(runtime.getMappingType(), members);
         }
     }
 
@@ -129,14 +129,14 @@ class ModernMembersTest {
      * Slots 36 - 40 must map to feet, legs, chest, head, offhand. Spigot obfuscates the enum constants
      * ({@code a}..{@code h}), so they are compared by ordinal, and by name where names are available.
      */
-    private static void assertSlotMapping(Namespace namespace, ModernMembers members) throws IllegalAccessException {
+    private static void assertSlotMapping(MappingType mappingType, ModernMembers members) throws IllegalAccessException {
         Map<?, ?> slotMapping = (Map<?, ?>) members.getSlotMapping().get(null);
         for (int i = 0; i < SLOT_NAMES.length; i++) {
             int slot = InventoryAccess.ARMOR_START + i;
             Enum<?> equipmentSlot = (Enum<?>) slotMapping.get(slot);
             assertNotNull(equipmentSlot, "no equipment slot for inventory slot " + slot);
             assertEquals(SLOT_ORDINALS[i], equipmentSlot.ordinal(), "inventory slot " + slot);
-            if (namespace == Namespace.MOJANG) {
+            if (mappingType == MappingType.MOJANG) {
                 assertEquals(SLOT_NAMES[i], equipmentSlot.name(), "inventory slot " + slot);
             }
         }

@@ -88,7 +88,7 @@ class NmsNameFactoryTest {
 
     @Test
     void spigotLegacyBefore117() throws UnsupportedVersionException {
-        LegacyNames names = NmsNameFactory.legacy(v("1.16.5"), runtime("v1_16_R3", Namespace.SPIGOT));
+        LegacyNames names = NmsNameFactory.legacy(v("1.16.5"), runtime("v1_16_R3", MappingType.SPIGOT));
 
         assertEquals("org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack", names.getCraftItemStackClass());
@@ -105,7 +105,7 @@ class NmsNameFactoryTest {
 
     @Test
     void spigotLegacyFrom117() throws UnsupportedVersionException {
-        LegacyNames names = NmsNameFactory.legacy(v("1.21.4"), runtime("v1_21_R3", Namespace.SPIGOT));
+        LegacyNames names = NmsNameFactory.legacy(v("1.21.4"), runtime("v1_21_R3", MappingType.SPIGOT));
 
         assertEquals("org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.server.level.EntityPlayer", names.getInventoryOwnerClass());
@@ -121,7 +121,7 @@ class NmsNameFactoryTest {
     @Test
     void mojangLegacy() throws UnsupportedVersionException {
         // Paper 1.20.5 - 1.21.4
-        LegacyNames names = NmsNameFactory.legacy(v("1.21.4"), runtime(null, Namespace.MOJANG));
+        LegacyNames names = NmsNameFactory.legacy(v("1.21.4"), runtime(null, MappingType.MOJANG));
 
         assertEquals("org.bukkit.craftbukkit.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.server.level.ServerPlayer", names.getInventoryOwnerClass());
@@ -139,7 +139,7 @@ class NmsNameFactoryTest {
     @Test
     void mojangLegacyKeepsRelocatedPackage() throws UnsupportedVersionException {
         // Paper's Mojang-mapped 1.20.4 build
-        LegacyNames names = NmsNameFactory.legacy(v("1.20.4"), runtime("v1_20_R3", Namespace.MOJANG));
+        LegacyNames names = NmsNameFactory.legacy(v("1.20.4"), runtime("v1_20_R3", MappingType.MOJANG));
 
         assertEquals("org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.server.level.ServerPlayer", names.getInventoryOwnerClass());
@@ -147,7 +147,7 @@ class NmsNameFactoryTest {
 
     @Test
     void spigotModern() throws UnsupportedVersionException {
-        ModernNames names = NmsNameFactory.modern(v("1.21.5"), runtime("v1_21_R4", Namespace.SPIGOT));
+        ModernNames names = NmsNameFactory.modern(v("1.21.5"), runtime("v1_21_R4", MappingType.SPIGOT));
 
         assertEquals("org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.world.entity.player.EntityHuman", names.getPlayerClass());
@@ -161,7 +161,7 @@ class NmsNameFactoryTest {
     @Test
     void mojangModern() throws UnsupportedVersionException {
         // Paper 1.21.5+, every 26.1+ server
-        ModernNames names = NmsNameFactory.modern(v("26.1"), runtime(null, Namespace.MOJANG));
+        ModernNames names = NmsNameFactory.modern(v("26.1"), runtime(null, MappingType.MOJANG));
 
         assertEquals("org.bukkit.craftbukkit.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.world.entity.player.Player", names.getPlayerClass());
@@ -175,34 +175,34 @@ class NmsNameFactoryTest {
     @Test
     void noMojangNamesBefore117() {
         assertThrows(UnsupportedVersionException.class,
-                () -> NmsNameFactory.legacy(v("1.16.5"), runtime("v1_16_R3", Namespace.MOJANG)));
+                () -> NmsNameFactory.legacy(v("1.16.5"), runtime("v1_16_R3", MappingType.MOJANG)));
     }
 
     @Test
     void noVersionlessPackageBefore117() {
         assertThrows(UnsupportedVersionException.class,
-                () -> NmsNameFactory.legacy(v("1.16.5"), runtime(null, Namespace.SPIGOT)));
+                () -> NmsNameFactory.legacy(v("1.16.5"), runtime(null, MappingType.SPIGOT)));
     }
 
     @Test
     void noSpigotNamesFrom26() {
         assertThrows(UnsupportedVersionException.class,
-                () -> NmsNameFactory.modern(v("26.1"), runtime(null, Namespace.SPIGOT)));
+                () -> NmsNameFactory.modern(v("26.1"), runtime(null, MappingType.SPIGOT)));
     }
 
     @Test
     void versionOfTheOtherModel() {
         assertThrows(UnsupportedVersionException.class,
-                () -> NmsNameFactory.legacy(v("1.21.5"), runtime(null, Namespace.MOJANG)));
+                () -> NmsNameFactory.legacy(v("1.21.5"), runtime(null, MappingType.MOJANG)));
         assertThrows(UnsupportedVersionException.class,
-                () -> NmsNameFactory.modern(v("1.21.4"), runtime(null, Namespace.MOJANG)));
+                () -> NmsNameFactory.modern(v("1.21.4"), runtime(null, MappingType.MOJANG)));
     }
 
     private static ServerVersion v(String version) {
         return ServerVersion.parse(version);
     }
 
-    private static ServerRuntime runtime(String craftbukkitPackage, Namespace namespace) {
-        return new ServerRuntime(craftbukkitPackage, namespace, LOADER);
+    private static ServerRuntime runtime(String craftbukkitPackage, MappingType mappingType) {
+        return new ServerRuntime(craftbukkitPackage, mappingType, LOADER);
     }
 }

@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class InventoryAccessFactoryTest {
 
     private static final ClassLoader LOADER = InventoryAccessFactoryTest.class.getClassLoader();
-    private static final ServerRuntime SPIGOT_1_21_4 = new ServerRuntime("v1_21_R3", Namespace.SPIGOT, LOADER);
+    private static final ServerRuntime SPIGOT_1_21_4 = new ServerRuntime("v1_21_R3", MappingType.SPIGOT, LOADER);
 
     @Test
     void providerOverridesMapping() throws UnsupportedVersionException {

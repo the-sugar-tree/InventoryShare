@@ -28,14 +28,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ServerRuntimeTest {
 
-    /** The test classpath has no NMS classes, so the namespace is always detected as SPIGOT here. */
+    /** The test classpath has no NMS classes, so the mapping type is always detected as SPIGOT here. */
     private static final ClassLoader LOADER = ServerRuntimeTest.class.getClassLoader();
 
     @Test
     void relocatedCraftBukkit() {
         ServerRuntime runtime = ServerRuntime.detect("org.bukkit.craftbukkit.v1_21_R3.CraftServer", LOADER);
         assertEquals("v1_21_R3", runtime.getCraftbukkitPackage());
-        assertEquals(Namespace.SPIGOT, runtime.getNamespace());
+        assertEquals(MappingType.SPIGOT, runtime.getMappingType());
     }
 
     @Test
