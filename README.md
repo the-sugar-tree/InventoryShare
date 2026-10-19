@@ -83,7 +83,7 @@ https://blog.naver.com/sugar-tree/222556850608
 - teaminventory: false
 
 ## 개발 참여
-빌드 방법과 버전 추가 절차는 [CONTRIBUTING.md](CONTRIBUTING.md), 구조 설명은 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)를 참고하세요.
+빌드 방법과 기여 절차는 [CONTRIBUTING.md](CONTRIBUTING.md), 구조 설명은 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)를 참고하세요.
 
 ## License / 라이센스
 
