@@ -3,9 +3,6 @@
 // A jar that is not installed is skipped; run with -PnmsStrict to fail instead.
 
 // Minecraft version -> Spigot artifact version (default classifier = the jar a server runs)
-// Versions that Spigot does not build separately are left out, since BuildTools cannot install them:
-// 1.21.7 and 1.21.9 are built as 1.21.8 and 1.21.10 (same build in hub.spigotmc.org/versions), and 1.16 has no build.
-// Their name table rows are still covered by the other versions of the same row.
 def spigotJars = [
         // Legacy (items / armor / extraSlots / contents)
         '1.12.2' : '1.12.2-R0.1-SNAPSHOT',

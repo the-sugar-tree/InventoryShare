@@ -87,7 +87,6 @@ tasks.withType(JavaCompile).configureEach {
 
 dependencies {
     testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
-//    testCompileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
 
     // Junit
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
