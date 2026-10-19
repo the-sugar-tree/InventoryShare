@@ -1,8 +1,8 @@
 /*
  * This file is part of InventoryShare, licensed under the GPL-3.0 License.
  *
- * InventoryShare the minecraft plugin that enables sharing inventory with ohter players
- * Copyright (c) 2023 the-sugar-tree
+ * InventoryShare the minecraft plugin that enables sharing inventory with other players
+ * Copyright (c) 2023 the-sugar-tree and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

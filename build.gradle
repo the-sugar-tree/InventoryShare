@@ -67,7 +67,7 @@ allprojects {
         exclude '**/Metrics.java'
         newLine = true
         properties {
-            name = 'the-sugar-tree'
+            name = 'the-sugar-tree and contributors'
             year = '2023'
         }
     }
