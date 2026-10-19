@@ -80,10 +80,10 @@ NMS를 직접 알지 못하고 `InventoryAccess`(§3.4)만 사용합니다.
 
 ```
 언어 파일 → bStats → 업데이트 확인
-→ MinecraftVersion.current() + InventoryAccessFactory.supports()   지원하지 않으면 "not_supported_version" 후 비활성화
-→ ProtocolLib 연동
+→ MinecraftVersion.current()
 → loadNMS(): ServerRuntime.current() → InventoryAccessFactory.create() → InventoryRegistry / InventoryManager / FileManager
-             UnsupportedVersionException → "not_supported_version", IncompatibleServerException·RuntimeException → "버그이니 신고"
+             UnsupportedVersionException → 지원 불가 버전 안내, IncompatibleServerException·RuntimeException → 버그 안내
+→ ProtocolLib 연동
 → 설정 파일 로드 → FileManager.load() → 명령어·리스너 등록 → 접속 중인 플레이어에 공유 적용(/reload 시)
 ```
 
@@ -139,9 +139,8 @@ ServerRuntime ────┘   (문자열 조립)     (문자열)   (Class / Fi
 ```
 Provider 목록 = [등록 파일(ServiceLoader)로 찾은 Provider들 (dev 샌드박스)..., ReflectionAccessProvider (항상 마지막)]
 
-InventoryAccessFactory.supports(version)        = 목록 중 하나라도 supports(version)
 InventoryAccessFactory.create(version, runtime) = supports(version)가 true인 첫 Provider의 create()
-                                                  아무도 없으면 UnsupportedVersionException
+                                                  Provider가 없으면 UnsupportedVersionException 발생
 ```
 
 | 클래스                                    | 책임                                                                              | 모르는 것                             |
@@ -160,7 +159,7 @@ InventoryAccessFactory.create(version, runtime) = supports(version)가 true인 �
 | `UnsupportedVersionException` | 이 플러그인이 지원하지 않는 버전. **신고 불필요**                       | `InventoryAccessFactory.create` (지원하는 Provider가 없을 때만) | `not_supported_version`, 비활성화          |
 | `IncompatibleServerException` | 지원하는 버전인데 이 서버에서 Access를 만들지 못함. **버그, 신고 필요** | Provider의 `create` (이름 해석 실패, 있을 수 없는 서버 조합 등) | "This is a bug... 신고해 주세요", 비활성화 |
 
-core는 `onEnable` 처음에 `InventoryAccessFactory.supports(version)`로 지원 여부를 확인하고, `loadNMS()`에서 `create()`를 호출합니다. 두 메서드가 같은 판단을 쓰므로 Provider만 있는 버전(이름표에 없는 dev 버전)도 통과합니다.
+core는 `loadNMS()`에서 `create()`를 한 번만 호출하고, 그 결과(예외)로 지원 여부를 판단합니다. 지원 여부를 판단하는 곳이 `create()` 하나뿐이므로, Provider만 있는 버전(이름표에 없는 dev 버전)도 통과합니다.
 
 ### 3.3 패키지
 
@@ -168,7 +167,7 @@ core는 `onEnable` 처음에 `InventoryAccessFactory.supports(version)`로 지�
 com.sugar_tree.inventoryshare.nms            API: core와 dev 샌드박스가 쓰는 것
 ├─ InventoryAccess           core가 아는 유일한 NMS 경계
 ├─ InventoryStorage          불투명 핸들 (Legacy: items/armor/extraSlots, Modern: items/equipment map)
-├─ InventoryAccessFactory    Provider 선택, supports(version) / create(version, runtime)
+├─ InventoryAccessFactory    Provider 선택, create(version, runtime)
 ├─ InventoryAccessProvider   Access를 만드는 구현의 약속 (supports / create)
 ├─ UnsupportedVersionException   지원하지 않는 버전
 ├─ IncompatibleServerException   지원하는 버전인데 이 서버에서 생성 실패

@@ -28,10 +28,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class InventoryAccessFactoryTest {
 
@@ -42,7 +40,6 @@ class InventoryAccessFactoryTest {
     void providerSupportsVersionWithoutNames() throws Exception {
         // A dev sandbox for a version that is not in the name tables yet
         MinecraftVersion version = MinecraftVersion.parse(TestProvider.WITHOUT_NAMES);
-        assertTrue(InventoryAccessFactory.supports(version));
         assertSame(TestProvider.ACCESS, InventoryAccessFactory.create(version, SPIGOT_1_21_4));
     }
 
@@ -55,7 +52,6 @@ class InventoryAccessFactoryTest {
     @Test
     void unsupportedWithoutProviderOrNames() {
         MinecraftVersion version = MinecraftVersion.parse("1.11.2");
-        assertFalse(InventoryAccessFactory.supports(version));
         assertThrows(UnsupportedVersionException.class, () -> InventoryAccessFactory.create(version, SPIGOT_1_21_4));
     }
 
@@ -63,7 +59,6 @@ class InventoryAccessFactoryTest {
     void incompatibleWithoutServerClasses() {
         // 1.21.4 is supported, but this test classpath has no CraftBukkit/NMS classes
         MinecraftVersion version = MinecraftVersion.parse("1.21.4");
-        assertTrue(InventoryAccessFactory.supports(version));
         assertThrows(IncompatibleServerException.class, () -> InventoryAccessFactory.create(version, SPIGOT_1_21_4));
     }
 

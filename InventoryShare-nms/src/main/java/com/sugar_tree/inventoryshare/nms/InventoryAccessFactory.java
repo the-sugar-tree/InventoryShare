@@ -32,19 +32,11 @@ import java.util.ServiceLoader;
 
 /**
  * Picks the {@link InventoryAccessProvider} for a version: the providers registered through
- * {@link ServiceLoader} first, then the built-in {@link ReflectionAccessProvider}. {@link #supports(MinecraftVersion)}
- * and {@link #create(MinecraftVersion, ServerRuntime)} ask the same providers in the same order, so they always agree.
+ * {@link ServiceLoader} first, then the built-in {@link ReflectionAccessProvider}.
  */
 public final class InventoryAccessFactory {
 
     private InventoryAccessFactory() {}
-
-    /**
-     * @return whether any provider supports the version
-     */
-    public static boolean supports(@NotNull MinecraftVersion version) {
-        return find(version) != null;
-    }
 
     /**
      * Creates the access with the first provider that supports the version.

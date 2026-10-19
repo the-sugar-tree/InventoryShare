@@ -77,11 +77,12 @@ public final class InventoryShare extends JavaPlugin {
         // Check for updates to the plugin
         UpdateUtil.showUpdateInformation();
 
-        // Check if the server version is supported
+        // Load NMS (Net Minecraft Server) contents; this also decides whether the version is supported
+        // FileManager and InventoryManager are initialized here
         MinecraftVersion minecraftVersion = MinecraftVersion.current();
-        if (!InventoryAccessFactory.supports(minecraftVersion)) {
-            logger.severe(I18NUtil.get(false, false, "not_supported_version", minecraftVersion.toString()));
-            this.setEnabled(false); // Disable the plugin if not supported
+        if (!loadNMS(minecraftVersion)) {
+            // Disable the plugin if the version is not supported or an error occurs
+            this.setEnabled(false);
             return;
         }
 
@@ -106,14 +107,6 @@ public final class InventoryShare extends JavaPlugin {
                 logger.warning("https://www.spigotmc.org/resources/protocollib.1997");
                 logger.warning("https://ci.dmulloy2.net/job/ProtocolLib/");
                 break;
-        }
-
-        // Load NMS (Net Minecraft Server) contents
-        // FileManager and InventoryManager are initialized here
-        if (!loadNMS(minecraftVersion)) {
-            // Disable the plugin if the version is not supported or an error occurs
-            this.setEnabled(false);
-            return;
         }
 
         // Load configuration files
@@ -172,7 +165,7 @@ public final class InventoryShare extends JavaPlugin {
             InventoryManager = new InventoryManager(access, registry);
             FileManager = new FileManager(access, registry);
         } catch (UnsupportedVersionException e) {
-            // Already checked in onEnable; kept so that the two outcomes stay distinct
+            // No provider supports the version: not a bug, nothing to report
             logger.severe(I18NUtil.get(false, false, "not_supported_version", minecraftVersion.toString()));
             return false;
         } catch (IncompatibleServerException | RuntimeException e) {
