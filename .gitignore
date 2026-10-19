@@ -119,3 +119,6 @@ run/
 
 gradle.properties
 tmp/
+
+# Local-only notes (not published)
+docs/local/
