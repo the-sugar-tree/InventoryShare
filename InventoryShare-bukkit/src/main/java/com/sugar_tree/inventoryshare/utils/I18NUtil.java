@@ -32,6 +32,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
+import java.util.logging.Level;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
@@ -210,7 +211,7 @@ public final class I18NUtil {
                 try {
                     fileConfiguration.save(file);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.log(Level.WARNING, "Could not save the updated language file " + file.getPath(), e);
                 }
             }
         }

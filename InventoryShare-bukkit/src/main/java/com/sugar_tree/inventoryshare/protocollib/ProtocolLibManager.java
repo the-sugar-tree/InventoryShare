@@ -33,6 +33,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * While a player is breaking a block, cancels the slot update packets of their main hand item if that item is
@@ -84,7 +85,8 @@ public final class ProtocolLibManager {
                             break;
                     }
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    plugin.getLogger().log(Level.WARNING, "Could not handle the block breaking packet of "
+                            + event.getPlayer().getName(), exception);
                 }
             }
         });

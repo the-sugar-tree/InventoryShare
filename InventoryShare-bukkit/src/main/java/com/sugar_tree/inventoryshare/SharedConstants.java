@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings("deprecation")
@@ -78,10 +79,11 @@ public final class SharedConstants {
     public static void saveConfigs() {
         FileManager.deleteWasteFiles();
         plugin.saveConfig();
-        try { invconfig.save(invfile); } catch (Exception e) { e.printStackTrace(); }
-        try { advconfig.save(advfile); } catch (Exception e) { e.printStackTrace(); }
+        try { invconfig.save(invfile); } catch (Exception e) { logger.log(Level.SEVERE, "Could not save " + invfile.getPath(), e); }
+        try { advconfig.save(advfile); } catch (Exception e) { logger.log(Level.SEVERE, "Could not save " + advfile.getPath(), e); }
         for (FileConfiguration fileConfiguration : teamInvFileList.keySet()) {
-            try { fileConfiguration.save(teamInvFileList.get(fileConfiguration)); } catch (Exception e) { e.printStackTrace(); }
+            File file = teamInvFileList.get(fileConfiguration);
+            try { fileConfiguration.save(file); } catch (Exception e) { logger.log(Level.SEVERE, "Could not save " + file.getPath(), e); }
         }
     }
 }

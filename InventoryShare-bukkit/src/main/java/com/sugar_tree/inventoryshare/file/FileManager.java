@@ -167,9 +167,8 @@ public final class FileManager implements IFileManager {
                     + ". " + source.getName() + " will be overwritten on the next save. To recover the skipped items, "
                     + "restore the backup on a server that can read them (e.g. the newer version it came from).");
         } catch (IOException e) {
-            logger.severe("Failed to back up " + source.getPath() + " into " + backupDirectory.getPath()
-                    + ". Copy it manually before the next save!");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to back up " + source.getPath() + " into " + backupDirectory.getPath()
+                    + ". Copy it manually before the next save!", e);
         }
     }
 
@@ -202,7 +201,7 @@ public final class FileManager implements IFileManager {
             try {
                 Files.delete(file.toPath());
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING, "Could not delete " + file.getPath() + ", the file of a removed team", e);
             }
         }
     }
