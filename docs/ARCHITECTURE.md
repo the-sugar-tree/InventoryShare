@@ -142,7 +142,7 @@ inventory = true, teaminventory = true    → 팀이 있으면 그 팀의 인벤
 | `IncompatibleServerException`             | 지원하는 버전인데 서버 내부 이름을 찾지 못함 (§4.2)         | "Could not hook into Minecraft ... This is a bug" + 신고 안내 |
 | `FileManager.load()`의 `RuntimeException` | 공유·팀 인벤토리를 읽는 중 오류                             | "Could not load the saved inventories ..." + 신고 안내        |
 
-종료 (`onDisable`): 각 플레이어를 개인 인벤토리로 되돌리고, 팀 감지 작업을 멈춘 뒤 저장합니다.
+종료 (`onDisable`): 각 플레이어를 개인 인벤토리로 되돌리고, 팀 감지 작업을 멈춘 뒤 저장합니다. 시작 중 `setEnabled(false)`로 비활성화하면 `onDisable()`이 바로 실행되는데, 시작이 끝나지 않았으면 파일을 저장하지 않습니다. 덜 읽힌 상태로 파일을 덮어쓰지 않기 위해서입니다.
 
 ### 3.5 부가 기능
 
@@ -324,6 +324,7 @@ extraSlots: [ ...1개 ]    # 칸 40 (offhand)
   - 데이터 버전이 숫자가 아니거나, 아이템으로 되돌릴 수 없는 경우
 - 하나라도 건너뛰면 **원본 파일을 `backups/<inventory|team-이름>-<날짜-시각>[-dv<데이터 버전>].yml`로 복사**하고, 건너뛴 칸과 백업 위치를 로그에 남깁니다. 원본 파일은 다음 저장 때 덮어써지므로, 복구하려면 그 데이터를 읽을 수 있는 서버에서 백업 파일을 원래 자리에 되돌립니다.
 - 파일의 `format-version`이 플러그인이 아는 값보다 높으면 경고합니다.
+- 아이템으로 되돌린 뒤 인벤토리에 넣는 단계(`InventoryAccess#setItem`)가 실패하면 건너뛰지 않습니다. 데이터가 아니라 Access의 문제이므로 `FileManager.load()`가 실패하고 플러그인이 비활성화됩니다(§3.4).
 
 ---
 

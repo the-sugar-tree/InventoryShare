@@ -60,6 +60,8 @@ final class Codec {
 
     /**
      * Loads every item that can be loaded into {@code inventory}; the slots of skipped items stay empty.
+     *
+     * @throws RuntimeException if {@link InventoryAccess#setItem} fails; such an item is not skipped
      */
     LoadResult read(ConfigurationSection config, InventoryStorage inventory) {
         List<SkippedItem> skipped = new ArrayList<>();
@@ -90,11 +92,15 @@ final class Codec {
                 skipped.add(rejected);
                 continue;
             }
+            ItemStack deserialized;
             try {
-                access.setItem(to, slot, ItemStack.deserialize((Map<String, Object>) item));
+                deserialized = ItemStack.deserialize((Map<String, Object>) item);
             } catch (Exception e) {
                 skipped.add(SkippedItem.deserializeFailed(slot, e));
+                continue;
             }
+            // Not caught: a failure here is the inventory access failing, not bad item data
+            access.setItem(to, slot, deserialized);
         }
     }
 

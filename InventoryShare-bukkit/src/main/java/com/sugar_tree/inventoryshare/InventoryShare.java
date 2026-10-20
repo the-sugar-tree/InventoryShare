@@ -55,6 +55,12 @@ public final class InventoryShare extends JavaPlugin {
 
     private Listeners listener; // Listener for events
 
+    /**
+     * Whether {@link #onEnable()} finished. {@code setEnabled(false)} inside {@code onEnable()} calls
+     * {@link #onDisable()} right away, which must not save a partly loaded state over the files.
+     */
+    private boolean started;
+
     @Override
     public void onLoad() {
         // Assign shared variable for the plugin instance and logger
@@ -142,6 +148,7 @@ public final class InventoryShare extends JavaPlugin {
             InventoryManager.updateInventroy(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
         }
+        started = true;
 
         // Send a message to the console indicating the plugin is loaded
         Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.YELLOW + "\"" + I18NUtil.get(false, false, "plugin_name") + "\" by. " + ChatColor.GREEN + "sugar_tree");
@@ -163,6 +170,8 @@ public final class InventoryShare extends JavaPlugin {
         }
         // Cancel any scheduled tasks for the listener
         if (listener != null) Bukkit.getScheduler().cancelTask(listener.getTaskId());
+        // After a failed start the loaded state may be incomplete; keep the files as they are
+        if (!started) return;
         FileManager.save(); // Save the inventories, advancements and settings
     }
 
