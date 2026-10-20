@@ -21,8 +21,8 @@
 package com.sugar_tree.inventoryshare.nms;
 
 /**
- * Thrown when the server is not based on CraftBukkit, whose internals the plugin works with: the plugin does not
- * support it. Not a bug, whatever the Minecraft version.
+ * Thrown when the server is not based on CraftBukkit, whose internals the plugin works with, or reports a Minecraft
+ * version the plugin cannot read: the plugin does not support it. Not a bug.
  */
 public class UnsupportedServerException extends Exception {
 

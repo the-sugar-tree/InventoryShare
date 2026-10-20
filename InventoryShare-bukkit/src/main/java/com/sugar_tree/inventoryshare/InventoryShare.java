@@ -78,9 +78,17 @@ public final class InventoryShare extends JavaPlugin {
         // Check for updates to the plugin
         UpdateUtil.showUpdateInformation();
 
+        MinecraftVersion minecraftVersion;
+        try {
+            minecraftVersion = MinecraftVersion.current();
+        } catch (UnsupportedServerException e) {
+            // An unreadable version: not a bug, nothing to report
+            logger.severe(I18NUtil.get(false, false, "not_supported_server", Bukkit.getName() + " " + Bukkit.getVersion()));
+            this.setEnabled(false);
+            return;
+        }
         // Load NMS (Net Minecraft Server) contents; this also decides whether the version is supported
         // FileManager and InventoryManager are initialized here
-        MinecraftVersion minecraftVersion = MinecraftVersion.current();
         if (!loadNMS(minecraftVersion)) {
             // Disable the plugin if the version is not supported or an error occurs
             this.setEnabled(false);
@@ -116,7 +124,11 @@ public final class InventoryShare extends JavaPlugin {
         invconfig = YamlConfiguration.loadConfiguration(invfile);
         advconfig = YamlConfiguration.loadConfiguration(advfile);
         saveDefaultConfigs(); // Save default configurations
-        FileManager.load(); // Load the saved inventories, advancements and settings
+        // Load the saved inventories, advancements and settings
+        if (!FileManager.load()) {
+            this.setEnabled(false);
+            return;
+        }
 
         // Load commands and event listeners
         TabExecutor commands = new Commands();

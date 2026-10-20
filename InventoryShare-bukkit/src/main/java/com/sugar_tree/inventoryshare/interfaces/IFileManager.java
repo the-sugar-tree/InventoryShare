@@ -28,8 +28,9 @@ public interface IFileManager {
 
     /**
      * Reads the shared and team inventories, the shared advancements and the settings from their files
+     * @return {@code false} if the inventories could not be loaded (the error is logged); the plugin must not run then
      */
-    void load();
+    boolean load();
 
     /**
      * Deletes the inventory files of teams that no longer exist

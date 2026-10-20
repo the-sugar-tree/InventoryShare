@@ -133,15 +133,16 @@ inventory = true, teaminventory = true    → 팀이 있으면 그 팀의 인벤
 → 설정 파일 로드 → FileManager.load() → 명령어·리스너 등록 → 접속 중인 플레이어에 공유 적용(/reload 시)
 ```
 
-`loadNMS()`가 실패하면 플러그인을 비활성화합니다. 이때 인벤토리는 건드리지 않습니다.
+버전 판별, `loadNMS()`, `FileManager.load()` 중 하나가 실패하면 플러그인을 비활성화합니다.
 
-| 실패                          | 원인                                                | 로그                                                          |
-|-------------------------------|-----------------------------------------------------|---------------------------------------------------------------|
-| `UnsupportedServerException`  | CraftBukkit 기반이 아닌 서버                        | "이 플러그인은 이 서버를 지원하지 않습니다" (신고 불필요)     |
-| `UnsupportedVersionException` | 지원하지 않는 마인크래프트 버전                     | "이 플러그인은 이 버전을 지원하지 않습니다" (신고 불필요)     |
-| `IncompatibleServerException` | 지원하는 버전인데 서버 내부 이름을 찾지 못함 (§4.2) | "Could not hook into Minecraft ... This is a bug" + 신고 안내 |
+| 실패                                      | 원인                                                        | 로그                                                          |
+|-------------------------------------------|-------------------------------------------------------------|---------------------------------------------------------------|
+| `UnsupportedServerException`              | CraftBukkit 기반이 아닌 서버, 또는 읽을 수 없는 버전 문자열 | "이 플러그인은 이 서버를 지원하지 않습니다" (신고 불필요)     |
+| `UnsupportedVersionException`             | 지원하지 않는 마인크래프트 버전                             | "이 플러그인은 이 버전을 지원하지 않습니다" (신고 불필요)     |
+| `IncompatibleServerException`             | 지원하는 버전인데 서버 내부 이름을 찾지 못함 (§4.2)         | "Could not hook into Minecraft ... This is a bug" + 신고 안내 |
+| `FileManager.load()`의 `RuntimeException` | 공유·팀 인벤토리를 읽는 중 오류                             | "Could not load the saved inventories ..." + 신고 안내        |
 
-종료 (`onDisable`): 각 플레이어를 개인 인벤토리로 되돌리고, 팀 감지 작업을 멈춘 뒤 저장합니다. 시작이 `loadNMS()` 단계에서 실패했다면 아무것도 하지 않습니다.
+종료 (`onDisable`): 각 플레이어를 개인 인벤토리로 되돌리고, 팀 감지 작업을 멈춘 뒤 저장합니다.
 
 ### 3.5 부가 기능
 

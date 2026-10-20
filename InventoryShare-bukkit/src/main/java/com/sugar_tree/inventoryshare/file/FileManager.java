@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
@@ -90,8 +91,31 @@ public final class FileManager implements IFileManager {
     }
 
     @Override
-    public void load() {
-        readInventory(invconfig, invfile, "inventory", registry.getSharedInventory(), "ALL");
+    public boolean load() {
+        try {
+            readInventory(invconfig, invfile, "inventory", registry.getSharedInventory(), "ALL");
+
+            StringBuilder sb = new StringBuilder();
+            boolean temp = false;
+            sb.append(I18N_TEAM_LOADED);
+            for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
+                InventoryStorage teamInventory = access.createEmpty();
+                File file = teamFile(team.getName());
+                if (file.exists()) {
+                    readInventory(YamlConfiguration.loadConfiguration(file), file, "team-" + team.getName(),
+                            teamInventory, "Team:" + team.getName());
+                }
+                registry.putTeamInventory(team.getName(), teamInventory);
+                sb.append("[").append(team.getName()).append("] ");
+                temp = true;
+            }
+            if (temp) logger.info(sb.toString());
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Could not load the saved inventories. InventoryShare will be disabled.", e);
+            logger.severe("This is a bug, not a configuration problem. Please report it with the error above:");
+            logger.severe("https://github.com/the-sugar-tree/InventoryShare/issues");
+            return false;
+        }
 
         List<String> advancementlist = advconfig.getStringList("advancement");
         for (String advancement : advancementlist) {
@@ -113,22 +137,7 @@ public final class FileManager implements IFileManager {
         if (plugin.getConfig().contains("teaminventory")) {
             teaminventory = plugin.getConfig().getBoolean("teaminventory");
         }
-
-        StringBuilder sb = new StringBuilder();
-        boolean temp = false;
-        sb.append(I18N_TEAM_LOADED);
-        for (Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
-            InventoryStorage teamInventory = access.createEmpty();
-            File file = teamFile(team.getName());
-            if (file.exists()) {
-                readInventory(YamlConfiguration.loadConfiguration(file), file, "team-" + team.getName(),
-                        teamInventory, "Team:" + team.getName());
-            }
-            registry.putTeamInventory(team.getName(), teamInventory);
-            sb.append("[").append(team.getName()).append("] ");
-            temp = true;
-        }
-        if (temp) logger.info(sb.toString());
+        return true;
     }
 
     private void writeInventory(FileConfiguration config, InventoryStorage inventory) {

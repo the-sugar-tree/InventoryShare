@@ -20,9 +20,11 @@
 
 package com.sugar_tree.inventoryshare.nms.server;
 
+import com.sugar_tree.inventoryshare.nms.UnsupportedServerException;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -73,9 +75,11 @@ public final class MinecraftVersion implements Comparable<MinecraftVersion> {
      * Spigot API. Spigot falls back to {@link Bukkit#getBukkitVersion()}, whose numeric prefix is the
      * Minecraft version. Paper 26.x changed the Bukkit version format, see
      * <a href="https://github.com/PaperMC/Paper/issues/13885">PaperMC/Paper#13885</a>.
+     *
+     * @throws UnsupportedServerException if the server reports a version that does not start with a version number
      */
     @SuppressWarnings("JavaReflectionMemberAccess")
-    public static @NotNull MinecraftVersion current() {
+    public static @NotNull MinecraftVersion current() throws UnsupportedServerException {
         String version;
         try {
             Method getMinecraftVersion = Server.class.getMethod("getMinecraftVersion");
@@ -88,7 +92,22 @@ public final class MinecraftVersion implements Comparable<MinecraftVersion> {
             if (cause instanceof Error) throw (Error) cause;
             throw new RuntimeException(cause);
         }
-        return parse(version);
+        return parseServerVersion(version);
+    }
+
+    /**
+     * @param version the version string the server reports, possibly {@code null}
+     * @throws UnsupportedServerException if it does not start with a version number
+     */
+    static @NotNull MinecraftVersion parseServerVersion(@Nullable String version) throws UnsupportedServerException {
+        if (version == null) {
+            throw new UnsupportedServerException("The server reports no Minecraft version");
+        }
+        try {
+            return parse(version);
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedServerException("Unknown Minecraft version: " + version);
+        }
     }
 
     public boolean isOlderThan(@NotNull String version) {

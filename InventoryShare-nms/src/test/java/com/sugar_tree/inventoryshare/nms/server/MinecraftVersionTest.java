@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare.nms.server;
 
+import com.sugar_tree.inventoryshare.nms.UnsupportedServerException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -31,6 +32,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MinecraftVersionTest {
+
+    @Test
+    void serverVersionIsParsed() throws UnsupportedServerException {
+        assertEquals("26.1.2", MinecraftVersion.parseServerVersion("26.1.2.build.63-stable").toString());
+    }
+
+    @Test
+    void unreadableServerVersionIsUnsupported() {
+        assertThrows(UnsupportedServerException.class, () -> MinecraftVersion.parseServerVersion("git-Fork-1"));
+        assertThrows(UnsupportedServerException.class, () -> MinecraftVersion.parseServerVersion("99999999999.1"));
+        assertThrows(UnsupportedServerException.class, () -> MinecraftVersion.parseServerVersion(null));
+    }
 
     @ParameterizedTest
     @CsvSource({
