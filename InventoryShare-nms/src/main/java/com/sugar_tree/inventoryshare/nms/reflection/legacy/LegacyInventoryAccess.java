@@ -23,6 +23,7 @@ package com.sugar_tree.inventoryshare.nms.reflection.legacy;
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryStorage;
+import com.sugar_tree.inventoryshare.nms.reflection.Reflections.FieldWrite;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +34,7 @@ import java.util.AbstractList;
 
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.get;
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.invoke;
-import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.set;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.setAll;
 
 /**
  * {@link InventoryAccess} for 1.12 - 1.21.4. Swaps the {@code items}, {@code armor}, {@code extraSlots}
@@ -68,10 +69,10 @@ public final class LegacyInventoryAccess implements InventoryAccess {
     public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
         LegacyStorage lists = (LegacyStorage) inventory;
         Object target = playerInventory(player);
-        set(members.getItems(), target, lists.items);
-        set(members.getArmor(), target, lists.armor);
-        set(members.getExtraSlots(), target, lists.extraSlots);
-        set(members.getContents(), target, ImmutableList.of(lists.items, lists.armor, lists.extraSlots));
+        setAll(FieldWrite.of(members.getItems(), target, lists.items),
+                FieldWrite.of(members.getArmor(), target, lists.armor),
+                FieldWrite.of(members.getExtraSlots(), target, lists.extraSlots),
+                FieldWrite.of(members.getContents(), target, ImmutableList.of(lists.items, lists.armor, lists.extraSlots)));
     }
 
     @Override

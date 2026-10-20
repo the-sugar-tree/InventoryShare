@@ -22,6 +22,7 @@ package com.sugar_tree.inventoryshare.nms.reflection.modern;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryStorage;
+import com.sugar_tree.inventoryshare.nms.reflection.Reflections.FieldWrite;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,7 @@ import java.util.Map;
 
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.get;
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.invoke;
-import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.set;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.setAll;
 
 /**
  * {@link InventoryAccess} for 1.21.5+. Swaps the player's {@code Inventory#items} list and the
@@ -79,9 +80,10 @@ public final class ModernInventoryAccess implements InventoryAccess {
     public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
         ModernStorage storage = (ModernStorage) inventory;
         Object target = playerInventory(player);
-        set(members.getItems(), target, storage.items);
         // The inventory's EntityEquipment is the player's own equipment, so this also changes what others see
-        set(members.getEquipmentItems(), get(members.getEquipment(), target), storage.equipment);
+        Object entityEquipment = get(members.getEquipment(), target);
+        setAll(FieldWrite.of(members.getItems(), target, storage.items),
+                FieldWrite.of(members.getEquipmentItems(), entityEquipment, storage.equipment));
     }
 
     @Override

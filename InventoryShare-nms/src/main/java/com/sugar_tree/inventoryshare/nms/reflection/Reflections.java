@@ -79,4 +79,48 @@ public final class Reflections {
             throw new IllegalStateException(e);
         }
     }
+
+    /**
+     * Writes the fields in order. If one write fails, the fields already written get their previous values back
+     * before the failure is rethrown, so the targets are either fully changed or left as they were. A failure while
+     * restoring is added to the rethrown one as suppressed.
+     */
+    public static void setAll(@NotNull FieldWrite... writes) {
+        Object[] previous = new Object[writes.length];
+        for (int i = 0; i < writes.length; i++) {
+            previous[i] = get(writes[i].field, writes[i].target);
+        }
+        int written = 0;
+        try {
+            for (; written < writes.length; written++) {
+                set(writes[written].field, writes[written].target, writes[written].value);
+            }
+        } catch (RuntimeException | Error e) {
+            for (int i = written - 1; i >= 0; i--) {
+                try {
+                    set(writes[i].field, writes[i].target, previous[i]);
+                } catch (RuntimeException | Error restoreFailure) {
+                    e.addSuppressed(restoreFailure);
+                }
+            }
+            throw e;
+        }
+    }
+
+    /** One field write for {@link #setAll(FieldWrite...)} */
+    public static final class FieldWrite {
+        private final Field field;
+        private final Object target;
+        private final Object value;
+
+        private FieldWrite(Field field, Object target, Object value) {
+            this.field = field;
+            this.target = target;
+            this.value = value;
+        }
+
+        public static @NotNull FieldWrite of(@NotNull Field field, @Nullable Object target, Object value) {
+            return new FieldWrite(field, target, value);
+        }
+    }
 }
