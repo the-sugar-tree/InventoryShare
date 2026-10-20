@@ -46,16 +46,19 @@ public final class I18NUtil {
     }
 
     public static void init() {
-        Bundle b = Bundle.getDefaultBundle();
         String language = plugin.getConfig().getString("language");
+        // Not set on the first run: pick one from the system locale
+        if (language == null || language.isEmpty()) {
+            saveLanguageInfo();
+            language = plugin.getConfig().getString("language");
+            logger.info("No language is set in config.yml; using " + language + " from the system locale");
+        }
+        Bundle b;
         try {
             b = Bundle.getBundle(language);
         } catch (NoSuchFileException e) {
-            logger.severe(language == null ? "Could not load language info from config.yml" : "Could not find lang_" + language + ".yml");
-            logger.severe("Attempt to use default language...");
-        }
-        if (language == null) {
-            saveLanguageInfo();
+            logger.warning("Could not find languages/lang_" + language + ".yml; using the default language");
+            b = Bundle.getDefaultBundle();
         }
         bundle = b;
 
