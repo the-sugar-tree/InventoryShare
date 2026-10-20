@@ -96,7 +96,7 @@ PERSONAL ───────────────────────�
     └─────── 맡겨 둔 자기 인벤토리를 되돌림 (apply) ───────────┘
 ```
 
-어떤 인벤토리를 적용할지는 `updateInventroy(player)`가 설정에 따라 정합니다.
+어떤 인벤토리를 적용할지는 `updateInventory(player)`가 설정에 따라 정합니다.
 
 ```
 inventory = false                         → 개인 인벤토리

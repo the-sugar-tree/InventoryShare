@@ -8,6 +8,6 @@ author: sugar_tree
 softdepend: [ProtocolLib]
 commands:
   inventoryshare:
-    usage: /inventoryshare <inventory|advancement|AnnounceDeath|teaminventory|reload> [true|false]
+    usage: /inventoryshare <inventory|advancement|announcedeath|teaminventory|check|reload> [true|false]
     description: Config Management
     aliases: [is]

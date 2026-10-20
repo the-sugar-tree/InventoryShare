@@ -60,7 +60,7 @@ public final class Commands implements TabExecutor {
                             if (!inventory) {
                                 inventory = true;
                                 for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.updateInventroy(p);
+                                    InventoryManager.updateInventory(p);
                                 }
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                             } else {
@@ -71,7 +71,7 @@ public final class Commands implements TabExecutor {
                             if (inventory) {
                                 inventory = false;
                                 for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.updateInventroy(p);
+                                    InventoryManager.updateInventory(p);
                                 }
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
                             } else {
@@ -144,7 +144,7 @@ public final class Commands implements TabExecutor {
                             if (!teaminventory) {
                                 teaminventory = true;
                                 for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.updateInventroy(p);
+                                    InventoryManager.updateInventory(p);
                                 }
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
                             } else {
@@ -155,7 +155,7 @@ public final class Commands implements TabExecutor {
                             if (teaminventory) {
                                 teaminventory = false;
                                 for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.updateInventroy(p);
+                                    InventoryManager.updateInventory(p);
                                 }
                                 Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
                             } else {
@@ -178,7 +178,7 @@ public final class Commands implements TabExecutor {
                     if (plugin.getConfig().contains("teaminventory")) teaminventory = plugin.getConfig().getBoolean("teaminventory");
                     // inventory / teaminventory may have changed, as with their commands
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        InventoryManager.updateInventroy(p);
+                        InventoryManager.updateInventory(p);
                     }
                     I18NUtil.reload();
                     updateUsageMessage();

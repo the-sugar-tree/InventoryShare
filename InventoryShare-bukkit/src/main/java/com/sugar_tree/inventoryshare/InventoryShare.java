@@ -145,7 +145,7 @@ public final class InventoryShare extends JavaPlugin {
 
         // Update inventories for online players if the server is reloaded
         for (Player player : Bukkit.getOnlinePlayers()) {
-            InventoryManager.updateInventroy(player);
+            InventoryManager.updateInventory(player);
             getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
         }
         started = true;

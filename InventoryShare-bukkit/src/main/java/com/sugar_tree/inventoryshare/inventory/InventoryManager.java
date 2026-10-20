@@ -54,7 +54,7 @@ public final class InventoryManager implements IInventoryManager {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void updateInventroy(@NotNull final Player p) {
+    public void updateInventory(@NotNull final Player p) {
         if (!inventory) {
             applyPersonalInventory(p);
             return;

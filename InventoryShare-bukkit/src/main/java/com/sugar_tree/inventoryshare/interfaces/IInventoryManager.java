@@ -56,7 +56,7 @@ public interface IInventoryManager {
      * otherwise their team's one if team inventories are on and they have a team, otherwise the shared one
      * @param p Player to apply
      */
-    void updateInventroy(@NotNull Player p);
+    void updateInventory(@NotNull Player p);
 
     /**
      * Saves the player's own inventory so it can be given back later

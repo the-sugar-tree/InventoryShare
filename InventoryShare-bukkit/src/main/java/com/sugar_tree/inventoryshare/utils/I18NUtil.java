@@ -197,7 +197,7 @@ public final class I18NUtil {
             // A file without FILE_VERSION (edited by hand, or broken) is treated as outdated
             String version = fileConfiguration.getString("FILE_VERSION");
             if (!plugin.getDescription().getVersion().equals(version)) {
-                logger.warning("Updating Langauge File... [" + locale + "]");
+                logger.warning("Updating Language File... [" + locale + "]");
                 InputStream is = InventoryShare.class.getResourceAsStream("/languages/lang_" + locale + ".yml");
                 if (is == null) {
                     logger.severe("Default language file ("+ locale +") does not exist.");
