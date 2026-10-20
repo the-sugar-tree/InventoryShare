@@ -51,6 +51,7 @@ public interface InventoryAccess {
 
     /**
      * Makes the player use the given storage. Players applied with the same {@link InventoryStorage} share it.
+     * If it throws, the player is still using the storage they were using before.
      */
     void apply(@NotNull Player player, @NotNull InventoryStorage inventory);
 

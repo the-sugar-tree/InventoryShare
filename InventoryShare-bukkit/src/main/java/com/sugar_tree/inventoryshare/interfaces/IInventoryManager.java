@@ -30,21 +30,23 @@ public interface IInventoryManager {
 
     /**
      * Makes the player use the inventory shared by all players. The player's own inventory is saved first if they
-     * are using it.
+     * are using it. If the inventory cannot be applied, the error is logged and nothing changes.
      * @param p Player to apply
      */
     void applyAllInventory(@NotNull Player p);
 
     /**
      * Makes the player use the team's inventory, created empty if the team has none yet. The player's own inventory
-     * is saved first if they are using it.
+     * is saved first if they are using it. If the inventory cannot be applied, the error is logged and nothing
+     * changes (the team's new empty inventory is kept).
      * @param p Player to apply
      * @param team Team name to apply
      */
     void applyTeamInventory(@NotNull Player p, @NotNull String team);
 
     /**
-     * Gives the player back their own inventory, if it was saved
+     * Gives the player back their own inventory, if it was saved. If it cannot be applied, the error is logged, and the
+     * player keeps the inventory they are using while their own stays saved.
      * @param p Player to apply to
      */
     void applyPersonalInventory(@NotNull Player p);

@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
@@ -73,12 +74,18 @@ public final class InventoryManager implements IInventoryManager {
 
     @Override
     public void applyAllInventory(@NotNull final Player p) {
-        if (InventoryState.getInventoryState(p).equals(InventoryState.ALL)) return;
-        if (InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL)) savePlayerInventory(p);
+        InventoryState previous = InventoryState.getInventoryState(p);
+        if (previous.equals(InventoryState.ALL)) return;
+        if (previous.equals(InventoryState.PERSONAL)) savePlayerInventory(p);
         try {
             access.apply(p, registry.getSharedInventory());
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Could not apply the shared inventory to " + p.getName()
+                    + "; they keep the inventory they were using", e);
+            // The player still uses their own inventory, so the one saved above is dropped
+            if (previous.equals(InventoryState.PERSONAL)) registry.removePlayerInventory(p);
+            InventoryState.setInventoryState(p, previous);
+            return;
         }
         InventoryState.setInventoryState(p, InventoryState.ALL);
         appliedTeams.remove(p.getUniqueId());
@@ -87,10 +94,11 @@ public final class InventoryManager implements IInventoryManager {
 
     @Override
     public void applyTeamInventory(@NotNull final Player p, @NotNull final String teamName) {
+        InventoryState previous = InventoryState.getInventoryState(p);
         // Moving to another team must apply that team's inventory, so only the same team is skipped
-        if (InventoryState.getInventoryState(p).equals(InventoryState.TEAM)
+        if (previous.equals(InventoryState.TEAM)
                 && teamName.equals(appliedTeams.get(p.getUniqueId()))) return;
-        if (InventoryState.getInventoryState(p).equals(InventoryState.PERSONAL)) savePlayerInventory(p);
+        if (previous.equals(InventoryState.PERSONAL)) savePlayerInventory(p);
         InventoryStorage teamInventory = registry.getTeamInventory(teamName);
         if (teamInventory == null) {
             teamInventory = access.createEmpty();
@@ -99,7 +107,12 @@ public final class InventoryManager implements IInventoryManager {
         try {
             access.apply(p, teamInventory);
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Could not apply the inventory of team " + teamName + " to " + p.getName()
+                    + "; they keep the inventory they were using", e);
+            // The player still uses their own inventory, so the one saved above is dropped
+            if (previous.equals(InventoryState.PERSONAL)) registry.removePlayerInventory(p);
+            InventoryState.setInventoryState(p, previous);
+            return;
         }
         InventoryState.setInventoryState(p, InventoryState.TEAM);
         appliedTeams.put(p.getUniqueId(), teamName);
@@ -114,7 +127,10 @@ public final class InventoryManager implements IInventoryManager {
             try {
                 access.apply(p, personalInventory);
             } catch (RuntimeException e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "Could not give " + p.getName() + " their own inventory back"
+                        + "; they keep the inventory they were using", e);
+                // Their own inventory stays saved for the next attempt
+                return;
             }
             registry.removePlayerInventory(p);
         }
