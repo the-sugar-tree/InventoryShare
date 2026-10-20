@@ -1,6 +1,6 @@
 # Contributing to InventoryShare
 
-InventoryShare 개발에 참여해 주셔서 감사합니다. 이 문서는 빌드·테스트·기여 방법을 다룹니다.
+InventoryShare 개발에 참여해 주셔서 감사합니다.
 
 > [!tip]
 > 플러그인의 동작과정, 코드 구조는 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)를 참고하세요.
