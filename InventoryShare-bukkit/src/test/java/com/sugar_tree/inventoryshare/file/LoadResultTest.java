@@ -62,21 +62,53 @@ class LoadResultTest {
         assertFalse(result.isComplete());
         assertEquals(4189, result.newestDataVersion());
         assertEquals(Collections.singletonList(
-                "38 item(s) saved by a newer Minecraft version (data version up to 4189 > 3955): slots 0-35, 38, 40"),
+                "  - 38 item(s) saved by a newer Minecraft version (data version up to 4189 > 3955): slots 0-35, 38, 40"),
                 result.describe());
     }
 
     @Test
-    void eachReasonGetsOneLine() {
+    void eachReasonGetsItsOwnLines() {
         LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, Arrays.asList(
                 SkippedItem.invalidVersion(3, "abc"),
                 SkippedItem.newerVersion(5, 4189),
                 SkippedItem.deserializeFailed(12, new IllegalArgumentException("Unknown material"))));
 
         assertEquals(Arrays.asList(
-                "1 item(s) saved by a newer Minecraft version (data version up to 4189 > 3955): slot 5",
-                "1 item(s) with an invalid data version: slot 3 (\"abc\")",
-                "1 item(s) failed to deserialize: slot 12 (java.lang.IllegalArgumentException: Unknown material)"),
+                "  - 1 item(s) saved by a newer Minecraft version (data version up to 4189 > 3955): slot 5",
+                "  - 1 item(s) with an invalid data version:",
+                "      \"abc\": slot 3",
+                "  - 1 item(s) failed to deserialize:",
+                "      java.lang.IllegalArgumentException: Unknown material: slot 12"),
+                result.describe());
+    }
+
+    @Test
+    void sameErrorIsGroupedIntoOneLine() {
+        List<SkippedItem> skipped = new ArrayList<>();
+        for (int slot = 0; slot <= 40; slot++) {
+            skipped.add(SkippedItem.deserializeFailed(slot, new IllegalArgumentException("Material cannot be null")));
+        }
+        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, skipped);
+
+        assertEquals(Arrays.asList(
+                "  - 41 item(s) failed to deserialize:",
+                "      java.lang.IllegalArgumentException: Material cannot be null: slots 0-40"),
+                result.describe());
+    }
+
+    @Test
+    void differentErrorsGetOneLineEachInOrderOfFirstAppearance() {
+        IllegalArgumentException noMaterial = new IllegalArgumentException("Material cannot be null");
+        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, Arrays.asList(
+                SkippedItem.deserializeFailed(0, noMaterial),
+                SkippedItem.deserializeFailed(1, noMaterial),
+                SkippedItem.deserializeFailed(12, new IllegalStateException("Broken meta")),
+                SkippedItem.deserializeFailed(36, noMaterial)));
+
+        assertEquals(Arrays.asList(
+                "  - 4 item(s) failed to deserialize:",
+                "      java.lang.IllegalArgumentException: Material cannot be null: slots 0-1, 36",
+                "      java.lang.IllegalStateException: Broken meta: slot 12"),
                 result.describe());
     }
 

@@ -23,6 +23,7 @@ package com.sugar_tree.inventoryshare.file;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,11 @@ import java.util.Map;
  * What could not be loaded from one inventory file.
  */
 final class LoadResult {
+
+    /** Indent of a problem line in {@link #describe()} */
+    private static final String PROBLEM = "  - ";
+    /** Indent of a line under a problem line */
+    private static final String DETAIL = "      ";
 
     private final int formatVersion;
     private final int serverDataVersion;
@@ -62,13 +68,19 @@ final class LoadResult {
     }
 
     /**
-     * @return one line per problem kind, e.g.
-     *         {@code 38 item(s) saved by a newer Minecraft version (data version up to 4189 > 3955): slots 0-35, 38, 40}
+     * Lines to log, already indented: one line per problem kind, e.g.
+     * <pre>
+     *   - 38 item(s) saved by a newer Minecraft version (data version up to 4189 > 3955): slots 0-35, 38, 40
+     *   - 41 item(s) failed to deserialize:
+     *       java.lang.IllegalArgumentException: Material cannot be null: slots 0-40
+     * </pre>
+     * Items skipped for an invalid data version or a deserialization error are listed under their problem line,
+     * one line per distinct value or error.
      */
     List<String> describe() {
         List<String> lines = new ArrayList<>();
         if (formatVersion > Codec.FORMAT_VERSION) {
-            lines.add("format-version " + formatVersion + " is newer than this plugin supports ("
+            lines.add(PROBLEM + "format-version " + formatVersion + " is newer than this plugin supports ("
                     + Codec.FORMAT_VERSION + ")");
         }
         Map<SkippedItem.Reason, List<SkippedItem>> byReason = new EnumMap<>(SkippedItem.Reason.class);
@@ -79,14 +91,16 @@ final class LoadResult {
             List<SkippedItem> items = entry.getValue();
             switch (entry.getKey()) {
                 case NEWER_VERSION:
-                    lines.add(items.size() + " item(s) saved by a newer Minecraft version (data version up to "
+                    lines.add(PROBLEM + items.size() + " item(s) saved by a newer Minecraft version (data version up to "
                             + newestDataVersion() + " > " + serverDataVersion + "): " + formatSlots(items));
                     break;
                 case INVALID_VERSION:
-                    lines.add(items.size() + " item(s) with an invalid data version: " + formatDetails(items));
+                    lines.add(PROBLEM + items.size() + " item(s) with an invalid data version:");
+                    lines.addAll(formatDetails(items));
                     break;
                 case DESERIALIZE_FAILED:
-                    lines.add(items.size() + " item(s) failed to deserialize: " + formatDetails(items));
+                    lines.add(PROBLEM + items.size() + " item(s) failed to deserialize:");
+                    lines.addAll(formatDetails(items));
                     break;
             }
         }
@@ -113,14 +127,20 @@ final class LoadResult {
     }
 
     /**
-     * @return e.g. {@code slot 3 ("abc"), slot 12 (IllegalArgumentException: ...)}
+     * @param items in ascending slot order
+     * @return one indented line per distinct detail, in order of first appearance, e.g.
+     *         {@code java.lang.IllegalArgumentException: Material cannot be null: slots 0-40}
      */
-    static String formatDetails(List<SkippedItem> items) {
-        List<String> details = new ArrayList<>();
+    static List<String> formatDetails(List<SkippedItem> items) {
+        Map<String, List<SkippedItem>> byDetail = new LinkedHashMap<>();
         for (SkippedItem item : items) {
-            details.add("slot " + item.slot + " (" + item.detail + ")");
+            byDetail.computeIfAbsent(item.detail, detail -> new ArrayList<>()).add(item);
         }
-        return String.join(", ", details);
+        List<String> lines = new ArrayList<>();
+        for (Map.Entry<String, List<SkippedItem>> entry : byDetail.entrySet()) {
+            lines.add(DETAIL + entry.getKey() + ": " + formatSlots(entry.getValue()));
+        }
+        return lines;
     }
 
     /** One item left out while loading; its slot stays empty. */

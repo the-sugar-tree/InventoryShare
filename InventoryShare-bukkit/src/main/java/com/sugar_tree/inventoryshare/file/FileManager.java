@@ -158,7 +158,7 @@ public final class FileManager implements IFileManager {
         }
         logger.severe("[" + category + "] Some data in " + source.getName() + " could not be loaded:");
         for (String line : result.describe()) {
-            logger.severe("  - " + line);
+            logger.severe(line);
         }
         File backupDirectory = new File(plugin.getDataFolder(), "backups");
         try {
