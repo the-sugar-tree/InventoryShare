@@ -82,12 +82,24 @@ public final class FileManager implements IFileManager {
             InventoryStorage teamInventory = registry.getTeamInventory(team.getName());
             if (teamInventory == null) continue;
             writeInventory(fileConfiguration, teamInventory);
-            teamInvFileList.put(fileConfiguration, file);
+            saveFile(fileConfiguration, file);
             sb.append("[").append(team.getName()).append("] ");
             savedLeastOneTeam = true;
         }
         if (savedLeastOneTeam) logger.info(sb.toString());
-        saveConfigs();
+
+        deleteWasteFiles();
+        plugin.saveConfig();
+        saveFile(invconfig, invfile);
+        saveFile(advconfig, advfile);
+    }
+
+    private static void saveFile(FileConfiguration config, File file) {
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Could not save " + file.getPath(), e);
+        }
     }
 
     @Override
