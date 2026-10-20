@@ -124,12 +124,22 @@ public final class I18NUtil {
 
         final FileConfiguration config;
 
+        /**
+         * Keys missing from the file fall back to the same language file in the plugin jar, or to the default language
+         * for a language the jar does not have: the file is only updated when the plugin version changes, so a key
+         * added within a version is not in it yet.
+         */
         static Bundle getBundle(String locale) throws NoSuchFileException {
             File file = I18NFileManager.languageFile(plugin.getDataFolder(), locale);
             if (!file.exists()) {
                 throw new NoSuchFileException("There's no language files with name: " + locale + ".yml");
             }
-            return new Bundle(YamlConfiguration.loadConfiguration(file));
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+            InputStream is = InventoryShare.class.getResourceAsStream("/languages/lang_" + locale + ".yml");
+            config.setDefaults(is == null
+                    ? getDefaultBundle().config
+                    : YamlConfiguration.loadConfiguration(new InputStreamReader(is, StandardCharsets.UTF_8)));
+            return new Bundle(config);
         }
 
         static Bundle getDefaultBundle() {
