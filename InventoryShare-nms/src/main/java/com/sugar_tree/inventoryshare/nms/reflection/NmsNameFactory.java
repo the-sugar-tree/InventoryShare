@@ -78,6 +78,7 @@ public final class NmsNameFactory {
             }
             names.inventoryOwnerClass(versionedNms(pkg, "EntityHuman"))
                     .playerInventoryClass(versionedNms(pkg, "PlayerInventory"))
+                    .playerClass(versionedNms(pkg, "EntityHuman"))
                     .itemStackClass(versionedNms(pkg, "ItemStack"))
                     .nonNullListClass(versionedNms(pkg, "NonNullList"));
         } else {
@@ -85,6 +86,8 @@ public final class NmsNameFactory {
                             "net.minecraft.server.level.EntityPlayer", "net.minecraft.server.level.ServerPlayer"))
                     .playerInventoryClass(byMappingType(runtime,
                             "net.minecraft.world.entity.player.PlayerInventory", "net.minecraft.world.entity.player.Inventory"))
+                    .playerClass(byMappingType(runtime,
+                            "net.minecraft.world.entity.player.EntityHuman", "net.minecraft.world.entity.player.Player"))
                     .itemStackClass(ITEM_STACK)
                     .nonNullListClass(NON_NULL_LIST);
         }

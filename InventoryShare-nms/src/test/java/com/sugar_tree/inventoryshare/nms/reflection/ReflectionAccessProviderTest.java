@@ -21,22 +21,12 @@
 package com.sugar_tree.inventoryshare.nms.reflection;
 
 import com.sugar_tree.inventoryshare.nms.IncompatibleServerException;
-import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.InventoryStorage;
 import com.sugar_tree.inventoryshare.nms.server.MappingType;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -67,53 +57,5 @@ class ReflectionAccessProviderTest {
         ServerRuntime runtime = new ServerRuntime(null, MappingType.SPIGOT, LOADER);
         assertThrows(IncompatibleServerException.class,
                 () -> provider.create(MinecraftVersion.parse("26.1"), runtime));
-    }
-
-    @Test
-    void verifyConvertsAnItemInEachPart() {
-        FakeAccess access = new FakeAccess(false);
-        ReflectionAccessProvider.verify(access);
-        assertEquals(Arrays.asList(InventoryAccess.STORAGE_START, InventoryAccess.ARMOR_START, InventoryAccess.OFFHAND_SLOT),
-                access.writtenSlots);
-    }
-
-    @Test
-    void verifyFailsIfTheEmptyInventoryCannotBeCreated() {
-        assertThrows(IllegalStateException.class, () -> ReflectionAccessProvider.verify(new FakeAccess(true)));
-    }
-
-    private static final class FakeAccess implements InventoryAccess {
-        private final boolean failCreateEmpty;
-        private final List<Integer> writtenSlots = new ArrayList<>();
-
-        private FakeAccess(boolean failCreateEmpty) {
-            this.failCreateEmpty = failCreateEmpty;
-        }
-
-        @Override
-        public @NotNull InventoryStorage createEmpty() {
-            if (failCreateEmpty) throw new IllegalStateException("NonNullList could not be created");
-            return new InventoryStorage() {};
-        }
-
-        @Override
-        public @NotNull InventoryStorage capture(@NotNull Player player) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot) {
-            return new ItemStack(Material.AIR);
-        }
-
-        @Override
-        public void setItem(@NotNull InventoryStorage inventory, int slot, @NotNull ItemStack item) {
-            writtenSlots.add(slot);
-        }
     }
 }

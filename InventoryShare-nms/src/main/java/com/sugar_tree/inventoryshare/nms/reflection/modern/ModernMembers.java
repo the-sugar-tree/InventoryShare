@@ -23,6 +23,7 @@ package com.sugar_tree.inventoryshare.nms.reflection.modern;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -39,9 +40,13 @@ public final class ModernMembers {
     private final Method getHandle;
     private final Method getInventory;
     private final Class<?> inventory;
+    /** {@code Inventory(Player, EntityEquipment)}, to verify the field writes on an inventory of no player */
+    private final Constructor<?> newInventory;
     private final Field items;
     private final Field equipment;
     private final Class<?> entityEquipment;
+    /** {@code EntityEquipment()}, for the inventory above */
+    private final Constructor<?> newEntityEquipment;
     private final Field equipmentItems;
     private final Class<?> equipmentSlot;
     private final Field slotMapping;
@@ -55,14 +60,17 @@ public final class ModernMembers {
     private ModernMembers(ModernNames names, ClassLoader loader) throws ReflectiveOperationException {
         craftPlayer = load(names.getCraftPlayerClass(), loader);
         getHandle = craftPlayer.getMethod("getHandle");
-        getInventory = load(names.getPlayerClass(), loader).getMethod(names.getGetInventory());
+        Class<?> player = load(names.getPlayerClass(), loader);
+        getInventory = player.getMethod(names.getGetInventory());
 
         inventory = load(names.getInventoryClass(), loader);
+        entityEquipment = load(names.getEntityEquipmentClass(), loader);
+        newInventory = inventory.getConstructor(player, entityEquipment);
         items = accessible(inventory.getDeclaredField(names.getItems()));
         equipment = accessible(inventory.getDeclaredField(names.getEquipment()));
         slotMapping = accessible(inventory.getDeclaredField(names.getSlotMapping()));
 
-        entityEquipment = load(names.getEntityEquipmentClass(), loader);
+        newEntityEquipment = entityEquipment.getConstructor();
         equipmentItems = accessible(entityEquipment.getDeclaredField(names.getEquipmentItems()));
         equipmentSlot = load(names.getEquipmentSlotClass(), loader);
 

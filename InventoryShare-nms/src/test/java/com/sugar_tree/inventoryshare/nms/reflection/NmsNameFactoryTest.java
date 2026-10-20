@@ -98,6 +98,7 @@ class NmsNameFactoryTest {
         assertEquals("org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack", names.getCraftItemStackClass());
         assertEquals("net.minecraft.server.v1_16_R3.EntityHuman", names.getInventoryOwnerClass());
         assertEquals("net.minecraft.server.v1_16_R3.PlayerInventory", names.getPlayerInventoryClass());
+        assertEquals("net.minecraft.server.v1_16_R3.EntityHuman", names.getPlayerClass());
         assertEquals("net.minecraft.server.v1_16_R3.ItemStack", names.getItemStackClass());
         assertEquals("net.minecraft.server.v1_16_R3.NonNullList", names.getNonNullListClass());
         assertTrue(names.isInventoryField());
@@ -114,6 +115,7 @@ class NmsNameFactoryTest {
         assertEquals("org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.server.level.EntityPlayer", names.getInventoryOwnerClass());
         assertEquals("net.minecraft.world.entity.player.PlayerInventory", names.getPlayerInventoryClass());
+        assertEquals("net.minecraft.world.entity.player.EntityHuman", names.getPlayerClass());
         assertEquals("net.minecraft.world.item.ItemStack", names.getItemStackClass());
         assertEquals("net.minecraft.core.NonNullList", names.getNonNullListClass());
         assertFalse(names.isInventoryField());
@@ -130,6 +132,7 @@ class NmsNameFactoryTest {
         assertEquals("org.bukkit.craftbukkit.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.server.level.ServerPlayer", names.getInventoryOwnerClass());
         assertEquals("net.minecraft.world.entity.player.Inventory", names.getPlayerInventoryClass());
+        assertEquals("net.minecraft.world.entity.player.Player", names.getPlayerClass());
         assertFalse(names.isInventoryField());
         assertEquals("getInventory", names.getInventory());
         assertEquals("items", names.getItems());

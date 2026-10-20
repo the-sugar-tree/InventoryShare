@@ -48,6 +48,8 @@ public final class LegacyNames {
 
     // Player inventory
     private final @NonNull String playerInventoryClass;
+    /** Parameter of the player inventory's constructor ({@code EntityHuman} / {@code Player}) */
+    private final @NonNull String playerClass;
     private final @NonNull String items;
     private final @NonNull String armor;
     private final @NonNull String extraSlots;

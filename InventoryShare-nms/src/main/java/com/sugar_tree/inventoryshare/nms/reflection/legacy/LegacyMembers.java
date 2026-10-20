@@ -23,6 +23,7 @@ package com.sugar_tree.inventoryshare.nms.reflection.legacy;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -41,6 +42,8 @@ public final class LegacyMembers {
     /** {@link Field} before 1.17, {@link Method} from 1.17 */
     private final Member inventory;
     private final Class<?> playerInventory;
+    /** {@code PlayerInventory(EntityHuman)}, to verify the field writes on an inventory of no player */
+    private final Constructor<?> newPlayerInventory;
     private final Field items;
     private final Field armor;
     private final Field extraSlots;
@@ -60,6 +63,7 @@ public final class LegacyMembers {
                 : inventoryOwner.getMethod(names.getInventory());
 
         playerInventory = load(names.getPlayerInventoryClass(), loader);
+        newPlayerInventory = playerInventory.getConstructor(load(names.getPlayerClass(), loader));
         items = accessible(playerInventory.getField(names.getItems()));
         armor = accessible(playerInventory.getField(names.getArmor()));
         extraSlots = accessible(playerInventory.getField(names.getExtraSlots()));

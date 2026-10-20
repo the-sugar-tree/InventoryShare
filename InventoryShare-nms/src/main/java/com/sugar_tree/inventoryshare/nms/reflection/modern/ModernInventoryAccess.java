@@ -33,6 +33,7 @@ import java.util.Map;
 
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.get;
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.invoke;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.newInstance;
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.setAll;
 
 /**
@@ -58,6 +59,7 @@ public final class ModernInventoryAccess implements InventoryAccess {
             }
             equipmentSlots[slot - ARMOR_START] = equipmentSlot;
         }
+        verify();
     }
 
     @Override
@@ -69,17 +71,39 @@ public final class ModernInventoryAccess implements InventoryAccess {
 
     @Override
     public @NotNull InventoryStorage capture(@NotNull Player player) {
-        Object inventory = playerInventory(player);
+        return captureFrom(playerInventory(player));
+    }
+
+    @Override
+    public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
+        applyTo(playerInventory(player), inventory);
+    }
+
+    /**
+     * Uses every member once, so a broken one fails while the plugin is starting instead of when an inventory is
+     * loaded or a player joins: converts an item both ways in the storage, armor and offhand of an empty inventory,
+     * then applies that inventory to a new inventory of no player (with its own new equipment) and captures it back.
+     * Applying writes the same fields as {@link #apply}, so a server or JVM that refuses the writes fails here too.
+     */
+    private void verify() {
+        InventoryStorage empty = createEmpty();
+        for (int slot : new int[]{STORAGE_START, ARMOR_START, OFFHAND_SLOT}) {
+            setItem(empty, slot, getItem(empty, slot));
+        }
+        Object detached = newInstance(members.getNewInventory(), null, newInstance(members.getNewEntityEquipment()));
+        applyTo(detached, empty);
+        captureFrom(detached);
+    }
+
+    private InventoryStorage captureFrom(Object inventory) {
         Object entityEquipment = get(members.getEquipment(), inventory);
         return new ModernStorage(
                 (AbstractList<Object>) get(members.getItems(), inventory),
                 (Map<Object, Object>) get(members.getEquipmentItems(), entityEquipment));
     }
 
-    @Override
-    public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
+    private void applyTo(Object target, InventoryStorage inventory) {
         ModernStorage storage = (ModernStorage) inventory;
-        Object target = playerInventory(player);
         // The inventory's EntityEquipment is the player's own equipment, so this also changes what others see
         Object entityEquipment = get(members.getEquipment(), target);
         setAll(FieldWrite.of(members.getItems(), target, storage.items),

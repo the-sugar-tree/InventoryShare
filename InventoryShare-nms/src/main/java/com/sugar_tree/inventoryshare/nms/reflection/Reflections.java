@@ -23,6 +23,7 @@ package com.sugar_tree.inventoryshare.nms.reflection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -55,6 +56,19 @@ public final class Reflections {
         try {
             return method.invoke(target, args);
         } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) throw (RuntimeException) cause;
+            if (cause instanceof Error) throw (Error) cause;
+            throw new IllegalStateException(cause);
+        }
+    }
+
+    public static Object newInstance(@NotNull Constructor<?> constructor, Object... args) {
+        try {
+            return constructor.newInstance(args);
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new IllegalStateException(e);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();

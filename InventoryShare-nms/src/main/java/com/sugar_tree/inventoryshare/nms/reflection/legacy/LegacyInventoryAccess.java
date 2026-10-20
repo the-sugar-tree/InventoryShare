@@ -34,6 +34,7 @@ import java.util.AbstractList;
 
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.get;
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.invoke;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.newInstance;
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.setAll;
 
 /**
@@ -49,6 +50,7 @@ public final class LegacyInventoryAccess implements InventoryAccess {
     public LegacyInventoryAccess(@NotNull LegacyMembers members) {
         this.members = members;
         this.emptyItem = get(members.getEmptyItem(), null);
+        verify();
     }
 
     @Override
@@ -58,17 +60,39 @@ public final class LegacyInventoryAccess implements InventoryAccess {
 
     @Override
     public @NotNull InventoryStorage capture(@NotNull Player player) {
-        Object inventory = playerInventory(player);
+        return captureFrom(playerInventory(player));
+    }
+
+    @Override
+    public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
+        applyTo(playerInventory(player), inventory);
+    }
+
+    /**
+     * Uses every member once, so a broken one fails while the plugin is starting instead of when an inventory is
+     * loaded or a player joins: converts an item both ways in each list of an empty inventory, then applies that
+     * inventory to a new player inventory of no player and captures it back. Applying writes the same fields as
+     * {@link #apply}, so a server or JVM that refuses the writes fails here too.
+     */
+    private void verify() {
+        InventoryStorage empty = createEmpty();
+        for (int slot : new int[]{STORAGE_START, ARMOR_START, OFFHAND_SLOT}) {
+            setItem(empty, slot, getItem(empty, slot));
+        }
+        Object detached = newInstance(members.getNewPlayerInventory(), (Object) null);
+        applyTo(detached, empty);
+        captureFrom(detached);
+    }
+
+    private InventoryStorage captureFrom(Object inventory) {
         return new LegacyStorage(
                 (AbstractList<Object>) get(members.getItems(), inventory),
                 (AbstractList<Object>) get(members.getArmor(), inventory),
                 (AbstractList<Object>) get(members.getExtraSlots(), inventory));
     }
 
-    @Override
-    public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
+    private void applyTo(Object target, InventoryStorage inventory) {
         LegacyStorage lists = (LegacyStorage) inventory;
-        Object target = playerInventory(player);
         setAll(FieldWrite.of(members.getItems(), target, lists.items),
                 FieldWrite.of(members.getArmor(), target, lists.armor),
                 FieldWrite.of(members.getExtraSlots(), target, lists.extraSlots),
