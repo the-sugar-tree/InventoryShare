@@ -36,6 +36,10 @@ import static com.sugar_tree.inventoryshare.SharedConstants.advlist;
 public class AdvancementUtil {
     private AdvancementUtil() {}
 
+    /**
+     * Adds the advancements the player has completed to the shared list, then awards every advancement in the list
+     * to all online players. Does nothing while advancement sharing is off.
+     */
     public static void AdvancementPatch(Player player) {
         if (!advancement) {
             return;

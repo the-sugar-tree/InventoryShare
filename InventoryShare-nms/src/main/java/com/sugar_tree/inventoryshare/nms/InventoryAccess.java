@@ -59,5 +59,8 @@ public interface InventoryAccess {
      */
     @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot);
 
+    /**
+     * Stores an NMS copy of the item in the slot; later changes to {@code item} do not affect the inventory.
+     */
     void setItem(@NotNull InventoryStorage inventory, int slot, @NotNull ItemStack item);
 }

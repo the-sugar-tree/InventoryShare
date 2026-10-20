@@ -72,7 +72,7 @@ public final class Listeners implements Listener {
 
     @EventHandler
     public void onWorldSave(WorldSaveEvent event) {
-        // FIXME: 3번 저장되는 오류 수정
+        // FIXME: WorldSaveEvent is called once per world, so this saves once per world (three times by default)
 
         FileManager.save();
         if (inventory) {
@@ -106,6 +106,7 @@ public final class Listeners implements Listener {
 
     /** Last seen team of each online player, keyed by UUID; removed when the player quits */
     private final Map<UUID, Team> teamMap = new HashMap<>();
+    /** Runs every tick: while inventory sharing and team inventories are on, updates the inventory of each player whose team changed */
     @SuppressWarnings("deprecation")
     public void onTick() {
         for (Player p : Bukkit.getOnlinePlayers()) {

@@ -35,6 +35,10 @@ public final class UpdateUtil {
     private UpdateUtil() {}
 
     private static String version;
+    /**
+     * Asks GitHub for the latest release and logs a warning if its tag is not {@code v<plugin version>}.
+     * A connection or parse error is logged instead of thrown.
+     */
     public static void showUpdateInformation() {
         try {
             String url = "https://api.github.com/repos/the-sugar-tree/InventoryShare/releases/latest";

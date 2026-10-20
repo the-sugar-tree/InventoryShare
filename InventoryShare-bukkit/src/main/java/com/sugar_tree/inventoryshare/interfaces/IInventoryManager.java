@@ -29,39 +29,43 @@ import java.util.UUID;
 public interface IInventoryManager {
 
     /**
-     * Apply all inventory to specific player
+     * Makes the player use the inventory shared by all players. The player's own inventory is saved first if they
+     * are using it.
      * @param p Player to apply
      */
     void applyAllInventory(@NotNull Player p);
 
     /**
-     * Apply team inventory to specific player
+     * Makes the player use the team's inventory, created empty if the team has none yet. The player's own inventory
+     * is saved first if they are using it.
      * @param p Player to apply
      * @param team Team name to apply
      */
     void applyTeamInventory(@NotNull Player p, @NotNull String team);
 
     /**
-     * Apply personal(normal) inventory to specific player
+     * Gives the player back their own inventory, if it was saved
      * @param p Player to apply to
      */
     void applyPersonalInventory(@NotNull Player p);
 
     /**
-     * Apply inventory to specific player automatically
+     * Applies the inventory the current settings call for: the player's own one if inventory sharing is off,
+     * otherwise their team's one if team inventories are on and they have a team, otherwise the shared one
      * @param p Player to apply
      */
     void updateInventroy(@NotNull Player p);
 
     /**
-     * Save player's inventory to list
+     * Saves the player's own inventory so it can be given back later
      * @param p Player to save
+     * @throws IllegalStateException if the player is not using their own inventory
      */
     void savePlayerInventory(@NotNull Player p);
 
     /**
-     * used for plugin disenable logic
-     * @return saved player's uuid list
+     * Used when the plugin is disabled, to give these players back their own inventory
+     * @return UUIDs of the players whose own inventory is saved
      */
     Set<UUID> getRegisteredPlayers();
 

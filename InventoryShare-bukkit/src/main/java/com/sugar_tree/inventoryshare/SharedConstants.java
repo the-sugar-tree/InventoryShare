@@ -59,7 +59,9 @@ public final class SharedConstants {
     public static String I18N_TEAM_LOADED;
 
     /**
-     * @see <a href="https://minecraft.wiki/w/Data_version">here</a>
+     * Data version of the running server, or {@code -1} if the server cannot report it.
+     *
+     * @see <a href="https://minecraft.wiki/w/Data_version">Data version</a>
      */
     public static final int WORLD_VERSION;
 

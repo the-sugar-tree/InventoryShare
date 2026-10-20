@@ -54,7 +54,8 @@ public final class NmsNameFactory {
 
     /**
      * @throws IllegalArgumentException    if the version does not use the legacy model
-     * @throws IncompatibleServerException if the server's names are unknown for it (Mojang's names before 1.17)
+     * @throws IncompatibleServerException if the server's names are unknown for it (before 1.17: Mojang's names, or
+     *                                     a CraftBukkit package without a version)
      */
     public static @NotNull LegacyNames legacy(@NotNull MinecraftVersion version, @NotNull ServerRuntime runtime)
             throws IncompatibleServerException {

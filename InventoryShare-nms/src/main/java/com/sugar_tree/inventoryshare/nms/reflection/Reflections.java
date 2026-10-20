@@ -31,8 +31,9 @@ import java.lang.reflect.Method;
 /**
  * Reflection helpers shared by the inventory models.
  *
- * <p>Members are resolved and made accessible up front, so an access failure afterwards is a bug and is thrown as
- * {@link IllegalStateException}. An exception thrown by the invoked method itself is rethrown as is.
+ * <p>Members are resolved and made accessible up front, so an access failure afterward is a bug and is thrown as
+ * {@link IllegalStateException}. An unchecked exception thrown by the invoked method or constructor itself is rethrown
+ * as is; a checked one is wrapped in {@link IllegalStateException}.
  */
 public final class Reflections {
 

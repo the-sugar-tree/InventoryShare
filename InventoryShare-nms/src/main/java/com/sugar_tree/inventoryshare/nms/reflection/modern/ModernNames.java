@@ -40,7 +40,10 @@ public final class ModernNames {
     private final @NonNull String bukkitItemStackClass;
 
     // Player -> inventory
-    /** Class declaring {@link #getInventory}; {@code CraftPlayer#getHandle()} returns a subtype of it */
+    /**
+     * Class declaring {@link #getInventory}; {@code CraftPlayer#getHandle()} returns a subtype of it. Also the first
+     * parameter of the inventory's constructor.
+     */
     private final @NonNull String playerClass;
     private final @NonNull String getInventory;
 

@@ -58,7 +58,7 @@ public final class I18NUtil {
         }
         bundle = b;
 
-        // Store an inaccessible language variable in a shared variable in advance.
+        // Messages FileManager logs when it saves or loads team inventories
         I18N_TEAM_SAVED = I18NUtil.get("team_saved");
         I18N_TEAM_LOADED = I18NUtil.get("team_loaded");
     }
@@ -73,7 +73,7 @@ public final class I18NUtil {
     }
 
     /**
-     * Returns the translated value, including the reset character. In other words, the value corresponding to {@link ChatColor#RESET} is added at the beginning of the translated value.
+     * Returns the translated value, including the reset character. In other words, the value corresponding to {@link ChatColor#RESET} is added at the end of the translated value.
      * @param key The key value
      * @return The translated value with the reset character included (does not include the prefix)
      */

@@ -34,6 +34,10 @@ import org.bukkit.plugin.Plugin;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * While a player is breaking a block, cancels the slot update packets of their main hand item if that item is
+ * damaged. The player's inventory is sent again when they stop or abort breaking.
+ */
 public final class ProtocolLibManager {
     private final Plugin plugin;
     public ProtocolLibManager(Plugin plugin) {

@@ -3,7 +3,7 @@
 // Each subproject compiles against the Spigot server jar installed into mavenLocal by BuildTools.
 //
 // Also hosts local Paper test servers (run-task, https://github.com/jpenilla/run-task), one task per server:
-//   ./gradlew :InventoryShare-dev:runPaper_1_21_4
+//   ./gradlew -Pdev :InventoryShare-dev:runPaper_1_21_4
 
 plugins {
     id 'xyz.jpenilla.run-paper' version '3.0.2'     // 3.1.0 needs Gradle 9.7

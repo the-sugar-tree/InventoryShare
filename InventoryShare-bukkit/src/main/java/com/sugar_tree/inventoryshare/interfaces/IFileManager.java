@@ -22,17 +22,17 @@ package com.sugar_tree.inventoryshare.interfaces;
 
 public interface IFileManager {
     /**
-     * Save data to file
+     * Writes the shared and team inventories, the shared advancements and the settings to their files
      */
     void save();
 
     /**
-     * Load data from file
+     * Reads the shared and team inventories, the shared advancements and the settings from their files
      */
     void load();
 
     /**
-     * Delete old team files
+     * Deletes the inventory files of teams that no longer exist
      */
     void deleteWasteFiles();
 }

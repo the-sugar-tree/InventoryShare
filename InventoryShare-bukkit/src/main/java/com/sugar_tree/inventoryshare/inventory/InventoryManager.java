@@ -142,7 +142,7 @@ public final class InventoryManager implements IInventoryManager {
 
     private enum InventoryState {
         /**
-         * saved and {@link #PERSONAL} inventory state, this state means the player in this state should be applied another inventory now
+         * The player's own inventory has just been saved, and another inventory is about to be applied
          */
         SAVED,
         TEAM,

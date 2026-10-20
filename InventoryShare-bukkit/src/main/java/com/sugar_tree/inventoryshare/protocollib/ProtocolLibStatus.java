@@ -20,6 +20,9 @@
 
 package com.sugar_tree.inventoryshare.protocollib;
 
+/**
+ * {@link #ENABLED}: installed and enabled, {@link #DISABLED}: installed but not enabled, {@link #NEED}: not installed
+ */
 public enum ProtocolLibStatus {
     ENABLED, DISABLED, NEED
 }

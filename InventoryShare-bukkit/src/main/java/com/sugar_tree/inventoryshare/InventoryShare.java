@@ -116,7 +116,7 @@ public final class InventoryShare extends JavaPlugin {
         invconfig = YamlConfiguration.loadConfiguration(invfile);
         advconfig = YamlConfiguration.loadConfiguration(advfile);
         saveDefaultConfigs(); // Save default configurations
-        FileManager.load(); // Load file manager
+        FileManager.load(); // Load the saved inventories, advancements and settings
 
         // Load commands and event listeners
         TabExecutor commands = new Commands();
@@ -151,7 +151,7 @@ public final class InventoryShare extends JavaPlugin {
         }
         // Cancel any scheduled tasks for the listener
         if (listener != null) Bukkit.getScheduler().cancelTask(listener.getTaskId());
-        FileManager.save(); // Save file manager data
+        FileManager.save(); // Save the inventories, advancements and settings
     }
 
     private boolean loadNMS(MinecraftVersion minecraftVersion) {
