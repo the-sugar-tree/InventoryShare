@@ -203,6 +203,7 @@ InventoryAccessFactory.create(version, runtime) = supports(version)가 true인 �
 |---------------------------------------------|--------------------------------------------------------------------------------------|
 | `InventoryAccessProvider` (인터페이스)      | `supports(version)`: 이 버전을 맡는지 판단. 버전만 보고, 부작용 없음                 |
 |                                             | `create(version, runtime)`: 완성된 Access를 돌려주거나 `IncompatibleServerException` |
+|                                             |     `create()`로 Access를 돌려주기 전에, access가 동작하는지 테스트                  |
 | `ReflectionAccessProvider`                  | 이름표에 있는 모든 버전. 배포 jar가 쓰는 기본 구현                                   |
 | `DevInventoryAccessProvider` (dev 샌드박스) | 대상 버전 하나만 맡고, 직접 NMS로 작성한 `DirectInventoryAccess`를 돌려줌            |
 | `InventoryAccessFactory`                    | Provider 목록과 순서. **지원 여부를 판단하는 유일한 곳**                             |
@@ -288,6 +289,7 @@ Minecraft 1.21.4 (CraftBukkit (not relocated), MOJANG mappings), using LegacyInv
 
 - `LegacyMembers.resolve(names, loader)` / `ModernMembers.resolve(names, loader)`는 모든 클래스를 **인자로 받은 클래스 로더**에서 찾습니다. 서버에서는 서버 클래스 로더, 테스트에서는 버전별로 격리한 클래스 로더를 넘기므로, **테스트가 플러그인과 같은 코드**를 실행합니다.
 - 모든 이름은 플러그인이 켜질 때 한 번에 해석합니다. 하나라도 없으면 `IncompatibleServerException`으로 비활성화되고 인벤토리는 건드리지 않습니다.
+- 해석이 끝나면 `ReflectionAccessProvider`가 만든 Access를 한 번 써 봅니다: 빈 인벤토리를 만들고, 보관함·갑옷·왼손 칸(0, 36, 40)에서 아이템을 읽어 다시 씁니다. 빈 칸 목록 생성, 아이템 변환(`asBukkitCopy`/`asNMSCopy`), 칸 대응이 여기서 실패하면 역시 `IncompatibleServerException`입니다. 플레이어 인벤토리에 쓰는 `apply`는 접속한 플레이어가 있어야 하므로 시작할 때 확인하지 않습니다.
 - dev 샌드박스의 Provider는 플러그인 jar의 `META-INF/services`에 있으므로, 서버 클래스 로더가 아니라 플러그인 jar의 클래스 로더로 찾습니다.
 - 마인크래프트 버전: Paper는 `Server#getMinecraftVersion()`, Spigot은 `Bukkit.getBukkitVersion()`의 앞부분을 씁니다. 이름표는 Bukkit 버전 문자열(`1.21.11-R0.2-SNAPSHOT`)이 아니라 마인크래프트 버전(`1.21.11`)으로 찾습니다.
 - 26.1 이상은 이름표의 한 행(`ModernNameTable.v26`, "26.1 이상")이 맡습니다. 난독화가 없어 이름이 안정적이므로 새 버전도 일단 시도하고, 이름을 찾지 못하면 비활성화합니다.
