@@ -75,29 +75,9 @@ allprojects {
     jar.dependsOn('licenseFormat')
 }
 
-//tasks.withType(Test).configureEach {
-//    enabled = false
-//}
 tasks.withType(Jar).configureEach {
     enabled = false
 }
 tasks.withType(JavaCompile).configureEach {
     enabled = false
-}
-
-dependencies {
-    testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
-
-    // Junit
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-jar {
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    duplicatesStrategy = 'EXCLUDE'
-}
-
-test {
-    useJUnitPlatform()
 }
