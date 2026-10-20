@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare.nms.server;
 
+import com.sugar_tree.inventoryshare.nms.UnsupportedServerException;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -56,8 +57,10 @@ public final class ServerRuntime {
      * Detects the running server, using the class loader of its own {@code CraftServer} class. Unlike a plugin's
      * class loader, it does not search other plugins, so a class bundled in another plugin cannot be mistaken for
      * the server's.
+     *
+     * @throws UnsupportedServerException if the server is not based on CraftBukkit
      */
-    public static @NotNull ServerRuntime current() {
+    public static @NotNull ServerRuntime current() throws UnsupportedServerException {
         Class<?> craftServer = Bukkit.getServer().getClass();
         return detect(craftServer.getName(), craftServer.getClassLoader());
     }
@@ -66,9 +69,10 @@ public final class ServerRuntime {
      * @param craftServerClass name of the server's {@code CraftServer} class,
      *                         e.g. {@code org.bukkit.craftbukkit.v1_21_R3.CraftServer}
      * @param classLoader      class loader that can see the server's NMS, CraftBukkit and Bukkit classes
-     * @throws IllegalArgumentException if the class is not CraftBukkit's server
+     * @throws UnsupportedServerException if the class is not CraftBukkit's server
      */
-    public static @NotNull ServerRuntime detect(@NotNull String craftServerClass, @NotNull ClassLoader classLoader) {
+    public static @NotNull ServerRuntime detect(@NotNull String craftServerClass, @NotNull ClassLoader classLoader)
+            throws UnsupportedServerException {
         int lastDot = craftServerClass.lastIndexOf('.');
         String pkg = lastDot < 0 ? "" : craftServerClass.substring(0, lastDot);
         String craftbukkitPackage;
@@ -77,7 +81,7 @@ public final class ServerRuntime {
         } else if (pkg.startsWith(CRAFTBUKKIT + ".") && pkg.indexOf('.', CRAFTBUKKIT.length() + 1) < 0) {
             craftbukkitPackage = pkg.substring(CRAFTBUKKIT.length() + 1);
         } else {
-            throw new IllegalArgumentException("Not a CraftBukkit server: " + craftServerClass);
+            throw new UnsupportedServerException("Not a CraftBukkit server: " + craftServerClass);
         }
         MappingType mappingType = classExists(MOJANG_PROBE_CLASS, classLoader) ? MappingType.MOJANG : MappingType.SPIGOT;
         return new ServerRuntime(craftbukkitPackage, mappingType, classLoader);

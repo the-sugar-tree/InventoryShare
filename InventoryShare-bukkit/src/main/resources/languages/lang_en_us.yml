@@ -17,6 +17,7 @@ FILE_VERSION: '${version}'
 plugin_name: "Inventory Sharing Plugin"
 
 not_supported_version: "This plugin does not support this version: %s"
+not_supported_server: "This plugin does not support this server: %s (only CraftBukkit-based servers such as Spigot and Paper)"
 
 # ProtocolLib
 protocolLib_found: "ProtocolLib plugin has been detected."

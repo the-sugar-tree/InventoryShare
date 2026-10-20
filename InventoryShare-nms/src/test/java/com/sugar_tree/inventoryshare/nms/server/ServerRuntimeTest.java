@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare.nms.server;
 
+import com.sugar_tree.inventoryshare.nms.UnsupportedServerException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,22 +33,22 @@ class ServerRuntimeTest {
     private static final ClassLoader LOADER = ServerRuntimeTest.class.getClassLoader();
 
     @Test
-    void relocatedCraftBukkit() {
+    void relocatedCraftBukkit() throws UnsupportedServerException {
         ServerRuntime runtime = ServerRuntime.detect("org.bukkit.craftbukkit.v1_21_R3.CraftServer", LOADER);
         assertEquals("v1_21_R3", runtime.getCraftbukkitPackage());
         assertEquals(MappingType.SPIGOT, runtime.getMappingType());
     }
 
     @Test
-    void unrelocatedCraftBukkit() {
+    void unrelocatedCraftBukkit() throws UnsupportedServerException {
         ServerRuntime runtime = ServerRuntime.detect("org.bukkit.craftbukkit.CraftServer", LOADER);
         assertNull(runtime.getCraftbukkitPackage());
     }
 
     @Test
     void rejectsNonCraftBukkitServer() {
-        assertThrows(IllegalArgumentException.class, () -> ServerRuntime.detect("com.example.Server", LOADER));
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(UnsupportedServerException.class, () -> ServerRuntime.detect("com.example.Server", LOADER));
+        assertThrows(UnsupportedServerException.class,
                 () -> ServerRuntime.detect("org.bukkit.craftbukkit.v1_21_R3.inner.CraftServer", LOADER));
     }
 }

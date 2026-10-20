@@ -17,6 +17,7 @@ FILE_VERSION: '${version}'
 plugin_name: "인벤토리 공유 플러그인"
 
 not_supported_version: "이 플러그인은 이 버전을 지원하지 않습니다: %s"
+not_supported_server: "이 플러그인은 이 서버를 지원하지 않습니다: %s (Spigot, Paper 등 CraftBukkit 기반 서버만 지원)"
 
 # ProtocolLib
 protocolLib_found: "ProtocolLib 플러그인이 감지되었습니다."

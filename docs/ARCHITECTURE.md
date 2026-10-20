@@ -137,6 +137,7 @@ inventory = true, teaminventory = true    → 팀이 있으면 그 팀의 인벤
 
 | 실패                          | 원인                                                | 로그                                                          |
 |-------------------------------|-----------------------------------------------------|---------------------------------------------------------------|
+| `UnsupportedServerException`  | CraftBukkit 기반이 아닌 서버                        | "이 플러그인은 이 서버를 지원하지 않습니다" (신고 불필요)     |
 | `UnsupportedVersionException` | 지원하지 않는 마인크래프트 버전                     | "이 플러그인은 이 버전을 지원하지 않습니다" (신고 불필요)     |
 | `IncompatibleServerException` | 지원하는 버전인데 서버 내부 이름을 찾지 못함 (§4.2) | "Could not hook into Minecraft ... This is a bug" + 신고 안내 |
 
@@ -214,6 +215,7 @@ InventoryAccessFactory.create(version, runtime) = supports(version)가 true인 �
 
 | 예외                          | 뜻                                                                      | 던지는 곳                                                         |
 |-------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------|
+| `UnsupportedServerException`  | CraftBukkit 기반이 아닌 서버. 버전과 상관없이 **신고 불필요**           | `ServerRuntime.current` (서버 클래스가 CraftBukkit에 없을 때)     |
 | `UnsupportedVersionException` | 이 플러그인이 지원하지 않는 버전. **신고 불필요**                       | `InventoryAccessFactory.create` (맡을 Provider가 없을 때)         |
 | `IncompatibleServerException` | 지원하는 버전인데 이 서버에서 Access를 만들지 못함. **버그, 신고 필요** | Provider의 `create` (이름을 찾지 못함, 있을 수 없는 서버 조합 등) |
 
@@ -225,6 +227,7 @@ com.sugar_tree.inventoryshare.nms            API: core와 dev 샌드박스가 �
 ├─ InventoryStorage              인벤토리 칸 목록 묶음 (내용은 구현마다 다름)
 ├─ InventoryAccessFactory        Provider 선택, create(version, runtime)
 ├─ InventoryAccessProvider       Access를 만드는 구현의 약속 (supports / create)
+├─ UnsupportedServerException
 ├─ UnsupportedVersionException
 ├─ IncompatibleServerException
 │

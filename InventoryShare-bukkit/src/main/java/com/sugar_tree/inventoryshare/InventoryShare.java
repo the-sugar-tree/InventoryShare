@@ -27,6 +27,7 @@ import com.sugar_tree.inventoryshare.metrics.Metrics;
 import com.sugar_tree.inventoryshare.nms.IncompatibleServerException;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryAccessFactory;
+import com.sugar_tree.inventoryshare.nms.UnsupportedServerException;
 import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
@@ -164,6 +165,10 @@ public final class InventoryShare extends JavaPlugin {
 
             InventoryManager = new InventoryManager(access, registry);
             FileManager = new FileManager(access, registry);
+        } catch (UnsupportedServerException e) {
+            // Not a CraftBukkit-based server: not a bug, nothing to report
+            logger.severe(I18NUtil.get(false, false, "not_supported_server", Bukkit.getName() + " " + Bukkit.getVersion()));
+            return false;
         } catch (UnsupportedVersionException e) {
             // No provider supports the version: not a bug, nothing to report
             logger.severe(I18NUtil.get(false, false, "not_supported_version", minecraftVersion.toString()));
