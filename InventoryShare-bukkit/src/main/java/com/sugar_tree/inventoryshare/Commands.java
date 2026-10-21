@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
@@ -51,120 +52,16 @@ public final class Commands implements TabExecutor {
             }
             switch (args[0].toLowerCase()) {
                 case "inventory":
-                    if (args.length != 2) {
-                        sender.sendMessage(I18NUtil.get(true, "inv_get", String.valueOf(inventory)));
-                        break;
-                    }
-                    switch (args[1].toLowerCase()) {
-                        case "true":
-                            if (!inventory) {
-                                inventory = true;
-                                for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.updateInventory(p);
-                                }
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
-                            } else {
-                                sender.sendMessage(I18NUtil.get(true, "inv_already_y"));
-                            }
-                            break;
-                        case "false":
-                            if (inventory) {
-                                inventory = false;
-                                for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.updateInventory(p);
-                                }
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "inv_set", String.valueOf(inventory)));
-                            } else {
-                                sender.sendMessage(I18NUtil.get(true, "inv_already_n"));
-                            }
-                            break;
-                        default:
-                            sender.sendMessage(usageMessage);
-                    }
+                    setting(sender, args, "inv", inventory, value -> inventory = value, true);
                     break;
                 case "advancement":
-                    if (args.length != 2) {
-                        sender.sendMessage(I18NUtil.get(true, "adv_get", String.valueOf(advancement)));
-                        break;
-                    }
-                    switch (args[1].toLowerCase()) {
-                        case "true":
-                            if (!advancement) {
-                                advancement = true;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "adv_set", String.valueOf(advancement)));
-                            } else {
-                                sender.sendMessage(I18NUtil.get(true, "adv_already_y"));
-                            }
-                            break;
-                        case "false":
-                            if (advancement) {
-                                advancement = false;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "adv_set", String.valueOf(advancement)));
-                            } else {
-                                sender.sendMessage(I18NUtil.get(true, "adv_already_n"));
-                            }
-                            break;
-                        default:
-                            sender.sendMessage(usageMessage);
-                    }
+                    setting(sender, args, "adv", advancement, value -> advancement = value, false);
                     break;
                 case "announcedeath":
-                    if (args.length != 2) {
-                        sender.sendMessage(I18NUtil.get(true, "andeath_get", String.valueOf(announcedeath)));
-                        break;
-                    }
-                    switch (args[1].toLowerCase()) {
-                        case "true":
-                            if (!announcedeath) {
-                                announcedeath = true;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "andeath_set", String.valueOf(announcedeath)));
-                            } else {
-                                sender.sendMessage(I18NUtil.get(true, "andeath_already_y"));
-                            }
-                            break;
-                        case "false":
-                            if (announcedeath) {
-                                announcedeath = false;
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "andeath_set", String.valueOf(announcedeath)));
-                            } else {
-                                sender.sendMessage(I18NUtil.get(true, "andeath_already_n"));
-                            }
-                            break;
-                        default:
-                            sender.sendMessage(usageMessage);
-                    }
+                    setting(sender, args, "andeath", announcedeath, value -> announcedeath = value, false);
                     break;
                 case "teaminventory":
-                    if (args.length != 2) {
-                        sender.sendMessage(I18NUtil.get(true, "teaminv_get", String.valueOf(teaminventory)));
-                        break;
-                    }
-                    switch (args[1].toLowerCase()) {
-                        case "true":
-                            if (!teaminventory) {
-                                teaminventory = true;
-                                for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.updateInventory(p);
-                                }
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
-                            } else {
-                                sender.sendMessage(I18NUtil.get(true, "teaminv_already_y"));
-                            }
-                            break;
-                        case "false":
-                            if (teaminventory) {
-                                teaminventory = false;
-                                for (Player p : Bukkit.getOnlinePlayers()) {
-                                    InventoryManager.updateInventory(p);
-                                }
-                                Command.broadcastCommandMessage(sender, I18NUtil.get(true, "teaminv_set", String.valueOf(teaminventory)));
-                            } else {
-                                sender.sendMessage(I18NUtil.get(true, "teaminv_already_n"));
-                            }
-                            break;
-                        default:
-                            sender.sendMessage(usageMessage);
-                    }
+                    setting(sender, args, "teaminv", teaminventory, value -> teaminventory = value, true);
                     break;
                 case "reload":
                     if (args.length != 1) {
@@ -193,6 +90,46 @@ public final class Commands implements TabExecutor {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Shows a boolean setting, or sets it from {@code args[1]} ({@code true} / {@code false}).
+     *
+     * @param key       prefix of the setting's messages in the language file, e.g. {@code inv} for {@code inv_get},
+     *                  {@code inv_set}, {@code inv_already_y} and {@code inv_already_n}
+     * @param current   the setting's current value
+     * @param set       stores a new value
+     * @param reapply   whether online players' inventories must be applied again after a change
+     */
+    private void setting(CommandSender sender, String[] args, String key, boolean current, Consumer<Boolean> set,
+                         boolean reapply) {
+        if (args.length != 2) {
+            sender.sendMessage(I18NUtil.get(true, key + "_get", String.valueOf(current)));
+            return;
+        }
+        boolean value;
+        switch (args[1].toLowerCase()) {
+            case "true":
+                value = true;
+                break;
+            case "false":
+                value = false;
+                break;
+            default:
+                sender.sendMessage(usageMessage);
+                return;
+        }
+        if (value == current) {
+            sender.sendMessage(I18NUtil.get(true, key + (value ? "_already_y" : "_already_n")));
+            return;
+        }
+        set.accept(value);
+        if (reapply) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                InventoryManager.updateInventory(p);
+            }
+        }
+        Command.broadcastCommandMessage(sender, I18NUtil.get(true, key + "_set", String.valueOf(value)));
     }
 
     @Override
