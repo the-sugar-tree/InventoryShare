@@ -52,6 +52,12 @@ public final class FileManager implements IFileManager {
     private final InventoryRegistry registry;
     private final Codec codec;
 
+    private final File invfile = new File(plugin.getDataFolder(), "inventory.yml");
+    private final File advfile = new File(plugin.getDataFolder(), "advancements.yml");
+    /** Read by {@link #load()} */
+    private FileConfiguration invconfig;
+    private FileConfiguration advconfig;
+
     public FileManager(InventoryAccess access, InventoryRegistry registry) {
         this.access = access;
         this.registry = registry;
@@ -99,6 +105,9 @@ public final class FileManager implements IFileManager {
 
     @Override
     public boolean load() {
+        saveDefaultFiles();
+        invconfig = YamlConfiguration.loadConfiguration(invfile);
+        advconfig = YamlConfiguration.loadConfiguration(advfile);
         try {
             readInventory(invconfig, invfile, "inventory", registry.getSharedInventory(), "ALL");
 
@@ -132,6 +141,14 @@ public final class FileManager implements IFileManager {
             }
         }
         return true;
+    }
+
+    /** Creates {@code inventory.yml}, {@code advancements.yml} and the {@code teams} folder if they do not exist */
+    private void saveDefaultFiles() {
+        if (!invfile.exists()) plugin.saveResource("inventory.yml", false);
+        if (!advfile.exists()) plugin.saveResource("advancements.yml", false);
+        File teamDir = teamDirectory();
+        if (!teamDir.exists() && !teamDir.mkdir()) logger.severe("Failed to create folder: " + teamDir.getAbsolutePath());
     }
 
     private void writeInventory(FileConfiguration config, InventoryStorage inventory) {

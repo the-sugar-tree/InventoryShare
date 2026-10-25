@@ -39,11 +39,9 @@ import com.sugar_tree.inventoryshare.utils.UpdateUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -128,12 +126,7 @@ public final class InventoryShare extends JavaPlugin {
                 break;
         }
 
-        // Load configuration files
-        invfile = new File(getDataFolder(), "inventory.yml");
-        advfile = new File(getDataFolder(), "advancements.yml");
-        invconfig = YamlConfiguration.loadConfiguration(invfile);
-        advconfig = YamlConfiguration.loadConfiguration(advfile);
-        saveDefaultConfigs(); // Save default configurations
+        saveDefaultConfig(); // Save config.yml if it does not exist
         // Load the saved inventories and advancements
         if (!FileManager.load()) {
             this.setEnabled(false);
@@ -223,20 +216,5 @@ public final class InventoryShare extends JavaPlugin {
         } else {
             return ProtocolLibStatus.ENABLED; // Return ENABLED status if found and enabled
         }
-    }
-
-    private void saveDefaultConfigs() {
-        saveDefaultConfig(); // Save the default configuration
-        // Save inventory.yml if it does not exist
-        if (!(invfile.exists())) {
-            saveResource("inventory.yml", false);
-        }
-        // Save advancements.yml if it does not exist
-        if (!(advfile.exists())) {
-            saveResource("advancements.yml", false);
-        }
-        // Create a directory for teams if it does not exist
-        File teamDir = new File(getDataFolder(), "teams");
-        if (!teamDir.exists() && !teamDir.mkdir()) logger.severe("Failed to create folder: " + teamDir.getAbsolutePath());
     }
 }

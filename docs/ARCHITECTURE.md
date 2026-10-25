@@ -70,7 +70,7 @@ InventoryShare-dev/<ver>  (core는 그대로, InventoryAccess 구현만 주입)
 | `Commands`                                | `/inventoryshare` 명령어. 설정 켜기·끄기, `reload`, `check`                              |
 | `Listeners`                               | 접속·퇴장·월드 저장·발전과제·사망 이벤트, 팀 변경 감지(`onTick`)                         |
 | `PluginSettings`                          | `config.yml`의 설정값(`inventory`, `teaminventory` 등) 읽기·저장·`reload`                |
-| `SharedConstants`                         | `InventoryManager`/`FileManager`, 저장 파일 등 전역 상태                                 |
+| `SharedConstants`                         | `InventoryManager`/`FileManager`, 공유 발전과제 목록 등 전역 상태                        |
 | `inventory/InventoryRegistry`             | 인벤토리 보관소: 전체 공유 1개, 팀별 1개, 공유하는 동안 맡아 둔 플레이어별 개인 인벤토리 |
 | `inventory/InventoryManager`              | 플레이어를 개인 / 전체 공유 / 팀 인벤토리 사이에서 전환 (§3.2)                           |
 | `file/FileManager`, `Codec`, `LoadResult` | 공유·팀 인벤토리와 발전과제 저장·로드(§5)                                                |
@@ -133,7 +133,7 @@ inventory = true, teaminventory = true    → 팀이 있으면 그 팀의 인벤
 → MinecraftVersion.current()
 → loadNMS(): ServerRuntime.current() → InventoryAccessFactory.create() → InventoryRegistry / InventoryManager / FileManager
 → ProtocolLib 연동
-→ 설정 파일 로드 → FileManager.load() → 명령어·리스너 등록 → 접속 중인 플레이어에 공유 적용(/reload 시)
+→ config.yml 생성 → FileManager.load()(인벤토리·발전과제 파일 생성·로드) → 명령어·리스너 등록 → 접속 중인 플레이어에 공유 적용(/reload 시)
 ```
 
 버전 판별, `loadNMS()`, `FileManager.load()` 중 하나가 실패하면 플러그인을 비활성화합니다.

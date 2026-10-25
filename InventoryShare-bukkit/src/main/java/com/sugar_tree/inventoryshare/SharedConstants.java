@@ -25,10 +25,8 @@ import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -40,10 +38,6 @@ public final class SharedConstants {
     public static Logger logger;
 
     public static final String PREFIX = ChatColor.LIGHT_PURPLE + "[" + ChatColor.AQUA + "InventoryShare" + ChatColor.LIGHT_PURPLE + "] " + ChatColor.RESET;
-    public static FileConfiguration invconfig;
-    public static FileConfiguration advconfig;
-    public static File invfile;
-    public static File advfile;
     public static List<NamespacedKey> advlist = new ArrayList<>();
     public static IInventoryManager InventoryManager;
     public static IFileManager FileManager;

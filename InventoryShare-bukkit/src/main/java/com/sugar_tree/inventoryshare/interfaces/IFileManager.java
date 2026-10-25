@@ -22,12 +22,13 @@ package com.sugar_tree.inventoryshare.interfaces;
 
 public interface IFileManager {
     /**
-     * Writes the shared and team inventories, the shared advancements and the settings to their files
+     * Writes the shared and team inventories, and the shared advancements to their files
      */
     void save();
 
     /**
-     * Reads the shared and team inventories, the shared advancements and the settings from their files
+     * Reads the shared and team inventories, and the shared advancements from their files,
+     * creating the files that do not exist yet
      * @return {@code false} if the inventories could not be loaded (the error is logged); the plugin must not run then
      */
     boolean load();
