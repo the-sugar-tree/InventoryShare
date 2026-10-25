@@ -63,8 +63,8 @@ public final class I18NUtil {
         bundle = b;
 
         // Messages FileManager logs when it saves or loads team inventories
-        I18N_TEAM_SAVED = I18NUtil.get("team_saved");
-        I18N_TEAM_LOADED = I18NUtil.get("team_loaded");
+        I18N_TEAM_SAVED = I18NUtil.get(false, false, "team_saved");
+        I18N_TEAM_LOADED = I18NUtil.get(false, false, "team_loaded");
     }
 
     private static void saveLanguageInfo() {
