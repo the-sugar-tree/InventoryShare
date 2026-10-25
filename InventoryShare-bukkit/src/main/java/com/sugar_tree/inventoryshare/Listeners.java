@@ -20,6 +20,9 @@
 
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.interfaces.IFileManager;
+import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
+import com.sugar_tree.inventoryshare.utils.AdvancementRegistry;
 import com.sugar_tree.inventoryshare.utils.I18NUtil;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -50,9 +53,16 @@ public final class Listeners implements Listener {
     private final int taskId;
 
     private final PluginSettings settings;
+    private final IInventoryManager inventoryManager;
+    private final IFileManager fileManager;
+    private final AdvancementRegistry advancements;
 
-    public Listeners(PluginSettings settings) {
+    public Listeners(PluginSettings settings, IInventoryManager inventoryManager, IFileManager fileManager,
+                     AdvancementRegistry advancements) {
         this.settings = settings;
+        this.inventoryManager = inventoryManager;
+        this.fileManager = fileManager;
+        this.advancements = advancements;
         taskId = Bukkit.getScheduler().runTaskTimer(plugin, this::onTick, 0L, 0L).getTaskId();
     }
 
@@ -60,40 +70,38 @@ public final class Listeners implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \""+ I18NUtil.get("plugin_name")
                 + ChatColor.YELLOW + "\" by." + ChatColor.GREEN + "sugar_tree");
-        InventoryManager.updateInventory(event.getPlayer());
-        AdvancementPatch(event.getPlayer(), settings);
+        inventoryManager.updateInventory(event.getPlayer());
+        AdvancementPatch(event.getPlayer(), settings, advancements);
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        InventoryManager.applyPersonalInventory(player);
-        InventoryManager.forgetPlayer(player);
+        inventoryManager.applyPersonalInventory(player);
+        inventoryManager.forgetPlayer(player);
         teamMap.remove(player.getUniqueId());
-        FileManager.save();
+        fileManager.save();
     }
 
     @EventHandler
     public void onWorldSave(WorldSaveEvent event) {
         // FIXME: WorldSaveEvent is called once per world, so this saves once per world (three times by default)
 
-        FileManager.save();
+        fileManager.save();
         if (settings.isInventory()) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                InventoryManager.applyPersonalInventory(p);
+                inventoryManager.applyPersonalInventory(p);
                 p.saveData();
-                InventoryManager.updateInventory(p);
+                inventoryManager.updateInventory(p);
             }
         }
     }
 
     @EventHandler
     public void onAdvancement(PlayerAdvancementDoneEvent event) {
-        if (!(advlist.contains(event.getAdvancement().getKey()))) {
-            advlist.add(event.getAdvancement().getKey());
-        }
+        advancements.add(event.getAdvancement().getKey());
         if (settings.isAdvancement()) {
-            AdvancementPatch(event.getPlayer(), settings);
+            AdvancementPatch(event.getPlayer(), settings, advancements);
         }
     }
 
@@ -118,7 +126,7 @@ public final class Listeners implements Listener {
                     if (settings.isTeaminventory()) {
                         if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p.getUniqueId()))) {
                             teamMap.put(p.getUniqueId(), Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
-                            InventoryManager.updateInventory(p);
+                            inventoryManager.updateInventory(p);
                         }
                     }
                 }

@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.sugar_tree.inventoryshare.SharedConstants.advlist;
 
 public class AdvancementUtil {
     private AdvancementUtil() {}
@@ -40,7 +39,7 @@ public class AdvancementUtil {
      * Adds the advancements the player has completed to the shared list, then awards every advancement in the list
      * to all online players. Does nothing while advancement sharing is off.
      */
-    public static void AdvancementPatch(Player player, PluginSettings settings) {
+    public static void AdvancementPatch(Player player, PluginSettings settings, AdvancementRegistry advancements) {
         if (!settings.isAdvancement()) {
             return;
         }
@@ -50,11 +49,9 @@ public class AdvancementUtil {
             if (!progress.isDone()) {
                 continue;
             }
-            if (!(advlist.contains(progress.getAdvancement().getKey()))) {
-                advlist.add(progress.getAdvancement().getKey());
-            }
+            advancements.add(progress.getAdvancement().getKey());
         }
-        for (NamespacedKey namespacedKey : advlist) {
+        for (NamespacedKey namespacedKey : advancements.getAdvancements()) {
             Advancement adv = Bukkit.getServer().getAdvancement(namespacedKey);
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (p.getAdvancementProgress(adv).isDone()) {

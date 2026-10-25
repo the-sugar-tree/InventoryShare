@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare;
 
+import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
 import com.sugar_tree.inventoryshare.utils.I18NUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,9 +40,11 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 public final class Commands implements TabExecutor {
 
     private final PluginSettings settings;
+    private final IInventoryManager inventoryManager;
 
-    public Commands(PluginSettings settings) {
+    public Commands(PluginSettings settings, IInventoryManager inventoryManager) {
         this.settings = settings;
+        this.inventoryManager = inventoryManager;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -77,7 +80,7 @@ public final class Commands implements TabExecutor {
                     settings.reload();
                     // inventory / teaminventory may have changed, as with their commands
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        InventoryManager.updateInventory(p);
+                        inventoryManager.updateInventory(p);
                     }
                     I18NUtil.reload();
                     updateUsageMessage();
@@ -128,7 +131,7 @@ public final class Commands implements TabExecutor {
         set.accept(value);
         if (reapply) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                InventoryManager.updateInventory(p);
+                inventoryManager.updateInventory(p);
             }
         }
         Command.broadcastCommandMessage(sender, I18NUtil.get(true, key + "_set", String.valueOf(value)));

@@ -24,6 +24,7 @@ import com.sugar_tree.inventoryshare.interfaces.IFileManager;
 import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryStorage;
+import com.sugar_tree.inventoryshare.utils.AdvancementRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -50,6 +51,7 @@ public final class FileManager implements IFileManager {
 
     private final InventoryAccess access;
     private final InventoryRegistry registry;
+    private final AdvancementRegistry advancements;
     private final Codec codec;
 
     private final File invfile = new File(plugin.getDataFolder(), "inventory.yml");
@@ -58,9 +60,10 @@ public final class FileManager implements IFileManager {
     private FileConfiguration invconfig;
     private FileConfiguration advconfig;
 
-    public FileManager(InventoryAccess access, InventoryRegistry registry) {
+    public FileManager(InventoryAccess access, InventoryRegistry registry, AdvancementRegistry advancements) {
         this.access = access;
         this.registry = registry;
+        this.advancements = advancements;
         this.codec = new Codec(access, WORLD_VERSION);
     }
 
@@ -69,7 +72,7 @@ public final class FileManager implements IFileManager {
         writeInventory(invconfig, registry.getSharedInventory());
 
         List<String> serializedAdvancementList = new ArrayList<>();
-        for (NamespacedKey namespacedKey : advlist) {
+        for (NamespacedKey namespacedKey : advancements.getAdvancements()) {
             serializedAdvancementList.add(namespacedKey.getKey());
         }
         advconfig.set("advancement", serializedAdvancementList);
@@ -136,7 +139,7 @@ public final class FileManager implements IFileManager {
         List<String> advancementlist = advconfig.getStringList("advancement");
         for (String advancement : advancementlist) {
             try {
-                advlist.add(plugin.getServer().getAdvancement(NamespacedKey.minecraft(advancement)).getKey());
+                advancements.add(plugin.getServer().getAdvancement(NamespacedKey.minecraft(advancement)).getKey());
             } catch (NullPointerException ignored) {
             }
         }

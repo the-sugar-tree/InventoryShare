@@ -20,15 +20,10 @@
 
 package com.sugar_tree.inventoryshare;
 
-import com.sugar_tree.inventoryshare.interfaces.IFileManager;
-import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 @SuppressWarnings("deprecation")
@@ -38,9 +33,6 @@ public final class SharedConstants {
     public static Logger logger;
 
     public static final String PREFIX = ChatColor.LIGHT_PURPLE + "[" + ChatColor.AQUA + "InventoryShare" + ChatColor.LIGHT_PURPLE + "] " + ChatColor.RESET;
-    public static List<NamespacedKey> advlist = new ArrayList<>();
-    public static IInventoryManager InventoryManager;
-    public static IFileManager FileManager;
 
     public static String I18N_TEAM_SAVED;
     public static String I18N_TEAM_LOADED;

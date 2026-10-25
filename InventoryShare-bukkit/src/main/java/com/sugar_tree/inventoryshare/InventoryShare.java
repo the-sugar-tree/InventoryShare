@@ -21,6 +21,8 @@
 package com.sugar_tree.inventoryshare;
 
 import com.sugar_tree.inventoryshare.file.FileManager;
+import com.sugar_tree.inventoryshare.interfaces.IFileManager;
+import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
 import com.sugar_tree.inventoryshare.inventory.InventoryManager;
 import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.metrics.Metrics;
@@ -33,6 +35,7 @@ import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibManager;
 import com.sugar_tree.inventoryshare.protocollib.ProtocolLibStatus;
+import com.sugar_tree.inventoryshare.utils.AdvancementRegistry;
 import com.sugar_tree.inventoryshare.utils.AdvancementUtil;
 import com.sugar_tree.inventoryshare.utils.I18NUtil;
 import com.sugar_tree.inventoryshare.utils.UpdateUtil;
@@ -54,6 +57,9 @@ public final class InventoryShare extends JavaPlugin {
     private Listeners listener; // Listener for events
 
     private PluginSettings settings;
+    private final AdvancementRegistry advancements = new AdvancementRegistry();
+    private IInventoryManager inventoryManager;
+    private IFileManager fileManager;
 
     /**
      * Whether {@link #onEnable()} finished. {@code setEnabled(false)} inside {@code onEnable()} calls
@@ -128,23 +134,23 @@ public final class InventoryShare extends JavaPlugin {
 
         saveDefaultConfig(); // Save config.yml if it does not exist
         // Load the saved inventories and advancements
-        if (!FileManager.load()) {
+        if (!fileManager.load()) {
             this.setEnabled(false);
             return;
         }
         settings.load();
 
         // Load commands and event listeners
-        TabExecutor commands = new Commands(settings);
+        TabExecutor commands = new Commands(settings, inventoryManager);
         getCommand("inventoryshare").setExecutor(commands);
         getCommand("inventoryshare").setTabCompleter(commands);
-        listener = new Listeners(settings);
+        listener = new Listeners(settings, inventoryManager, fileManager, advancements);
         Bukkit.getPluginManager().registerEvents(listener, this);
 
         // Update inventories for online players if the server is reloaded
         for (Player player : Bukkit.getOnlinePlayers()) {
-            InventoryManager.updateInventory(player);
-            getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player, settings), 1);
+            inventoryManager.updateInventory(player);
+            getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player, settings, advancements), 1);
         }
         started = true;
 
@@ -154,23 +160,23 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Check if InventoryManager or FileManager is null
-        if (InventoryManager == null || FileManager == null) {
+        // Check if inventoryManager or fileManager is null
+        if (inventoryManager == null || fileManager == null) {
             // If not supported version or unexpected exception occurs
             return;
         }
         // Apply personal inventory for registered players, so the server saves their own inventory.
-        for (UUID puuid : InventoryManager.getRegisteredPlayers()) {
+        for (UUID puuid : inventoryManager.getRegisteredPlayers()) {
             if (getServer().getOfflinePlayer(puuid).isOnline()) {
                 Player p = (Player) getServer().getOfflinePlayer(puuid);
-                InventoryManager.applyPersonalInventory(p);
+                inventoryManager.applyPersonalInventory(p);
             }
         }
         // Cancel any scheduled tasks for the listener
         if (listener != null) Bukkit.getScheduler().cancelTask(listener.getTaskId());
         // After a failed start the loaded state may be incomplete; keep the files as they are
         if (!started) return;
-        FileManager.save(); // Save the inventories and advancements
+        fileManager.save(); // Save the inventories and advancements
         settings.save();
     }
 
@@ -183,8 +189,8 @@ public final class InventoryShare extends JavaPlugin {
             InventoryRegistry registry = new InventoryRegistry(access);
             logger.info("Minecraft " + minecraftVersion + " (" + runtime + "), using " + access.getClass().getSimpleName());
 
-            InventoryManager = new InventoryManager(access, registry, settings);
-            FileManager = new FileManager(access, registry);
+            inventoryManager = new InventoryManager(access, registry, settings);
+            fileManager = new FileManager(access, registry, advancements);
         } catch (UnsupportedServerException e) {
             // Not a CraftBukkit-based server: not a bug, nothing to report
             logger.severe(I18NUtil.get(false, false, "not_supported_server", Bukkit.getName() + " " + Bukkit.getVersion()));
