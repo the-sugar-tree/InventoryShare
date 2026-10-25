@@ -69,6 +69,17 @@ class FileManagerTest {
     }
 
     @Test
+    void advancementKeyWithoutNamespaceIsMinecraft() {
+        assertEquals("minecraft:story/root", FileManager.fullAdvancementKey("story/root"));
+    }
+
+    @Test
+    void advancementKeyWithNamespaceIsKept() {
+        assertEquals("minecraft:story/root", FileManager.fullAdvancementKey("minecraft:story/root"));
+        assertEquals("mypack:foo/bar", FileManager.fullAdvancementKey("mypack:foo/bar"));
+    }
+
+    @Test
     void copiesSourceWithDataVersionInName() throws IOException {
         File source = write("inventory.yml", "items: []\n");
         File backup = FileManager.backUp(temp.resolve("backups").toFile(), source, "inventory", 4189);

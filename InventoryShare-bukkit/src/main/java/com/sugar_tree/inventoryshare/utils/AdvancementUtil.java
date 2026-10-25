@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.sugar_tree.inventoryshare.SharedConstants.logger;
+
 
 public class AdvancementUtil {
     private AdvancementUtil() {}
@@ -51,8 +53,15 @@ public class AdvancementUtil {
             }
             advancements.add(progress.getAdvancement().getKey());
         }
-        for (NamespacedKey namespacedKey : advancements.getAdvancements()) {
+        // A copy, because advancements the server no longer has are removed while iterating
+        for (NamespacedKey namespacedKey : new ArrayList<>(advancements.getAdvancements())) {
             Advancement adv = Bukkit.getServer().getAdvancement(namespacedKey);
+            if (adv == null) {
+                // Its data pack was disabled or reloaded away while the server was running
+                logger.info("Advancement " + namespacedKey + " no longer exists; removed it from the shared list");
+                advancements.remove(namespacedKey);
+                continue;
+            }
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (p.getAdvancementProgress(adv).isDone()) {
                     continue;

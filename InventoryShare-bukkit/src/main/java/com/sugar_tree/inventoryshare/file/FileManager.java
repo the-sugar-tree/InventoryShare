@@ -27,6 +27,7 @@ import com.sugar_tree.inventoryshare.nms.InventoryStorage;
 import com.sugar_tree.inventoryshare.utils.AdvancementRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scoreboard.Team;
@@ -37,8 +38,11 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -73,7 +77,7 @@ public final class FileManager implements IFileManager {
 
         List<String> serializedAdvancementList = new ArrayList<>();
         for (NamespacedKey namespacedKey : advancements.getAdvancements()) {
-            serializedAdvancementList.add(namespacedKey.getKey());
+            serializedAdvancementList.add(namespacedKey.toString());
         }
         advconfig.set("advancement", serializedAdvancementList);
 
@@ -136,14 +140,27 @@ public final class FileManager implements IFileManager {
             return false;
         }
 
-        List<String> advancementlist = advconfig.getStringList("advancement");
-        for (String advancement : advancementlist) {
-            try {
-                advancements.add(plugin.getServer().getAdvancement(NamespacedKey.minecraft(advancement)).getKey());
-            } catch (NullPointerException ignored) {
-            }
+        // Advancements the server no longer has (removed data pack, another version) are dropped
+        Map<String, NamespacedKey> serverAdvancements = new HashMap<>();
+        Iterator<Advancement> iterator = Bukkit.getServer().advancementIterator();
+        while (iterator.hasNext()) {
+            NamespacedKey key = iterator.next().getKey();
+            serverAdvancements.put(key.toString(), key);
+        }
+        for (String advancement : advconfig.getStringList("advancement")) {
+            NamespacedKey key = serverAdvancements.get(fullAdvancementKey(advancement));
+            if (key != null) advancements.add(key);
         }
         return true;
+    }
+
+    /**
+     * @param saved an advancement key from {@code advancements.yml}: {@code minecraft:story/root}, or
+     *              {@code story/root} as saved before 4.0, which only kept the key without the namespace
+     * @return the key with its namespace, e.g. {@code minecraft:story/root}
+     */
+    static String fullAdvancementKey(String saved) {
+        return saved.contains(":") ? saved : "minecraft:" + saved;
     }
 
     /** Creates {@code inventory.yml}, {@code advancements.yml} and the {@code teams} folder if they do not exist */

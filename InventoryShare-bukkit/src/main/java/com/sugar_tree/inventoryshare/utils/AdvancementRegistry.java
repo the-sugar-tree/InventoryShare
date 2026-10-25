@@ -38,6 +38,10 @@ public final class AdvancementRegistry {
         advancements.add(advancement);
     }
 
+    public void remove(NamespacedKey advancement) {
+        advancements.remove(advancement);
+    }
+
     /** @return the advancements in the order they were added */
     public Set<NamespacedKey> getAdvancements() {
         return Collections.unmodifiableSet(advancements);
