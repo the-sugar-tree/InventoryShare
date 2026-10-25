@@ -38,6 +38,12 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public final class Commands implements TabExecutor {
 
+    private final PluginSettings settings;
+
+    public Commands(PluginSettings settings) {
+        this.settings = settings;
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -52,27 +58,23 @@ public final class Commands implements TabExecutor {
             }
             switch (args[0].toLowerCase()) {
                 case "inventory":
-                    setting(sender, args, "inv", inventory, value -> inventory = value, true);
+                    setting(sender, args, "inv", settings.isInventory(), settings::setInventory, true);
                     break;
                 case "advancement":
-                    setting(sender, args, "adv", advancement, value -> advancement = value, false);
+                    setting(sender, args, "adv", settings.isAdvancement(), settings::setAdvancement, false);
                     break;
                 case "announcedeath":
-                    setting(sender, args, "andeath", announcedeath, value -> announcedeath = value, false);
+                    setting(sender, args, "andeath", settings.isAnnouncedeath(), settings::setAnnouncedeath, false);
                     break;
                 case "teaminventory":
-                    setting(sender, args, "teaminv", teaminventory, value -> teaminventory = value, true);
+                    setting(sender, args, "teaminv", settings.isTeaminventory(), settings::setTeaminventory, true);
                     break;
                 case "reload":
                     if (args.length != 1) {
                         sender.sendMessage(usageMessage);
                         break;
                     }
-                    plugin.reloadConfig();
-                    if (plugin.getConfig().contains("inventory")) inventory = plugin.getConfig().getBoolean("inventory");
-                    if (plugin.getConfig().contains("advancement")) advancement = plugin.getConfig().getBoolean("advancement");
-                    if (plugin.getConfig().contains("announcedeath")) announcedeath = plugin.getConfig().getBoolean("announcedeath");
-                    if (plugin.getConfig().contains("teaminventory")) teaminventory = plugin.getConfig().getBoolean("teaminventory");
+                    settings.reload();
                     // inventory / teaminventory may have changed, as with their commands
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         InventoryManager.updateInventory(p);
@@ -179,10 +181,10 @@ public final class Commands implements TabExecutor {
 
     private String checkMessage() {
         return ChatColor.DARK_AQUA + "-----------------------------------------------------\n" +
-                PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + inventory + "\n" +
-                PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + advancement + "\n" +
-                PREFIX + ChatColor.GOLD + "announcedeath: " + ChatColor.GREEN + announcedeath + "\n" +
-                PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + teaminventory + "\n" +
+                PREFIX + ChatColor.GOLD + "inventory: " + ChatColor.GREEN + settings.isInventory() + "\n" +
+                PREFIX + ChatColor.GOLD + "advancement: " + ChatColor.GREEN + settings.isAdvancement() + "\n" +
+                PREFIX + ChatColor.GOLD + "announcedeath: " + ChatColor.GREEN + settings.isAnnouncedeath() + "\n" +
+                PREFIX + ChatColor.GOLD + "teaminventory: " + ChatColor.GREEN + settings.isTeaminventory() + "\n" +
                 ChatColor.DARK_AQUA + "-----------------------------------------------------"
                 ;
     }

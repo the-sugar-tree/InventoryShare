@@ -69,10 +69,11 @@ InventoryShare-dev/<ver>  (core는 그대로, InventoryAccess 구현만 주입)
 | `InventoryShare`                          | 플러그인 진입점. 시작·종료 순서(§3.4)                                                    |
 | `Commands`                                | `/inventoryshare` 명령어. 설정 켜기·끄기, `reload`, `check`                              |
 | `Listeners`                               | 접속·퇴장·월드 저장·발전과제·사망 이벤트, 팀 변경 감지(`onTick`)                         |
-| `SharedConstants`                         | 설정값(`inventory`, `teaminventory` 등)과 `InventoryManager`/`FileManager` 등 전역 상태  |
+| `PluginSettings`                          | `config.yml`의 설정값(`inventory`, `teaminventory` 등) 읽기·저장·`reload`                |
+| `SharedConstants`                         | `InventoryManager`/`FileManager`, 저장 파일 등 전역 상태                                 |
 | `inventory/InventoryRegistry`             | 인벤토리 보관소: 전체 공유 1개, 팀별 1개, 공유하는 동안 맡아 둔 플레이어별 개인 인벤토리 |
 | `inventory/InventoryManager`              | 플레이어를 개인 / 전체 공유 / 팀 인벤토리 사이에서 전환 (§3.2)                           |
-| `file/FileManager`, `Codec`, `LoadResult` | 공유·팀 인벤토리와 설정 저장·로드(§5)                                                    |
+| `file/FileManager`, `Codec`, `LoadResult` | 공유·팀 인벤토리와 발전과제 저장·로드(§5)                                                |
 | `utils/I18NUtil`                          | 언어 파일(`languages/lang_<locale>.yml`) 저장·갱신과 메시지                              |
 | `utils/AdvancementUtil`                   | 발전과제 공유 (§3.5)                                                                     |
 | `utils/UpdateUtil`                        | 새 릴리스 확인                                                                           |

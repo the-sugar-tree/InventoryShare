@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare.inventory;
 
+import com.sugar_tree.inventoryshare.PluginSettings;
 import com.sugar_tree.inventoryshare.SharedConstants;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryStorage;
@@ -43,7 +44,7 @@ class InventoryManagerTest {
 
     private final FakeAccess access = new FakeAccess();
     private final InventoryRegistry registry = new InventoryRegistry(access);
-    private final InventoryManager manager = new InventoryManager(access, registry);
+    private final InventoryManager manager = new InventoryManager(access, registry, new PluginSettings(null));
     private final Player player = player();
 
     @BeforeAll

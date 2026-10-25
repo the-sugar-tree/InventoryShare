@@ -68,10 +68,6 @@ public final class FileManager implements IFileManager {
         }
         advconfig.set("advancement", serializedAdvancementList);
 
-        plugin.getConfig().set("inventory", inventory);
-        plugin.getConfig().set("advancement", advancement);
-        plugin.getConfig().set("announcedeath", announcedeath);
-        plugin.getConfig().set("teaminventory", teaminventory);
         StringBuilder sb = new StringBuilder();
         boolean savedLeastOneTeam = false;
         sb.append(I18N_TEAM_SAVED);
@@ -89,7 +85,6 @@ public final class FileManager implements IFileManager {
         if (savedLeastOneTeam) logger.info(sb.toString());
 
         deleteWasteFiles();
-        plugin.saveConfig();
         saveFile(invconfig, invfile);
         saveFile(advconfig, advfile);
     }
@@ -135,19 +130,6 @@ public final class FileManager implements IFileManager {
                 advlist.add(plugin.getServer().getAdvancement(NamespacedKey.minecraft(advancement)).getKey());
             } catch (NullPointerException ignored) {
             }
-        }
-
-        if (plugin.getConfig().contains("inventory")) {
-            inventory = plugin.getConfig().getBoolean("inventory");
-        }
-        if (plugin.getConfig().contains("advancement")) {
-            advancement = plugin.getConfig().getBoolean("advancement");
-        }
-        if (plugin.getConfig().contains("announcedeath")) {
-            announcedeath = plugin.getConfig().getBoolean("announcedeath");
-        }
-        if (plugin.getConfig().contains("teaminventory")) {
-            teaminventory = plugin.getConfig().getBoolean("teaminventory");
         }
         return true;
     }

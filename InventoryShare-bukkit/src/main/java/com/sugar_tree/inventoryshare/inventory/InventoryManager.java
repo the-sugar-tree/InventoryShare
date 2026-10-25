@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare.inventory;
 
+import com.sugar_tree.inventoryshare.PluginSettings;
 import com.sugar_tree.inventoryshare.interfaces.IInventoryManager;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryStorage;
@@ -41,6 +42,7 @@ public final class InventoryManager implements IInventoryManager {
 
     private final InventoryAccess access;
     private final InventoryRegistry registry;
+    private final PluginSettings settings;
 
     /**
      * Team whose inventory each player in {@code TEAM} state is using
@@ -53,19 +55,20 @@ public final class InventoryManager implements IInventoryManager {
      */
     private final Map<UUID, InventoryState> states = new HashMap<>();
 
-    public InventoryManager(InventoryAccess access, InventoryRegistry registry) {
+    public InventoryManager(InventoryAccess access, InventoryRegistry registry, PluginSettings settings) {
         this.access = access;
         this.registry = registry;
+        this.settings = settings;
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void updateInventory(@NotNull final Player p) {
-        if (!inventory) {
+        if (!settings.isInventory()) {
             applyPersonalInventory(p);
             return;
         }
-        if (!teaminventory) {
+        if (!settings.isTeaminventory()) {
             applyAllInventory(p);
             return;
         }

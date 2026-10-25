@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare.utils;
 
+import com.sugar_tree.inventoryshare.PluginSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.sugar_tree.inventoryshare.SharedConstants.advancement;
 import static com.sugar_tree.inventoryshare.SharedConstants.advlist;
 
 public class AdvancementUtil {
@@ -40,8 +40,8 @@ public class AdvancementUtil {
      * Adds the advancements the player has completed to the shared list, then awards every advancement in the list
      * to all online players. Does nothing while advancement sharing is off.
      */
-    public static void AdvancementPatch(Player player) {
-        if (!advancement) {
+    public static void AdvancementPatch(Player player, PluginSettings settings) {
+        if (!settings.isAdvancement()) {
             return;
         }
         Iterator<Advancement> serveradvancements = Bukkit.getServer().advancementIterator();

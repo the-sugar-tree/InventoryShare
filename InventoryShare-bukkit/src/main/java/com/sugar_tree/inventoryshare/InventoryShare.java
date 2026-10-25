@@ -55,6 +55,8 @@ public final class InventoryShare extends JavaPlugin {
 
     private Listeners listener; // Listener for events
 
+    private PluginSettings settings;
+
     /**
      * Whether {@link #onEnable()} finished. {@code setEnabled(false)} inside {@code onEnable()} calls
      * {@link #onDisable()} right away, which must not save a partly loaded state over the files.
@@ -70,6 +72,8 @@ public final class InventoryShare extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        settings = new PluginSettings(this);
+
         // Check the status of ProtocolLib
         protocolLibStatus = checkProtocolLib();
 
@@ -130,23 +134,24 @@ public final class InventoryShare extends JavaPlugin {
         invconfig = YamlConfiguration.loadConfiguration(invfile);
         advconfig = YamlConfiguration.loadConfiguration(advfile);
         saveDefaultConfigs(); // Save default configurations
-        // Load the saved inventories, advancements and settings
+        // Load the saved inventories and advancements
         if (!FileManager.load()) {
             this.setEnabled(false);
             return;
         }
+        settings.load();
 
         // Load commands and event listeners
-        TabExecutor commands = new Commands();
+        TabExecutor commands = new Commands(settings);
         getCommand("inventoryshare").setExecutor(commands);
         getCommand("inventoryshare").setTabCompleter(commands);
-        listener = new Listeners();
+        listener = new Listeners(settings);
         Bukkit.getPluginManager().registerEvents(listener, this);
 
         // Update inventories for online players if the server is reloaded
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryManager.updateInventory(player);
-            getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player), 1);
+            getServer().getScheduler().runTaskLater(this, () -> AdvancementUtil.AdvancementPatch(player, settings), 1);
         }
         started = true;
 
@@ -172,7 +177,8 @@ public final class InventoryShare extends JavaPlugin {
         if (listener != null) Bukkit.getScheduler().cancelTask(listener.getTaskId());
         // After a failed start the loaded state may be incomplete; keep the files as they are
         if (!started) return;
-        FileManager.save(); // Save the inventories, advancements and settings
+        FileManager.save(); // Save the inventories and advancements
+        settings.save();
     }
 
     private boolean loadNMS(MinecraftVersion minecraftVersion) {
@@ -184,7 +190,7 @@ public final class InventoryShare extends JavaPlugin {
             InventoryRegistry registry = new InventoryRegistry(access);
             logger.info("Minecraft " + minecraftVersion + " (" + runtime + "), using " + access.getClass().getSimpleName());
 
-            InventoryManager = new InventoryManager(access, registry);
+            InventoryManager = new InventoryManager(access, registry, settings);
             FileManager = new FileManager(access, registry);
         } catch (UnsupportedServerException e) {
             // Not a CraftBukkit-based server: not a bug, nothing to report

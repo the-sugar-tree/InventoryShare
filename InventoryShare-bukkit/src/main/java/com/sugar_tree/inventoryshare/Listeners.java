@@ -49,7 +49,10 @@ public final class Listeners implements Listener {
     @Getter
     private final int taskId;
 
-    public Listeners() {
+    private final PluginSettings settings;
+
+    public Listeners(PluginSettings settings) {
+        this.settings = settings;
         taskId = Bukkit.getScheduler().runTaskTimer(plugin, this::onTick, 0L, 0L).getTaskId();
     }
 
@@ -58,7 +61,7 @@ public final class Listeners implements Listener {
         event.getPlayer().sendMessage(PREFIX + ChatColor.YELLOW + "This server is using \""+ I18NUtil.get("plugin_name")
                 + ChatColor.YELLOW + "\" by." + ChatColor.GREEN + "sugar_tree");
         InventoryManager.updateInventory(event.getPlayer());
-        AdvancementPatch(event.getPlayer());
+        AdvancementPatch(event.getPlayer(), settings);
     }
 
     @EventHandler
@@ -75,7 +78,7 @@ public final class Listeners implements Listener {
         // FIXME: WorldSaveEvent is called once per world, so this saves once per world (three times by default)
 
         FileManager.save();
-        if (inventory) {
+        if (settings.isInventory()) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 InventoryManager.applyPersonalInventory(p);
                 p.saveData();
@@ -89,14 +92,14 @@ public final class Listeners implements Listener {
         if (!(advlist.contains(event.getAdvancement().getKey()))) {
             advlist.add(event.getAdvancement().getKey());
         }
-        if (advancement) {
-            AdvancementPatch(event.getPlayer());
+        if (settings.isAdvancement()) {
+            AdvancementPatch(event.getPlayer(), settings);
         }
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (announcedeath) {
+        if (settings.isAnnouncedeath()) {
             Location deathLocation = event.getEntity().getLocation();
             World deathWorld = deathLocation.getWorld();
             Bukkit.broadcastMessage(PREFIX + I18NUtil.get("death_info", event.getEntity().getName(), (deathWorld == null ? null : deathWorld.getName()),
@@ -111,8 +114,8 @@ public final class Listeners implements Listener {
     public void onTick() {
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (teamMap.containsKey(p.getUniqueId())) {
-                if (inventory) {
-                    if (teaminventory) {
+                if (settings.isInventory()) {
+                    if (settings.isTeaminventory()) {
                         if (!Objects.equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p), teamMap.get(p.getUniqueId()))) {
                             teamMap.put(p.getUniqueId(), Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
                             InventoryManager.updateInventory(p);
