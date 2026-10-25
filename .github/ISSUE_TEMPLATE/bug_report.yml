@@ -1,0 +1,61 @@
+name: 버그 제보 (Bug Report)
+description: 플러그인이 예상대로 동작하지 않을 때 / The plugin doesn't work as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        제보 전에 [README](https://github.com/the-sugar-tree/InventoryShare#readme)와 기존 이슈를 먼저 확인해주세요.
+        Please check the [README](https://github.com/the-sugar-tree/InventoryShare#readme) and existing issues first.
+  - type: input
+    id: plugin-version
+    attributes:
+      label: 플러그인 버전 (Plugin version)
+      placeholder: 예) 3.1.1
+    validations:
+      required: true
+  - type: input
+    id: server-version
+    attributes:
+      label: 서버 종류 및 버전 (Server software and version)
+      description: "`/version` 명령어 결과를 붙여주세요. / Paste the output of `/version`."
+      placeholder: 예) Paper 1.21.1-130
+    validations:
+      required: true
+  - type: input
+    id: protocollib
+    attributes:
+      label: ProtocolLib 버전 (ProtocolLib version)
+      placeholder: 예) 5.3.0 / 사용 안 함 (not used)
+  - type: textarea
+    id: description
+    attributes:
+      label: 문제 설명 (Description)
+      description: |
+        어떤 일이 일어났고, 원래 어떻게 동작해야 하는지 적어주세요.
+        What happened, and what did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 재현 방법 (Steps to reproduce)
+      placeholder: |
+        1. `/inventoryshare ...` 입력
+        2. ...
+        3. 오류 발생
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 서버 로그 / 오류 메시지 (Server log / error)
+      description: |
+        콘솔에 출력된 오류를 붙여주세요. 길면 https://mclo.gs 링크로 대체해도 됩니다.
+        Paste the console error. For long logs, a https://mclo.gs link is fine.
+      render: text
+  - type: textarea
+    id: plugins
+    attributes:
+      label: 함께 사용 중인 플러그인 (Other plugins)
+      description: "`/plugins` 결과 / Output of `/plugins`"

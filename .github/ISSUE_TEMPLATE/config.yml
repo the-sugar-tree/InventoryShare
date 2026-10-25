@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: ProtocolLib 다운로드 방법 (How to download ProtocolLib)
+    url: https://github.com/the-sugar-tree/InventoryShare/wiki/How-to-download-ProtocolLib
+    about: ProtocolLib 설치 관련 질문은 먼저 위키를 확인해주세요. / Check the wiki for ProtocolLib setup first.

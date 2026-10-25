@@ -1,0 +1,20 @@
+name: 질문 (Question)
+description: 사용법 등 궁금한 점 / Ask about usage or anything else
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        질문 전에 [README](https://github.com/the-sugar-tree/InventoryShare#readme)와 [위키](https://github.com/the-sugar-tree/InventoryShare/wiki)를 확인해주세요.
+        Please check the [README](https://github.com/the-sugar-tree/InventoryShare#readme) and the [wiki](https://github.com/the-sugar-tree/InventoryShare/wiki) first.
+  - type: textarea
+    id: question
+    attributes:
+      label: 질문 내용 (Question)
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: 플러그인 / 서버 버전 (Plugin / server version)
+      placeholder: 예) 3.1.1 / Paper 1.21.1
