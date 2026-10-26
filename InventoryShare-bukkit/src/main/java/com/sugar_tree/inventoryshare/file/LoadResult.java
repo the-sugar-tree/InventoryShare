@@ -41,14 +41,17 @@ final class LoadResult {
     private final int serverDataVersion;
     /** In ascending slot order */
     private final List<SkippedItem> skipped;
-    /** Items loaded from Bukkit's format that will be saved in Minecraft's (1.20.5+) */
-    private final int migrated;
+    /**
+     * Data version of each item loaded from Bukkit's format that will be saved in Minecraft's (1.20.5+);
+     * {@code 0} for an item saved before 1.13
+     */
+    private final List<Integer> migrated;
 
-    LoadResult(int formatVersion, int serverDataVersion, List<SkippedItem> skipped, int migrated) {
+    LoadResult(int formatVersion, int serverDataVersion, List<SkippedItem> skipped, List<Integer> migrated) {
         this.formatVersion = formatVersion;
         this.serverDataVersion = serverDataVersion;
         this.skipped = Collections.unmodifiableList(new ArrayList<>(skipped));
-        this.migrated = migrated;
+        this.migrated = Collections.unmodifiableList(new ArrayList<>(migrated));
     }
 
     boolean isComplete() {
@@ -60,7 +63,22 @@ final class LoadResult {
     }
 
     int getMigrated() {
-        return migrated;
+        return migrated.size();
+    }
+
+    /**
+     * @return the lowest data version among the migrated items, or {@code -1} if none was migrated
+     */
+    int oldestMigratedDataVersion() {
+        return migrated.isEmpty() ? -1 : Collections.min(migrated);
+    }
+
+    /**
+     * Whether a migrated item was saved by an older Minecraft version. Bukkit reads such an item with its newer
+     * rules and may drop part of it (e.g. the contents of a shulker box), which it does not when the versions match.
+     */
+    boolean isMigratedFromOlderVersion() {
+        return !migrated.isEmpty() && oldestMigratedDataVersion() < serverDataVersion;
     }
 
     /**

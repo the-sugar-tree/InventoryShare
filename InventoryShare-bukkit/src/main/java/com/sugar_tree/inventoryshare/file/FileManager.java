@@ -203,6 +203,13 @@ public final class FileManager implements IFileManager {
             logger.info("[" + category + "] " + result.getMigrated() + " item(s) in " + source.getName()
                     + " are in Bukkit's item format (InventoryShare 3.x, or saved before Minecraft 1.20.5)."
                     + " They will be saved in Minecraft's own item format from now on.");
+            if (result.isMigratedFromOlderVersion()) {
+                logger.warning("[" + category + "] Some of them were saved by an older Minecraft version (data version "
+                        + result.oldestMigratedDataVersion() + " < " + WORLD_VERSION + "). Reading them on a newer version"
+                        + " may lose part of their data, such as the contents of shulker boxes. To migrate without loss,"
+                        + " restore the backup below and run this version of InventoryShare once on the Minecraft version"
+                        + " they were saved with before upgrading the server.");
+            }
         }
         File backupDirectory = new File(plugin.getDataFolder(), "backups");
         File backup;

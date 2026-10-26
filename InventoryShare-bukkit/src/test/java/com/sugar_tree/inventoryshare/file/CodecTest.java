@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -144,7 +145,21 @@ class CodecTest {
 
         assertTrue(result.isComplete());
         assertEquals(2, result.getMigrated(), "the stone and the air are Bukkit items");
+        assertFalse(result.isMigratedFromOlderVersion(), "saved by the same Minecraft version");
         assertItem(Material.DIRT, 2, access.items(inventory).get(2));
+    }
+
+    @Test
+    void bukkitItemsOfAnOlderVersionAreReported() throws InvalidConfigurationException {
+        YamlConfiguration config = new YamlConfiguration();
+        config.loadFromString("items:\n- v: 3955\n  type: STONE\n- v: 3700\n  type: DIRT\n");
+        RecordingAccess access = new RecordingAccess();
+
+        LoadResult result = new Codec(access, SERVER, new FakeItemCodec()).read(config, access.createEmpty());
+
+        assertEquals(2, result.getMigrated());
+        assertEquals(3700, result.oldestMigratedDataVersion());
+        assertTrue(result.isMigratedFromOlderVersion());
     }
 
     @Test

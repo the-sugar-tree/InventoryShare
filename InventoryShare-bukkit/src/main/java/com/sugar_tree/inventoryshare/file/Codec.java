@@ -86,9 +86,10 @@ final class Codec {
      */
     LoadResult read(ConfigurationSection config, InventoryStorage inventory) {
         List<SkippedItem> skipped = new ArrayList<>();
-        int migrated = deserialize(config.getMapList("items"), inventory, STORAGE_START, STORAGE_SIZE, skipped)
-                + deserialize(config.getMapList("armor"), inventory, ARMOR_START, ARMOR_SIZE, skipped)
-                + deserialize(config.getMapList("extraSlots"), inventory, OFFHAND_SLOT, 1, skipped);
+        List<Integer> migrated = new ArrayList<>();
+        deserialize(config.getMapList("items"), inventory, STORAGE_START, STORAGE_SIZE, skipped, migrated);
+        deserialize(config.getMapList("armor"), inventory, ARMOR_START, ARMOR_SIZE, skipped, migrated);
+        deserialize(config.getMapList("extraSlots"), inventory, OFFHAND_SLOT, 1, skipped, migrated);
         return new LoadResult(config.getInt("format-version", BUKKIT_FORMAT), serverDataVersion, skipped, migrated);
     }
 
@@ -109,12 +110,12 @@ final class Codec {
     }
 
     /**
-     * @return how many Bukkit items were read while the item codec is available, i.e. migrated
+     * @param migrated gets the data version of each Bukkit item read while the item codec is available, i.e. each
+     *                 migrated item; {@code 0} for an item without one (saved before 1.13)
      */
     @SuppressWarnings("unchecked")
-    private int deserialize(List<Map<?, ?>> from, InventoryStorage to, int firstSlot, int count,
-                            List<SkippedItem> skipped) {
-        int migrated = 0;
+    private void deserialize(List<Map<?, ?>> from, InventoryStorage to, int firstSlot, int count,
+                             List<SkippedItem> skipped, List<Integer> migrated) {
         for (int i = 0; i < Math.min(from.size(), count); i++) {
             Map<?, ?> item = from.get(i);
             if (item.isEmpty()) {
@@ -144,10 +145,10 @@ final class Codec {
             // Not caught: a failure here is the inventory access failing, not bad item data
             access.setItem(to, slot, deserialized);
             if (!itemCodecFormat && itemCodec != null) {
-                migrated++;
+                Object version = item.get("v");
+                migrated.add(version == null ? 0 : Integer.parseInt(version.toString()));
             }
         }
-        return migrated;
     }
 
     /**
