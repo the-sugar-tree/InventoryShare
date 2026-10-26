@@ -51,7 +51,10 @@ public final class LegacyMembers {
     private final Class<?> itemStack;
     private final Field emptyItem;
     private final Method createItemList;
-    private final Method asBukkitCopy;
+    /** {@code asCraftMirror(ItemStack)}: a Bukkit item backed by the NMS item, without going through ItemMeta */
+    private final Method asCraftMirror;
+    /** {@code asCraftCopy(org.bukkit.inventory.ItemStack)}: copies the NMS item of a CraftItemStack */
+    private final Method asCraftCopy;
     private final Method asNMSCopy;
 
     private LegacyMembers(LegacyNames names, ClassLoader loader) throws ReflectiveOperationException {
@@ -75,8 +78,10 @@ public final class LegacyMembers {
                 .getDeclaredMethod(names.getCreateItemList(), int.class, Object.class);
 
         Class<?> craftItemStack = load(names.getCraftItemStackClass(), loader);
-        asBukkitCopy = craftItemStack.getMethod("asBukkitCopy", itemStack);
-        asNMSCopy = craftItemStack.getMethod("asNMSCopy", load(names.getBukkitItemStackClass(), loader));
+        Class<?> bukkitItemStack = load(names.getBukkitItemStackClass(), loader);
+        asCraftMirror = craftItemStack.getMethod("asCraftMirror", itemStack);
+        asCraftCopy = craftItemStack.getMethod("asCraftCopy", bukkitItemStack);
+        asNMSCopy = craftItemStack.getMethod("asNMSCopy", bukkitItemStack);
     }
 
     public static @NotNull LegacyMembers resolve(@NotNull LegacyNames names, @NotNull ClassLoader loader)

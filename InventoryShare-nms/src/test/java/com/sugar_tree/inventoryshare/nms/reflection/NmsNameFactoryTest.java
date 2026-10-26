@@ -21,6 +21,7 @@
 package com.sugar_tree.inventoryshare.nms.reflection;
 
 import com.sugar_tree.inventoryshare.nms.IncompatibleServerException;
+import com.sugar_tree.inventoryshare.nms.reflection.item.ItemCodecNames;
 import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyNames;
 import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernNames;
 import com.sugar_tree.inventoryshare.nms.server.MappingType;
@@ -203,6 +204,96 @@ class NmsNameFactoryTest {
                 () -> NmsNameFactory.legacy(v("1.21.5"), runtime(null, MappingType.MOJANG)));
         assertThrows(IllegalArgumentException.class,
                 () -> NmsNameFactory.modern(v("1.21.4"), runtime(null, MappingType.MOJANG)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1.20.5, v1_20_R4, b",
+            "1.21, v1_21_R1, b",
+            "1.21.3, v1_21_R2, a",
+            "1.21.4, v1_21_R3, a",
+            "1.21.5, v1_21_R4, b",
+            "1.21.11-R0.2-SNAPSHOT, v1_21_R7, b",
+            "26.1, v26, ",
+            "27.0, v26, ",
+    })
+    void findsItemCodecRow(String text, String row, String codec) {
+        ItemCodecNameTable found = ItemCodecNameTable.find(v(text));
+        assertEquals(row, found == null ? null : found.name());
+        assertEquals(codec, found == null ? null : found.codec);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1.12.2", "1.20.4", "1.21.12"})
+    void noItemCodecRow(String version) {
+        assertNull(ItemCodecNameTable.find(v(version)));
+    }
+
+    @Test
+    void eachVersionBelongsToOneItemCodecRow() {
+        Set<MinecraftVersion> seen = new HashSet<>();
+        for (ItemCodecNameTable row : ItemCodecNameTable.values()) {
+            for (MinecraftVersion version : row.versions.getVersions()) {
+                assertTrue(seen.add(version), version + " is listed twice");
+            }
+        }
+    }
+
+    @Test
+    void itemCodecRowsMatchInventoryRows() {
+        // The rows follow the CraftBukkit packages, as the inventory model tables do
+        for (ItemCodecNameTable row : ItemCodecNameTable.values()) {
+            for (MinecraftVersion version : row.versions.getVersions()) {
+                Enum<?> inventoryRow = InventoryModel.of(version) == InventoryModel.LEGACY
+                        ? LegacyNameTable.find(version) : ModernNameTable.find(version);
+                assertEquals(row.name(), inventoryRow == null ? null : inventoryRow.name(), version.toString());
+            }
+        }
+    }
+
+    @Test
+    void spigotItemCodec() throws IncompatibleServerException {
+        ItemCodecNames names = NmsNameFactory.itemCodec(v("1.21.4"), runtime("v1_21_R3", MappingType.SPIGOT));
+
+        assertEquals("org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack", names.getCraftItemStackClass());
+        assertEquals("org.bukkit.craftbukkit.v1_21_R3.CraftRegistry", names.getCraftRegistryClass());
+        assertEquals("net.minecraft.world.item.ItemStack", names.getItemStackClass());
+        assertEquals("net.minecraft.nbt.DynamicOpsNBT", names.getNbtOpsClass());
+        assertEquals("net.minecraft.core.HolderLookup$a", names.getRegistryProviderClass());
+        assertEquals("net.minecraft.nbt.MojangsonParser", names.getTagParserClass());
+        assertEquals("net.minecraft.util.datafix.DataConverterRegistry", names.getDataFixersClass());
+        assertEquals("a", names.getCodec());
+        assertEquals("a", names.getParseTag());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1.20.5, parseTag", "1.21.4, parseTag", "1.21.5, parseCompoundFully", "26.2, parseCompoundFully"})
+    void mojangItemCodec(String version, String parseTag) throws IncompatibleServerException {
+        // Paper 1.20.5+, every 26.1+ server
+        ItemCodecNames names = NmsNameFactory.itemCodec(v(version), runtime(null, MappingType.MOJANG));
+
+        assertEquals("org.bukkit.craftbukkit.CraftRegistry", names.getCraftRegistryClass());
+        assertEquals("net.minecraft.nbt.NbtOps", names.getNbtOpsClass());
+        assertEquals("net.minecraft.core.HolderLookup$Provider", names.getRegistryProviderClass());
+        assertEquals("net.minecraft.nbt.TagParser", names.getTagParserClass());
+        assertEquals("net.minecraft.util.datafix.DataFixers", names.getDataFixersClass());
+        assertEquals("CODEC", names.getCodec());
+        assertEquals("INSTANCE", names.getNbtOps());
+        assertEquals("createSerializationContext", names.getCreateSerializationContext());
+        assertEquals(parseTag, names.getParseTag());
+        assertEquals("getDataFixer", names.getGetDataFixer());
+    }
+
+    @Test
+    void noItemCodecBefore1205() {
+        assertThrows(IllegalArgumentException.class,
+                () -> NmsNameFactory.itemCodec(v("1.20.4"), runtime(null, MappingType.MOJANG)));
+    }
+
+    @Test
+    void noSpigotItemCodecNamesFrom26() {
+        assertThrows(IncompatibleServerException.class,
+                () -> NmsNameFactory.itemCodec(v("26.1"), runtime(null, MappingType.SPIGOT)));
     }
 
     private static MinecraftVersion v(String version) {

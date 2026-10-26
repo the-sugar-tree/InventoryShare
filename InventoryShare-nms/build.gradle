@@ -1,5 +1,6 @@
 // NMS access layer shared by every supported Minecraft version.
-// Compiles against spigot-api only; all NMS members are resolved by reflection at runtime.
+// Compiles against spigot-api, and DataFixerUpper for the item codec (1.20.5+); all NMS members are resolved by
+// reflection at runtime.
 
 java {
     toolchain {
@@ -11,8 +12,18 @@ tasks.withType(JavaCompile).configureEach {
     options.release = 8
 }
 
+repositories {
+    maven {
+        name = 'minecraft-libraries'
+        url = 'https://libraries.minecraft.net/'
+        content { includeGroup 'com.mojang' }
+    }
+}
+
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+    // Provided by the server from 1.20.5 (the version 1.20.5 and 1.20.6 ship); only the item codec uses it
+    compileOnly 'com.mojang:datafixerupper:7.0.14'
 
     testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'

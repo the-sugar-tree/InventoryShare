@@ -111,7 +111,8 @@ class ModernMembersTest {
             assertEquals(members.getNonNullList(), createItemList.getReturnType());
 
             Class<?> bukkitItemStack = Class.forName(names.getBukkitItemStackClass(), false, loader);
-            assertEquals(bukkitItemStack, members.getAsBukkitCopy().getReturnType());
+            assertTrue(bukkitItemStack.isAssignableFrom(members.getAsCraftMirror().getReturnType()), "asCraftMirror");
+            assertTrue(bukkitItemStack.isAssignableFrom(members.getAsCraftCopy().getReturnType()), "asCraftCopy");
             assertEquals(itemStack, members.getAsNMSCopy().getReturnType());
 
             assertSlotMapping(runtime.getMappingType(), members);

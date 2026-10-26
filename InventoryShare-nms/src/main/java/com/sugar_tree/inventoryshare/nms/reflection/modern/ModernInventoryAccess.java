@@ -120,7 +120,7 @@ public final class ModernInventoryAccess implements InventoryAccess {
             item = storage.equipment.get(equipmentSlot(slot));
             if (item == null) item = emptyItem;
         }
-        return (ItemStack) invoke(members.getAsBukkitCopy(), null, item);
+        return (ItemStack) invoke(members.getAsCraftCopy(), null, invoke(members.getAsCraftMirror(), null, item));
     }
 
     @Override
