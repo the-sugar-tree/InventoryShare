@@ -79,6 +79,9 @@ https://blog.naver.com/sugar-tree/222556850608
 
 ## 명령어
 ![](https://raw.githubusercontent.com/the-sugar-tree/InventoryShare/master/help_message.png)   
+
+권한: `inventoryshare.command` (기본값: OP). 권한 플러그인으로 OP가 아닌 플레이어에게도 줄 수 있습니다.
+
 ### 기본 값
 - inventory: true
 - advancement: true

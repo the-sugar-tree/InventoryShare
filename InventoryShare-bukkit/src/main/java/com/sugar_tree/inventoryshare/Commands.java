@@ -39,6 +39,9 @@ import static com.sugar_tree.inventoryshare.SharedConstants.*;
 
 public final class Commands implements TabExecutor {
 
+    /** Permission node for {@code /inventoryshare}, declared in {@code plugin.yml} with {@code default: op}. */
+    private static final String PERMISSION = "inventoryshare.command";
+
     private final PluginSettings settings;
     private final IInventoryManager inventoryManager;
 
@@ -51,8 +54,8 @@ public final class Commands implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (command.getName().equalsIgnoreCase("inventoryshare")) {
-            if (!sender.isOp()) {
-                sender.sendMessage(ChatColor.RED + "I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is a mistake.");
+            if (!sender.hasPermission(PERMISSION)) {
+                sender.sendMessage(ChatColor.RED + "I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error.");
                 return true;
             }
             if (args.length < 1) {
