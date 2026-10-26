@@ -30,6 +30,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -254,14 +255,14 @@ class CodecTest {
     /** Writes {@code id} and {@code count} only; ids are {@code minecraft:} + the material name in lower case */
     private static final class FakeItemCodec implements ItemCodec {
         @Override
-        public Map<String, Object> encode(ItemStack item) {
+        public @NotNull Map<String, Object> encode(@NotNull ItemStack item) {
             Map<String, Object> data = codecItem(SERVER, "minecraft:" + item.getType().name().toLowerCase());
             data.put("count", item.getAmount());
             return data;
         }
 
         @Override
-        public ItemStack decode(Map<?, ?> data) {
+        public @NotNull ItemStack decode(@NotNull Map<?, ?> data) {
             String id = String.valueOf(data.get("id"));
             Material material = Material.getMaterial(id.substring("minecraft:".length()).toUpperCase());
             if (material == null) throw new IllegalArgumentException("Unknown item " + id);
@@ -281,28 +282,28 @@ class CodecTest {
         }
 
         @Override
-        public InventoryStorage createEmpty() {
+        public @NotNull InventoryStorage createEmpty() {
             return new Storage();
         }
 
         @Override
-        public InventoryStorage capture(Player player) {
+        public @NotNull InventoryStorage capture(@NotNull Player player) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void apply(Player player, InventoryStorage inventory) {
+        public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public ItemStack getItem(InventoryStorage inventory, int slot) {
+        public @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot) {
             ItemStack item = items(inventory).get(slot);
             return item == null ? new ItemStack(Material.AIR) : item.clone();
         }
 
         @Override
-        public void setItem(InventoryStorage inventory, int slot, ItemStack item) {
+        public void setItem(@NotNull InventoryStorage inventory, int slot, @NotNull ItemStack item) {
             items(inventory).put(slot, item.clone());
         }
     }
@@ -312,27 +313,27 @@ class CodecTest {
         static final IllegalStateException FAILURE = new IllegalStateException("access failed");
 
         @Override
-        public InventoryStorage createEmpty() {
+        public @NotNull InventoryStorage createEmpty() {
             return new InventoryStorage() {};
         }
 
         @Override
-        public InventoryStorage capture(Player player) {
+        public @NotNull InventoryStorage capture(@NotNull Player player) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void apply(Player player, InventoryStorage inventory) {
+        public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public ItemStack getItem(InventoryStorage inventory, int slot) {
+        public @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void setItem(InventoryStorage inventory, int slot, ItemStack item) {
+        public void setItem(@NotNull InventoryStorage inventory, int slot, @NotNull ItemStack item) {
             throw FAILURE;
         }
     }

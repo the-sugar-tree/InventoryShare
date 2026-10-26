@@ -26,6 +26,7 @@ import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryStorage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -112,29 +113,29 @@ class InventoryManagerTest {
         final List<InventoryStorage> applied = new ArrayList<>();
 
         @Override
-        public InventoryStorage createEmpty() {
+        public @NotNull InventoryStorage createEmpty() {
             return new InventoryStorage() {};
         }
 
         @Override
-        public InventoryStorage capture(Player player) {
+        public @NotNull InventoryStorage capture(@NotNull Player player) {
             captures++;
             return new InventoryStorage() {};
         }
 
         @Override
-        public void apply(Player player, InventoryStorage inventory) {
+        public void apply(@NotNull Player player, @NotNull InventoryStorage inventory) {
             if (failing) throw new IllegalStateException("apply failed");
             applied.add(inventory);
         }
 
         @Override
-        public ItemStack getItem(InventoryStorage inventory, int slot) {
+        public @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void setItem(InventoryStorage inventory, int slot, ItemStack item) {
+        public void setItem(@NotNull InventoryStorage inventory, int slot, @NotNull ItemStack item) {
             throw new UnsupportedOperationException();
         }
     }
