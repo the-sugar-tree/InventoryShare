@@ -146,7 +146,7 @@ Spigot 이름은 버전마다 다르므로 위 표는 예시입니다. 버전별
 | CraftBukkit 패키지   | 서버 객체(`Bukkit.getServer()`)의 클래스 이름을 봄               | `org.bukkit.craftbukkit.v1_20_R3.CraftServer` → `v1_20_R3`<br>`org.bukkit.craftbukkit.CraftServer` → 버전 번호 없음 |
 | NMS 이름 체계        | `net.minecraft.world.entity.player.Inventory` 클래스가 있는지 봄 | 있으면 Mojang 이름, 없으면 Spigot 이름                                                                              |
 
-그다음 마인크래프트 버전으로 인벤토리 구조(Legacy / Modern)를 고르고, 위에서 확인한 패키지와 이름 체계에 맞는 클래스·멤버 이름을 조립합니다(`com.sugar_tree.inventoryshare.nms.reflection.NmsNameFactory`).
+그다음 마인크래프트 버전으로 인벤토리 구조(Legacy / Modern)를 고르고, 위에서 확인한 패키지와 이름 체계에 맞는 클래스·멤버 이름을 조립합니다(`com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryNameFactory`, 아이템 저장용은 `…reflection.item.ItemNameFactory`).
 그래서 같은 마인크래프트 1.21.4라도 Spigot에서는 `net.minecraft.world.entity.player.PlayerInventory`의 `g`를, Paper에서는 `net.minecraft.world.entity.player.Inventory`의 `items`를 찾습니다.
 
 - 서버를 실행하는 클래스 로더(`CraftServer`의 클래스 로더)에서 찾습니다. 다른 플러그인 jar에 들어 있는 같은 이름의 클래스를 서버 것으로 잘못 찾지 않기 위해서입니다.
