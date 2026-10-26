@@ -85,7 +85,8 @@ public final class Listeners implements Listener {
 
     @EventHandler
     public void onWorldSave(WorldSaveEvent event) {
-        // FIXME: WorldSaveEvent is called once per world, so this saves once per world (three times by default)
+        // Called once per world; the server saves its players and every world together, so the main world is enough
+        if (!event.getWorld().equals(Bukkit.getWorlds().get(0))) return;
 
         fileManager.save();
         if (settings.isInventory()) {
