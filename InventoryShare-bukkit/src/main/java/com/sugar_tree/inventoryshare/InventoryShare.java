@@ -29,6 +29,8 @@ import com.sugar_tree.inventoryshare.metrics.Metrics;
 import com.sugar_tree.inventoryshare.nms.IncompatibleServerException;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryAccessFactory;
+import com.sugar_tree.inventoryshare.nms.ItemCodec;
+import com.sugar_tree.inventoryshare.nms.ItemCodecFactory;
 import com.sugar_tree.inventoryshare.nms.UnsupportedServerException;
 import com.sugar_tree.inventoryshare.nms.UnsupportedVersionException;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
@@ -188,9 +190,12 @@ public final class InventoryShare extends JavaPlugin {
 
             InventoryRegistry registry = new InventoryRegistry(access);
             logger.info("Minecraft " + minecraftVersion + " (" + runtime + "), using " + access.getClass().getSimpleName());
+            // From 1.20.5 items are saved in Minecraft's own format; before, in Bukkit's
+            ItemCodec itemCodec = ItemCodecFactory.supports(minecraftVersion)
+                    ? ItemCodecFactory.create(minecraftVersion, runtime, WORLD_VERSION) : null;
 
             inventoryManager = new InventoryManager(access, registry, settings);
-            fileManager = new FileManager(access, registry, advancements);
+            fileManager = new FileManager(access, registry, advancements, itemCodec);
         } catch (UnsupportedServerException e) {
             // Not a CraftBukkit-based server: not a bug, nothing to report
             logger.severe(I18NUtil.get(false, false, "not_supported_server", Bukkit.getName() + " " + Bukkit.getVersion()));

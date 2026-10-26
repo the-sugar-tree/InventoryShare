@@ -38,7 +38,7 @@ class LoadResultTest {
 
     @Test
     void nothingSkippedIsComplete() {
-        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, Collections.emptyList());
+        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, Collections.emptyList(), 0);
         assertTrue(result.isComplete());
         assertEquals(Collections.emptyList(), result.describe());
         assertEquals(-1, result.newestDataVersion());
@@ -46,7 +46,7 @@ class LoadResultTest {
 
     @Test
     void newerFormatVersionIsIncomplete() {
-        LoadResult result = new LoadResult(Codec.FORMAT_VERSION + 1, SERVER, Collections.emptyList());
+        LoadResult result = new LoadResult(Codec.FORMAT_VERSION + 1, SERVER, Collections.emptyList(), 0);
         assertFalse(result.isComplete());
         assertEquals(1, result.describe().size());
     }
@@ -57,7 +57,7 @@ class LoadResultTest {
         for (int slot = 0; slot < 36; slot++) skipped.add(SkippedItem.newerVersion(slot, 4100));
         skipped.add(SkippedItem.newerVersion(38, 4189));
         skipped.add(SkippedItem.newerVersion(40, 4100));
-        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, skipped);
+        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, skipped, 0);
 
         assertFalse(result.isComplete());
         assertEquals(4189, result.newestDataVersion());
@@ -71,7 +71,7 @@ class LoadResultTest {
         LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, Arrays.asList(
                 SkippedItem.invalidVersion(3, "abc"),
                 SkippedItem.newerVersion(5, 4189),
-                SkippedItem.deserializeFailed(12, new IllegalArgumentException("Unknown material"))));
+                SkippedItem.deserializeFailed(12, new IllegalArgumentException("Unknown material"))), 0);
 
         assertEquals(Arrays.asList(
                 "  - 1 item(s) saved by a newer Minecraft version (data version up to 4189 > 3955): slot 5",
@@ -88,7 +88,7 @@ class LoadResultTest {
         for (int slot = 0; slot <= 40; slot++) {
             skipped.add(SkippedItem.deserializeFailed(slot, new IllegalArgumentException("Material cannot be null")));
         }
-        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, skipped);
+        LoadResult result = new LoadResult(Codec.FORMAT_VERSION, SERVER, skipped, 0);
 
         assertEquals(Arrays.asList(
                 "  - 41 item(s) failed to deserialize:",
@@ -103,7 +103,7 @@ class LoadResultTest {
                 SkippedItem.deserializeFailed(0, noMaterial),
                 SkippedItem.deserializeFailed(1, noMaterial),
                 SkippedItem.deserializeFailed(12, new IllegalStateException("Broken meta")),
-                SkippedItem.deserializeFailed(36, noMaterial)));
+                SkippedItem.deserializeFailed(36, noMaterial)), 0);
 
         assertEquals(Arrays.asList(
                 "  - 4 item(s) failed to deserialize:",

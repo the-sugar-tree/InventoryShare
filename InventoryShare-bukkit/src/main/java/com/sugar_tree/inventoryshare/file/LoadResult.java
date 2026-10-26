@@ -41,11 +41,14 @@ final class LoadResult {
     private final int serverDataVersion;
     /** In ascending slot order */
     private final List<SkippedItem> skipped;
+    /** Items loaded from Bukkit's format that will be saved in Minecraft's (1.20.5+) */
+    private final int migrated;
 
-    LoadResult(int formatVersion, int serverDataVersion, List<SkippedItem> skipped) {
+    LoadResult(int formatVersion, int serverDataVersion, List<SkippedItem> skipped, int migrated) {
         this.formatVersion = formatVersion;
         this.serverDataVersion = serverDataVersion;
         this.skipped = Collections.unmodifiableList(new ArrayList<>(skipped));
+        this.migrated = migrated;
     }
 
     boolean isComplete() {
@@ -54,6 +57,10 @@ final class LoadResult {
 
     List<SkippedItem> getSkipped() {
         return skipped;
+    }
+
+    int getMigrated() {
+        return migrated;
     }
 
     /**

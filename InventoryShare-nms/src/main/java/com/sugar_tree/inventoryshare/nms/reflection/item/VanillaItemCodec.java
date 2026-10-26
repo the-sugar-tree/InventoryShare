@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.get;
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.invoke;
@@ -94,24 +95,29 @@ public final class VanillaItemCodec implements ItemCodec {
         }
         Object tag = codec.encodeStart(registryOps, invoke(members.getAsNMSCopy(), null, item))
                 .getOrThrow(message -> new IllegalStateException("Could not encode " + item + ": " + message));
+        // The compound's order is not fixed; id, count and components come first, as in Paper's layout
+        Map<String, Object> others = new LinkedHashMap<>();
         for (Pair<Object, Object> entry : entries(tag)) {
             String key = string(entry.getFirst());
             Object value = entry.getSecond();
             if (key.equals(ID)) {
                 data.put(ID, string(value));
             } else if (key.equals(COUNT)) {
-                data.put(COUNT, nbtOps.getNumberValue(value).getOrThrow(IllegalStateException::new).intValue());
+                others.put(COUNT, nbtOps.getNumberValue(value).getOrThrow(IllegalStateException::new).intValue());
             } else if (key.equals(COMPONENTS)) {
-                Map<String, Object> components = new LinkedHashMap<>();
+                Map<String, Object> components = new TreeMap<>();
                 for (Pair<Object, Object> component : entries(value)) {
                     components.put(string(component.getFirst()), component.getSecond().toString());
                 }
-                data.put(COMPONENTS, components);
+                others.put(COMPONENTS, components);
             } else {
                 // Not written by any version so far; kept as SNBT and put back as is
-                data.put(key, value.toString());
+                others.put(key, value.toString());
             }
         }
+        if (others.containsKey(COUNT)) data.put(COUNT, others.remove(COUNT));
+        if (others.containsKey(COMPONENTS)) data.put(COMPONENTS, others.remove(COMPONENTS));
+        data.putAll(others);
         data.put(SCHEMA_VERSION, SCHEMA);
         return data;
     }

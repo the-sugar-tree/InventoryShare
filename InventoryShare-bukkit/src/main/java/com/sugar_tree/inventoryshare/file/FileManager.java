@@ -24,6 +24,7 @@ import com.sugar_tree.inventoryshare.interfaces.IFileManager;
 import com.sugar_tree.inventoryshare.inventory.InventoryRegistry;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryStorage;
+import com.sugar_tree.inventoryshare.nms.ItemCodec;
 import com.sugar_tree.inventoryshare.utils.AdvancementRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -31,6 +32,7 @@ import org.bukkit.advancement.Advancement;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,11 +66,15 @@ public final class FileManager implements IFileManager {
     private FileConfiguration invconfig;
     private FileConfiguration advconfig;
 
-    public FileManager(InventoryAccess access, InventoryRegistry registry, AdvancementRegistry advancements) {
+    /**
+     * @param itemCodec writes and reads the items from 1.20.5, {@code null} before
+     */
+    public FileManager(InventoryAccess access, InventoryRegistry registry, AdvancementRegistry advancements,
+                       @Nullable ItemCodec itemCodec) {
         this.access = access;
         this.registry = registry;
         this.advancements = advancements;
-        this.codec = new Codec(access, WORLD_VERSION);
+        this.codec = new Codec(access, WORLD_VERSION, itemCodec);
     }
 
     @Override
@@ -176,30 +182,43 @@ public final class FileManager implements IFileManager {
     }
 
     /**
-     * Loads every item that can be loaded. If anything is skipped, the source file is backed up first,
-     * because the next {@link #save()} overwrites it with what is in memory.
+     * Loads every item that can be loaded. If anything is skipped, or if items are migrated from Bukkit's format,
+     * the source file is backed up first, because the next {@link #save()} overwrites it with what is in memory.
      *
      * @param backupName prefix of the backup file name, e.g. {@code inventory} or {@code team-red}
      */
     private void readInventory(FileConfiguration config, File source, String backupName,
                                InventoryStorage inventory, String category) {
         LoadResult result = codec.read(config, inventory);
-        if (result.isComplete()) {
+        if (result.isComplete() && result.getMigrated() == 0) {
             return;
         }
-        logger.severe("[" + category + "] Some data in " + source.getName() + " could not be loaded:");
-        for (String line : result.describe()) {
-            logger.severe(line);
+        if (!result.isComplete()) {
+            logger.severe("[" + category + "] Some data in " + source.getName() + " could not be loaded:");
+            for (String line : result.describe()) {
+                logger.severe(line);
+            }
+        }
+        if (result.getMigrated() > 0) {
+            logger.info("[" + category + "] " + result.getMigrated() + " item(s) in " + source.getName()
+                    + " are in Bukkit's item format (InventoryShare 3.x, or saved before Minecraft 1.20.5)."
+                    + " They will be saved in Minecraft's own item format from now on.");
         }
         File backupDirectory = new File(plugin.getDataFolder(), "backups");
+        File backup;
         try {
-            File backup = backUp(backupDirectory, source, backupName, result.newestDataVersion());
-            logger.severe("The original file was backed up to " + backup.getPath()
-                    + ". " + source.getName() + " will be overwritten on the next save. To recover the skipped items, "
-                    + "restore the backup on a server that can read them (e.g. the newer version it came from).");
+            backup = backUp(backupDirectory, source, backupName, result.newestDataVersion());
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to back up " + source.getPath() + " into " + backupDirectory.getPath()
                     + ". Copy it manually before the next save!", e);
+            return;
+        }
+        if (!result.isComplete()) {
+            logger.severe("The original file was backed up to " + backup.getPath()
+                    + ". " + source.getName() + " will be overwritten on the next save. To recover the skipped items, "
+                    + "restore the backup on a server that can read them (e.g. the newer version it came from).");
+        } else {
+            logger.info("The original file was backed up to " + backup.getPath() + ".");
         }
     }
 
