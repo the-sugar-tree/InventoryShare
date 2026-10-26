@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection.modern;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory.modern;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryStorage;
@@ -120,7 +120,7 @@ public final class ModernInventoryAccess implements InventoryAccess {
             item = storage.equipment.get(equipmentSlot(slot));
             if (item == null) item = emptyItem;
         }
-        return (ItemStack) invoke(members.getAsBukkitCopy(), null, item);
+        return (ItemStack) invoke(members.getAsCraftCopy(), null, invoke(members.getAsCraftMirror(), null, item));
     }
 
     @Override

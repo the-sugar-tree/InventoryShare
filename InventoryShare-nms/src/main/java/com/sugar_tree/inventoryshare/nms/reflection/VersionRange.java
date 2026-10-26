@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * The Minecraft versions of a name table row: an exact list, or a version and every later one.
  */
-final class VersionRange {
+public final class VersionRange {
 
     private final List<MinecraftVersion> versions;
     private final @Nullable MinecraftVersion since;
@@ -41,7 +41,7 @@ final class VersionRange {
         this.since = since;
     }
 
-    static @NotNull VersionRange of(String... versions) {
+    public static @NotNull VersionRange of(String... versions) {
         List<MinecraftVersion> list = new ArrayList<>(versions.length);
         for (String version : versions) {
             list.add(MinecraftVersion.parse(version));
@@ -49,16 +49,16 @@ final class VersionRange {
         return new VersionRange(Collections.unmodifiableList(list), null);
     }
 
-    static @NotNull VersionRange atLeast(String version) {
+    public static @NotNull VersionRange atLeast(String version) {
         return new VersionRange(Collections.emptyList(), MinecraftVersion.parse(version));
     }
 
-    boolean contains(@NotNull MinecraftVersion version) {
+    public boolean contains(@NotNull MinecraftVersion version) {
         return versions.contains(version) || since != null && version.compareTo(since) >= 0;
     }
 
     /** The exact versions; empty for an open range */
-    @NotNull List<MinecraftVersion> getVersions() {
+    public @NotNull List<MinecraftVersion> getVersions() {
         return versions;
     }
 }

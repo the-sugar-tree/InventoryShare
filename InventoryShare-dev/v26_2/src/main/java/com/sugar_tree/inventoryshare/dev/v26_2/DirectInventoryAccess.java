@@ -80,7 +80,7 @@ public final class DirectInventoryAccess implements InventoryAccess {
         ItemStack item = slot < ARMOR_START
                 ? storage.items.get(slot)
                 : storage.equipment.getOrDefault(equipmentSlot(slot), ItemStack.EMPTY);
-        return CraftItemStack.asBukkitCopy(item);
+        return CraftItemStack.asCraftCopy(CraftItemStack.asCraftMirror(item));
     }
 
     @Override

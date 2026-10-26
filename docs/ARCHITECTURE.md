@@ -38,7 +38,7 @@ Bukkit API는 아이템을 복사해서 넣고 빼는 방법만 제공하므로,
 ```
 InventoryShare/
 ├─ InventoryShare-bukkit/      배포 플러그인 (core). spigot-api로만 컴파일, Java 8 대상
-├─ InventoryShare-nms/         NMS 접근 계층: InventoryAccess, 서버 감지, 리플렉션 구현. spigot-api로만 컴파일, Java 8 대상
+├─ InventoryShare-nms/         NMS 접근 계층: InventoryAccess, ItemCodec, 서버 감지, 리플렉션 구현. Java 8 대상
 ├─ InventoryShare-nms-test/    NMS 이름을 실제 Spigot jar로 검증하는 테스트
 ├─ InventoryShare-dev/         개발용 샌드박스(<ver>/)와 로컬 Paper 테스트 서버 Task. -Pdev일 때만 포함, 배포 안 함
 └─ docs/
@@ -54,9 +54,10 @@ InventoryShare-dev/<ver>  (core는 그대로, InventoryAccess 구현만 주입)
 ```
 
 설계 원칙:
-- **core는 NMS를 직접 다루지 않습니다.** 인벤토리 교체는 `InventoryAccess` 인터페이스(§4.4)를 통해서만 합니다.
+- **core는 NMS를 직접 다루지 않습니다.** 인벤토리 교체는 `InventoryAccess`(§4.4), 아이템 저장 변환은 `ItemCodec`(§4.5)으로만 합니다.
 - **배포 jar는 리플렉션만 씁니다.** 그래서 기본 빌드에 BuildTools(Spigot 서버 jar)가 필요 없습니다. Spigot 서버 jar는 테스트(`InventoryShare-nms-test`)와 개발 샌드박스(`InventoryShare-dev`)에서만 씁니다.
 - `InventoryShare-nms`의 jar는 `InventoryShare-bukkit` jar 안에 함께 들어갑니다.
+- `InventoryShare-nms`는 spigot-api와 DataFixerUpper(`ItemCodec`용, 서버가 제공)로 컴파일합니다.
 
 ---
 
@@ -162,23 +163,26 @@ inventory = true, teaminventory = true    → 팀이 있으면 그 팀의 인벤
 
 ```
 MinecraftVersion ─┐
-                  ├─▶ NmsNameFactory ─▶ *Names ─▶ *Members.resolve(names, loader) ─▶ *InventoryAccess
-ServerRuntime ────┘   (문자열 조립)     (문자열)   (Class / Field / Method)           (리플렉션 수행)
+                  ├─▶ *NameFactory ─▶ *Names ─▶ *Members.resolve(names, loader) ─▶ *InventoryAccess, VanillaItemCodec
+ServerRuntime ────┘   (문자열 조립)    (문자열)   (Class / Field / Method)           (리플렉션 수행)
 ```
 
-| 단계      | 클래스                                           | 하는 일                                                                               |
-|-----------|--------------------------------------------------|---------------------------------------------------------------------------------------|
-| 서버 정보 | `MinecraftVersion`                               | 마인크래프트 버전 파싱·비교                                                           |
-|           | `ServerRuntime`                                  | 서버에서 CraftBukkit 패키지, 이름 체계(`MappingType`), 클래스 로더를 감지             |
-| 이름 조립 | `NmsNameFactory`                                 | 버전과 서버 정보로 **완성된 클래스·멤버 이름**을 만듦. 이름 규칙은 모두 여기에만 있음 |
-|           | `LegacyNameTable`, `ModernNameTable`             | 버전별 Spigot 멤버 이름표 (데이터만)                                                  |
-|           | `InventoryModel`                                 | 버전 → `LEGACY` / `MODERN`                                                            |
-| 데이터    | `LegacyNames`, `ModernNames`                     | 한 서버에서 쓸 이름 묶음. 로직 없음                                                   |
-| 변환      | `LegacyMembers`, `ModernMembers`                 | 이름 + 클래스 로더 → `Class`/`Field`/`Method`                                         |
-| 수행      | `LegacyInventoryAccess`, `ModernInventoryAccess` | 구조별 capture / apply / 칸 읽기·쓰기                                                 |
-|           | `Reflections`                                    | 리플렉션 호출과 예외 변환 유틸                                                        |
-| 조립      | `ReflectionAccessProvider`                       | `InventoryModel` → `NmsNameFactory` → `Members.resolve` → Access                      |
-| 선택      | `InventoryAccessFactory`                         | 이 버전을 맡을 Provider를 고름 (§4.2)                                                 |
+| 단계      | 클래스                                                     | 하는 일                                                                   |
+|-----------|------------------------------------------------------------|---------------------------------------------------------------------------|
+| 서버 정보 | `MinecraftVersion`                                         | 마인크래프트 버전 파싱·비교                                               |
+|           | `ServerRuntime`                                            | 서버에서 CraftBukkit 패키지, 이름 체계(`MappingType`), 클래스 로더를 감지 |
+| 이름 조립 | `InventoryNameFactory`, `ItemNameFactory`                  | 버전과 서버 정보로 **완성된 클래스·멤버 이름**을 만듦                     |
+|           | `NmsNames`                                                 | 두 Factory가 함께 쓰는 이름 규칙                                          |
+|           | `LegacyNameTable`, `ModernNameTable`, `ItemCodecNameTable` | 버전별 Spigot 멤버 이름표 (데이터만)                                      |
+|           | `InventoryModel`                                           | 버전 → `LEGACY` / `MODERN`                                                |
+| 데이터    | `LegacyNames`, `ModernNames`, `ItemCodecNames`             | 한 서버에서 쓸 이름 묶음. 로직 없음                                       |
+| 변환      | `LegacyMembers`, `ModernMembers`, `ItemCodecMembers`       | 이름 + 클래스 로더 → `Class`/`Field`/`Method`                             |
+| 수행      | `LegacyInventoryAccess`, `ModernInventoryAccess`           | 구조별 capture / apply / 칸 읽기·쓰기                                     |
+|           | `VanillaItemCodec`                                         | 아이템 ↔ 저장 데이터 (§4.5)                                               |
+|           | `Reflections`                                              | 리플렉션 호출과 예외 변환 유틸                                            |
+| 조립      | `ReflectionAccessProvider`                                 | `InventoryModel` → `InventoryNameFactory` → `Members.resolve` → Access    |
+|           | `ItemCodecFactory`                                         | `ItemNameFactory` → `ItemCodecMembers.resolve` → `VanillaItemCodec`       |
+| 선택      | `InventoryAccessFactory`                                   | 이 버전을 맡을 Provider를 고름 (§4.2)                                     |
 
 이름이 달라지는 이유는 두 가지이고, 서로 다른 곳에서 처리합니다.
 
@@ -187,11 +191,11 @@ ServerRuntime ────┘   (문자열 조립)     (문자열)   (Class / Fi
 
 | 축                     | 무엇이 달라지나                                                           | 어떻게 정하나     | 처리하는 곳                              |
 |------------------------|---------------------------------------------------------------------------|-------------------|------------------------------------------|
-| 구조 (Legacy / Modern) | 코드 구조 (Names, Members, Access)                                        | 마인크래프트 버전 | `reflection.legacy`, `reflection.modern` |
-| 이름                   | 이름 체계(Spigot/Mojang), NMS 패키지 형태(1.17 전/후), CraftBukkit 패키지 | 서버 감지 + 버전  | `NmsNameFactory`만                       |
+| 구조 (Legacy / Modern) | 코드 구조 (Names, Members, Access)                                        | 마인크래프트 버전 | `reflection.inventory.legacy`, `.modern` |
+| 이름                   | 이름 체계(Spigot/Mojang), NMS 패키지 형태(1.17 전/후), CraftBukkit 패키지 | 서버 감지 + 버전  | `*NameFactory`, `NmsNames`               |
 
 - 이름 체계는 버전만으로 알 수 없습니다. 같은 1.20.4라도 Spigot은 Spigot 이름, Paper Mojang 빌드는 Mojang 이름을 씁니다. 그래서 `LegacySpigot*`, `LegacyMojang*` 같은 클래스는 없고, Members와 Access는 이름 체계와 상관없이 같은 코드로 동작합니다.
-- Legacy와 Modern은 **도메인 코드를 공유하지 않습니다.** 비슷한 코드(플레이어 → 인벤토리, 아이템 변환)가 양쪽에 있지만, 더 이상 바뀌지 않는 Legacy가 계속 바뀌는 Modern의 변경에 영향받지 않게 하려는 의도입니다. 공유하는 것은 기술 유틸(`Reflections`)과 이름 조립(`NmsNameFactory`)뿐입니다.
+- Legacy와 Modern은 **도메인 코드를 공유하지 않습니다.** 비슷한 코드(플레이어 → 인벤토리, 아이템 변환)가 양쪽에 있지만, 더 이상 바뀌지 않는 Legacy가 계속 바뀌는 Modern의 변경에 영향받지 않게 하려는 의도입니다. 공유하는 것은 기술 유틸(`Reflections`)과 이름 조립(`InventoryNameFactory`)뿐입니다.
 
 ### 4.2 Provider와 예외
 
@@ -217,39 +221,27 @@ InventoryAccessFactory.create(version, runtime) = supports(version)가 true인 �
 - 즉, dev 샌드박스의 Provider가 앞에 오므로, 이름표에 아직 없는 새 버전도 샌드박스로 실행할 수 있습니다.
 - `supports`가 서버 정보를 받지 않는 이유: 지원 여부는 "이 버전을 지원하기로 했는가"라는 정책입니다. 서버 환경 때문에 생기는 실패는 `IncompatibleServerException`입니다.
 
-| 예외                          | 뜻                                                                      | 던지는 곳                                                         |
-|-------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------|
-| `UnsupportedServerException`  | CraftBukkit 기반이 아닌 서버. 버전과 상관없이 **신고 불필요**           | `ServerRuntime.current` (서버 클래스가 CraftBukkit에 없을 때)     |
-| `UnsupportedVersionException` | 이 플러그인이 지원하지 않는 버전. **신고 불필요**                       | `InventoryAccessFactory.create` (맡을 Provider가 없을 때)         |
-| `IncompatibleServerException` | 지원하는 버전인데 이 서버에서 Access를 만들지 못함. **버그, 신고 필요** | Provider의 `create` (이름을 찾지 못함, 있을 수 없는 서버 조합 등) |
+| 예외                          | 뜻                                                                             | 던지는 곳                                                            |
+|-------------------------------|--------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| `UnsupportedServerException`  | CraftBukkit 기반이 아닌 서버. 버전과 상관없이 **신고 불필요**                  | `ServerRuntime.current` (서버 클래스가 CraftBukkit에 없을 때)        |
+| `UnsupportedVersionException` | 이 플러그인이 지원하지 않는 버전. **신고 불필요**                              | `InventoryAccessFactory.create` (맡을 Provider가 없을 때)            |
+| `IncompatibleServerException` | 지원하는 버전인데 이 서버에서 Access나 코덱을 만들지 못함. **버그, 신고 필요** | Provider의 `create`, `ItemCodecFactory.create` (이름을 찾지 못함 등) |
 
 ### 4.3 패키지
 
 ```
-com.sugar_tree.inventoryshare.nms            API: core와 dev 샌드박스가 쓰는 것
-├─ InventoryAccess               core가 아는 유일한 NMS 경계
-├─ InventoryStorage              인벤토리 칸 목록 묶음 (내용은 구현마다 다름)
-├─ InventoryAccessFactory        Provider 선택, create(version, runtime)
-├─ InventoryAccessProvider       Access를 만드는 구현의 약속 (supports / create)
-├─ UnsupportedServerException
-├─ UnsupportedVersionException
-├─ IncompatibleServerException
+com.sugar_tree.inventoryshare.nms                    API: core와 dev 샌드박스가 쓰는 것
+├─ InventoryAccess, InventoryStorage                 인벤토리 칸 목록 교체 (§4.4)
+├─ InventoryAccessFactory, InventoryAccessProvider   Provider 선택과 약속 (§4.2)
+├─ ItemCodec, ItemCodecFactory                       아이템 ↔ 저장 데이터, 1.20.5 이상 (§4.5)
 │
-├─ server/                       서버 조사
-│   ├─ MinecraftVersion          마인크래프트 버전 파싱/비교 ("1.21.11")
-│   ├─ ServerRuntime             CraftBukkit 패키지 + MappingType + 클래스 로더 감지
-│   └─ MappingType               SPIGOT | MOJANG
+├─ server/                 MinecraftVersion, ServerRuntime, MappingType, 시작 실패 예외 3개
 │
-└─ reflection/                   리플렉션 구현
-    ├─ ReflectionAccessProvider  기본 Provider (항상 마지막)
-    ├─ Reflections               리플렉션 유틸
-    ├─ InventoryModel            LEGACY | MODERN
-    ├─ NmsNameFactory            버전 + 서버 정보 → Names
-    ├─ LegacyNameTable           버전별 Spigot 멤버 이름 (package-private)
-    ├─ ModernNameTable           〃
-    ├─ VersionRange              이름표 행의 버전 목록 (package-private)
-    ├─ legacy/                   LegacyNames, LegacyMembers, LegacyInventoryAccess
-    └─ modern/                   ModernNames, ModernMembers, ModernInventoryAccess
+└─ reflection/             Reflections, VersionRange, NmsNames
+    ├─ inventory/          ReflectionAccessProvider, InventoryModel, InventoryNameFactory
+    │   ├─ legacy/         LegacyNameTable, LegacyNames, LegacyMembers, LegacyInventoryAccess
+    │   └─ modern/         ModernNameTable, ModernNames, ModernMembers, ModernInventoryAccess
+    └─ item/               ItemCodecNameTable, ItemNameFactory, ItemCodecNames, ItemCodecMembers, VanillaItemCodec
 ```
 
 ### 4.4 `InventoryAccess`
@@ -259,7 +251,7 @@ public interface InventoryAccess {
     InventoryStorage createEmpty();                    // 공유·팀용 빈 인벤토리
     InventoryStorage capture(Player player);           // 플레이어가 지금 쓰는 칸 목록(참조)
     void apply(Player player, InventoryStorage inv);   // 플레이어의 칸 목록을 inv로 바꿔 끼움 (공유의 핵심)
-    ItemStack getItem(InventoryStorage inv, int slot); // Bukkit 아이템 사본
+    ItemStack getItem(InventoryStorage inv, int slot); // 사본 (CraftItemStack, NMS 데이터 그대로)
     void setItem(InventoryStorage inv, int slot, ItemStack item);
 }
 ```
@@ -272,16 +264,23 @@ public interface InventoryAccess {
 | 36 – 39 | 신발, 바지, 갑옷, 투구 | 갑옷 리스트 `[i - 36]` | 장비 맵 (칸 번호 → 장비 슬롯 표로 변환) |
 | 40      | 왼손                   | 왼손 리스트 `[0]`      | 장비 맵 (OFFHAND)                       |
 
-### 4.5 서버 감지와 이름 조립
+### 4.5 `ItemCodec` (1.20.5 이상)
+
+- 마인크래프트의 `ItemStack.CODEC`으로 아이템을 NBT로 바꾸고, 컴포넌트마다 SNBT 문자열로 저장합니다. 형식은 Paper 1.21.5 이상의 `ItemStack#serialize()`와 같습니다(§5).
+- `ItemMeta`를 거치지 않아 데이터가 빠지지 않고, Spigot과 Paper가 서로의 데이터를 읽습니다.
+- 더 낮은 데이터 버전의 아이템은 서버의 DataFixer로 변환한 뒤 읽습니다.
+- `VanillaItemCodec`은 DataFixerUpper 타입을 직접 써서 1.20.5 이상에서만 로드됩니다. 만들 때 아이템 하나를 저장했다 읽어 보고, 실패하면 `IncompatibleServerException`입니다.
+
+### 4.6 서버 감지와 이름 조립
 
 - **서버 감지 (`ServerRuntime`)**
   - CraftBukkit 패키지: `Bukkit.getServer()`의 클래스(`CraftServer`) 패키지에서 읽습니다.
   - 이름 체계: 서버 클래스 로더에 `net.minecraft.world.entity.player.Inventory`가 있으면 Mojang 이름(`MOJANG`), 없으면 Spigot 이름(`SPIGOT`)입니다.
   - 클래스 로더: `CraftServer`의 클래스 로더를 씁니다. 플러그인 클래스 로더는 다른 플러그인 jar까지 검색하므로 쓰지 않습니다.
-- **이름 조립 (`NmsNameFactory`)**
+- **이름 조립 (`InventoryNameFactory`, `ItemNameFactory`)**
   - CraftBukkit 클래스: `org.bukkit.craftbukkit[.<패키지>].entity.CraftPlayer` 등
   - NMS 클래스: 1.17 이전은 `net.minecraft.server.<패키지>.<이름>`, 1.17 이후는 이름 체계에 따라 Spigot 또는 Mojang 클래스 이름
-  - Spigot 멤버 이름: 버전별 이름표(`LegacyNameTable`, `ModernNameTable`)
+  - Spigot 멤버 이름: 버전별 이름표(`LegacyNameTable`, `ModernNameTable`, `ItemCodecNameTable`)
   - Mojang 멤버 이름: 구조마다 고정값. Legacy(1.17 – 1.21.4), Modern(1.21.5 – 26.x) 구간 안에서 바뀌지 않았습니다.
   - 있을 수 없는 조합(1.17 이전 + Mojang 이름, 26.1 이상 + Spigot 이름 등)은 서버 감지가 잘못된 것으로 보고 `IncompatibleServerException`을 던집니다.
 
@@ -292,9 +291,9 @@ public interface InventoryAccess {
 Minecraft 1.21.4 (CraftBukkit (not relocated), MOJANG mappings), using LegacyInventoryAccess
 ```
 
-### 4.6 멤버 해석과 버전 감지
+### 4.7 멤버 해석과 버전 감지
 
-- `LegacyMembers.resolve(names, loader)` / `ModernMembers.resolve(names, loader)`는 모든 클래스를 **인자로 받은 클래스 로더**에서 찾습니다. 서버에서는 서버 클래스 로더, 테스트에서는 버전별로 격리한 클래스 로더를 넘기므로, **테스트가 플러그인과 같은 코드**를 실행합니다.
+- `*Members.resolve(names, loader)`는 모든 클래스를 **인자로 받은 클래스 로더**에서 찾습니다. 서버에서는 서버 클래스 로더, 테스트에서는 버전별로 격리한 클래스 로더를 넘기므로, **테스트가 플러그인과 같은 코드**를 실행합니다.
 - 모든 이름은 플러그인이 켜질 때 한 번에 해석합니다. 하나라도 없으면 `IncompatibleServerException`으로 비활성화되고 인벤토리는 건드리지 않습니다.
 - Access는 생성자에서 모든 멤버를 한 번 써 봅니다. 먼저 빈 인벤토리를 만들고, 보관함·갑옷·왼손 칸(0, 36, 40)에서 아이템을 읽어 다시 씁니다. 이어서 플레이어 없는 인벤토리를 생성자로 만들어(`PlayerInventory(null)`, Modern은 `Inventory(null, new EntityEquipment())`) 그 빈 인벤토리를 `apply`와 같은 코드로 써 넣고 다시 읽어 봅니다. 여기서 실패하면 역시 `IncompatibleServerException`입니다. 그래서 `apply`가 바꾸는 final 필드에 쓰지 못하는 환경(JVM의 final 필드 변경 제한 등)도 첫 접속이 아니라 시작할 때 드러납니다. 생성자는 필드에 값을 넣기만 하므로 플레이어가 `null`이어도 안전합니다(Spigot, Paper 1.12.2 – 26.2에서 확인).
 - `apply`는 필드 여러 개(Legacy 4개, Modern 2개)를 `Reflections.setAll`로 바꿉니다. 중간에 하나라도 실패하면 이미 바꾼 필드를 원래 값으로 되돌린 뒤 예외를 던지므로, 플레이어 인벤토리가 일부만 바뀐 채로 남지 않습니다.
@@ -309,21 +308,41 @@ Minecraft 1.21.4 (CraftBukkit (not relocated), MOJANG mappings), using LegacyInv
 공유 인벤토리는 `plugins/InventoryShare/inventory.yml`, 팀 인벤토리는 `plugins/InventoryShare/teams/<팀 이름>.yml`에 저장합니다.
 
 ```yaml
-format-version: 1
+format-version: 2
 items:      [ ...36개 ]   # 칸 0 – 35
 armor:      [ ...4개 ]    # 칸 36 – 39 (feet, legs, chest, head)
 extraSlots: [ ...1개 ]    # 칸 40 (offhand)
 ```
 
-- 각 아이템은 Bukkit `ItemStack#serialize()`로 저장합니다.
+| `format-version` | 쓰는 서버        | 아이템 형식                     |
+|------------------|------------------|---------------------------------|
+| 2                | 1.20.5 이상      | `ItemCodec` (§4.5). 빈칸은 `{}` |
+| 1, 또는 키 없음  | 1.20.4 이하, 3.x | Bukkit `ItemStack#serialize()`  |
+
+```yaml
+- DataVersion: 4903
+  id: minecraft:diamond_sword
+  count: 1
+  components:
+    minecraft:damage: '100'
+    minecraft:enchantments: '{"minecraft:sharpness":5}'
+  schema_version: 1
+```
+
+- 읽을 때는 아이템마다 형식을 판별합니다(`DataVersion` 키가 있으면 `ItemCodec`).
 - 그 밖의 파일: `advancements.yml`(공유된 발전과제), `config.yml`(설정), `languages/`(언어 파일)
+
+### 마이그레이션
+
+- 1.20.5 이상에서 Bukkit 형식 아이템을 읽으면, 다음 저장 때 `ItemCodec` 형식으로 바뀝니다. 원본은 먼저 `backups/`에 복사합니다.
+- 그 아이템이 서버보다 낮은 데이터 버전에서 저장됐으면 경고합니다. Bukkit은 옛 데이터를 새 버전에서 읽을 때 일부(셜커 상자 내용물 등)를 잃을 수 있습니다. 저장한 버전의 서버에서 먼저 한 번 실행하면 손실이 없습니다([위키](https://github.com/the-sugar-tree/InventoryShare/wiki/Updating-to-4.0)).
 
 ### 읽을 수 없는 데이터
 
 다른 버전의 서버에서 저장한 파일을 읽을 때를 대비해 **아이템 단위**로 처리합니다.
 
 - 다음 아이템은 건너뛰고 그 칸을 빈칸으로 둡니다. 나머지 아이템은 정상적으로 읽습니다.
-  - 서버보다 높은 데이터 버전(`v`)에서 저장된 아이템 (다운그레이드)
+  - 서버보다 높은 데이터 버전(`v`, `DataVersion`)에서 저장된 아이템 (다운그레이드)
   - 데이터 버전이 숫자가 아니거나, 아이템으로 되돌릴 수 없는 경우
 - 하나라도 건너뛰면 **원본 파일을 `backups/<inventory|team-이름>-<날짜-시각>[-dv<데이터 버전>].yml`로 복사**하고, 건너뛴 칸과 백업 위치를 로그에 남깁니다. 원본 파일은 다음 저장 때 덮어써지므로, 복구하려면 그 데이터를 읽을 수 있는 서버에서 백업 파일을 원래 자리에 되돌립니다.
 - 파일의 `format-version`이 플러그인이 아는 값보다 높으면 경고합니다.
@@ -333,14 +352,15 @@ extraSlots: [ ...1개 ]    # 칸 40 (offhand)
 
 ## 6. 테스트 구조
 
-| 테스트                                                               | 확인하는 것                                                                                                                                                   | Spigot jar               |
-|----------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
-| `InventoryShare-nms` 단위 테스트                                     | 버전 파싱, CraftBukkit 패키지 감지, 이름 조립(Spigot/Mojang, 패키지 형태별), Provider 선택과 예외                                                             | 불필요                   |
-| `InventoryShare-bukkit` 단위 테스트                                  | 아이템 로드 판정과 로그 문구, 백업 파일, 지울 팀 파일 판정, 언어 파일 경로                                                                                    | 불필요                   |
-| `InventoryShare-nms-test` (`LegacyMembersTest`, `ModernMembersTest`) | 버전별 Spigot jar와 `remapped-mojang` jar(Mojang 이름)에서 서버를 감지하고, 플러그인과 같은 코드로 모든 이름을 찾은 뒤 필드 타입과 칸 → 장비 슬롯 표까지 확인 | 있으면 검증, 없으면 skip |
+| 테스트                                     | 확인하는 것                                                                                                                                                   | Spigot jar               |
+|--------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| `InventoryShare-nms` 단위 테스트           | 버전 파싱, CraftBukkit 패키지 감지, 이름 조립(Spigot/Mojang, 패키지 형태별), 이름표 행, Provider 선택과 예외                                                  | 불필요                   |
+| `InventoryShare-bukkit` 단위 테스트        | 아이템 형식 판별·마이그레이션·로드 판정과 로그 문구, 백업 파일, 지울 팀 파일 판정, 언어 파일 경로                                                             | 불필요                   |
+| `InventoryShare-nms-test` (`*MembersTest`) | 버전별 Spigot jar와 `remapped-mojang` jar(Mojang 이름)에서 서버를 감지하고, 플러그인과 같은 코드로 모든 이름을 찾은 뒤 필드 타입과 칸 → 장비 슬롯 표까지 확인 | 있으면 검증, 없으면 skip |
 
 - 테스트는 대상 클래스와 같은 패키지에 둡니다. 그래서 package-private인 이름표도 직접 확인할 수 있습니다.
 - 이름표의 모든 행이 최소 한 버전의 jar로 검사되는지도 테스트합니다.
+- `ItemStack.CODEC`은 같은 타입의 필드가 여러 개라, Spigot 이름이 가리키는 필드가 `remapped-mojang` jar의 `CODEC`과 같은 위치인지 확인합니다.
 - 실행 방법은 [CONTRIBUTING.md §4](../CONTRIBUTING.md#4-테스트)을 참고하세요.
 
 ---
@@ -348,9 +368,9 @@ extraSlots: [ ...1개 ]    # 칸 40 (offhand)
 ## 7. 설계 결정과 알려진 한계
 
 - **참조 공유를 택한 이유와 위험:** 아이템을 복사해 맞추는 대신 리스트 객체를 공유하므로 동기화가 필요 없고 복제 버그가 생기지 않습니다. 대신 서버 내부의 `final` 필드를 리플렉션으로 바꿔야 합니다. JDK 26부터 이 동작에 경고가 나오고 이후 막힐 예정입니다(JEP 500). 막히면 `InventoryAccess` 뒤에서 "내용 복사 동기화" 구현으로 바꿀 수 있도록 인터페이스를 나눠 두었습니다.
-- **쓰기 실패는 시작할 때 드러나지 않음:** 시작할 때는 이름을 찾고 접근 권한을 얻는 것까지만 확인합니다. 필드 쓰기가 막히는 환경에서는 첫 접속 때 처음 실패합니다.
 - **Modern 장비 맵 공유:** 장비 맵을 통째로 공유하므로, 플레이어가 쓰지 않는 장비 칸(말 갑옷 등에 쓰이는 BODY, SADDLE)도 함께 공유됩니다.
-- **Paper ↔ Spigot 데이터 이동:** Paper 1.21.5 이상은 아이템을 다른 형식(`DataVersion`, `id`)으로 저장합니다. 이 데이터는 Spigot이나 이전 버전 서버에서 읽을 수 없습니다. 반대 방향(Spigot 또는 이전 버전 → Paper 1.21.5 이상)은 읽을 수 있습니다.
+- **Paper ↔ Spigot 데이터 이동:** 1.20.5 이상은 손실 없이 옮겨집니다. Bukkit 형식(1.20.4 이하)은 Paper가 저장한 일부 아이템(셜커 상자 내용물 등)을 Spigot이 읽지 못합니다(1.21.4에서 확인).
+- **1.20.4 이하에서 1.20.5 이상으로 올릴 때:** `ItemCodec`이 없는 버전이라 같은 버전에서 먼저 마이그레이션할 수 없습니다. 올리면서 변환되므로 §5의 손실이 생길 수 있습니다.
 - **시작 실패 메시지:** 일부 시작 실패(개발 샌드박스의 오류 등)는 실패 종류별 메시지 없이 서버의 일반 오류로 끝납니다. 이때도 플러그인은 비활성화됩니다.
 
 새 마인크래프트 버전을 지원하는 절차는 [CONTRIBUTING.md §6.2](../CONTRIBUTING.md#62-새-마인크래프트-버전-지원)를 참고하세요.

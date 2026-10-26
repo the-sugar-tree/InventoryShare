@@ -20,7 +20,6 @@
 
 package com.sugar_tree.inventoryshare.nms.server;
 
-import com.sugar_tree.inventoryshare.nms.UnsupportedServerException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

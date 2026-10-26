@@ -1,0 +1,53 @@
+/*
+ * This file is part of InventoryShare, licensed under the GPL-3.0 License.
+ *
+ * InventoryShare the minecraft plugin that enables sharing inventory with other players
+ * Copyright (c) 2023 the-sugar-tree and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy;
+
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.modern.ModernNameTable;
+import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class LegacyNameTableTest {
+
+    @Test
+    void eachVersionBelongsToOneRow() {
+        Set<MinecraftVersion> seen = new HashSet<>();
+        for (LegacyNameTable row : LegacyNameTable.values()) {
+            for (MinecraftVersion version : row.versions.getVersions()) {
+                assertTrue(seen.add(version), version + " is listed twice");
+            }
+        }
+    }
+
+    @Test
+    void noVersionIsAlsoModern() {
+        for (LegacyNameTable row : LegacyNameTable.values()) {
+            for (MinecraftVersion version : row.versions.getVersions()) {
+                assertNull(ModernNameTable.find(version), version + " is in both inventory models");
+            }
+        }
+    }
+}

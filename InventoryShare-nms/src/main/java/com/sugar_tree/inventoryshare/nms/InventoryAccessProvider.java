@@ -20,6 +20,8 @@
 
 package com.sugar_tree.inventoryshare.nms;
 
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.ReflectionAccessProvider;
+import com.sugar_tree.inventoryshare.nms.server.IncompatibleServerException;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>{@link InventoryAccessFactory} asks the providers in order and uses the first one that supports the version:
  * those registered through {@link java.util.ServiceLoader}
  * ({@code META-INF/services/com.sugar_tree.inventoryshare.nms.InventoryAccessProvider}) first, then the built-in
- * reflection provider ({@link com.sugar_tree.inventoryshare.nms.reflection.ReflectionAccessProvider}).
+ * reflection provider ({@link ReflectionAccessProvider}).
  * The {@code InventoryShare-dev} sandboxes register one to run the plugin with direct NMS code while a new version
  * is being developed. The released plugin registers none.
  *

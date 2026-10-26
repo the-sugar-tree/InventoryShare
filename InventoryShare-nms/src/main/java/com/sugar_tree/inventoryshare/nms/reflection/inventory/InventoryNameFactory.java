@@ -18,39 +18,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory;
 
-import com.sugar_tree.inventoryshare.nms.IncompatibleServerException;
-import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyNames;
-import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy.LegacyNameTable;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy.LegacyNames;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.modern.ModernNameTable;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.server.IncompatibleServerException;
 import com.sugar_tree.inventoryshare.nms.server.MappingType;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import static com.sugar_tree.inventoryshare.nms.reflection.NmsNames.*;
 
 /**
- * Builds the names of NMS, CraftBukkit and Bukkit classes and members for one server. Only strings are built here;
- * nothing is loaded.
+ * Builds the names of the inventory models' classes and members for one server. Only strings are built here;
+ * nothing is loaded. Spigot's member names come from {@link LegacyNameTable} and {@link ModernNameTable}; Mojang's did
+ * not change within either model.
  *
- * <p>Three things decide the strings, independently of the {@link InventoryModel}:
- * <ul>
- *   <li>the mappings the server uses ({@link MappingType}): Spigot's names come from {@link LegacyNameTable} and
- *       {@link ModernNameTable}, Mojang's did not change within either model</li>
- *   <li>the NMS package layout: {@code net.minecraft.server.vX_Y_RZ} before 1.17, flattened from 1.17</li>
- *   <li>the CraftBukkit package: {@code org.bukkit.craftbukkit.vX_Y_RZ}, or not relocated</li>
- * </ul>
+ * @see com.sugar_tree.inventoryshare.nms.reflection.NmsNames
  */
-public final class NmsNameFactory {
+public final class InventoryNameFactory {
 
-    private static final String CRAFTBUKKIT = "org.bukkit.craftbukkit";
-    private static final String BUKKIT_ITEM_STACK = "org.bukkit.inventory.ItemStack";
-
-    private static final String ITEM_STACK = "net.minecraft.world.item.ItemStack";
     private static final String NON_NULL_LIST = "net.minecraft.core.NonNullList";
     private static final String ENTITY_EQUIPMENT = "net.minecraft.world.entity.EntityEquipment";
 
-    private NmsNameFactory() {}
+    private InventoryNameFactory() {}
 
     /**
      * @throws IllegalArgumentException    if the version does not use the legacy model
@@ -161,16 +155,8 @@ public final class NmsNameFactory {
         return names.build();
     }
 
-    private static String craftbukkit(@Nullable String pkg, String name) {
-        return pkg == null ? CRAFTBUKKIT + "." + name : CRAFTBUKKIT + "." + pkg + "." + name;
-    }
-
     /** Pre-1.17 NMS classes share the versioned package of CraftBukkit */
     private static String versionedNms(String pkg, String simpleName) {
         return "net.minecraft.server." + pkg + "." + simpleName;
-    }
-
-    private static String byMappingType(ServerRuntime runtime, String spigot, String mojang) {
-        return runtime.getMappingType() == MappingType.MOJANG ? mojang : spigot;
     }
 }

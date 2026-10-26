@@ -18,11 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory;
 
-import com.sugar_tree.inventoryshare.nms.IncompatibleServerException;
-import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyNames;
-import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy.LegacyNameTable;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy.LegacyNames;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.modern.ModernNameTable;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.server.IncompatibleServerException;
 import com.sugar_tree.inventoryshare.nms.server.MappingType;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
@@ -30,21 +32,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class NmsNameFactoryTest {
+class InventoryNameFactoryTest {
 
     /** Only names are built here; nothing is loaded */
-    private static final ClassLoader LOADER = NmsNameFactoryTest.class.getClassLoader();
+    private static final ClassLoader LOADER = InventoryNameFactoryTest.class.getClassLoader();
 
     @ParameterizedTest
     @CsvSource({
@@ -77,22 +74,8 @@ class NmsNameFactoryTest {
     }
 
     @Test
-    void eachVersionBelongsToOneRow() {
-        List<VersionRange> ranges = new ArrayList<>();
-        for (LegacyNameTable row : LegacyNameTable.values()) ranges.add(row.versions);
-        for (ModernNameTable row : ModernNameTable.values()) ranges.add(row.versions);
-
-        Set<MinecraftVersion> seen = new HashSet<>();
-        for (VersionRange range : ranges) {
-            for (MinecraftVersion version : range.getVersions()) {
-                assertTrue(seen.add(version), version + " is listed twice");
-            }
-        }
-    }
-
-    @Test
     void spigotLegacyBefore117() throws IncompatibleServerException {
-        LegacyNames names = NmsNameFactory.legacy(v("1.16.5"), runtime("v1_16_R3", MappingType.SPIGOT));
+        LegacyNames names = InventoryNameFactory.legacy(v("1.16.5"), runtime("v1_16_R3", MappingType.SPIGOT));
 
         assertEquals("org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack", names.getCraftItemStackClass());
@@ -110,7 +93,7 @@ class NmsNameFactoryTest {
 
     @Test
     void spigotLegacyFrom117() throws IncompatibleServerException {
-        LegacyNames names = NmsNameFactory.legacy(v("1.21.4"), runtime("v1_21_R3", MappingType.SPIGOT));
+        LegacyNames names = InventoryNameFactory.legacy(v("1.21.4"), runtime("v1_21_R3", MappingType.SPIGOT));
 
         assertEquals("org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.server.level.EntityPlayer", names.getInventoryOwnerClass());
@@ -127,7 +110,7 @@ class NmsNameFactoryTest {
     @Test
     void mojangLegacy() throws IncompatibleServerException {
         // Paper 1.20.5 - 1.21.4
-        LegacyNames names = NmsNameFactory.legacy(v("1.21.4"), runtime(null, MappingType.MOJANG));
+        LegacyNames names = InventoryNameFactory.legacy(v("1.21.4"), runtime(null, MappingType.MOJANG));
 
         assertEquals("org.bukkit.craftbukkit.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.server.level.ServerPlayer", names.getInventoryOwnerClass());
@@ -146,7 +129,7 @@ class NmsNameFactoryTest {
     @Test
     void mojangLegacyKeepsRelocatedPackage() throws IncompatibleServerException {
         // Paper's Mojang-mapped 1.20.4 build
-        LegacyNames names = NmsNameFactory.legacy(v("1.20.4"), runtime("v1_20_R3", MappingType.MOJANG));
+        LegacyNames names = InventoryNameFactory.legacy(v("1.20.4"), runtime("v1_20_R3", MappingType.MOJANG));
 
         assertEquals("org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.server.level.ServerPlayer", names.getInventoryOwnerClass());
@@ -154,7 +137,7 @@ class NmsNameFactoryTest {
 
     @Test
     void spigotModern() throws IncompatibleServerException {
-        ModernNames names = NmsNameFactory.modern(v("1.21.5"), runtime("v1_21_R4", MappingType.SPIGOT));
+        ModernNames names = InventoryNameFactory.modern(v("1.21.5"), runtime("v1_21_R4", MappingType.SPIGOT));
 
         assertEquals("org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.world.entity.player.EntityHuman", names.getPlayerClass());
@@ -168,7 +151,7 @@ class NmsNameFactoryTest {
     @Test
     void mojangModern() throws IncompatibleServerException {
         // Paper 1.21.5+, every 26.1+ server
-        ModernNames names = NmsNameFactory.modern(v("26.1"), runtime(null, MappingType.MOJANG));
+        ModernNames names = InventoryNameFactory.modern(v("26.1"), runtime(null, MappingType.MOJANG));
 
         assertEquals("org.bukkit.craftbukkit.entity.CraftPlayer", names.getCraftPlayerClass());
         assertEquals("net.minecraft.world.entity.player.Player", names.getPlayerClass());
@@ -182,27 +165,27 @@ class NmsNameFactoryTest {
     @Test
     void noMojangNamesBefore117() {
         assertThrows(IncompatibleServerException.class,
-                () -> NmsNameFactory.legacy(v("1.16.5"), runtime("v1_16_R3", MappingType.MOJANG)));
+                () -> InventoryNameFactory.legacy(v("1.16.5"), runtime("v1_16_R3", MappingType.MOJANG)));
     }
 
     @Test
     void noVersionlessPackageBefore117() {
         assertThrows(IncompatibleServerException.class,
-                () -> NmsNameFactory.legacy(v("1.16.5"), runtime(null, MappingType.SPIGOT)));
+                () -> InventoryNameFactory.legacy(v("1.16.5"), runtime(null, MappingType.SPIGOT)));
     }
 
     @Test
     void noSpigotNamesFrom26() {
         assertThrows(IncompatibleServerException.class,
-                () -> NmsNameFactory.modern(v("26.1"), runtime(null, MappingType.SPIGOT)));
+                () -> InventoryNameFactory.modern(v("26.1"), runtime(null, MappingType.SPIGOT)));
     }
 
     @Test
     void versionOfTheOtherModel() {
         assertThrows(IllegalArgumentException.class,
-                () -> NmsNameFactory.legacy(v("1.21.5"), runtime(null, MappingType.MOJANG)));
+                () -> InventoryNameFactory.legacy(v("1.21.5"), runtime(null, MappingType.MOJANG)));
         assertThrows(IllegalArgumentException.class,
-                () -> NmsNameFactory.modern(v("1.21.4"), runtime(null, MappingType.MOJANG)));
+                () -> InventoryNameFactory.modern(v("1.21.4"), runtime(null, MappingType.MOJANG)));
     }
 
     private static MinecraftVersion v(String version) {

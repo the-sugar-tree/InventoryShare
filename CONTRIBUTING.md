@@ -165,7 +165,7 @@ dev=true
 ### 6.1 core 기능 수정·버그 수정
 
 1. [ARCHITECTURE §3](docs/ARCHITECTURE.md#3-core-동작-inventoryshare-bukkit)에서 인벤토리 상태와 이벤트별 처리를 먼저 확인합니다.
-2. core는 NMS를 직접 다루지 않고 `InventoryAccess`만 사용합니다. 서버 내부 동작이 필요하면 `InventoryAccess`에 메서드를 추가하고 Legacy·Modern 구현과 샌드박스 구현을 함께 고쳐야 합니다.
+2. core는 NMS를 직접 다루지 않고 `InventoryAccess`와 `ItemCodec`만 사용합니다. 서버 내부 동작이 필요하면 `InventoryAccess`에 메서드를 추가하고 Legacy·Modern 구현과 샌드박스 구현을 함께 고쳐야 합니다.
 3. 로직은 가능하면 서버 없이 테스트할 수 있게 작성하고 단위 테스트를 추가합니다(예: `file/FileManagerTest`, `file/CodecTest`).
 4. §5.2의 테스트 서버나 직접 띄운 서버에서 §6.3 체크리스트의 관련 항목을 확인합니다. Legacy(1.21.4 이하)와 Modern(1.21.5 이상)에서 한 번씩 확인하는 것을 권장합니다.
 
@@ -175,8 +175,8 @@ dev=true
 2. `InventoryShare-dev`의 가장 가까운 샌드박스를 복사해 `DirectInventoryAccess`로 동작을 확인합니다.
    (`build.gradle`의 Spigot 버전과 toolchain, 패키지명, `DevInventoryAccessProvider.TARGET`, `META-INF/services` 파일을 바꿉니다.)
 3. `InventoryShare-nms-test/build.gradle`의 `spigotJars`에 버전을 추가하고 `-PnmsStrict`로 테스트합니다. 이름표에 그 버전이 없으면 이 테스트가 실패합니다.
-4. `LegacyNameTable` 또는 `ModernNameTable`(`InventoryShare-nms`의 `nms/reflection/`)에 행을 추가해 3번 테스트를 통과시킵니다. 샌드박스에서 쓴 필드·메서드 이름을 Spigot 이름으로 옮기면 됩니다. 이름을 찾는 방법은 [NMS_GUIDE.md §6](docs/NMS_GUIDE.md#6-이름을-직접-확인하는-방법)을 참고하세요.
-   - 클래스 이름이나 Mojang 이름이 바뀌었다면 `NmsNameFactory`를 고칩니다.
+4. 이름표에 행을 추가해 3번 테스트를 통과시킵니다. 인벤토리는 `LegacyNameTable` 또는 `ModernNameTable`(`nms/reflection/inventory/`), 아이템 저장(1.20.5 이상)은 `ItemCodecNameTable`(`nms/reflection/item/`)입니다. 샌드박스에서 쓴 필드·메서드 이름을 Spigot 이름으로 옮기면 됩니다. 이름을 찾는 방법은 [NMS_GUIDE.md §6](docs/NMS_GUIDE.md#6-이름을-직접-확인하는-방법)을 참고하세요.
+   - 클래스 이름이나 Mojang 이름이 바뀌었다면 `InventoryNameFactory` 또는 `ItemNameFactory`를 고칩니다.
    - 인벤토리 구조 자체가 바뀌었다면 새 `InventoryAccess` 구현이 필요합니다.
 5. 배포 jar로 실서버 검증을 합니다(§6.3). Paper는 §5.2의 테스트 서버로 확인할 수 있습니다.
 
@@ -199,8 +199,8 @@ dev=true
 ## 7. 코드 규칙
 
 - `InventoryShare-bukkit`, `InventoryShare-nms`는 **Java 8 대상**(`release 8`)입니다. 이후 버전의 API를 쓰지 마세요.
-- core(`InventoryShare-bukkit`)는 NMS/CraftBukkit 클래스를 직접 참조하지 않습니다. NMS 접근은 `InventoryAccess` 뒤에만 두고, core는 `nms`와 `nms.server` 패키지만 사용합니다.
-- 서버 내부 이름(클래스·필드·메서드)은 `NmsNameFactory`와 이름표에만 적습니다.
+- core(`InventoryShare-bukkit`)는 NMS/CraftBukkit 클래스를 직접 참조하지 않습니다. NMS 접근은 `InventoryAccess`와 `ItemCodec` 뒤에만 두고, core는 `nms`와 `nms.server` 패키지만 사용합니다.
+- 서버 내부 이름(클래스·필드·메서드)은 `*NameFactory`, `NmsNames`와 이름표에만 적습니다.
 - 테스트는 대상 클래스와 같은 패키지에 둡니다. package-private 멤버를 테스트 때문에 공개하지 않습니다.
 - 주변 코드의 스타일을 따릅니다(4칸 들여쓰기, Lombok의 `@Getter` 등 사용).
 - 모든 Java 파일에는 GPL 라이선스 헤더가 필요합니다. `./gradlew licenseFormat`이 자동으로 추가하며, `jar` 작업 전에도 실행됩니다.

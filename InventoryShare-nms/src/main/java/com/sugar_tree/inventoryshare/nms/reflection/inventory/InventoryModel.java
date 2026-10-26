@@ -18,15 +18,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory;
 
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy.LegacyNameTable;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.modern.ModernNameTable;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Where a Minecraft version stores the player's armor and offhand. Decided by the version alone; which names the
- * server uses for the classes and members is a separate question, see {@link NmsNameFactory}.
+ * server uses for the classes and members is a separate question, see {@link InventoryNameFactory}.
  */
 public enum InventoryModel {
     /** 1.12 - 1.21.4: {@code armor} and {@code extraSlots} lists in the player inventory */

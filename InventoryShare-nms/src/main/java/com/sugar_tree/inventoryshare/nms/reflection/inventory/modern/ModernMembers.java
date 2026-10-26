@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection.modern;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory.modern;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +54,10 @@ public final class ModernMembers {
     private final Field emptyItem;
     private final Class<?> nonNullList;
     private final Method createItemList;
-    private final Method asBukkitCopy;
+    /** {@code asCraftMirror(ItemStack)}: a Bukkit item backed by the NMS item, without going through ItemMeta */
+    private final Method asCraftMirror;
+    /** {@code asCraftCopy(org.bukkit.inventory.ItemStack)}: copies the NMS item of a CraftItemStack */
+    private final Method asCraftCopy;
     private final Method asNMSCopy;
 
     private ModernMembers(ModernNames names, ClassLoader loader) throws ReflectiveOperationException {
@@ -80,8 +83,10 @@ public final class ModernMembers {
         createItemList = nonNullList.getDeclaredMethod(names.getCreateItemList(), int.class, Object.class);
 
         Class<?> craftItemStack = load(names.getCraftItemStackClass(), loader);
-        asBukkitCopy = craftItemStack.getMethod("asBukkitCopy", itemStack);
-        asNMSCopy = craftItemStack.getMethod("asNMSCopy", load(names.getBukkitItemStackClass(), loader));
+        Class<?> bukkitItemStack = load(names.getBukkitItemStackClass(), loader);
+        asCraftMirror = craftItemStack.getMethod("asCraftMirror", itemStack);
+        asCraftCopy = craftItemStack.getMethod("asCraftCopy", bukkitItemStack);
+        asNMSCopy = craftItemStack.getMethod("asNMSCopy", bukkitItemStack);
     }
 
     public static @NotNull ModernMembers resolve(@NotNull ModernNames names, @NotNull ClassLoader loader)

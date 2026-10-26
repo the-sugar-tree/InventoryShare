@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection.legacy;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
@@ -102,7 +102,7 @@ public final class LegacyInventoryAccess implements InventoryAccess {
     @Override
     public @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot) {
         Object item = list((LegacyStorage) inventory, slot).get(index(slot));
-        return (ItemStack) invoke(members.getAsBukkitCopy(), null, item);
+        return (ItemStack) invoke(members.getAsCraftCopy(), null, invoke(members.getAsCraftMirror(), null, item));
     }
 
     @Override

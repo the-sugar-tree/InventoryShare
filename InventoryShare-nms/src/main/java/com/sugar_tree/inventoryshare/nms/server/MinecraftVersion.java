@@ -20,7 +20,6 @@
 
 package com.sugar_tree.inventoryshare.nms.server;
 
-import com.sugar_tree.inventoryshare.nms.UnsupportedServerException;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.jetbrains.annotations.NotNull;

@@ -56,7 +56,7 @@ public interface InventoryAccess {
     void apply(@NotNull Player player, @NotNull InventoryStorage inventory);
 
     /**
-     * @return a Bukkit copy of the item in the slot
+     * @return a copy of the item in the slot: a {@code CraftItemStack} that holds a copy of the NMS item.
      */
     @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot);
 

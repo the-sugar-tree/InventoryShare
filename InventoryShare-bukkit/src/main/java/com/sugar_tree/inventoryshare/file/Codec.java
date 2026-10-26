@@ -22,11 +22,15 @@ package com.sugar_tree.inventoryshare.file;
 
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryStorage;
+import com.sugar_tree.inventoryshare.nms.ItemCodec;
 import com.sugar_tree.inventoryshare.file.LoadResult.SkippedItem;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,25 +38,42 @@ import static com.sugar_tree.inventoryshare.nms.InventoryAccess.*;
 
 /**
  * Converts an {@link InventoryStorage} to and from the {@code items / armor / extraSlots} lists of a config.
+ *
+ * <p>Two item formats, told apart per item:
+ * <ul>
+ *   <li>Bukkit's {@code ItemStack#serialize()} ({@code v}, {@code type}, {@code meta}, ...): written before 1.20.5,
+ *       as v3.1.1 wrote it everywhere</li>
+ *   <li>Minecraft's own item data through {@link ItemCodec} ({@value ItemCodec#DATA_VERSION}, {@code id},
+ *       {@code components}, ...): written from 1.20.5, and what Paper's {@code serialize()} writes from 1.21.5</li>
+ * </ul>
+ * A Bukkit item read on 1.20.5+ is migrated: it is saved in the new format the next time.
  */
 final class Codec {
 
-    /** Version of the inventory file layout */
-    static final int FORMAT_VERSION = 1;
+    /** {@code format-version} of a file whose items are written by Bukkit; a file without the key is this too */
+    static final int BUKKIT_FORMAT = 1;
+    /** {@code format-version} of a file whose items are written by {@link ItemCodec} */
+    static final int ITEM_CODEC_FORMAT = 2;
+    /** The newest {@code format-version} this plugin reads */
+    static final int FORMAT_VERSION = ITEM_CODEC_FORMAT;
 
     private final InventoryAccess access;
     private final int serverDataVersion;
+    /** {@code null} before 1.20.5 */
+    private final @Nullable ItemCodec itemCodec;
 
     /**
      * @param serverDataVersion data version of the running server; items saved by a higher one are skipped
+     * @param itemCodec         writes and reads the items from 1.20.5, {@code null} before
      */
-    Codec(InventoryAccess access, int serverDataVersion) {
+    Codec(InventoryAccess access, int serverDataVersion, @Nullable ItemCodec itemCodec) {
         this.access = access;
         this.serverDataVersion = serverDataVersion;
+        this.itemCodec = itemCodec;
     }
 
     void write(ConfigurationSection config, InventoryStorage inventory) {
-        config.set("format-version", FORMAT_VERSION);
+        config.set("format-version", itemCodec == null ? BUKKIT_FORMAT : ITEM_CODEC_FORMAT);
         config.set("items", serialize(inventory, STORAGE_START, STORAGE_SIZE));
         config.set("armor", serialize(inventory, ARMOR_START, ARMOR_SIZE));
         config.set("extraSlots", serialize(inventory, OFFHAND_SLOT, 1));
@@ -65,22 +86,36 @@ final class Codec {
      */
     LoadResult read(ConfigurationSection config, InventoryStorage inventory) {
         List<SkippedItem> skipped = new ArrayList<>();
-        deserialize(config.getMapList("items"), inventory, STORAGE_START, STORAGE_SIZE, skipped);
-        deserialize(config.getMapList("armor"), inventory, ARMOR_START, ARMOR_SIZE, skipped);
-        deserialize(config.getMapList("extraSlots"), inventory, OFFHAND_SLOT, 1, skipped);
-        return new LoadResult(config.getInt("format-version", FORMAT_VERSION), serverDataVersion, skipped);
+        List<Integer> migrated = new ArrayList<>();
+        deserialize(config.getMapList("items"), inventory, STORAGE_START, STORAGE_SIZE, skipped, migrated);
+        deserialize(config.getMapList("armor"), inventory, ARMOR_START, ARMOR_SIZE, skipped, migrated);
+        deserialize(config.getMapList("extraSlots"), inventory, OFFHAND_SLOT, 1, skipped, migrated);
+        return new LoadResult(config.getInt("format-version", BUKKIT_FORMAT), serverDataVersion, skipped, migrated);
     }
 
     private List<Map<?, ?>> serialize(InventoryStorage inventory, int firstSlot, int count) {
         List<Map<?, ?>> serialized = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            serialized.add(access.getItem(inventory, firstSlot + i).serialize());
+            ItemStack item = access.getItem(inventory, firstSlot + i);
+            if (itemCodec == null) {
+                serialized.add(item.serialize());
+            } else if (item.getType() == Material.AIR) {
+                // An empty slot is an empty map, which reading skips
+                serialized.add(Collections.emptyMap());
+            } else {
+                serialized.add(itemCodec.encode(item));
+            }
         }
         return serialized;
     }
 
+    /**
+     * @param migrated gets the data version of each Bukkit item read while the item codec is available, i.e. each
+     *                 migrated item; {@code 0} for an item without one (saved before 1.13)
+     */
     @SuppressWarnings("unchecked")
-    private void deserialize(List<Map<?, ?>> from, InventoryStorage to, int firstSlot, int count, List<SkippedItem> skipped) {
+    private void deserialize(List<Map<?, ?>> from, InventoryStorage to, int firstSlot, int count,
+                             List<SkippedItem> skipped, List<Integer> migrated) {
         for (int i = 0; i < Math.min(from.size(), count); i++) {
             Map<?, ?> item = from.get(i);
             if (item.isEmpty()) {
@@ -92,26 +127,39 @@ final class Codec {
                 skipped.add(rejected);
                 continue;
             }
+            boolean itemCodecFormat = item.containsKey(ItemCodec.DATA_VERSION);
             ItemStack deserialized;
             try {
-                deserialized = ItemStack.deserialize((Map<String, Object>) item);
+                if (itemCodecFormat) {
+                    if (itemCodec == null) {
+                        throw new IllegalArgumentException("Minecraft's item format needs 1.20.5 or later");
+                    }
+                    deserialized = itemCodec.decode(item);
+                } else {
+                    deserialized = ItemStack.deserialize((Map<String, Object>) item);
+                }
             } catch (Exception e) {
                 skipped.add(SkippedItem.deserializeFailed(slot, e));
                 continue;
             }
             // Not caught: a failure here is the inventory access failing, not bad item data
             access.setItem(to, slot, deserialized);
+            if (!itemCodecFormat && itemCodec != null) {
+                Object version = item.get("v");
+                migrated.add(version == null ? 0 : Integer.parseInt(version.toString()));
+            }
         }
     }
 
     /**
      * Items saved by a newer Minecraft version (server downgrade) are rejected rather than deserialized:
      * Bukkit may silently drop data it does not understand, and a damaged item is harder to notice than a missing one.
+     * The data version is {@code v} in Bukkit's format and {@value ItemCodec#DATA_VERSION} in Minecraft's.
      *
      * @return why the serialized item must not be loaded, or {@code null} if it may be
      */
     static SkippedItem checkVersion(Map<?, ?> item, int slot, int serverDataVersion) {
-        Object version = item.get("v");
+        Object version = item.containsKey(ItemCodec.DATA_VERSION) ? item.get(ItemCodec.DATA_VERSION) : item.get("v");
         if (version == null) {
             return null;
         }

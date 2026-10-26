@@ -18,7 +18,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms;
+package com.sugar_tree.inventoryshare.nms.server;
+
+import com.sugar_tree.inventoryshare.nms.InventoryAccessProvider;
 
 /**
  * Thrown when no {@link InventoryAccessProvider} supports the Minecraft version: the plugin does not support it.
