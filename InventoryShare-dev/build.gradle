@@ -6,7 +6,7 @@
 //   ./gradlew -Pdev :InventoryShare-dev:runPaper_1_21_4
 
 plugins {
-    id 'xyz.jpenilla.run-paper' version '3.0.2'     // 3.1.0 needs Gradle 9.7
+    id 'xyz.jpenilla.run-paper' version '3.1.0'
 }
 
 import xyz.jpenilla.runpaper.task.RunServer
