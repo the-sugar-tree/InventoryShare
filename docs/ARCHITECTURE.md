@@ -295,7 +295,7 @@ Minecraft 1.21.4 (CraftBukkit (not relocated), MOJANG mappings), using LegacyInv
 
 - `*Members.resolve(names, loader)`는 모든 클래스를 **인자로 받은 클래스 로더**에서 찾습니다. 서버에서는 서버 클래스 로더, 테스트에서는 버전별로 격리한 클래스 로더를 넘기므로, **테스트가 플러그인과 같은 코드**를 실행합니다.
 - 모든 이름은 플러그인이 켜질 때 한 번에 해석합니다. 하나라도 없으면 `IncompatibleServerException`으로 비활성화되고 인벤토리는 건드리지 않습니다.
-- Access는 생성자에서 모든 멤버를 한 번 써 봅니다. 먼저 빈 인벤토리를 만들고, 보관함·갑옷·왼손 칸(0, 36, 40)에서 아이템을 읽어 다시 씁니다. 이어서 플레이어 없는 인벤토리를 생성자로 만들어(`PlayerInventory(null)`, Modern은 `Inventory(null, new EntityEquipment())`) 그 빈 인벤토리를 `apply`와 같은 코드로 써 넣고 다시 읽어 봅니다. 여기서 실패하면 역시 `IncompatibleServerException`입니다. 그래서 `apply`가 바꾸는 final 필드에 쓰지 못하는 환경(JVM의 final 필드 변경 제한 등)도 첫 접속이 아니라 시작할 때 드러납니다. 생성자는 필드에 값을 넣기만 하므로 플레이어가 `null`이어도 안전합니다(Spigot, Paper 1.12.2 – 26.2에서 확인).
+- Access는 생성자에서 모든 멤버를 한 번 써 봅니다. 먼저 빈 인벤토리를 만들고, 보관함·갑옷·왼손 칸(0, 36, 40)에서 아이템을 읽어 다시 씁니다. 이어서 플레이어 없는 인벤토리를 생성자로 만들어(`PlayerInventory(null)`, Modern은 `Inventory(null, new EntityEquipment())`) 그 빈 인벤토리를 `apply`와 같은 코드로 써 넣고 다시 읽어 봅니다. 여기서 실패하면 역시 `IncompatibleServerException`입니다. 그래서 `apply`가 바꾸는 final 필드에 쓰지 못하는 환경(JVM의 final 필드 변경 제한 등)도 첫 접속이 아니라 시작할 때 드러납니다. 생성자는 필드에 값을 넣기만 하므로 플레이어가 `null`이어도 안전합니다(Spigot, Paper 1.12.2 – 26.3에서 확인).
 - `apply`는 필드 여러 개(Legacy 4개, Modern 2개)를 `Reflections.setAll`로 바꿉니다. 중간에 하나라도 실패하면 이미 바꾼 필드를 원래 값으로 되돌린 뒤 예외를 던지므로, 플레이어 인벤토리가 일부만 바뀐 채로 남지 않습니다.
 - dev 샌드박스의 Provider는 플러그인 jar의 `META-INF/services`에 있으므로, 서버 클래스 로더가 아니라 플러그인 jar의 클래스 로더로 찾습니다.
 - 마인크래프트 버전: Paper는 `Server#getMinecraftVersion()`, Spigot은 `Bukkit.getBukkitVersion()`의 앞부분을 씁니다. 이름표는 Bukkit 버전 문자열(`1.21.11-R0.2-SNAPSHOT`)이 아니라 마인크래프트 버전(`1.21.11`)으로 찾습니다.

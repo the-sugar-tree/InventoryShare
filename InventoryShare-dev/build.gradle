@@ -26,6 +26,7 @@ def paperServers = [
         '1.21.11'      : [jdk: 21],
         '26.1.2'       : [jdk: 25],
         '26.2'         : [jdk: 25],
+        '26.3'         : [jdk: 25],
 ]
 
 // The released plugin jar; InventoryShare-nms is bundled inside it

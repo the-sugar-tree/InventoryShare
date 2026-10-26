@@ -36,6 +36,7 @@ def spigotJars = [
         '1.21.11': '1.21.11-R0.2-SNAPSHOT',
         '26.1.2' : '26.1.2-R0.1-SNAPSHOT',
         '26.2'   : '26.2-R0.1-SNAPSHOT',
+        '26.3'   : '26.3-R0.1-SNAPSHOT',
 ]
 
 // Versions that are also checked with Mojang's names (Paper 1.20.5+, Paper's Mojang-mapped 1.20.4):
