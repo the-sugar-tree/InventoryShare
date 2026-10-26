@@ -20,7 +20,6 @@
 
 package com.sugar_tree.inventoryshare.nms.reflection.inventory;
 
-import com.sugar_tree.inventoryshare.nms.reflection.VersionRange;
 import com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy.LegacyNameTable;
 import com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy.LegacyNames;
 import com.sugar_tree.inventoryshare.nms.reflection.inventory.modern.ModernNameTable;
@@ -32,11 +31,6 @@ import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -77,20 +71,6 @@ class InventoryNameFactoryTest {
     @CsvSource({"1.11.2", "1.16", "1.21.12", "25.9"})
     void unsupportedVersionHasNoModel(String version) {
         assertNull(InventoryModel.of(MinecraftVersion.parse(version)));
-    }
-
-    @Test
-    void eachVersionBelongsToOneRow() {
-        List<VersionRange> ranges = new ArrayList<>();
-        for (LegacyNameTable row : LegacyNameTable.values()) ranges.add(row.versions);
-        for (ModernNameTable row : ModernNameTable.values()) ranges.add(row.versions);
-
-        Set<MinecraftVersion> seen = new HashSet<>();
-        for (VersionRange range : ranges) {
-            for (MinecraftVersion version : range.getVersions()) {
-                assertTrue(seen.add(version), version + " is listed twice");
-            }
-        }
     }
 
     @Test

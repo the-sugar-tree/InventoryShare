@@ -46,7 +46,7 @@ public enum ModernNameTable {
     v26(atLeast("26.1")),
     ;
 
-    public final VersionRange versions;
+    final VersionRange versions;
     /** Spigot's names, all {@code null} if the versions have none */
     public final @Nullable String getInventory;
     public final @Nullable String items;

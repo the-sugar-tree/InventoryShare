@@ -62,7 +62,7 @@ public enum LegacyNameTable {
     /** {@code NonNullList#withSize(int, Object)}, the same in every Spigot release */
     public static final String CREATE_ITEM_LIST = "a";
 
-    public final VersionRange versions;
+    final VersionRange versions;
     /** inventory field (pre-1.17) or method (1.17+) of the player */
     public final String inventory;
     public final String items;
