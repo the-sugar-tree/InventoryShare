@@ -46,7 +46,7 @@ public final class NmsNames {
     private NmsNames() {}
 
     /**
-     * @param pkg  the CraftBukkit package version ({@link ServerRuntime#getCraftbukkitPackage()}), or {@code null}
+     * @param pkg  the CraftBukkit package version ({@code ServerRuntime#getCraftbukkitPackage()}), or {@code null}
      * @param name the class name under {@code org.bukkit.craftbukkit}, e.g. {@code inventory.CraftItemStack}
      */
     public static @NotNull String craftbukkit(@Nullable String pkg, @NotNull String name) {
