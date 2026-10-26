@@ -11,3 +11,8 @@ commands:
     usage: /inventoryshare <inventory|advancement|announcedeath|teaminventory|check|reload> [true|false]
     description: Config Management
     aliases: [is]
+    permission: inventoryshare.command
+permissions:
+  inventoryshare.command:
+    description: Allows using /inventoryshare
+    default: op
