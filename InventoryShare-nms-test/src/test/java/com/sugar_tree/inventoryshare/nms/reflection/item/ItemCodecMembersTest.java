@@ -90,7 +90,7 @@ class ItemCodecMembersTest {
             assertEquals("com.mojang.datafixers.DataFixer", getDataFixer.getReturnType().getName());
 
             assertEquals(itemStack, members.getAsNMSCopy().getReturnType());
-            assertEquals(itemStack, members.getAsCraftMirror().getParameterTypes()[0]);
+            assertEquals(itemStack, members.getCraftMirror().getParameterTypes()[0]);
         }
     }
 

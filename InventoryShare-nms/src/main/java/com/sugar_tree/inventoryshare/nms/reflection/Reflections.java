@@ -48,6 +48,19 @@ public final class Reflections {
         return Class.forName(name, false, loader);
     }
 
+    /** The public method of {@code type} with one {@code parameter}, under the first of {@code names} it has */
+    public static @NotNull Method anyMethod(@NotNull Class<?> type, @NotNull Class<?> parameter,
+                                            @NotNull String... names) throws NoSuchMethodException {
+        for (String name : names) {
+            try {
+                return type.getMethod(name, parameter);
+            } catch (NoSuchMethodException ignored) {
+            }
+        }
+        throw new NoSuchMethodException(
+                type.getName() + "." + String.join(" / ", names) + "(" + parameter.getName() + ")");
+    }
+
     public static @NotNull Field accessible(@NotNull Field field) {
         field.setAccessible(true);
         return field;

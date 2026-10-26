@@ -105,6 +105,8 @@ InventoryShare의 슬롯 번호는 Bukkit `PlayerInventory.getContents()`와 같
 | `net.minecraft.world.entity.EntityEquipment`            | 갑옷·왼손 장비 (1.21.5 이상)    |
 | `org.bukkit.craftbukkit[.{v}].inventory.CraftItemStack` | Bukkit 아이템 ↔ NMS 아이템 변환 |
 
+`CraftItemStack`은 `asNMSCopy`와 `asCraftMirror`(Paper 26.3부터 `asBukkitMirror`)만 씁니다. 아이템을 읽을 때는 미러를 `clone()`해서 NMS 아이템을 복사합니다(`ItemMeta`를 거치지 않음).
+
 ### 4.2 필드·메서드
 
 **Legacy (1.17 – 1.21.4)** — 예: 1.21.4

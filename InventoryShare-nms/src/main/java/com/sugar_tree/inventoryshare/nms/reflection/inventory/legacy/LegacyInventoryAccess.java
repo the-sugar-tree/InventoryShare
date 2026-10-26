@@ -102,7 +102,8 @@ public final class LegacyInventoryAccess implements InventoryAccess {
     @Override
     public @NotNull ItemStack getItem(@NotNull InventoryStorage inventory, int slot) {
         Object item = list((LegacyStorage) inventory, slot).get(index(slot));
-        return (ItemStack) invoke(members.getAsCraftCopy(), null, invoke(members.getAsCraftMirror(), null, item));
+        // clone() copies the NMS item of a CraftItemStack
+        return ((ItemStack) invoke(members.getCraftMirror(), null, item)).clone();
     }
 
     @Override

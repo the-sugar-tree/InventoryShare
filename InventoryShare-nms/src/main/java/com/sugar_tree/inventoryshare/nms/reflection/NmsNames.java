@@ -41,6 +41,13 @@ public final class NmsNames {
     /** NMS {@code ItemStack} from 1.17, under both mappings */
     public static final String ITEM_STACK = "net.minecraft.world.item.ItemStack";
 
+    /**
+     * {@code CraftItemStack}'s static methods that wrap an NMS item in a Bukkit item without copying it or going
+     * through {@code ItemMeta}, in lookup order: Paper renamed it from 26.3
+     */
+    public static final String CRAFT_MIRROR = "asCraftMirror";
+    public static final String PAPER_CRAFT_MIRROR = "asBukkitMirror";
+
     private static final String CRAFTBUKKIT = "org.bukkit.craftbukkit";
 
     private NmsNames() {}

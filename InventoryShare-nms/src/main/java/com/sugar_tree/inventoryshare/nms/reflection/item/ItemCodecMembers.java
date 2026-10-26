@@ -20,12 +20,16 @@
 
 package com.sugar_tree.inventoryshare.nms.reflection.item;
 
+import com.sugar_tree.inventoryshare.nms.reflection.NmsNames;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import static com.sugar_tree.inventoryshare.nms.reflection.NmsNames.CRAFT_MIRROR;
+import static com.sugar_tree.inventoryshare.nms.reflection.NmsNames.PAPER_CRAFT_MIRROR;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.anyMethod;
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.load;
 
 /**
@@ -46,7 +50,8 @@ public final class ItemCodecMembers {
     private final Method parseTag;
     private final Method getDataFixer;
     private final Method asNMSCopy;
-    private final Method asCraftMirror;
+    /** {@code CraftItemStack.asCraftMirror(ItemStack)} or Paper's {@code asBukkitMirror}: see {@link NmsNames#CRAFT_MIRROR} */
+    private final Method craftMirror;
 
     private ItemCodecMembers(ItemCodecNames names, ClassLoader loader) throws ReflectiveOperationException {
         itemStack = load(names.getItemStackClass(), loader);
@@ -60,7 +65,7 @@ public final class ItemCodecMembers {
 
         Class<?> craftItemStack = load(names.getCraftItemStackClass(), loader);
         asNMSCopy = craftItemStack.getMethod("asNMSCopy", load(names.getBukkitItemStackClass(), loader));
-        asCraftMirror = craftItemStack.getMethod("asCraftMirror", itemStack);
+        craftMirror = anyMethod(craftItemStack, itemStack, CRAFT_MIRROR, PAPER_CRAFT_MIRROR);
     }
 
     public static @NotNull ItemCodecMembers resolve(@NotNull ItemCodecNames names, @NotNull ClassLoader loader)

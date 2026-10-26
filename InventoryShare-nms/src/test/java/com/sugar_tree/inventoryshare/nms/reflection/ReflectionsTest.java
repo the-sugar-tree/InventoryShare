@@ -45,6 +45,12 @@ class ReflectionsTest {
     }
 
     @Test
+    void anyMethodTakesTheFirstNameThatExists() throws NoSuchMethodException {
+        assertEquals("valueOf", Reflections.anyMethod(String.class, Object.class, "missing", "valueOf").getName());
+        assertThrows(NoSuchMethodException.class, () -> Reflections.anyMethod(String.class, Object.class, "missing"));
+    }
+
+    @Test
     void setAllRestoresWrittenFieldsWhenOneFails() {
         Target a = new Target();
         Target b = new Target();

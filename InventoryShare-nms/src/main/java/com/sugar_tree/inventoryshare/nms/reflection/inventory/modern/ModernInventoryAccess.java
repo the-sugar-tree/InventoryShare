@@ -120,7 +120,8 @@ public final class ModernInventoryAccess implements InventoryAccess {
             item = storage.equipment.get(equipmentSlot(slot));
             if (item == null) item = emptyItem;
         }
-        return (ItemStack) invoke(members.getAsCraftCopy(), null, invoke(members.getAsCraftMirror(), null, item));
+        // clone() copies the NMS item of a CraftItemStack
+        return ((ItemStack) invoke(members.getCraftMirror(), null, item)).clone();
     }
 
     @Override

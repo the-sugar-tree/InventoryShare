@@ -102,8 +102,7 @@ class LegacyMembersTest {
             assertEquals(nonNullList, createItemList.getReturnType());
 
             Class<?> bukkitItemStack = Class.forName(names.getBukkitItemStackClass(), false, loader);
-            assertTrue(bukkitItemStack.isAssignableFrom(members.getAsCraftMirror().getReturnType()), "asCraftMirror");
-            assertTrue(bukkitItemStack.isAssignableFrom(members.getAsCraftCopy().getReturnType()), "asCraftCopy");
+            assertTrue(bukkitItemStack.isAssignableFrom(members.getCraftMirror().getReturnType()), "craft mirror");
             assertEquals(itemStack, members.getAsNMSCopy().getReturnType());
         }
     }

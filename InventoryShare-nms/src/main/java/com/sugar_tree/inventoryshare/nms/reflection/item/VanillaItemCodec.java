@@ -154,7 +154,7 @@ public final class VanillaItemCodec implements ItemCodec {
         }
         Object item = codec.parse(registryOps, tag)
                 .getOrThrow(message -> new IllegalArgumentException("Could not decode " + id + ": " + message));
-        return (ItemStack) invoke(members.getAsCraftMirror(), null, item);
+        return (ItemStack) invoke(members.getCraftMirror(), null, item);
     }
 
     /**

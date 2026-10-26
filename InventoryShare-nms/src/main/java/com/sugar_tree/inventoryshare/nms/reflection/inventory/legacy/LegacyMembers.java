@@ -20,6 +20,7 @@
 
 package com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy;
 
+import com.sugar_tree.inventoryshare.nms.reflection.NmsNames;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +29,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
+import static com.sugar_tree.inventoryshare.nms.reflection.NmsNames.CRAFT_MIRROR;
+import static com.sugar_tree.inventoryshare.nms.reflection.NmsNames.PAPER_CRAFT_MIRROR;
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.accessible;
+import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.anyMethod;
 import static com.sugar_tree.inventoryshare.nms.reflection.Reflections.load;
 
 /**
@@ -51,10 +55,8 @@ public final class LegacyMembers {
     private final Class<?> itemStack;
     private final Field emptyItem;
     private final Method createItemList;
-    /** {@code asCraftMirror(ItemStack)}: a Bukkit item backed by the NMS item, without going through ItemMeta */
-    private final Method asCraftMirror;
-    /** {@code asCraftCopy(org.bukkit.inventory.ItemStack)}: copies the NMS item of a CraftItemStack */
-    private final Method asCraftCopy;
+    /** {@code CraftItemStack.asCraftMirror(ItemStack)} or Paper's {@code asBukkitMirror}: see {@link NmsNames#CRAFT_MIRROR} */
+    private final Method craftMirror;
     private final Method asNMSCopy;
 
     private LegacyMembers(LegacyNames names, ClassLoader loader) throws ReflectiveOperationException {
@@ -79,8 +81,7 @@ public final class LegacyMembers {
 
         Class<?> craftItemStack = load(names.getCraftItemStackClass(), loader);
         Class<?> bukkitItemStack = load(names.getBukkitItemStackClass(), loader);
-        asCraftMirror = craftItemStack.getMethod("asCraftMirror", itemStack);
-        asCraftCopy = craftItemStack.getMethod("asCraftCopy", bukkitItemStack);
+        craftMirror = anyMethod(craftItemStack, itemStack, CRAFT_MIRROR, PAPER_CRAFT_MIRROR);
         asNMSCopy = craftItemStack.getMethod("asNMSCopy", bukkitItemStack);
     }
 
