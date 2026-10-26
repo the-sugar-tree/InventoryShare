@@ -122,3 +122,6 @@ tmp/
 
 # Local-only notes (not published)
 docs/local/
+
+# Local experiments: probe plugins, test servers and their results (not published)
+experiments/
