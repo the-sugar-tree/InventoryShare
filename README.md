@@ -77,6 +77,9 @@ https://blog.naver.com/sugar-tree/222556850608
 팀 인벤토리 공유는 전체 인벤토리 공유가 활성화 되었을때만 활성화 되며 팀 인벤토리도 따로 저장됩니다.  
 그러나 페이퍼 서버의 한계로, 아무도 없는팀은 서버를 재시작할때 삭제되오니 이 점 참고 바랍니다.
 
+## 알려진 문제
+- 팀 인벤토리를 켜도 발전과제는 팀별로 나뉘지 않고 모든 플레이어가 공유합니다([#6](https://github.com/the-sugar-tree/InventoryShare/issues/6)). 발전과제 공유는 진행 상황까지 공유하는 별도 플러그인으로 옮길 예정이며, 그때 이 플러그인에서는 제거됩니다.
+
 ## 명령어
 ![](https://raw.githubusercontent.com/the-sugar-tree/InventoryShare/master/help_message.png)   
 
