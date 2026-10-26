@@ -1,0 +1,13 @@
+[versions]
+junit = "5.14.4"
+
+[libraries]
+spigot-api = "org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT"
+protocollib = "net.dmulloy2:ProtocolLib:5.3.0"
+datafixerupper = "com.mojang:datafixerupper:7.0.14"
+lombok = "org.projectlombok:lombok:1.18.46"
+jetbrains-annotations = "org.jetbrains:annotations:24.0.1"
+
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }

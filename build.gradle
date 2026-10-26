@@ -48,9 +48,9 @@ allprojects {
     }
 
     dependencies {
-        compileOnly 'org.projectlombok:lombok:1.18.46'
-        annotationProcessor 'org.projectlombok:lombok:1.18.46'
-        compileOnly 'org.jetbrains:annotations:24.0.1'
+        compileOnly rootProject.libs.lombok
+        annotationProcessor rootProject.libs.lombok
+        compileOnly rootProject.libs.jetbrains.annotations
     }
 
     jar {

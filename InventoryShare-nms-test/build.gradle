@@ -76,9 +76,10 @@ checkedJars.each { key, spec ->
 
 dependencies {
     testImplementation project(':InventoryShare-nms')
-    testImplementation 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation libs.spigot.api
+    testImplementation platform(libs.junit.bom)
+    testImplementation libs.junit.jupiter
+    testRuntimeOnly libs.junit.platform.launcher
 }
 
 jar {
