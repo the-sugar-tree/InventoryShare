@@ -22,7 +22,7 @@ package com.sugar_tree.inventoryshare.nms.reflection.item;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Every class and member name the item codec (1.20.5+) needs on one server. Class names are fully qualified.
@@ -34,30 +34,30 @@ import lombok.NonNull;
 public final class ItemCodecNames {
 
     // CraftBukkit and Bukkit
-    private final @NonNull String craftItemStackClass;
-    private final @NonNull String bukkitItemStackClass;
+    private final @NotNull String craftItemStackClass;
+    private final @NotNull String bukkitItemStackClass;
     /** {@code CraftRegistry}, whose static {@code getMinecraftRegistry()} returns the server's registries */
-    private final @NonNull String craftRegistryClass;
+    private final @NotNull String craftRegistryClass;
 
     // ItemStack
-    private final @NonNull String itemStackClass;
+    private final @NotNull String itemStackClass;
     /** static {@code Codec<ItemStack>} of a non-empty item */
-    private final @NonNull String codec;
+    private final @NotNull String codec;
 
     // NBT
-    private final @NonNull String nbtOpsClass;
+    private final @NotNull String nbtOpsClass;
     /** static {@code NbtOps} instance */
-    private final @NonNull String nbtOps;
+    private final @NotNull String nbtOps;
     /** {@code HolderLookup.Provider}, the type of the server's registries */
-    private final @NonNull String registryProviderClass;
+    private final @NotNull String registryProviderClass;
     /** {@code RegistryOps createSerializationContext(DynamicOps)}: ops that can look up registry entries */
-    private final @NonNull String createSerializationContext;
-    private final @NonNull String tagParserClass;
+    private final @NotNull String createSerializationContext;
+    private final @NotNull String tagParserClass;
     /** static {@code CompoundTag parse(String)}: parses SNBT */
-    private final @NonNull String parseTag;
+    private final @NotNull String parseTag;
 
     // Data fixer
-    private final @NonNull String dataFixersClass;
+    private final @NotNull String dataFixersClass;
     /** static {@code DataFixer getDataFixer()} */
-    private final @NonNull String getDataFixer;
+    private final @NotNull String getDataFixer;
 }

@@ -22,7 +22,7 @@ package com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Every class and member name the legacy inventory model ({@code items / armor / extraSlots / contents},
@@ -35,32 +35,32 @@ import lombok.NonNull;
 public final class LegacyNames {
 
     // CraftBukkit and Bukkit
-    private final @NonNull String craftPlayerClass;
-    private final @NonNull String craftItemStackClass;
-    private final @NonNull String bukkitItemStackClass;
+    private final @NotNull String craftPlayerClass;
+    private final @NotNull String craftItemStackClass;
+    private final @NotNull String bukkitItemStackClass;
 
     // Player -> player inventory
     /** Class declaring the {@link #inventory} member; {@code CraftPlayer#getHandle()} returns a subtype of it */
-    private final @NonNull String inventoryOwnerClass;
-    private final @NonNull String inventory;
+    private final @NotNull String inventoryOwnerClass;
+    private final @NotNull String inventory;
     /** {@code true} if {@link #inventory} is a field (pre-1.17), {@code false} if it is a method */
     private final boolean inventoryField;
 
     // Player inventory
-    private final @NonNull String playerInventoryClass;
+    private final @NotNull String playerInventoryClass;
     /** Parameter of the player inventory's constructor ({@code EntityHuman} / {@code Player}) */
-    private final @NonNull String playerClass;
-    private final @NonNull String items;
-    private final @NonNull String armor;
-    private final @NonNull String extraSlots;
+    private final @NotNull String playerClass;
+    private final @NotNull String items;
+    private final @NotNull String armor;
+    private final @NotNull String extraSlots;
     /** List of the three lists above */
-    private final @NonNull String contents;
+    private final @NotNull String contents;
 
     // Items
-    private final @NonNull String itemStackClass;
+    private final @NotNull String itemStackClass;
     /** static empty item field of ItemStack */
-    private final @NonNull String emptyItem;
-    private final @NonNull String nonNullListClass;
+    private final @NotNull String emptyItem;
+    private final @NotNull String nonNullListClass;
     /** static {@code NonNullList(int size, Object fill)} factory */
-    private final @NonNull String createItemList;
+    private final @NotNull String createItemList;
 }

@@ -22,7 +22,7 @@ package com.sugar_tree.inventoryshare.nms.reflection.inventory.modern;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Every class and member name the modern inventory model ({@code items + EntityEquipment}, 1.21.5+) needs on one
@@ -35,37 +35,37 @@ import lombok.NonNull;
 public final class ModernNames {
 
     // CraftBukkit and Bukkit
-    private final @NonNull String craftPlayerClass;
-    private final @NonNull String craftItemStackClass;
-    private final @NonNull String bukkitItemStackClass;
+    private final @NotNull String craftPlayerClass;
+    private final @NotNull String craftItemStackClass;
+    private final @NotNull String bukkitItemStackClass;
 
     // Player -> inventory
     /**
      * Class declaring {@link #getInventory}; {@code CraftPlayer#getHandle()} returns a subtype of it. Also the first
      * parameter of the inventory's constructor.
      */
-    private final @NonNull String playerClass;
-    private final @NonNull String getInventory;
+    private final @NotNull String playerClass;
+    private final @NotNull String getInventory;
 
     // Inventory
-    private final @NonNull String inventoryClass;
-    private final @NonNull String items;
+    private final @NotNull String inventoryClass;
+    private final @NotNull String items;
     /** EntityEquipment of the inventory's player */
-    private final @NonNull String equipment;
+    private final @NotNull String equipment;
     /** static {@code Int2ObjectMap}: inventory slot (36 - 40) to EquipmentSlot */
-    private final @NonNull String slotMapping;
+    private final @NotNull String slotMapping;
 
     // EntityEquipment
-    private final @NonNull String entityEquipmentClass;
+    private final @NotNull String entityEquipmentClass;
     /** {@code EnumMap<EquipmentSlot, ItemStack>} */
-    private final @NonNull String equipmentItems;
-    private final @NonNull String equipmentSlotClass;
+    private final @NotNull String equipmentItems;
+    private final @NotNull String equipmentSlotClass;
 
     // Items
-    private final @NonNull String itemStackClass;
+    private final @NotNull String itemStackClass;
     /** static empty item field of ItemStack */
-    private final @NonNull String emptyItem;
-    private final @NonNull String nonNullListClass;
+    private final @NotNull String emptyItem;
+    private final @NotNull String nonNullListClass;
     /** static {@code NonNullList(int size, Object fill)} factory */
-    private final @NonNull String createItemList;
+    private final @NotNull String createItemList;
 }

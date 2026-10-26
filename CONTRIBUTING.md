@@ -203,6 +203,7 @@ dev=true
 - 서버 내부 이름(클래스·필드·메서드)은 `*NameFactory`, `NmsNames`와 이름표에만 적습니다.
 - 테스트는 대상 클래스와 같은 패키지에 둡니다. package-private 멤버를 테스트 때문에 공개하지 않습니다.
 - 주변 코드의 스타일을 따릅니다(4칸 들여쓰기, Lombok의 `@Getter` 등 사용).
+- null 표시는 `org.jetbrains.annotations`의 `@NotNull`, `@Nullable`만 씁니다. Lombok도 이 `@NotNull`이 붙은 필드에 null 검사를 생성합니다.
 - 의존성 버전은 `gradle/libs.versions.toml`에만 적습니다(`InventoryShare-nms-test`가 검사하는 Spigot 서버 jar와 `InventoryShare-dev` 제외).
 - 모든 Java 파일에는 GPL 라이선스 헤더가 필요합니다. `./gradlew licenseFormat`이 자동으로 추가하며, `jar` 작업 전에도 실행됩니다.
 - 커밋 메시지는 [Conventional Commits](https://www.conventionalcommits.org/) 형식을 따릅니다 (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`).
