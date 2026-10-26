@@ -55,7 +55,7 @@ public final class Commands implements TabExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (command.getName().equalsIgnoreCase("inventoryshare")) {
             if (!sender.hasPermission(PERMISSION)) {
-                sender.sendMessage(ChatColor.RED + "I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is a mistake.");
+                sender.sendMessage(ChatColor.RED + "I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error.");
                 return true;
             }
             if (args.length < 1) {
@@ -143,9 +143,6 @@ public final class Commands implements TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (command.getName().equalsIgnoreCase("inventoryshare")) {
-            if (!sender.hasPermission(PERMISSION)) {
-                return new ArrayList<>();
-            }
             if (args.length == 1) {
                 ArrayList<String> arrayList = new ArrayList<>();
                 arrayList.add("inventory");
