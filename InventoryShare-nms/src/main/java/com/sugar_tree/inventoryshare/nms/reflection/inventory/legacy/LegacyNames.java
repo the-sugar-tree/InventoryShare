@@ -18,48 +18,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection.modern;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
 /**
- * Every class and member name the modern inventory model ({@code items + EntityEquipment}, 1.21.5+) needs on one
- * server. Class names are fully qualified.
+ * Every class and member name the legacy inventory model ({@code items / armor / extraSlots / contents},
+ * 1.12 - 1.21.4) needs on one server. Class names are fully qualified.
  *
- * @see com.sugar_tree.inventoryshare.nms.reflection.NmsNameFactory
+ * @see com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryNameFactory
  */
 @Getter
 @Builder
-public final class ModernNames {
+public final class LegacyNames {
 
     // CraftBukkit and Bukkit
     private final @NonNull String craftPlayerClass;
     private final @NonNull String craftItemStackClass;
     private final @NonNull String bukkitItemStackClass;
 
-    // Player -> inventory
-    /**
-     * Class declaring {@link #getInventory}; {@code CraftPlayer#getHandle()} returns a subtype of it. Also the first
-     * parameter of the inventory's constructor.
-     */
+    // Player -> player inventory
+    /** Class declaring the {@link #inventory} member; {@code CraftPlayer#getHandle()} returns a subtype of it */
+    private final @NonNull String inventoryOwnerClass;
+    private final @NonNull String inventory;
+    /** {@code true} if {@link #inventory} is a field (pre-1.17), {@code false} if it is a method */
+    private final boolean inventoryField;
+
+    // Player inventory
+    private final @NonNull String playerInventoryClass;
+    /** Parameter of the player inventory's constructor ({@code EntityHuman} / {@code Player}) */
     private final @NonNull String playerClass;
-    private final @NonNull String getInventory;
-
-    // Inventory
-    private final @NonNull String inventoryClass;
     private final @NonNull String items;
-    /** EntityEquipment of the inventory's player */
-    private final @NonNull String equipment;
-    /** static {@code Int2ObjectMap}: inventory slot (36 - 40) to EquipmentSlot */
-    private final @NonNull String slotMapping;
-
-    // EntityEquipment
-    private final @NonNull String entityEquipmentClass;
-    /** {@code EnumMap<EquipmentSlot, ItemStack>} */
-    private final @NonNull String equipmentItems;
-    private final @NonNull String equipmentSlotClass;
+    private final @NonNull String armor;
+    private final @NonNull String extraSlots;
+    /** List of the three lists above */
+    private final @NonNull String contents;
 
     // Items
     private final @NonNull String itemStackClass;

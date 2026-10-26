@@ -18,8 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection;
+package com.sugar_tree.inventoryshare.nms.reflection.item;
 
+import com.sugar_tree.inventoryshare.nms.reflection.VersionRange;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.modern.ModernNameTable;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +44,7 @@ enum ItemCodecNameTable {
     v1_21_R5(of("1.21.6", "1.21.7", "1.21.8"), "b"),
     v1_21_R6(of("1.21.9", "1.21.10"), "b"),
     v1_21_R7(of("1.21.11"), "b"),
-    /** 26.1 and every later version: Mojang's names only, as in {@link ModernNameTable#v26} */
+    /** 26.1 and every later version: Mojang's names only, as in the modern inventory model's table */
     v26(atLeast("26.1"), null),
     ;
 

@@ -18,15 +18,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory;
 
-import com.sugar_tree.inventoryshare.nms.IncompatibleServerException;
+import com.sugar_tree.inventoryshare.nms.server.IncompatibleServerException;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
 import com.sugar_tree.inventoryshare.nms.InventoryAccessProvider;
-import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyInventoryAccess;
-import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyMembers;
-import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernInventoryAccess;
-import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernMembers;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy.LegacyInventoryAccess;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy.LegacyMembers;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.modern.ModernInventoryAccess;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.modern.ModernMembers;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import org.jetbrains.annotations.NotNull;
@@ -57,9 +57,9 @@ public final class ReflectionAccessProvider implements InventoryAccessProvider {
         try {
             switch (model) {
                 case LEGACY:
-                    return new LegacyInventoryAccess(LegacyMembers.resolve(NmsNameFactory.legacy(version, runtime), loader));
+                    return new LegacyInventoryAccess(LegacyMembers.resolve(InventoryNameFactory.legacy(version, runtime), loader));
                 case MODERN:
-                    return new ModernInventoryAccess(ModernMembers.resolve(NmsNameFactory.modern(version, runtime), loader));
+                    return new ModernInventoryAccess(ModernMembers.resolve(InventoryNameFactory.modern(version, runtime), loader));
                 default:
                     throw new AssertionError(model);
             }

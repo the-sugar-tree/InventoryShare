@@ -27,7 +27,7 @@ import lombok.NonNull;
 /**
  * Every class and member name the item codec (1.20.5+) needs on one server. Class names are fully qualified.
  *
- * @see com.sugar_tree.inventoryshare.nms.reflection.NmsNameFactory
+ * @see ItemNameFactory
  */
 @Getter
 @Builder

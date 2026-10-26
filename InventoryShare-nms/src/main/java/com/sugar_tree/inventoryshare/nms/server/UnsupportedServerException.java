@@ -18,20 +18,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms;
+package com.sugar_tree.inventoryshare.nms.server;
 
 /**
- * Thrown when the version is supported, but the {@link InventoryAccess} for this server cannot be created: the
- * server's internals differ from what the plugin expects (wrong names, an unexpected server build or fork).
- * This is a bug to report, unlike {@link UnsupportedVersionException}.
+ * Thrown when the server is not based on CraftBukkit, whose internals the plugin works with, or reports a Minecraft
+ * version the plugin cannot read: the plugin does not support it. Not a bug.
  */
-public class IncompatibleServerException extends Exception {
+public class UnsupportedServerException extends Exception {
 
-    public IncompatibleServerException(String message) {
+    public UnsupportedServerException(String message) {
         super(message);
-    }
-
-    public IncompatibleServerException(String message, Throwable cause) {
-        super(message, cause);
     }
 }

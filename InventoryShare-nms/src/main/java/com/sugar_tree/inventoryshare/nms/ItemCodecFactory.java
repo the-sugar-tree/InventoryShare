@@ -20,9 +20,10 @@
 
 package com.sugar_tree.inventoryshare.nms;
 
-import com.sugar_tree.inventoryshare.nms.reflection.NmsNameFactory;
 import com.sugar_tree.inventoryshare.nms.reflection.item.ItemCodecMembers;
+import com.sugar_tree.inventoryshare.nms.reflection.item.ItemNameFactory;
 import com.sugar_tree.inventoryshare.nms.reflection.item.VanillaItemCodec;
+import com.sugar_tree.inventoryshare.nms.server.IncompatibleServerException;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +56,7 @@ public final class ItemCodecFactory {
             throw new IllegalArgumentException("Minecraft " + version + " has no item codec");
         }
         try {
-            return new VanillaItemCodec(ItemCodecMembers.resolve(NmsNameFactory.itemCodec(version, runtime),
+            return new VanillaItemCodec(ItemCodecMembers.resolve(ItemNameFactory.itemCodec(version, runtime),
                     runtime.getClassLoader()), dataVersion);
         } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
             throw new IncompatibleServerException("Failed to set up the item codec for Minecraft " + version

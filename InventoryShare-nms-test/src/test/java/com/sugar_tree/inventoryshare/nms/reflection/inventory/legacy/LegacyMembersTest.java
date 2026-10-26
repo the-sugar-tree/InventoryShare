@@ -18,10 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy;
 
-import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyMembers;
-import com.sugar_tree.inventoryshare.nms.reflection.legacy.LegacyNames;
+import com.sugar_tree.inventoryshare.nms.reflection.SpigotJars;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryNameFactory;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryModel;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryModel;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import org.junit.jupiter.api.DisplayName;
@@ -67,7 +69,7 @@ class LegacyMembersTest {
             ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
             assertEquals(jar.expectedMappingType(), runtime.getMappingType(), "mapping type");
 
-            LegacyNames names = NmsNameFactory.legacy(jar.version(), runtime);
+            LegacyNames names = InventoryNameFactory.legacy(jar.version(), runtime);
             LegacyMembers members = LegacyMembers.resolve(names, loader);
             Class<?> nonNullList = Class.forName(names.getNonNullListClass(), false, loader);
             Class<?> itemStack = members.getItemStack();

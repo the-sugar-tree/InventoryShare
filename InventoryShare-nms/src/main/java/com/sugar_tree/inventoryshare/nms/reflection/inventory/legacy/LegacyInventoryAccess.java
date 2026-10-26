@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection.legacy;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy;
 
 import com.google.common.collect.ImmutableList;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;

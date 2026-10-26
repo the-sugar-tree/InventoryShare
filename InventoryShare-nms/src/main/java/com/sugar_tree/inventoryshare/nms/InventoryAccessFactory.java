@@ -20,9 +20,11 @@
 
 package com.sugar_tree.inventoryshare.nms;
 
-import com.sugar_tree.inventoryshare.nms.reflection.ReflectionAccessProvider;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.ReflectionAccessProvider;
+import com.sugar_tree.inventoryshare.nms.server.IncompatibleServerException;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
+import com.sugar_tree.inventoryshare.nms.server.UnsupportedVersionException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

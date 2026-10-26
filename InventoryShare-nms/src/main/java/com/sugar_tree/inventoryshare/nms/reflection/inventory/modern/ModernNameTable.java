@@ -18,8 +18,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory.modern;
 
+import com.sugar_tree.inventoryshare.nms.reflection.VersionRange;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,7 @@ import static com.sugar_tree.inventoryshare.nms.reflection.VersionRange.of;
  * Spigot's member names of the modern inventory model ({@code items + EntityEquipment}, 1.21.5+),
  * one row per set of versions with the same names. Rows are named after the CraftBukkit package of the release.
  */
-enum ModernNameTable {
+public enum ModernNameTable {
     // (versions, getInventory, items, equipment, EntityEquipment.items, slotMapping, EMPTY, createItemList)
     v1_21_R4(of("1.21.5"), "gj", "i", "k", "b", "g", "l", "a"),
     v1_21_R5(of("1.21.6", "1.21.7", "1.21.8"), "gs", "k", "m", "b", "i", "l", "a"),
@@ -45,15 +46,15 @@ enum ModernNameTable {
     v26(atLeast("26.1")),
     ;
 
-    final VersionRange versions;
+    public final VersionRange versions;
     /** Spigot's names, all {@code null} if the versions have none */
-    final @Nullable String getInventory;
-    final @Nullable String items;
-    final @Nullable String equipment;
-    final @Nullable String equipmentItems;
-    final @Nullable String slotMapping;
-    final @Nullable String emptyItem;
-    final @Nullable String createItemList;
+    public final @Nullable String getInventory;
+    public final @Nullable String items;
+    public final @Nullable String equipment;
+    public final @Nullable String equipmentItems;
+    public final @Nullable String slotMapping;
+    public final @Nullable String emptyItem;
+    public final @Nullable String createItemList;
 
     ModernNameTable(VersionRange versions) {
         this(versions, null, null, null, null, null, null, null);
@@ -71,11 +72,11 @@ enum ModernNameTable {
         this.createItemList = createItemList;
     }
 
-    boolean hasSpigotNames() {
+    public boolean hasSpigotNames() {
         return getInventory != null;
     }
 
-    static @Nullable ModernNameTable find(@NotNull MinecraftVersion version) {
+    public static @Nullable ModernNameTable find(@NotNull MinecraftVersion version) {
         for (ModernNameTable row : values()) {
             if (row.versions.contains(version)) {
                 return row;

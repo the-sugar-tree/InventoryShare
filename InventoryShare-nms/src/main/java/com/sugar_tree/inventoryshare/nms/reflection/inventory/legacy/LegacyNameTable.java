@@ -18,8 +18,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy;
 
+import com.sugar_tree.inventoryshare.nms.reflection.VersionRange;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +31,7 @@ import static com.sugar_tree.inventoryshare.nms.reflection.VersionRange.of;
  * Spigot's member names of the legacy inventory model ({@code items / armor / extraSlots / contents}, 1.12 - 1.21.4),
  * one row per set of versions with the same names. Rows are named after the CraftBukkit package of the release.
  */
-enum LegacyNameTable {
+public enum LegacyNameTable {
     // (versions, inventory, items, armor, extraSlots, contents, EMPTY)
     v1_12_R1(of("1.12", "1.12.1", "1.12.2"), "inventory", "items", "armor", "extraSlots", "f", "a"),
     v1_13_R1(of("1.13"), "inventory", "items", "armor", "extraSlots", "f", "a"),
@@ -59,16 +60,16 @@ enum LegacyNameTable {
     ;
 
     /** {@code NonNullList#withSize(int, Object)}, the same in every Spigot release */
-    static final String CREATE_ITEM_LIST = "a";
+    public static final String CREATE_ITEM_LIST = "a";
 
-    final VersionRange versions;
+    public final VersionRange versions;
     /** inventory field (pre-1.17) or method (1.17+) of the player */
-    final String inventory;
-    final String items;
-    final String armor;
-    final String extraSlots;
-    final String contents;
-    final String emptyItem;
+    public final String inventory;
+    public final String items;
+    public final String armor;
+    public final String extraSlots;
+    public final String contents;
+    public final String emptyItem;
 
     LegacyNameTable(VersionRange versions, String inventory, String items, String armor, String extraSlots,
                     String contents, String emptyItem) {
@@ -85,11 +86,11 @@ enum LegacyNameTable {
      * 1.17+: NMS packages are flattened ({@code net.minecraft.world...}) instead of {@code net.minecraft.server.vX_Y_RZ},
      * and the player inventory is reached through a method instead of a field.
      */
-    boolean isFlattened() {
+    public boolean isFlattened() {
         return compareTo(v1_17_R1) >= 0;
     }
 
-    static @Nullable LegacyNameTable find(@NotNull MinecraftVersion version) {
+    public static @Nullable LegacyNameTable find(@NotNull MinecraftVersion version) {
         for (LegacyNameTable row : values()) {
             if (row.versions.contains(version)) {
                 return row;

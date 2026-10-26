@@ -18,11 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection;
+package com.sugar_tree.inventoryshare.nms.reflection.item;
 
+import com.sugar_tree.inventoryshare.nms.reflection.SpigotJars;
 import com.sugar_tree.inventoryshare.nms.ItemCodecFactory;
-import com.sugar_tree.inventoryshare.nms.reflection.item.ItemCodecMembers;
-import com.sugar_tree.inventoryshare.nms.reflection.item.ItemCodecNames;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
 import org.junit.jupiter.api.Assumptions;
@@ -58,7 +57,7 @@ class ItemCodecMembersTest {
         try (URLClassLoader loader = SpigotJars.open(jar)) {
             ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
             assertEquals(jar.expectedMappingType(), runtime.getMappingType(), "mapping type");
-            ItemCodecNames names = NmsNameFactory.itemCodec(jar.version(), runtime);
+            ItemCodecNames names = ItemNameFactory.itemCodec(jar.version(), runtime);
             ItemCodecMembers members = ItemCodecMembers.resolve(names, loader);
             Class<?> itemStack = members.getItemStack();
 
@@ -112,7 +111,7 @@ class ItemCodecMembersTest {
         int spigotIndex;
         try (URLClassLoader loader = SpigotJars.open(spigot)) {
             ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(spigot), loader);
-            ItemCodecNames names = NmsNameFactory.itemCodec(spigot.version(), runtime);
+            ItemCodecNames names = ItemNameFactory.itemCodec(spigot.version(), runtime);
             spigotIndex = fieldNames(Class.forName(names.getItemStackClass(), false, loader)).indexOf(names.getCodec());
         }
         try (URLClassLoader loader = SpigotJars.open(mojang)) {

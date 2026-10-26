@@ -18,11 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sugar_tree.inventoryshare.nms.reflection;
+package com.sugar_tree.inventoryshare.nms.reflection.inventory.modern;
 
+import com.sugar_tree.inventoryshare.nms.reflection.SpigotJars;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryNameFactory;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryModel;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
-import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernMembers;
-import com.sugar_tree.inventoryshare.nms.reflection.modern.ModernNames;
+import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryModel;
 import com.sugar_tree.inventoryshare.nms.server.MappingType;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
@@ -74,7 +76,7 @@ class ModernMembersTest {
             ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
             assertEquals(jar.expectedMappingType(), runtime.getMappingType(), "mapping type");
 
-            ModernNames names = NmsNameFactory.modern(jar.version(), runtime);
+            ModernNames names = InventoryNameFactory.modern(jar.version(), runtime);
             ModernMembers members = ModernMembers.resolve(names, loader);
             Class<?> itemStack = members.getItemStack();
 
