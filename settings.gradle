@@ -15,6 +15,3 @@ if (providers.gradleProperty('dev').isPresent()) {
 
 //include 'InventoryShare-sponge'
 
-
-//include 'InventoryShare-bukkit:InventoryShare-api'
-//findProject(':InventoryShare-bukkit:InventoryShare-api')?.name = 'InventoryShare-api'

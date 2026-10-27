@@ -72,7 +72,7 @@ Gradle은 설치된 JDK를 toolchain으로 자동 탐색합니다. `Cannot find 
 | `InventoryShare-nms-test` | 이름표를 실제 Spigot jar로 검증하는 파라미터화 테스트                                          | 있으면 검증, 없으면 skip |
 | `InventoryShare-dev`      | `-Pdev`일 때만 포함. 직접 NMS로 작성하는 개발 샌드박스(`<ver>/`)와 로컬 Paper 테스트 서버 Task | 샌드박스: O              |
 
-`InventoryShare-bukkit/InventoryShare-api`(외부 플러그인용 API, 개발 예정)와 `InventoryShare-sponge`(중단)는 빌드에 포함되지 않습니다.
+`InventoryShare-sponge`(중단)는 빌드에 포함되지 않습니다.
 
 ---
 

@@ -44,7 +44,6 @@ InventoryShare/
 └─ docs/
 ```
 
-- `InventoryShare-bukkit/InventoryShare-api/`: 외부 플러그인용 API를 위한 자리입니다(개발 예정). 지금은 빌드에 포함되지 않습니다.
 - `InventoryShare-sponge/`: Sponge 서버용으로 시작했다가 중단된 폴더입니다. 빌드에 포함되지 않습니다.
 
 ```
