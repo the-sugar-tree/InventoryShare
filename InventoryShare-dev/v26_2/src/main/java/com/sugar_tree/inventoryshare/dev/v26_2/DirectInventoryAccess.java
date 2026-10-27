@@ -114,13 +114,7 @@ public final class DirectInventoryAccess implements InventoryAccess {
         }
     }
 
-    private static final class Storage implements InventoryStorage {
-        private final NonNullList<ItemStack> items;
-        private final EnumMap<EquipmentSlot, ItemStack> equipment;
-
-        private Storage(NonNullList<ItemStack> items, EnumMap<EquipmentSlot, ItemStack> equipment) {
-            this.items = items;
-            this.equipment = equipment;
-        }
+    private record Storage(NonNullList<ItemStack> items,
+                           EnumMap<EquipmentSlot, ItemStack> equipment) implements InventoryStorage {
     }
 }
