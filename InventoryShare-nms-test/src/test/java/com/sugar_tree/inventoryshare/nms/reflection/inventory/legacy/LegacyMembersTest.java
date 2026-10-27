@@ -20,7 +20,7 @@
 
 package com.sugar_tree.inventoryshare.nms.reflection.inventory.legacy;
 
-import com.sugar_tree.inventoryshare.nms.reflection.SpigotJars;
+import com.sugar_tree.inventoryshare.nms.reflection.ServerJars;
 import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryNameFactory;
 import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryModel;
 import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryModel;
@@ -46,27 +46,27 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Legacy NMS names (1.12 - 1.21.4) resolved against Spigot runtime and remapped-mojang jars")
+@DisplayName("Legacy NMS names (1.12 - 1.21.4) resolved against Spigot, remapped-mojang and Paper jars")
 class LegacyMembersTest {
 
     private static final String FIRST_MODERN = "1.21.5";
 
     static Stream<String> legacyVersions() {
-        return SpigotJars.versionsBelow(FIRST_MODERN);
+        return ServerJars.versionsBelow(FIRST_MODERN);
     }
 
-    static Stream<SpigotJars.Jar> legacyJars() {
-        return SpigotJars.jarsBelow(FIRST_MODERN);
+    static Stream<ServerJars.Jar> legacyJars() {
+        return ServerJars.jarsBelow(FIRST_MODERN);
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("legacyJars")
-    void membersResolve(SpigotJars.Jar jar) throws Exception {
+    void membersResolve(ServerJars.Jar jar) throws Exception {
         assertEquals(InventoryModel.LEGACY, InventoryModel.of(jar.version()));
 
-        try (URLClassLoader loader = SpigotJars.open(jar)) {
+        try (URLClassLoader loader = ServerJars.open(jar)) {
             // The runtime is detected from the jar and the names are built exactly as on a server
-            ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
+            ServerRuntime runtime = ServerRuntime.detect(ServerJars.craftServerClass(jar), loader);
             assertEquals(jar.expectedMappingType(), runtime.getMappingType(), "mapping type");
 
             LegacyNames names = InventoryNameFactory.legacy(jar.version(), runtime);

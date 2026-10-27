@@ -31,7 +31,7 @@ cd InventoryShare
 | 17         | 필수 | Gradle 실행, `InventoryShare-bukkit` / `InventoryShare-nms` 컴파일 (Java 8 대상)         |
 | 25         | 필수 | `InventoryShare-nms-test` 실행 (26.x 클래스 파일을 읽기 위해). 기본 `build`에 포함됩니다 |
 | 21, 25     | 선택 | `-Pdev` 샌드박스 컴파일 (`v1_21_R4`: 21, `v26_2`: 25)                                    |
-| 17, 21, 25 | 선택 | 로컬 Paper 테스트 서버 실행 (1.20.4: 17, 1.20.6 – 1.21.11: 21, 26.x: 25)                 |
+| 17, 21, 25 | 선택 | 로컬 Paper 테스트 서버, `preparePaperJars` (1.20.4: 17, 1.20.6 – 1.21.11: 21, 26.x: 25)  |
 
 Gradle은 설치된 JDK를 toolchain으로 자동 탐색합니다. `Cannot find a Java installation matching ... languageVersion=<N>` 오류가 나면 해당 JDK를 설치하세요.
 
@@ -88,7 +88,7 @@ Gradle은 설치된 JDK를 toolchain으로 자동 탐색합니다. `Cannot find 
 
 ### 4.2 NMS 이름 검증 테스트 (BuildTools 필요)
 
-`InventoryShare-nms-test`는 mavenLocal(`~/.m2`)에 설치된 Spigot **서버** jar를 불러, 플러그인과 같은 코드로 모든 서버 내부 이름을 찾고 필드 타입까지 확인합니다. 서버 jar는 공식 저장소에 배포되지 않으므로 BuildTools로 직접 만들어야 합니다.
+`InventoryShare-nms-test`는 mavenLocal(`~/.m2`)에 설치된 Spigot **서버** jar와 Paper 서버 jar를 불러, 플러그인과 같은 코드로 모든 서버 내부 이름을 찾고 필드 타입까지 확인합니다. Spigot 서버 jar는 공식 저장소에 배포되지 않으므로 BuildTools로 직접 만들어야 합니다.
 
 [BuildTools](https://www.spigotmc.org/wiki/buildtools/)를 내려받아 실행합니다.
 
@@ -98,7 +98,7 @@ java -jar BuildTools.jar --rev 1.21.4 --remapped  # 1.17 – 1.21.11: Mojang 이
 ```
 
 - BuildTools가 `org.spigotmc:spigot:<version>`을 mavenLocal에 설치합니다. `--remapped`를 주면 같은 버전의 `remapped-mojang` jar도 설치됩니다. (1.17 - 1.21.11)
-- Paper 1.20.5 이상은 실행 중에 Mojang 이름을 쓰므로, `remapped-mojang` jar로 Paper에서 쓰는 이름을 검증합니다. 26.1 이상은 기본 jar가 이미 Mojang 이름입니다.
+- `remapped-mojang` jar는 Spigot의 같은 버전을 Mojang 이름으로 바꾼 것입니다. 26.1 이상은 기본 jar가 이미 Mojang 이름입니다.
 - 검사할 버전 목록은 `InventoryShare-nms-test/build.gradle`의 `spigotJars`입니다. 필요한 버전만 설치해도 됩니다.
 
 | Minecraft        | BuildTools 실행 JDK |
@@ -118,6 +118,17 @@ BuildTools가 요구하는 JDK는 BuildTools 버전에 따라 달라질 수 있�
 
 - 결과: `InventoryShare-nms-test/build/reports/tests/test/index.html`
 - 버전별로 **skip**인지 **통과**인지 리포트에서 확인하세요. skip은 jar가 설치되지 않았다는 뜻입니다.
+
+**Paper jar**
+
+Paper는 CraftBukkit 자체를 고칩니다(예: 26.3에서 `CraftItemStack#asCraftMirror`가 `asBukkitMirror`로 바뀜). 그래서 Spigot jar로는 Paper를 검증할 수 없습니다.
+
+```bash
+./gradlew :InventoryShare-nms-test:preparePaperJars
+```
+
+- 검사할 버전 목록은 `InventoryShare-nms-test/build.gradle`의 `paperJars`입니다. 각 버전의 최신 빌드를 내려받아 서버 jar를 만들고 Gradle 사용자 홈(`~/.gradle/caches/inventoryshare/paper/`)에 둡니다. 새 빌드가 나왔을 때만 다시 받습니다.
+- `-PnmsStrict`는 이 작업을 먼저 실행합니다.
 
 ---
 
@@ -174,7 +185,7 @@ dev=true
 1. BuildTools로 해당 버전을 설치합니다(1.17 – 1.21.11이면 `--remapped`을 포함해서 설치하세요.).
 2. `InventoryShare-dev`의 가장 가까운 샌드박스를 복사해 `DirectInventoryAccess`로 동작을 확인합니다.
    (`build.gradle`의 Spigot 버전과 toolchain, 패키지명, `DevInventoryAccessProvider.TARGET`, `META-INF/services` 파일을 바꿉니다.)
-3. `InventoryShare-nms-test/build.gradle`의 `spigotJars`에 버전을 추가하고 `-PnmsStrict`로 테스트합니다. 이름표에 그 버전이 없으면 이 테스트가 실패합니다.
+3. `InventoryShare-nms-test/build.gradle`의 `spigotJars`와 `paperJars`에 버전을 추가하고 `-PnmsStrict`로 테스트합니다. 이름표에 그 버전이 없으면 이 테스트가 실패합니다.
 4. 이름표에 행을 추가해 3번 테스트를 통과시킵니다. 인벤토리는 `LegacyNameTable` 또는 `ModernNameTable`(`nms/reflection/inventory/`), 아이템 저장(1.20.5 이상)은 `ItemCodecNameTable`(`nms/reflection/item/`)입니다. 샌드박스에서 쓴 필드·메서드 이름을 Spigot 이름으로 옮기면 됩니다. 이름을 찾는 방법은 [NMS_GUIDE.md §6](docs/NMS_GUIDE.md#6-이름을-직접-확인하는-방법)을 참고하세요.
    - 클래스 이름이나 Mojang 이름이 바뀌었다면 `InventoryNameFactory` 또는 `ItemNameFactory`를 고칩니다.
    - 인벤토리 구조 자체가 바뀌었다면 새 `InventoryAccess` 구현이 필요합니다.

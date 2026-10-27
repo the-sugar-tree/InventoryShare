@@ -1,6 +1,10 @@
 // Verifies the NMS names built by InventoryNameFactory and ItemNameFactory against real Spigot runtime jars installed into mavenLocal by BuildTools,
-// and (1.17+) against the Mojang-named `remapped-mojang` jars, as Paper 1.20.5+ runs with Mojang's names.
-// A jar that is not installed is skipped; run with -PnmsStrict to fail instead.
+// (1.17+) against the Mojang-named `remapped-mojang` jars, and against Paper server jars prepared by preparePaperJars.
+// A jar that is not installed is skipped; run with -PnmsStrict to prepare the Paper jars and fail on any missing jar.
+
+import groovy.json.JsonSlurper
+
+import java.security.MessageDigest
 
 // Minecraft version -> Spigot artifact version (default classifier = the jar a server runs)
 def spigotJars = [
@@ -46,6 +50,72 @@ def mojangJars = spigotJars.findAll { mc, artifact ->
     parts[0] == 1 && parts[1] >= 17
 }
 
+// Paper changes CraftBukkit itself (26.3 renamed CraftItemStack#asCraftMirror), which no Spigot jar shows.
+// Minecraft version -> JDK that runs Paperclip to build the server jar. The latest build of each is kept in the Gradle
+// user home; preparePaperJars downloads a build only when a newer one is released.
+def paperJars = [
+        '1.20.4' : 17,   // the last Paper on Spigot's names
+        '1.20.6' : 21,
+        '1.21.4' : 21,
+        '1.21.5' : 21,
+        '1.21.11': 21,
+        '26.1.2' : 25,
+        '26.2'   : 25,
+        '26.3'   : 25,
+]
+def paperCache = new File(gradle.gradleUserHomeDir, 'caches/inventoryshare/paper')
+
+// The server jar of the newest prepared build of a Paper version, or null
+def paperServerJar = { String mc ->
+    def builds = new File(paperCache, mc).listFiles()?.findAll { it.name.isInteger() } ?: []
+    builds.sort { it.name.toInteger() }.reverse()
+            .collect { new File(it, "versions/${mc}/paper-${mc}.jar") }
+            .find { it.isFile() }
+}
+
+interface InjectedExecOperations {
+    @Inject
+    ExecOperations getExecOperations()
+}
+def execOperations = objects.newInstance(InjectedExecOperations).execOperations
+
+tasks.register('preparePaperJars') {
+    group = 'verification'
+    description = 'Downloads the latest build of each Paper version checked by the tests and builds its server jar'
+    def launchers = paperJars.collectEntries { mc, jdk ->
+        [mc, javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(jdk) }]
+    }
+    doLast {
+        def api = { String path ->
+            def connection = new URL("https://fill.papermc.io/v3/projects/paper/${path}").openConnection()
+            connection.setRequestProperty('User-Agent', 'InventoryShare-nms-test (https://github.com/the-sugar-tree/InventoryShare)')
+            connection.inputStream.withCloseable { new JsonSlurper().parse(it) }
+        }
+        paperJars.each { mc, jdk ->
+            def build = api("versions/${mc}/builds/latest")
+            def dir = new File(paperCache, "${mc}/${build.id}")
+            if (new File(dir, "versions/${mc}/paper-${mc}.jar").isFile()) return
+
+            def download = build.downloads['server:default']
+            def paperclip = new File(dir, 'paperclip.jar')
+            dir.mkdirs()
+            new URL(download.url).withInputStream { input -> paperclip.withOutputStream { it << input } }
+            def sha256 = MessageDigest.getInstance('SHA-256').digest(paperclip.bytes).encodeHex().toString()
+            if (sha256 != download.checksums.sha256) {
+                dir.deleteDir()
+                throw new GradleException("Checksum mismatch for Paper ${mc} build ${build.id}")
+            }
+            // Downloads the Mojang server jar and the libraries, applies Paper's patches, and exits
+            execOperations.exec {
+                workingDir = dir
+                executable = launchers[mc].get().executablePath.asFile
+                args '-Dpaperclip.patchonly=true', '-jar', paperclip.name
+            }
+            logger.lifecycle("Paper ${mc} build ${build.id} prepared")
+        }
+    }
+}
+
 // Reading 26.x class files needs a recent JVM; the tests themselves never run NMS code.
 java {
     toolchain {
@@ -57,7 +127,7 @@ tasks.withType(JavaCompile).configureEach {
     options.release = 17
 }
 
-// Each checked jar: key in spigot-classpaths.properties -> [configuration, dependency notation, server jar name]
+// Each checked Spigot jar: key in server-classpaths.properties -> [configuration, dependency notation, server jar name]
 def checkedJars = [:]
 spigotJars.each { mc, artifact ->
     checkedJars[mc] = ["spigot_" + mc.replace('.', '_'), "org.spigotmc:spigot:${artifact}", "spigot-${artifact}.jar"]
@@ -90,14 +160,19 @@ jar {
 test {
     useJUnitPlatform()
     boolean strict = project.hasProperty('nmsStrict')
+    if (strict) dependsOn 'preparePaperJars'
     // Classpaths are written to a file: passing them as system properties exceeds the Windows command line limit
-    def classpathFile = layout.buildDirectory.file('spigot-classpaths.properties').get().asFile
+    def classpathFile = layout.buildDirectory.file('server-classpaths.properties').get().asFile
     inputs.property('spigotJars', spigotJars)
     inputs.property('mojangJars', mojangJars.keySet())
+    inputs.property('paperJars', paperJars.keySet())
+    // The prepared Paper builds: a newer build reruns the tests
+    inputs.property('paperBuilds', providers.provider { paperJars.keySet().collect { paperServerJar(it)?.path } })
     inputs.property('nmsStrict', strict)
     systemProperty 'spigot.versions', spigotJars.keySet().join(',')
     systemProperty 'spigot.mojangVersions', mojangJars.keySet().join(',')
-    systemProperty 'spigot.classpaths', classpathFile.absolutePath
+    systemProperty 'paper.versions', paperJars.keySet().join(',')
+    systemProperty 'server.classpaths', classpathFile.absolutePath
     doFirst {
         def classpaths = new Properties()
         checkedJars.each { key, spec ->
@@ -110,7 +185,15 @@ test {
             classpaths.setProperty(key, server ? files.collect { it.absolutePath }.join(File.pathSeparator) : '')
             classpaths.setProperty(key + '.server', server ? server.absolutePath : '')
         }
+        paperJars.keySet().each { mc ->
+            def server = paperServerJar(mc)
+            if (strict && !server) throw new GradleException("Paper ${mc} is not prepared")
+            def libraries = server ? fileTree(new File(server, '../../../libraries')) { include '**/*.jar' }.files : []
+            def files = server ? [server] + libraries : []
+            classpaths.setProperty("${mc}@paper", files.collect { it.absolutePath }.join(File.pathSeparator))
+            classpaths.setProperty("${mc}@paper.server", server ? server.absolutePath : '')
+        }
         classpathFile.parentFile.mkdirs()
-        classpathFile.withOutputStream { classpaths.store(it, 'Spigot runtime classpaths by Minecraft version') }
+        classpathFile.withOutputStream { classpaths.store(it, 'Server runtime classpaths by Minecraft version') }
     }
 }

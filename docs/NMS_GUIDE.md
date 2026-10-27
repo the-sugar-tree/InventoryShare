@@ -170,10 +170,10 @@ Minecraft 1.21.11 (CraftBukkit (not relocated), MOJANG mappings), using ModernIn
 
 새 버전을 지원하거나 이름이 맞는지 의심될 때 쓸 수 있는 방법입니다.
 
-| 방법            | 설명                                                                                                                                                                                                                                                    |
-|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 자동 테스트     | `InventoryShare-nms-test`가 BuildTools로 설치한 Spigot jar와 `remapped-mojang` jar(Mojang 이름)를 불러 플러그인과 같은 코드로 이름을 찾고, 필드 타입까지 확인합니다. [CONTRIBUTING.md §4.2](../CONTRIBUTING.md#42-nms-이름-검증-테스트-buildtools-필요) |
-| `javap`         | 서버 jar의 클래스를 직접 열어 봅니다. 예: `javap -p -cp <서버 jar> net.minecraft.world.entity.player.Inventory`                                                                                                                                         |
-| 직접 NMS로 작성 | `InventoryShare-dev` 샌드박스에서 NMS를 직접 호출해 동작을 먼저 확인한 뒤, 같은 이름을 이름표로 옮깁니다. [CONTRIBUTING.md §5](../CONTRIBUTING.md#5-개발-환경-inventoryshare-dev)                                                                       |
+| 방법            | 설명                                                                                                                                                                                                                                                                                        |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 자동 테스트     | `InventoryShare-nms-test`가 BuildTools로 설치한 Spigot jar, `remapped-mojang` jar(Mojang 이름), `preparePaperJars`로 받은 Paper jar를 불러 플러그인과 같은 코드로 이름을 찾고, 필드 타입까지 확인합니다. [CONTRIBUTING.md §4.2](../CONTRIBUTING.md#42-nms-이름-검증-테스트-buildtools-필요) |
+| `javap`         | 서버 jar의 클래스를 직접 열어 봅니다. 예: `javap -p -cp <서버 jar> net.minecraft.world.entity.player.Inventory`                                                                                                                                                                             |
+| 직접 NMS로 작성 | `InventoryShare-dev` 샌드박스에서 NMS를 직접 호출해 동작을 먼저 확인한 뒤, 같은 이름을 이름표로 옮깁니다. [CONTRIBUTING.md §5](../CONTRIBUTING.md#5-개발-환경-inventoryshare-dev)                                                                                                           |
 
 Paper 서버 jar(`versions/<버전>/paper-<버전>.jar`)는 실행 중인 이름 그대로(Mojang 이름) 들어 있어서 `javap`로 바로 확인할 수 있습니다.

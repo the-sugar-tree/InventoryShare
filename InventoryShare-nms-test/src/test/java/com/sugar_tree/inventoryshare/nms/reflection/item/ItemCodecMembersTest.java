@@ -20,7 +20,7 @@
 
 package com.sugar_tree.inventoryshare.nms.reflection.item;
 
-import com.sugar_tree.inventoryshare.nms.reflection.SpigotJars;
+import com.sugar_tree.inventoryshare.nms.reflection.ServerJars;
 import com.sugar_tree.inventoryshare.nms.ItemCodecFactory;
 import com.sugar_tree.inventoryshare.nms.server.MinecraftVersion;
 import com.sugar_tree.inventoryshare.nms.server.ServerRuntime;
@@ -44,18 +44,18 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Item codec names (1.20.5+) resolved against Spigot runtime and remapped-mojang jars")
+@DisplayName("Item codec names (1.20.5+) resolved against Spigot, remapped-mojang and Paper jars")
 class ItemCodecMembersTest {
 
-    static Stream<SpigotJars.Jar> itemCodecJars() {
-        return SpigotJars.jarsFrom(ItemCodecFactory.FIRST_VERSION);
+    static Stream<ServerJars.Jar> itemCodecJars() {
+        return ServerJars.jarsFrom(ItemCodecFactory.FIRST_VERSION);
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("itemCodecJars")
-    void membersResolve(SpigotJars.Jar jar) throws Exception {
-        try (URLClassLoader loader = SpigotJars.open(jar)) {
-            ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
+    void membersResolve(ServerJars.Jar jar) throws Exception {
+        try (URLClassLoader loader = ServerJars.open(jar)) {
+            ServerRuntime runtime = ServerRuntime.detect(ServerJars.craftServerClass(jar), loader);
             assertEquals(jar.expectedMappingType(), runtime.getMappingType(), "mapping type");
             ItemCodecNames names = ItemNameFactory.itemCodec(jar.version(), runtime);
             ItemCodecMembers members = ItemCodecMembers.resolve(names, loader);
@@ -102,19 +102,19 @@ class ItemCodecMembersTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("spigotNamedVersions")
     void spigotCodecIsMojangCodec(String mc) throws Exception {
-        SpigotJars.Jar spigot = SpigotJars.jars().filter(jar -> jar.mc.equals(mc) && !jar.mojangRemapped)
+        ServerJars.Jar spigot = ServerJars.jars().filter(jar -> jar.mc.equals(mc) && jar.kind == ServerJars.Kind.SPIGOT)
                 .findFirst().orElseThrow(IllegalStateException::new);
-        SpigotJars.Jar mojang = SpigotJars.jars().filter(jar -> jar.mc.equals(mc) && jar.mojangRemapped)
+        ServerJars.Jar mojang = ServerJars.jars().filter(jar -> jar.mc.equals(mc) && jar.kind == ServerJars.Kind.MOJANG_REMAPPED)
                 .findFirst().orElse(null);
         Assumptions.assumeTrue(mojang != null, "no remapped-mojang jar listed for " + mc);
 
         int spigotIndex;
-        try (URLClassLoader loader = SpigotJars.open(spigot)) {
-            ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(spigot), loader);
+        try (URLClassLoader loader = ServerJars.open(spigot)) {
+            ServerRuntime runtime = ServerRuntime.detect(ServerJars.craftServerClass(spigot), loader);
             ItemCodecNames names = ItemNameFactory.itemCodec(spigot.version(), runtime);
             spigotIndex = fieldNames(Class.forName(names.getItemStackClass(), false, loader)).indexOf(names.getCodec());
         }
-        try (URLClassLoader loader = SpigotJars.open(mojang)) {
+        try (URLClassLoader loader = ServerJars.open(mojang)) {
             List<String> mojangFields = fieldNames(Class.forName("net.minecraft.world.item.ItemStack", false, loader));
             assertEquals(mojangFields.indexOf("CODEC"), spigotIndex, "declared fields (Mojang): " + mojangFields);
         }
@@ -123,7 +123,7 @@ class ItemCodecMembersTest {
     @Test
     @DisplayName("every item codec row is checked by at least one listed version")
     void everyRowIsCovered() {
-        Set<ItemCodecNameTable> covered = SpigotJars.versionsFrom(ItemCodecFactory.FIRST_VERSION)
+        Set<ItemCodecNameTable> covered = ServerJars.versionsFrom(ItemCodecFactory.FIRST_VERSION)
                 .map(mc -> ItemCodecNameTable.find(MinecraftVersion.parse(mc)))
                 .collect(Collectors.toSet());
         for (ItemCodecNameTable row : ItemCodecNameTable.values()) {
@@ -133,7 +133,7 @@ class ItemCodecMembersTest {
 
     /** Versions whose Spigot jar uses Spigot's names (1.20.5 - 1.21.11) */
     static Stream<String> spigotNamedVersions() {
-        return SpigotJars.versionsFrom(ItemCodecFactory.FIRST_VERSION)
+        return ServerJars.versionsFrom(ItemCodecFactory.FIRST_VERSION)
                 .filter(mc -> MinecraftVersion.parse(mc).isOlderThan("26.1"));
     }
 

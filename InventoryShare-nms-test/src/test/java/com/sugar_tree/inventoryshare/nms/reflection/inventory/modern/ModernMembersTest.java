@@ -20,7 +20,7 @@
 
 package com.sugar_tree.inventoryshare.nms.reflection.inventory.modern;
 
-import com.sugar_tree.inventoryshare.nms.reflection.SpigotJars;
+import com.sugar_tree.inventoryshare.nms.reflection.ServerJars;
 import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryNameFactory;
 import com.sugar_tree.inventoryshare.nms.reflection.inventory.InventoryModel;
 import com.sugar_tree.inventoryshare.nms.InventoryAccess;
@@ -49,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Modern NMS names (1.21.5+) resolved against Spigot runtime and remapped-mojang jars")
+@DisplayName("Modern NMS names (1.21.5+) resolved against Spigot, remapped-mojang and Paper jars")
 class ModernMembersTest {
 
     private static final String FIRST_MODERN = "1.21.5";
@@ -59,21 +59,21 @@ class ModernMembersTest {
     private static final int[] SLOT_ORDINALS = {2, 3, 4, 5, 1};
 
     static Stream<String> modernVersions() {
-        return SpigotJars.versionsFrom(FIRST_MODERN);
+        return ServerJars.versionsFrom(FIRST_MODERN);
     }
 
-    static Stream<SpigotJars.Jar> modernJars() {
-        return SpigotJars.jarsFrom(FIRST_MODERN);
+    static Stream<ServerJars.Jar> modernJars() {
+        return ServerJars.jarsFrom(FIRST_MODERN);
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("modernJars")
-    void membersResolve(SpigotJars.Jar jar) throws Exception {
+    void membersResolve(ServerJars.Jar jar) throws Exception {
         assertEquals(InventoryModel.MODERN, InventoryModel.of(jar.version()));
 
-        try (URLClassLoader loader = SpigotJars.open(jar)) {
+        try (URLClassLoader loader = ServerJars.open(jar)) {
             // The runtime is detected from the jar and the names are built exactly as on a server
-            ServerRuntime runtime = ServerRuntime.detect(SpigotJars.craftServerClass(jar), loader);
+            ServerRuntime runtime = ServerRuntime.detect(ServerJars.craftServerClass(jar), loader);
             assertEquals(jar.expectedMappingType(), runtime.getMappingType(), "mapping type");
 
             ModernNames names = InventoryNameFactory.modern(jar.version(), runtime);

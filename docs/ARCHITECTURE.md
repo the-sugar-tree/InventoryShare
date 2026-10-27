@@ -39,7 +39,7 @@ Bukkit API는 아이템을 복사해서 넣고 빼는 방법만 제공하므로,
 InventoryShare/
 ├─ InventoryShare-bukkit/      배포 플러그인 (core). spigot-api로만 컴파일, Java 8 대상
 ├─ InventoryShare-nms/         NMS 접근 계층: InventoryAccess, ItemCodec, 서버 감지, 리플렉션 구현. Java 8 대상
-├─ InventoryShare-nms-test/    NMS 이름을 실제 Spigot jar로 검증하는 테스트
+├─ InventoryShare-nms-test/    NMS 이름을 실제 Spigot·Paper jar로 검증하는 테스트
 ├─ InventoryShare-dev/         개발용 샌드박스(<ver>/)와 로컬 Paper 테스트 서버 Task. -Pdev일 때만 포함, 배포 안 함
 └─ docs/
 ```
@@ -352,11 +352,11 @@ extraSlots: [ ...1개 ]    # 칸 40 (offhand)
 
 ## 6. 테스트 구조
 
-| 테스트                                     | 확인하는 것                                                                                                                                                   | Spigot jar               |
-|--------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
-| `InventoryShare-nms` 단위 테스트           | 버전 파싱, CraftBukkit 패키지 감지, 이름 조립(Spigot/Mojang, 패키지 형태별), 이름표 행, Provider 선택과 예외                                                  | 불필요                   |
-| `InventoryShare-bukkit` 단위 테스트        | 아이템 형식 판별·마이그레이션·로드 판정과 로그 문구, 백업 파일, 지울 팀 파일 판정, 언어 파일 경로                                                             | 불필요                   |
-| `InventoryShare-nms-test` (`*MembersTest`) | 버전별 Spigot jar와 `remapped-mojang` jar(Mojang 이름)에서 서버를 감지하고, 플러그인과 같은 코드로 모든 이름을 찾은 뒤 필드 타입과 칸 → 장비 슬롯 표까지 확인 | 있으면 검증, 없으면 skip |
+| 테스트                                     | 확인하는 것                                                                                                                                                             | Spigot jar               |
+|--------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| `InventoryShare-nms` 단위 테스트           | 버전 파싱, CraftBukkit 패키지 감지, 이름 조립(Spigot/Mojang, 패키지 형태별), 이름표 행, Provider 선택과 예외                                                            | 불필요                   |
+| `InventoryShare-bukkit` 단위 테스트        | 아이템 형식 판별·마이그레이션·로드 판정과 로그 문구, 백업 파일, 지울 팀 파일 판정, 언어 파일 경로                                                                       | 불필요                   |
+| `InventoryShare-nms-test` (`*MembersTest`) | 버전별 Spigot jar, `remapped-mojang` jar(Mojang 이름), Paper jar에서 서버를 감지하고, 플러그인과 같은 코드로 모든 이름을 찾은 뒤 필드 타입과 칸 → 장비 슬롯 표까지 확인 | 있으면 검증, 없으면 skip |
 
 - 테스트는 대상 클래스와 같은 패키지에 둡니다. 그래서 package-private인 이름표도 직접 확인할 수 있습니다.
 - 이름표의 모든 행이 최소 한 버전의 jar로 검사되는지도 테스트합니다.

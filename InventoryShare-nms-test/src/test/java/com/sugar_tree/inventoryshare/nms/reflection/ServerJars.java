@@ -45,63 +45,101 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * Spigot server classpaths written by {@code InventoryShare-nms-test/build.gradle}.
+ * Spigot and Paper server classpaths written by {@code InventoryShare-nms-test/build.gradle}.
  */
-public final class SpigotJars {
+public final class ServerJars {
 
     private static final Pattern CRAFT_SERVER = Pattern.compile("^(org/bukkit/craftbukkit/(?:v[0-9_R]+/)?CraftServer)\\.class$");
 
     private static Properties classpaths;
 
-    private SpigotJars() {}
+    private ServerJars() {}
+
+    public enum Kind {
+        /** The jar a Spigot server runs, installed into mavenLocal by BuildTools */
+        SPIGOT,
+        /** The same Spigot version remapped to Mojang's names (1.17+, BuildTools {@code --remapped}) */
+        MOJANG_REMAPPED,
+        /** A Paper server, prepared by {@code preparePaperJars}. Paper changes CraftBukkit itself */
+        PAPER
+    }
 
     /**
-     * A Spigot server jar to check: the runtime jar of a version, or (1.17+) the same version remapped to Mojang's
-     * names, which stands in for Paper 1.20.5+.
+     * A server jar to check.
      */
     public static final class Jar {
         public final String mc;
-        public final boolean mojangRemapped;
+        public final Kind kind;
 
-        private Jar(String mc, boolean mojangRemapped) {
+        private Jar(String mc, Kind kind) {
             this.mc = mc;
-            this.mojangRemapped = mojangRemapped;
+            this.kind = kind;
         }
 
         public String key() {
-            return mojangRemapped ? mc + "@mojang" : mc;
+            switch (kind) {
+                case MOJANG_REMAPPED:
+                    return mc + "@mojang";
+                case PAPER:
+                    return mc + "@paper";
+                default:
+                    return mc;
+            }
         }
 
         public MinecraftVersion version() {
             return MinecraftVersion.parse(mc);
         }
 
-        /** Remapped jars, and every 26.1+ jar, use Mojang's names */
+        /** Remapped jars, Paper from 1.20.5, and every 26.1+ jar use Mojang's names */
         public MappingType expectedMappingType() {
-            return mojangRemapped || version().isAtLeast("26.1") ? MappingType.MOJANG : MappingType.SPIGOT;
+            boolean mojang = kind == Kind.MOJANG_REMAPPED
+                    || (kind == Kind.PAPER && version().isAtLeast("1.20.5"))
+                    || version().isAtLeast("26.1");
+            return mojang ? MappingType.MOJANG : MappingType.SPIGOT;
         }
 
         @Override
         public String toString() {
-            return mojangRemapped ? mc + " (remapped-mojang)" : mc;
+            switch (kind) {
+                case MOJANG_REMAPPED:
+                    return mc + " (remapped-mojang)";
+                case PAPER:
+                    return "Paper " + mc;
+                default:
+                    return mc;
+            }
+        }
+
+        private String missing() {
+            switch (kind) {
+                case MOJANG_REMAPPED:
+                    return "Spigot " + this + " is not installed in mavenLocal (BuildTools --rev " + mc + " --remapped)";
+                case PAPER:
+                    return this + " is not prepared (./gradlew :InventoryShare-nms-test:preparePaperJars)";
+                default:
+                    return "Spigot " + this + " is not installed in mavenLocal (BuildTools --rev " + mc + ")";
+            }
         }
     }
 
     /**
-     * @return every Minecraft version listed in the build script, installed or not
+     * @return every Minecraft version listed for Spigot in the build script, installed or not
      */
     public static Stream<String> versions() {
         return list("spigot.versions").stream();
     }
 
     /**
-     * @return the runtime jar of every listed version, then the remapped-mojang jar of the versions that have one
+     * @return the runtime jar of every listed Spigot version, then the remapped-mojang jars, then the Paper jars
      */
     public static Stream<Jar> jars() {
         Set<String> mojang = new HashSet<>(list("spigot.mojangVersions"));
-        return Stream.concat(
-                versions().map(mc -> new Jar(mc, false)),
-                versions().filter(mojang::contains).map(mc -> new Jar(mc, true)));
+        return Stream.of(
+                versions().map(mc -> new Jar(mc, Kind.SPIGOT)),
+                versions().filter(mojang::contains).map(mc -> new Jar(mc, Kind.MOJANG_REMAPPED)),
+                list("paper.versions").stream().map(mc -> new Jar(mc, Kind.PAPER))
+        ).flatMap(jars -> jars);
     }
 
     public static Stream<Jar> jarsBelow(String version) {
@@ -126,8 +164,7 @@ public final class SpigotJars {
      */
     public static URLClassLoader open(Jar jar) throws IOException {
         String classpath = classpaths().getProperty(jar.key(), "");
-        Assumptions.assumeFalse(classpath.isEmpty(), "Spigot " + jar + " is not installed in mavenLocal (BuildTools --rev "
-                + jar.mc + (jar.mojangRemapped ? " --remapped" : "") + ")");
+        Assumptions.assumeFalse(classpath.isEmpty(), jar.missing());
         String[] paths = classpath.split(File.pathSeparator);
         URL[] urls = new URL[paths.length];
         for (int i = 0; i < paths.length; i++) {
@@ -141,7 +178,7 @@ public final class SpigotJars {
      */
     public static String craftServerClass(Jar jar) throws IOException {
         String server = classpaths().getProperty(jar.key() + ".server", "");
-        Assumptions.assumeFalse(server.isEmpty(), "Spigot " + jar + " is not installed in mavenLocal");
+        Assumptions.assumeFalse(server.isEmpty(), jar.missing());
         try (ZipFile zip = new ZipFile(server)) {
             Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
@@ -163,7 +200,7 @@ public final class SpigotJars {
     private static synchronized Properties classpaths() throws IOException {
         if (classpaths == null) {
             Properties properties = new Properties();
-            try (InputStream in = Files.newInputStream(Paths.get(System.getProperty("spigot.classpaths")))) {
+            try (InputStream in = Files.newInputStream(Paths.get(System.getProperty("server.classpaths")))) {
                 properties.load(in);
             }
             classpaths = properties;
