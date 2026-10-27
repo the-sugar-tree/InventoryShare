@@ -7,7 +7,7 @@ allprojects {
     apply plugin: 'net.minecraftforge.licenser'
 
     group = 'com.sugar_tree.inventoryshare'
-    version = '4.0-beta'
+    version = '4.0'
     description = 'Minecraft Plugin'
 
     plugins.withType(JavaPlugin).configureEach {

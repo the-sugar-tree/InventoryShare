@@ -1,8 +1,5 @@
-# Inventory Sharing Plugin (v3.1.1)
-인벤토리 공유 플러그인 (v3.1.1)
-
-> [!important]   
-> 죄송합니다 플러그인 업데이트가 늦어지고 있습니다. 현재 1.21.1까지만 플러그인을 지원합니다. 양해 부탁드립니다. <br>
+# Inventory Sharing Plugin (v4.0)
+인벤토리 공유 플러그인 (v4.0)
 
 > [!note]   
 > [1.12-1.20.4]버전의 ProtocolLib 플러그인은 [링크](https://github.com/dmulloy2/ProtocolLib/releases)를 참조해주세요!
@@ -16,11 +13,14 @@
 
 
 ## Change Log   
-Added 1.20.1-1.21.1 Support
+- 1.12.2 – 26.3 지원 (Spigot, Paper)
+- 1.20.5 이상에서 아이템을 마인크래프트 자체 형식으로 저장합니다. 셜커 상자 내용물, 머리 스킨 등이 사라지지 않고, Spigot과 Paper가 서로의 데이터를 읽습니다. ([3.x에서 업데이트](#3x에서-업데이트) 참고)
+- 명령어 권한 `inventoryshare.command` 추가 (기본값: OP)
+- 월드 저장 때 데이터를 월드 수만큼 반복 저장하던 문제 수정
 
 ---
 <p align="center">
-    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v3.1.1/InventoryShare-3.1.1.jar">
+    <a href="https://github.com/the-sugar-tree/InventoryShare/releases/download/v4.0/InventoryShare-4.0.jar">
         <img src="https://img.shields.io/badge/Plugin%20Download-CLICK-bbbbbb?style=for-the-badge" height="40" width="260">
     </a>
 </p>
@@ -28,9 +28,9 @@ Added 1.20.1-1.21.1 Support
 ---
 [![Youtube](https://img.shields.io/badge/youtube-sugar_tree-red.svg?logo=youtube&style=for-the-badge)](https://www.youtube.com/channel/UCtqLK2FrJI9BNB0BI8-sWHA)
 [![Release](https://img.shields.io/github/v/release/the-sugar-tree/InventoryShare?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare/releases/latest)
-[![Java](https://img.shields.io/badge/java-21-ED8B00.svg?logo=java&style=for-the-badge)](https://www.azul.com/)
+[![Java](https://img.shields.io/badge/java-8%2B-ED8B00.svg?logo=java&style=for-the-badge)](https://www.azul.com/)
 [![DownloadCount](https://img.shields.io/github/downloads/the-sugar-tree/InventoryShare/total?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare/releases)   
-[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12—1.21.1-green?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare)
+[![SupportVersion](https://img.shields.io/badge/Supported%20Minecraft%20Version-1.12.2—26.3-green?style=for-the-badge)](https://github.com/the-sugar-tree/InventoryShare)
 [![License](https://img.shields.io/github/license/the-sugar-tree/InventoryShare?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![Gradle](https://img.shields.io/badge/gradle-9.8.2-02303A.svg?logo=gradle&style=for-the-badge)](https://gradle.org)
 
@@ -54,13 +54,13 @@ https://blog.naver.com/sugar-tree/222556850608
 
 ## Minecraft Version
 ### Current Versions
-- 1.12-1.21.1 (Release 3.1.1) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v3.1.1/InventoryShare-3.1.1.jar)]
+- 1.12.2-26.3 (Release 4.0) \[[Download](https://github.com/the-sugar-tree/InventoryShare/releases/download/v4.0/InventoryShare-4.0.jar)]
 
 ## 주의사항
 **이 플러그인은 스피갓, 페이퍼 기반입니다!**   
 **반드시 지원하는 버킷에서 사용해주세요!**
 
-## 3.x에서 업데이트
+### 3.x에서 업데이트
 마인크래프트 1.20.5 이상에서는 아이템 저장 형식이 바뀝니다. **서버 버전을 올리기 전에**, 지금 버전에서 새 플러그인으로 서버를 한 번 켰다 끄세요. 자세한 내용은 [위키](https://github.com/the-sugar-tree/InventoryShare/wiki/Updating-to-4.0)를 참고하세요.
 
 ## 도움말
