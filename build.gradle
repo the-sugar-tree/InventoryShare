@@ -76,8 +76,6 @@ allprojects {
             year = '2023'
         }
     }
-
-    jar.dependsOn('licenseFormat')
 }
 
 tasks.withType(Jar).configureEach {

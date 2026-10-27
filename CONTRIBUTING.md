@@ -41,7 +41,7 @@ Gradle은 설치된 JDK를 toolchain으로 자동 탐색합니다. `Cannot find 
 
 1. **이슈 확인·등록:** 작업 전에 [Issues](https://github.com/the-sugar-tree/InventoryShare/issues)에 같은 내용이 있는지 확인하고, 없으면 등록해 주세요.
 2. **브랜치:** 저장소를 fork하고 `master`에서 작업 브랜치를 만듭니다.
-3. **확인:** `./gradlew build`가 통과해야 합니다. 서버에서 동작이 바뀌는 수정이라면 §6.3의 체크리스트 중 관련 항목을 실서버에서 확인해 주세요.
+3. **확인:** 커밋과 빌드 전에 `./gradlew licenseFormat`으로 라이선스 헤더를 넣고, `./gradlew build`가 통과해야 합니다. 서버에서 동작이 바뀌는 수정이라면 §6.3의 체크리스트 중 관련 항목을 실서버에서 확인해 주세요.
 4. **Pull Request:** `master`로 PR을 보냅니다. 무엇을 왜 바꿨는지, 어떤 서버·버전에서 확인했는지 적어 주세요.
 
 ### 버그 신고
@@ -216,7 +216,7 @@ dev=true
 - 주변 코드의 스타일을 따릅니다(4칸 들여쓰기, Lombok의 `@Getter` 등 사용).
 - null 표시는 `org.jetbrains.annotations`의 `@NotNull`, `@Nullable`만 씁니다. Lombok도 이 `@NotNull`이 붙은 필드에 null 검사를 생성합니다.
 - 의존성 버전은 `gradle/libs.versions.toml`에만 적습니다(`InventoryShare-nms-test`가 검사하는 Spigot 서버 jar와 `InventoryShare-dev` 제외).
-- 모든 Java 파일에는 GPL 라이선스 헤더가 필요합니다. `./gradlew licenseFormat`이 자동으로 추가하며, `jar` 작업 전에도 실행됩니다.
+- 모든 Java 파일에는 GPL 라이선스 헤더가 필요합니다. 커밋과 빌드 전에 `./gradlew licenseFormat`을 실행해 주세요. 헤더가 빠진 파일이 있으면 `build`(`checkLicenses`)가 실패합니다.
 - 커밋 메시지는 [Conventional Commits](https://www.conventionalcommits.org/) 형식을 따릅니다 (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`).
 
 ---
