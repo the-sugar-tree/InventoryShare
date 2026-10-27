@@ -20,7 +20,7 @@ cd InventoryShare
 ./gradlew build          # Windows: gradlew.bat build
 ```
 
-- 결과물: `InventoryShare-bukkit/build/libs/InventoryShare-bukkit-<version>-[1.12.2-26.3].jar` (루트 `build/libs/`에도 복사됩니다).
+- 결과물: `InventoryShare-bukkit/build/libs/InventoryShare-bukkit-<version>-[1.12.2-26.3].jar` (루트 `build/libs/`에는 릴리스 이름 `InventoryShare-<version>.jar`로 복사됩니다).
 - 배포 플러그인은 `spigot-api`와 리플렉션만 사용하므로 **BuildTools로 Spigot을 설치하지 않아도 빌드됩니다.**
 - Spigot jar가 필요한 테스트는 jar가 없으면 실패하지 않고 **skip**됩니다(§4.2).
 

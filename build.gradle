@@ -63,6 +63,8 @@ allprojects {
                 include '*.jar'
             }
             into(rootProject.file("build/libs"))
+            // The released plugin jar, under the name the release download link uses
+            rename(/InventoryShare-bukkit-(.+)-\[.+]\.jar/, 'InventoryShare-$1.jar')
         }
     }
 
