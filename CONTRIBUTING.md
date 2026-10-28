@@ -1,6 +1,6 @@
-<p align="center"><a href="CONTRIBUTING.en.md">ENGLISH</a> | <b>한국어</b></p>
-
 # Contributing to InventoryShare
+
+<p align="center"><a href="CONTRIBUTING.en.md">ENGLISH</a> | <b>한국어</b></p>
 
 InventoryShare 개발에 참여해 주셔서 감사합니다.
 

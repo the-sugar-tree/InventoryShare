@@ -1,7 +1,7 @@
-<p align="center"><a href="README.en.md">ENGLISH</a> | <b>한국어</b></p>
-
 # Inventory Sharing Plugin (v4.0)
 인벤토리 공유 플러그인 (v4.0)
+
+<p align="center"><a href="README.en.md">ENGLISH</a> | <b>한국어</b></p>
 
 > [!note]   
 > [1.12-1.20.4]버전의 ProtocolLib 플러그인은 [링크](https://github.com/dmulloy2/ProtocolLib/releases)를 참조해주세요!

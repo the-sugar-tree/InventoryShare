@@ -1,6 +1,6 @@
-<p align="center"><b>ENGLISH</b> | <a href="README.md">한국어</a></p>
-
 # Inventory Sharing Plugin (v4.0)
+
+<p align="center"><b>ENGLISH</b> | <a href="README.md">한국어</a></p>
 
 > [!note]   
 > For the ProtocolLib plugin for versions [1.12-1.20.4], see this [link](https://github.com/dmulloy2/ProtocolLib/releases)!

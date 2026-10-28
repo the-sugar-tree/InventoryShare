@@ -1,6 +1,6 @@
-<p align="center"><b>ENGLISH</b> | <a href="NMS_GUIDE.md">한국어</a></p>
-
 # Introduction to Server-Internal Classes (NMS): Spigot and Paper
+
+<p align="center"><b>ENGLISH</b> | <a href="NMS_GUIDE.md">한국어</a></p>
 
 This document explains what the server-internal classes that InventoryShare works with are, and how their names differ by server type and version.
 For the plugin's structure, see [ARCHITECTURE.en.md](ARCHITECTURE.en.md); for how to build and contribute, see [CONTRIBUTING.en.md](../CONTRIBUTING.en.md).

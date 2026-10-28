@@ -1,6 +1,6 @@
-<p align="center"><b>ENGLISH</b> | <a href="ARCHITECTURE.md">한국어</a></p>
-
 # InventoryShare Architecture
+
+<p align="center"><b>ENGLISH</b> | <a href="ARCHITECTURE.md">한국어</a></p>
 
 This document explains how InventoryShare works and how its code is organized.
 

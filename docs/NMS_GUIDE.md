@@ -1,6 +1,6 @@
-<p align="center"><a href="NMS_GUIDE.en.md">ENGLISH</a> | <b>한국어</b></p>
-
 # 서버 내부 클래스(NMS) 입문: Spigot과 Paper
+
+<p align="center"><a href="NMS_GUIDE.en.md">ENGLISH</a> | <b>한국어</b></p>
 
 InventoryShare가 다루는 서버 내부 클래스가 무엇이고, 서버 종류와 버전에 따라 이름이 어떻게 달라지는지 설명합니다.
 플러그인 구조는 [ARCHITECTURE.md](ARCHITECTURE.md), 빌드와 기여 방법은 [CONTRIBUTING.md](../CONTRIBUTING.md)를 참고하세요.
