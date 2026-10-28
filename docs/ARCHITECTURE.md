@@ -1,3 +1,5 @@
+<p align="center"><a href="ARCHITECTURE.en.md">ENGLISH</a> | <b>한국어</b></p>
+
 # InventoryShare Architecture
 
 InventoryShare가 어떻게 동작하고, 코드가 어떻게 나뉘어 있는지 설명합니다.

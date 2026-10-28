@@ -1,3 +1,5 @@
+<p align="center"><a href="NMS_GUIDE.en.md">ENGLISH</a> | <b>한국어</b></p>
+
 # 서버 내부 클래스(NMS) 입문: Spigot과 Paper
 
 InventoryShare가 다루는 서버 내부 클래스가 무엇이고, 서버 종류와 버전에 따라 이름이 어떻게 달라지는지 설명합니다.

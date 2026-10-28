@@ -1,3 +1,5 @@
+<p align="center"><a href="README.en.md">ENGLISH</a> | <b>한국어</b></p>
+
 # Inventory Sharing Plugin (v4.0)
 인벤토리 공유 플러그인 (v4.0)
 
