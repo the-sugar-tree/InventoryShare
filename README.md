@@ -82,7 +82,7 @@ https://blog.naver.com/sugar-tree/222556850608
 - 팀 인벤토리를 켜도 발전과제는 팀별로 나뉘지 않고 모든 플레이어가 공유합니다([#6](https://github.com/the-sugar-tree/InventoryShare/issues/6)). 발전과제 공유는 진행 상황까지 공유하는 별도 플러그인으로 옮길 예정이며, 그때 이 플러그인에서는 제거됩니다.
 
 ## 명령어
-![](https://raw.githubusercontent.com/the-sugar-tree/InventoryShare/master/help_message.png)   
+<img src="https://raw.githubusercontent.com/the-sugar-tree/InventoryShare/master/help_message.png" width="650">   
 
 권한: `inventoryshare.command` (기본값: OP). 권한 플러그인으로 OP가 아닌 플레이어에게도 줄 수 있습니다.
 

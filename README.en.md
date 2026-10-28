@@ -81,7 +81,7 @@ However, due to a limitation of Paper servers, teams with no members are deleted
 - Even with team inventory enabled, advancements are not split per team; all players share them ([#6](https://github.com/the-sugar-tree/InventoryShare/issues/6)). Advancement sharing, including progress, will be moved to a separate plugin, and will be removed from this plugin at that point.
 
 ## Commands
-![](https://raw.githubusercontent.com/the-sugar-tree/InventoryShare/master/help_message_en.png)   
+<img src="https://raw.githubusercontent.com/the-sugar-tree/InventoryShare/master/help_message_en.png" width="650">   
 
 Permission: `inventoryshare.command` (default: OP). You can grant it to non-OP players with a permissions plugin.
 
