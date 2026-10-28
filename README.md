@@ -4,10 +4,9 @@
 <p align="center"><a href="README.en.md">ENGLISH</a> | <b>한국어</b></p>
 
 > [!note]   
-> [1.12-1.20.4]버전의 ProtocolLib 플러그인은 [링크](https://github.com/dmulloy2/ProtocolLib/releases)를 참조해주세요!
-
-> [!note]   
-> [1.20.5+]버전의 ProtocolLib 플러그인은 [링크](https://ci.dmulloy2.net/job/ProtocolLib/lastBuild/)를 참조해주세요! ([다운로드 방법](https://github.com/the-sugar-tree/InventoryShare/wiki/How-to-download-ProtocolLib))
+> [1.12-1.21.1]버전의 ProtocolLib 플러그인은 [링크](https://github.com/dmulloy2/ProtocolLib/releases/tag/5.3.0)를 참조해주세요!   
+> [1.21.2-1.21.8]버전의 ProtocolLib 플러그인은 [링크](https://github.com/dmulloy2/ProtocolLib/releases/tag/5.4.0)를 참조해주세요!   
+> [1.21.9+]버전의 ProtocolLib 플러그인은 [링크](https://github.com/dmulloy2/ProtocolLib/releases/tag/dev-build)(개발 빌드)를 참조해주세요! ([다운로드 방법](https://github.com/the-sugar-tree/InventoryShare/wiki/How-to-download-ProtocolLib))
 
 
 > [!important]   

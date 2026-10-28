@@ -3,10 +3,9 @@
 <p align="center"><b>ENGLISH</b> | <a href="README.md">한국어</a></p>
 
 > [!note]   
-> For the ProtocolLib plugin for versions [1.12-1.20.4], see this [link](https://github.com/dmulloy2/ProtocolLib/releases)!
-
-> [!note]   
-> For the ProtocolLib plugin for versions [1.20.5+], see this [link](https://ci.dmulloy2.net/job/ProtocolLib/lastBuild/)! ([How to download](https://github.com/the-sugar-tree/InventoryShare/wiki/How-to-download-ProtocolLib))
+> For the ProtocolLib plugin for versions [1.12-1.21.1], see this [link](https://github.com/dmulloy2/ProtocolLib/releases/tag/5.3.0)!   
+> For the ProtocolLib plugin for versions [1.21.2-1.21.8], see this [link](https://github.com/dmulloy2/ProtocolLib/releases/tag/5.4.0)!   
+> For the ProtocolLib plugin for versions [1.21.9+], see this [link](https://github.com/dmulloy2/ProtocolLib/releases/tag/dev-build) (development build)! ([How to download](https://github.com/the-sugar-tree/InventoryShare/wiki/How-to-download-ProtocolLib))
 
 
 > [!important]   
